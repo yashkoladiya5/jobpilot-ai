@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ApplicationStatus {
+  SAVED
+  APPLIED
+  INTERVIEW
+  OFFER
+  REJECTED
+  WITHDRAWN
+}
+
+model User {
+  id              String            @id @default(uuid())
+  email           String            @unique
+  passwordHash    String            @map("password_hash")
+  name            String
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @updatedAt @map("updated_at")
+  resumes         Resume[]
+  jobApplications JobApplication[]
+
+  @@map("users")
+}
+
+model Resume {
+  id              String            @id @default(uuid())
+  userId          String            @map("user_id")
+  fileName        String            @map("file_name")
+  filePath        String            @map("file_path")
+  fileSize        Int               @map("file_size")
+  mimeType        String            @map("mime_type")
+  isPrimary       Boolean           @default(false) @map("is_primary")
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @updatedAt @map("updated_at")
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobApplications JobApplication[]
+
+  @@index([userId])
+  @@map("resumes")
+}
+
+model JobApplication {
+  id          String            @id @default(uuid())
+  userId      String            @map("user_id")
+  companyName String            @map("company_name")
+  role        String
+  jobUrl      String?           @map("job_url")
+  salaryRange String?           @map("salary_range")
+  location    String?
+  status      ApplicationStatus @default(SAVED)
+  notes       String?           @db.Text
+  resumeId    String?           @map("resume_id")
+  appliedDate DateTime          @default(now()) @map("applied_date")
+  createdAt   DateTime          @default(now()) @map("created_at")
+  updatedAt   DateTime          @updatedAt @map("updated_at")
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resume      Resume?           @relation(fields: [resumeId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([status])
+  @@index([appliedDate])
+  @@map("job_applications")
+}
