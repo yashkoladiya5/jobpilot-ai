@@ -5,12 +5,11 @@ part 'dashboard_stats.g.dart';
 @freezed
 class DashboardStats with _$DashboardStats {
   const factory DashboardStats({
-    @JsonKey(name: 'total_applications') required int totalApplications,
-    @JsonKey(name: 'by_status') required List<StatusCount> byStatus,
-    @JsonKey(name: 'recent_applications')
+    required int totalApplications,
+    required List<StatusCount> byStatus,
     required List<RecentApplication> recentApplications,
-    @JsonKey(name: 'recent_activity') required int recentActivity,
-    @JsonKey(name: 'resume_count') required int resumeCount,
+    required int recentActivity,
+    required int resumeCount,
   }) = _DashboardStats;
 
   factory DashboardStats.fromJson(Map<String, dynamic> json) =>
@@ -32,10 +31,10 @@ class StatusCount with _$StatusCount {
 class RecentApplication with _$RecentApplication {
   const factory RecentApplication({
     required String id,
-    @JsonKey(name: 'company_name') required String companyName,
+    required String companyName,
     required String role,
     required String status,
-    @JsonKey(name: 'applied_date') required DateTime appliedDate,
+    required DateTime appliedDate,
   }) = _RecentApplication;
 
   factory RecentApplication.fromJson(Map<String, dynamic> json) =>

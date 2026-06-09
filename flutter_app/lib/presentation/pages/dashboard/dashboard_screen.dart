@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:jobpilot_ai/core/theme/app_colors.dart';
 import 'package:jobpilot_ai/domain/entities/dashboard_stats.dart';
 import 'package:jobpilot_ai/domain/entities/job_application.dart';
+import 'package:jobpilot_ai/presentation/bloc/auth/auth_bloc.dart';
+import 'package:jobpilot_ai/presentation/bloc/auth/auth_event.dart';
 import 'package:jobpilot_ai/presentation/bloc/dashboard/dashboard_bloc.dart';
 import 'package:jobpilot_ai/presentation/bloc/dashboard/dashboard_event.dart';
 import 'package:jobpilot_ai/presentation/bloc/dashboard/dashboard_state.dart';
@@ -34,7 +36,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: () {},
+            onPressed: () =>
+                context.read<AuthBloc>().add(const LogoutRequested()),
           ),
         ],
       ),

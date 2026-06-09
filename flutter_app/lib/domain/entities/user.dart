@@ -8,7 +8,7 @@ class User with _$User {
     required String id,
     required String email,
     required String name,
-    @JsonKey(name: 'created_at') DateTime? createdAt,
+    DateTime? createdAt,
   }) = _User;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);

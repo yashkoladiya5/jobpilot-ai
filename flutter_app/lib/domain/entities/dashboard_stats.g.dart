@@ -8,25 +8,25 @@ part of 'dashboard_stats.dart';
 
 _$DashboardStatsImpl _$$DashboardStatsImplFromJson(Map<String, dynamic> json) =>
     _$DashboardStatsImpl(
-      totalApplications: (json['total_applications'] as num).toInt(),
-      byStatus: (json['by_status'] as List<dynamic>)
+      totalApplications: (json['totalApplications'] as num).toInt(),
+      byStatus: (json['byStatus'] as List<dynamic>)
           .map((e) => StatusCount.fromJson(e as Map<String, dynamic>))
           .toList(),
-      recentApplications: (json['recent_applications'] as List<dynamic>)
+      recentApplications: (json['recentApplications'] as List<dynamic>)
           .map((e) => RecentApplication.fromJson(e as Map<String, dynamic>))
           .toList(),
-      recentActivity: (json['recent_activity'] as num).toInt(),
-      resumeCount: (json['resume_count'] as num).toInt(),
+      recentActivity: (json['recentActivity'] as num).toInt(),
+      resumeCount: (json['resumeCount'] as num).toInt(),
     );
 
 Map<String, dynamic> _$$DashboardStatsImplToJson(
   _$DashboardStatsImpl instance,
 ) => <String, dynamic>{
-  'total_applications': instance.totalApplications,
-  'by_status': instance.byStatus,
-  'recent_applications': instance.recentApplications,
-  'recent_activity': instance.recentActivity,
-  'resume_count': instance.resumeCount,
+  'totalApplications': instance.totalApplications,
+  'byStatus': instance.byStatus,
+  'recentApplications': instance.recentApplications,
+  'recentActivity': instance.recentActivity,
+  'resumeCount': instance.resumeCount,
 };
 
 _$StatusCountImpl _$$StatusCountImplFromJson(Map<String, dynamic> json) =>
@@ -42,18 +42,18 @@ _$RecentApplicationImpl _$$RecentApplicationImplFromJson(
   Map<String, dynamic> json,
 ) => _$RecentApplicationImpl(
   id: json['id'] as String,
-  companyName: json['company_name'] as String,
+  companyName: json['companyName'] as String,
   role: json['role'] as String,
   status: json['status'] as String,
-  appliedDate: DateTime.parse(json['applied_date'] as String),
+  appliedDate: DateTime.parse(json['appliedDate'] as String),
 );
 
 Map<String, dynamic> _$$RecentApplicationImplToJson(
   _$RecentApplicationImpl instance,
 ) => <String, dynamic>{
   'id': instance.id,
-  'company_name': instance.companyName,
+  'companyName': instance.companyName,
   'role': instance.role,
   'status': instance.status,
-  'applied_date': instance.appliedDate.toIso8601String(),
+  'appliedDate': instance.appliedDate.toIso8601String(),
 };

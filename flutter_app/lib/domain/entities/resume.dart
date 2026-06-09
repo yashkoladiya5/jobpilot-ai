@@ -6,13 +6,13 @@ part 'resume.g.dart';
 class Resume with _$Resume {
   const factory Resume({
     required String id,
-    @JsonKey(name: 'user_id') required String userId,
-    @JsonKey(name: 'file_name') required String fileName,
-    @JsonKey(name: 'file_path') required String filePath,
-    @JsonKey(name: 'file_size') int? fileSize,
-    @JsonKey(name: 'mime_type') String? mimeType,
-    @JsonKey(name: 'is_primary') bool? isPrimary,
-    @JsonKey(name: 'created_at') DateTime? createdAt,
+    required String userId,
+    required String fileName,
+    required String filePath,
+    int? fileSize,
+    String? mimeType,
+    bool? isPrimary,
+    DateTime? createdAt,
   }) = _Resume;
 
   factory Resume.fromJson(Map<String, dynamic> json) => _$ResumeFromJson(json);

@@ -22,19 +22,12 @@ Resume _$ResumeFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$Resume {
   String get id => throw _privateConstructorUsedError;
-  @JsonKey(name: 'user_id')
   String get userId => throw _privateConstructorUsedError;
-  @JsonKey(name: 'file_name')
   String get fileName => throw _privateConstructorUsedError;
-  @JsonKey(name: 'file_path')
   String get filePath => throw _privateConstructorUsedError;
-  @JsonKey(name: 'file_size')
   int? get fileSize => throw _privateConstructorUsedError;
-  @JsonKey(name: 'mime_type')
   String? get mimeType => throw _privateConstructorUsedError;
-  @JsonKey(name: 'is_primary')
   bool? get isPrimary => throw _privateConstructorUsedError;
-  @JsonKey(name: 'created_at')
   DateTime? get createdAt => throw _privateConstructorUsedError;
 
   /// Serializes this Resume to a JSON map.
@@ -53,13 +46,13 @@ abstract class $ResumeCopyWith<$Res> {
   @useResult
   $Res call({
     String id,
-    @JsonKey(name: 'user_id') String userId,
-    @JsonKey(name: 'file_name') String fileName,
-    @JsonKey(name: 'file_path') String filePath,
-    @JsonKey(name: 'file_size') int? fileSize,
-    @JsonKey(name: 'mime_type') String? mimeType,
-    @JsonKey(name: 'is_primary') bool? isPrimary,
-    @JsonKey(name: 'created_at') DateTime? createdAt,
+    String userId,
+    String fileName,
+    String filePath,
+    int? fileSize,
+    String? mimeType,
+    bool? isPrimary,
+    DateTime? createdAt,
   });
 }
 
@@ -137,13 +130,13 @@ abstract class _$$ResumeImplCopyWith<$Res> implements $ResumeCopyWith<$Res> {
   @useResult
   $Res call({
     String id,
-    @JsonKey(name: 'user_id') String userId,
-    @JsonKey(name: 'file_name') String fileName,
-    @JsonKey(name: 'file_path') String filePath,
-    @JsonKey(name: 'file_size') int? fileSize,
-    @JsonKey(name: 'mime_type') String? mimeType,
-    @JsonKey(name: 'is_primary') bool? isPrimary,
-    @JsonKey(name: 'created_at') DateTime? createdAt,
+    String userId,
+    String fileName,
+    String filePath,
+    int? fileSize,
+    String? mimeType,
+    bool? isPrimary,
+    DateTime? createdAt,
   });
 }
 
@@ -214,13 +207,13 @@ class __$$ResumeImplCopyWithImpl<$Res>
 class _$ResumeImpl implements _Resume {
   const _$ResumeImpl({
     required this.id,
-    @JsonKey(name: 'user_id') required this.userId,
-    @JsonKey(name: 'file_name') required this.fileName,
-    @JsonKey(name: 'file_path') required this.filePath,
-    @JsonKey(name: 'file_size') this.fileSize,
-    @JsonKey(name: 'mime_type') this.mimeType,
-    @JsonKey(name: 'is_primary') this.isPrimary,
-    @JsonKey(name: 'created_at') this.createdAt,
+    required this.userId,
+    required this.fileName,
+    required this.filePath,
+    this.fileSize,
+    this.mimeType,
+    this.isPrimary,
+    this.createdAt,
   });
 
   factory _$ResumeImpl.fromJson(Map<String, dynamic> json) =>
@@ -229,25 +222,18 @@ class _$ResumeImpl implements _Resume {
   @override
   final String id;
   @override
-  @JsonKey(name: 'user_id')
   final String userId;
   @override
-  @JsonKey(name: 'file_name')
   final String fileName;
   @override
-  @JsonKey(name: 'file_path')
   final String filePath;
   @override
-  @JsonKey(name: 'file_size')
   final int? fileSize;
   @override
-  @JsonKey(name: 'mime_type')
   final String? mimeType;
   @override
-  @JsonKey(name: 'is_primary')
   final bool? isPrimary;
   @override
-  @JsonKey(name: 'created_at')
   final DateTime? createdAt;
 
   @override
@@ -307,13 +293,13 @@ class _$ResumeImpl implements _Resume {
 abstract class _Resume implements Resume {
   const factory _Resume({
     required final String id,
-    @JsonKey(name: 'user_id') required final String userId,
-    @JsonKey(name: 'file_name') required final String fileName,
-    @JsonKey(name: 'file_path') required final String filePath,
-    @JsonKey(name: 'file_size') final int? fileSize,
-    @JsonKey(name: 'mime_type') final String? mimeType,
-    @JsonKey(name: 'is_primary') final bool? isPrimary,
-    @JsonKey(name: 'created_at') final DateTime? createdAt,
+    required final String userId,
+    required final String fileName,
+    required final String filePath,
+    final int? fileSize,
+    final String? mimeType,
+    final bool? isPrimary,
+    final DateTime? createdAt,
   }) = _$ResumeImpl;
 
   factory _Resume.fromJson(Map<String, dynamic> json) = _$ResumeImpl.fromJson;
@@ -321,25 +307,18 @@ abstract class _Resume implements Resume {
   @override
   String get id;
   @override
-  @JsonKey(name: 'user_id')
   String get userId;
   @override
-  @JsonKey(name: 'file_name')
   String get fileName;
   @override
-  @JsonKey(name: 'file_path')
   String get filePath;
   @override
-  @JsonKey(name: 'file_size')
   int? get fileSize;
   @override
-  @JsonKey(name: 'mime_type')
   String? get mimeType;
   @override
-  @JsonKey(name: 'is_primary')
   bool? get isPrimary;
   @override
-  @JsonKey(name: 'created_at')
   DateTime? get createdAt;
 
   /// Create a copy of Resume

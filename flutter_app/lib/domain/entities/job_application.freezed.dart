@@ -22,23 +22,16 @@ JobApplication _$JobApplicationFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$JobApplication {
   String get id => throw _privateConstructorUsedError;
-  @JsonKey(name: 'company_name')
   String get companyName => throw _privateConstructorUsedError;
   String get role => throw _privateConstructorUsedError;
-  @JsonKey(name: 'job_url')
   String? get jobUrl => throw _privateConstructorUsedError;
-  @JsonKey(name: 'salary_range')
   String? get salaryRange => throw _privateConstructorUsedError;
   String? get location => throw _privateConstructorUsedError;
   ApplicationStatus get status => throw _privateConstructorUsedError;
   String? get notes => throw _privateConstructorUsedError;
-  @JsonKey(name: 'resume_id')
   String? get resumeId => throw _privateConstructorUsedError;
-  @JsonKey(name: 'applied_date')
   DateTime get appliedDate => throw _privateConstructorUsedError;
-  @JsonKey(name: 'created_at')
   DateTime? get createdAt => throw _privateConstructorUsedError;
-  @JsonKey(name: 'updated_at')
   DateTime? get updatedAt => throw _privateConstructorUsedError;
 
   /// Serializes this JobApplication to a JSON map.
@@ -60,17 +53,17 @@ abstract class $JobApplicationCopyWith<$Res> {
   @useResult
   $Res call({
     String id,
-    @JsonKey(name: 'company_name') String companyName,
+    String companyName,
     String role,
-    @JsonKey(name: 'job_url') String? jobUrl,
-    @JsonKey(name: 'salary_range') String? salaryRange,
+    String? jobUrl,
+    String? salaryRange,
     String? location,
     ApplicationStatus status,
     String? notes,
-    @JsonKey(name: 'resume_id') String? resumeId,
-    @JsonKey(name: 'applied_date') DateTime appliedDate,
-    @JsonKey(name: 'created_at') DateTime? createdAt,
-    @JsonKey(name: 'updated_at') DateTime? updatedAt,
+    String? resumeId,
+    DateTime appliedDate,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   });
 }
 
@@ -169,17 +162,17 @@ abstract class _$$JobApplicationImplCopyWith<$Res>
   @useResult
   $Res call({
     String id,
-    @JsonKey(name: 'company_name') String companyName,
+    String companyName,
     String role,
-    @JsonKey(name: 'job_url') String? jobUrl,
-    @JsonKey(name: 'salary_range') String? salaryRange,
+    String? jobUrl,
+    String? salaryRange,
     String? location,
     ApplicationStatus status,
     String? notes,
-    @JsonKey(name: 'resume_id') String? resumeId,
-    @JsonKey(name: 'applied_date') DateTime appliedDate,
-    @JsonKey(name: 'created_at') DateTime? createdAt,
-    @JsonKey(name: 'updated_at') DateTime? updatedAt,
+    String? resumeId,
+    DateTime appliedDate,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   });
 }
 
@@ -270,17 +263,17 @@ class __$$JobApplicationImplCopyWithImpl<$Res>
 class _$JobApplicationImpl implements _JobApplication {
   const _$JobApplicationImpl({
     required this.id,
-    @JsonKey(name: 'company_name') required this.companyName,
+    required this.companyName,
     required this.role,
-    @JsonKey(name: 'job_url') this.jobUrl,
-    @JsonKey(name: 'salary_range') this.salaryRange,
+    this.jobUrl,
+    this.salaryRange,
     this.location,
     required this.status,
     this.notes,
-    @JsonKey(name: 'resume_id') this.resumeId,
-    @JsonKey(name: 'applied_date') required this.appliedDate,
-    @JsonKey(name: 'created_at') this.createdAt,
-    @JsonKey(name: 'updated_at') this.updatedAt,
+    this.resumeId,
+    required this.appliedDate,
+    this.createdAt,
+    this.updatedAt,
   });
 
   factory _$JobApplicationImpl.fromJson(Map<String, dynamic> json) =>
@@ -289,15 +282,12 @@ class _$JobApplicationImpl implements _JobApplication {
   @override
   final String id;
   @override
-  @JsonKey(name: 'company_name')
   final String companyName;
   @override
   final String role;
   @override
-  @JsonKey(name: 'job_url')
   final String? jobUrl;
   @override
-  @JsonKey(name: 'salary_range')
   final String? salaryRange;
   @override
   final String? location;
@@ -306,16 +296,12 @@ class _$JobApplicationImpl implements _JobApplication {
   @override
   final String? notes;
   @override
-  @JsonKey(name: 'resume_id')
   final String? resumeId;
   @override
-  @JsonKey(name: 'applied_date')
   final DateTime appliedDate;
   @override
-  @JsonKey(name: 'created_at')
   final DateTime? createdAt;
   @override
-  @JsonKey(name: 'updated_at')
   final DateTime? updatedAt;
 
   @override
@@ -387,17 +373,17 @@ class _$JobApplicationImpl implements _JobApplication {
 abstract class _JobApplication implements JobApplication {
   const factory _JobApplication({
     required final String id,
-    @JsonKey(name: 'company_name') required final String companyName,
+    required final String companyName,
     required final String role,
-    @JsonKey(name: 'job_url') final String? jobUrl,
-    @JsonKey(name: 'salary_range') final String? salaryRange,
+    final String? jobUrl,
+    final String? salaryRange,
     final String? location,
     required final ApplicationStatus status,
     final String? notes,
-    @JsonKey(name: 'resume_id') final String? resumeId,
-    @JsonKey(name: 'applied_date') required final DateTime appliedDate,
-    @JsonKey(name: 'created_at') final DateTime? createdAt,
-    @JsonKey(name: 'updated_at') final DateTime? updatedAt,
+    final String? resumeId,
+    required final DateTime appliedDate,
+    final DateTime? createdAt,
+    final DateTime? updatedAt,
   }) = _$JobApplicationImpl;
 
   factory _JobApplication.fromJson(Map<String, dynamic> json) =
@@ -406,15 +392,12 @@ abstract class _JobApplication implements JobApplication {
   @override
   String get id;
   @override
-  @JsonKey(name: 'company_name')
   String get companyName;
   @override
   String get role;
   @override
-  @JsonKey(name: 'job_url')
   String? get jobUrl;
   @override
-  @JsonKey(name: 'salary_range')
   String? get salaryRange;
   @override
   String? get location;
@@ -423,16 +406,12 @@ abstract class _JobApplication implements JobApplication {
   @override
   String? get notes;
   @override
-  @JsonKey(name: 'resume_id')
   String? get resumeId;
   @override
-  @JsonKey(name: 'applied_date')
   DateTime get appliedDate;
   @override
-  @JsonKey(name: 'created_at')
   DateTime? get createdAt;
   @override
-  @JsonKey(name: 'updated_at')
   DateTime? get updatedAt;
 
   /// Create a copy of JobApplication

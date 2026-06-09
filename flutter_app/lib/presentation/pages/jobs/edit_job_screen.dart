@@ -27,7 +27,6 @@ class _EditJobScreenState extends State<EditJobScreen> {
   late final TextEditingController _notesController;
   late ApplicationStatus _status;
   String? _resumeId;
-  bool _isLoading = false;
 
   @override
   void initState() {
@@ -114,14 +113,14 @@ class _EditJobScreenState extends State<EditJobScreen> {
           }
         },
         builder: (context, state) {
-          _isLoading = state is JobLoading;
-          return _buildForm(context);
+          final isLoading = state is JobLoading;
+          return _buildForm(context, isLoading: isLoading);
         },
       ),
     );
   }
 
-  Widget _buildForm(BuildContext context) {
+  Widget _buildForm(BuildContext context, {required bool isLoading}) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Form(
@@ -210,8 +209,8 @@ class _EditJobScreenState extends State<EditJobScreen> {
             ),
             const SizedBox(height: 24),
             ElevatedButton(
-              onPressed: _isLoading ? null : _submit,
-              child: _isLoading
+              onPressed: isLoading ? null : _submit,
+              child: isLoading
                   ? const SizedBox(
                       height: 20,
                       width: 20,
