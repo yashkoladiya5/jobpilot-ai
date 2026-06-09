@@ -52,4 +52,19 @@ export class ResumeService {
 
     await prisma.resume.delete({ where: { id } });
   }
+
+  async setPrimaryResume(userId: string, id: string) {
+    const resume = await prisma.resume.findUnique({ where: { id } });
+    if (!resume || resume.userId !== userId) {
+      throw ApiError.notFound("Resume not found");
+    }
+    await prisma.resume.updateMany({
+      where: { userId, isPrimary: true },
+      data: { isPrimary: false },
+    });
+    return prisma.resume.update({
+      where: { id },
+      data: { isPrimary: true },
+    });
+  }
 }

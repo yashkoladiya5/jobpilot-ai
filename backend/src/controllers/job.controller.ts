@@ -7,8 +7,13 @@ const jobService = new JobService();
 
 export const getJobs = asyncHandler(async (req: Request, res: Response) => {
   const userId = (req as AuthenticatedRequest).user.id;
-  const jobs = await jobService.getJobs(userId);
-
+  const { search, status, sortBy, sortOrder } = req.query;
+  const jobs = await jobService.getJobs(userId, {
+    search: search as string | undefined,
+    status: status as string | undefined,
+    sortBy: sortBy as string | undefined,
+    sortOrder: sortOrder as string | undefined,
+  });
   res.status(200).json({
     success: true,
     message: "Job applications fetched successfully",

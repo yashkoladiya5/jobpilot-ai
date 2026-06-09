@@ -2,11 +2,33 @@ import prisma from "../config/prisma";
 import { ApiError } from "../utils/ApiError";
 
 export class JobService {
-  async getJobs(userId: string) {
-    return prisma.jobApplication.findMany({
-      where: { userId },
-      orderBy: { appliedDate: "desc" },
-    });
+  async getJobs(
+    userId: string,
+    query?: {
+      search?: string;
+      status?: string;
+      sortBy?: string;
+      sortOrder?: string;
+    }
+  ) {
+    const where: any = { userId };
+    if (query?.status) {
+      where.status = query.status;
+    }
+    if (query?.search) {
+      where.OR = [
+        { companyName: { contains: query.search, mode: "insensitive" } },
+        { role: { contains: query.search, mode: "insensitive" } },
+      ];
+    }
+    let orderBy: any = { appliedDate: "desc" };
+    if (query?.sortBy) {
+      const validSortFields = ["appliedDate", "companyName", "status", "createdAt"];
+      if (validSortFields.includes(query.sortBy)) {
+        orderBy = { [query.sortBy]: query.sortOrder === "asc" ? "asc" : "desc" };
+      }
+    }
+    return prisma.jobApplication.findMany({ where, orderBy });
   }
 
   async getJobById(userId: string, id: string) {
@@ -42,7 +64,7 @@ export class JobService {
         jobUrl: data.jobUrl,
         salaryRange: data.salaryRange,
         location: data.location,
-        status: (data.status as any) ?? "SAVED",
+        status: (data.status ?? "SAVED") as "SAVED" | "APPLIED" | "INTERVIEW" | "OFFER" | "REJECTED" | "WITHDRAWN",
         notes: data.notes,
         resumeId: data.resumeId,
       },
@@ -68,8 +90,14 @@ export class JobService {
     return prisma.jobApplication.update({
       where: { id },
       data: {
-        ...data,
-        status: data.status as any,
+        companyName: data.companyName,
+        role: data.role,
+        jobUrl: data.jobUrl,
+        salaryRange: data.salaryRange,
+        location: data.location,
+        notes: data.notes,
+        ...(data.status ? { status: data.status as "SAVED" | "APPLIED" | "INTERVIEW" | "OFFER" | "REJECTED" | "WITHDRAWN" } : {}),
+        ...(data.resumeId !== undefined ? { resumeId: data.resumeId } : {}),
       },
     });
   }
