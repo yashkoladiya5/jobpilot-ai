@@ -60,3 +60,14 @@ export const deleteResume = asyncHandler(async (req: Request, res: Response) => 
     data: null,
   });
 });
+
+export const setPrimaryResume = asyncHandler(async (req: Request, res: Response) => {
+  const { id: userId } = (req as AuthenticatedRequest).user;
+  const { id } = req.params;
+  const resume = await resumeService.setPrimaryResume(userId, id);
+  res.status(200).json({
+    success: true,
+    message: "Primary resume updated successfully",
+    data: resume,
+  });
+});

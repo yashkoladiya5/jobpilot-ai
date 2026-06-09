@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { ApiError } from "../utils/ApiError";
 import { config } from "../config";
+import { logger } from "../utils/logger";
 
 export const errorHandler = (
   err: Error,
@@ -9,7 +10,7 @@ export const errorHandler = (
   _next: NextFunction
 ): void => {
   if (config.nodeEnv === "development") {
-    console.error("Error:", err);
+    logger.error("Error:", err);
   }
 
   if (err instanceof ApiError) {
