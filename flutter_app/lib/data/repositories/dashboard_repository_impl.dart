@@ -23,6 +23,9 @@ class DashboardRepositoryImpl implements DashboardRepository {
         (data) =>
             DashboardStats.fromJson(data as Map<String, dynamic>),
       );
+      if (apiResponse.data == null) {
+        return const Left(Failure.serverFailure(message: 'No stats data returned'));
+      }
       return Right(apiResponse.data!);
     } on DioException catch (e) {
       return Left(_handleDioError(e));

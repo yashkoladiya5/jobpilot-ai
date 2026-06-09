@@ -40,6 +40,9 @@ class JobRepositoryImpl implements JobRepository {
         (data) =>
             JobApplication.fromJson(data as Map<String, dynamic>),
       );
+      if (apiResponse.data == null) {
+        return const Left(Failure.serverFailure(message: 'Job not found'));
+      }
       return Right(apiResponse.data!);
     } on DioException catch (e) {
       return Left(_handleDioError(e));
@@ -51,16 +54,16 @@ class JobRepositoryImpl implements JobRepository {
       CreateJobParams params) async {
     try {
       final data = {
-        'company_name': params.companyName,
+        'companyName': params.companyName,
         'role': params.role,
-        if (params.jobUrl != null) 'job_url': params.jobUrl,
-        if (params.salaryRange != null) 'salary_range': params.salaryRange,
+        if (params.jobUrl != null) 'jobUrl': params.jobUrl,
+        if (params.salaryRange != null) 'salaryRange': params.salaryRange,
         if (params.location != null) 'location': params.location,
         if (params.status != null) 'status': params.status!.value,
         if (params.notes != null) 'notes': params.notes,
-        if (params.resumeId != null) 'resume_id': params.resumeId,
+        if (params.resumeId != null) 'resumeId': params.resumeId,
         if (params.appliedDate != null)
-          'applied_date': params.appliedDate!.toIso8601String(),
+          'appliedDate': params.appliedDate!.toIso8601String(),
       };
       final response = await _remoteDataSource.createJob(data);
       final apiResponse = ApiResponseModel<JobApplication>.fromJson(
@@ -68,6 +71,9 @@ class JobRepositoryImpl implements JobRepository {
         (data) =>
             JobApplication.fromJson(data as Map<String, dynamic>),
       );
+      if (apiResponse.data == null) {
+        return const Left(Failure.serverFailure(message: 'Failed to create job'));
+      }
       return Right(apiResponse.data!);
     } on DioException catch (e) {
       return Left(_handleDioError(e));
@@ -79,16 +85,16 @@ class JobRepositoryImpl implements JobRepository {
       String id, UpdateJobParams params) async {
     try {
       final data = <String, dynamic>{
-        if (params.companyName != null) 'company_name': params.companyName,
+        if (params.companyName != null) 'companyName': params.companyName,
         if (params.role != null) 'role': params.role,
-        if (params.jobUrl != null) 'job_url': params.jobUrl,
-        if (params.salaryRange != null) 'salary_range': params.salaryRange,
+        if (params.jobUrl != null) 'jobUrl': params.jobUrl,
+        if (params.salaryRange != null) 'salaryRange': params.salaryRange,
         if (params.location != null) 'location': params.location,
         if (params.status != null) 'status': params.status!.value,
         if (params.notes != null) 'notes': params.notes,
-        if (params.resumeId != null) 'resume_id': params.resumeId,
+        if (params.resumeId != null) 'resumeId': params.resumeId,
         if (params.appliedDate != null)
-          'applied_date': params.appliedDate!.toIso8601String(),
+          'appliedDate': params.appliedDate!.toIso8601String(),
       };
       final response = await _remoteDataSource.updateJob(id, data);
       final apiResponse = ApiResponseModel<JobApplication>.fromJson(
@@ -96,6 +102,9 @@ class JobRepositoryImpl implements JobRepository {
         (data) =>
             JobApplication.fromJson(data as Map<String, dynamic>),
       );
+      if (apiResponse.data == null) {
+        return const Left(Failure.serverFailure(message: 'Failed to update job'));
+      }
       return Right(apiResponse.data!);
     } on DioException catch (e) {
       return Left(_handleDioError(e));

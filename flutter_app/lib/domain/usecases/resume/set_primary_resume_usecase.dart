@@ -5,11 +5,11 @@ import 'package:jobpilot_ai/domain/entities/resume.dart';
 import 'package:jobpilot_ai/domain/repositories/resume_repository.dart';
 
 @injectable
-class UploadResumeUseCase {
-  final ResumeRepository repository;
-  UploadResumeUseCase(this.repository);
+class SetPrimaryResumeUseCase {
+  final ResumeRepository _repository;
+  SetPrimaryResumeUseCase(this._repository);
 
-  Future<Either<Failure, Resume>> call(String filePath) {
-    return repository.uploadResume(filePath);
+  Future<Either<Failure, Resume>> call(String id) {
+    return _repository.setPrimaryResume(id);
   }
 }

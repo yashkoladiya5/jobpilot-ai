@@ -12,7 +12,6 @@ class AppTheme {
       secondary: AppColors.secondary,
       surface: AppColors.surface,
       error: AppColors.error,
-      brightness: Brightness.light,
     );
 
     return ThemeData(

@@ -46,34 +46,34 @@ class StatusChip extends StatelessWidget {
   _StatusConfig _getStatusConfig(ApplicationStatus status) {
     switch (status) {
       case ApplicationStatus.saved:
-        return _StatusConfig(
-          backgroundColor: const Color(0xFFE0E0E0),
-          textColor: const Color(0xFF616161),
+        return const _StatusConfig(
+          backgroundColor: Color(0xFFE0E0E0),
+          textColor: Color(0xFF616161),
         );
       case ApplicationStatus.applied:
-        return _StatusConfig(
-          backgroundColor: const Color(0xFFE3F2FD),
-          textColor: const Color(0xFF1565C0),
+        return const _StatusConfig(
+          backgroundColor: Color(0xFFE3F2FD),
+          textColor: Color(0xFF1565C0),
         );
       case ApplicationStatus.interview:
-        return _StatusConfig(
-          backgroundColor: const Color(0xFFFFF3E0),
-          textColor: const Color(0xFFE65100),
+        return const _StatusConfig(
+          backgroundColor: Color(0xFFFFF3E0),
+          textColor: Color(0xFFE65100),
         );
       case ApplicationStatus.offer:
-        return _StatusConfig(
-          backgroundColor: const Color(0xFFE8F5E9),
-          textColor: const Color(0xFF2E7D32),
+        return const _StatusConfig(
+          backgroundColor: Color(0xFFE8F5E9),
+          textColor: Color(0xFF2E7D32),
         );
       case ApplicationStatus.rejected:
-        return _StatusConfig(
-          backgroundColor: const Color(0xFFFFEBEE),
-          textColor: const Color(0xFFC62828),
+        return const _StatusConfig(
+          backgroundColor: Color(0xFFFFEBEE),
+          textColor: Color(0xFFC62828),
         );
       case ApplicationStatus.withdrawn:
-        return _StatusConfig(
-          backgroundColor: const Color(0xFFF3E5F5),
-          textColor: const Color(0xFF7B1FA2),
+        return const _StatusConfig(
+          backgroundColor: Color(0xFFF3E5F5),
+          textColor: Color(0xFF7B1FA2),
         );
     }
   }

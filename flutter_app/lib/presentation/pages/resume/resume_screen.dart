@@ -10,6 +10,7 @@ import 'package:jobpilot_ai/presentation/widgets/empty_state.dart';
 import 'package:jobpilot_ai/presentation/widgets/error_display.dart';
 import 'package:jobpilot_ai/presentation/widgets/loading_overlay.dart';
 import 'package:jobpilot_ai/presentation/widgets/resume_card.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ResumeScreen extends StatefulWidget {
   const ResumeScreen({super.key});
@@ -19,6 +20,8 @@ class ResumeScreen extends StatefulWidget {
 }
 
 class _ResumeScreenState extends State<ResumeScreen> {
+  List<Resume>? _lastResumes;
+
   @override
   void initState() {
     super.initState();
@@ -159,15 +162,26 @@ class _ResumeScreenState extends State<ResumeScreen> {
           );
         },
         builder: (context, state) {
+          final isLoading = state is ResumeLoading;
+          final showOverlay = isLoading && _lastResumes != null;
           return LoadingOverlay(
-            isLoading: state is ResumeLoading,
-            message: state is ResumeLoading ? _loadingMessage(state) : null,
+            isLoading: showOverlay,
+            message: showOverlay ? _loadingMessage(state) : null,
             child: state.maybeWhen(
               initial: () => const SizedBox.shrink(),
-              loading: () => const SizedBox.shrink(),
-              resumesLoaded: (resumes) => _buildResumeList(resumes),
-              uploadSuccess: (_) => const SizedBox.shrink(),
-              operationSuccess: (_) => const SizedBox.shrink(),
+              loading: () => _lastResumes != null
+                  ? _buildResumeList(_lastResumes!)
+                  : const _ResumeShimmer(),
+              resumesLoaded: (resumes) {
+                _lastResumes = resumes;
+                return _buildResumeList(resumes);
+              },
+              uploadSuccess: (_) => _lastResumes != null
+                  ? _buildResumeList(_lastResumes!)
+                  : const SizedBox.shrink(),
+              operationSuccess: (_) => _lastResumes != null
+                  ? _buildResumeList(_lastResumes!)
+                  : const SizedBox.shrink(),
               error: (message) => ErrorDisplay(
                 message: message,
                 onRetry: () => context.read<ResumeBloc>().add(const LoadResumes()),
@@ -249,11 +263,7 @@ class _ResumeScreenState extends State<ResumeScreen> {
             child: ResumeCard(
               resume: resume,
               onDelete: () => _confirmDelete(resume),
-              onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Opening resumes coming soon')),
-                );
-              },
+              onTap: () => context.read<ResumeBloc>().add(SetPrimaryResume(resume.id)),
             ),
           );
         },
@@ -270,5 +280,29 @@ class _ResumeScreenState extends State<ResumeScreen> {
     if (bytes < 1024) return '$bytes B';
     if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
     return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+  }
+}
+
+class _ResumeShimmer extends StatelessWidget {
+  const _ResumeShimmer();
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      padding: const EdgeInsets.only(top: 8, bottom: 88),
+      children: List.generate(3, (_) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+        child: Shimmer.fromColors(
+          baseColor: Colors.grey.shade300,
+          highlightColor: Colors.grey.shade100,
+          child: Container(
+            height: 72,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        ),
+      )),
+    );
   }
 }
