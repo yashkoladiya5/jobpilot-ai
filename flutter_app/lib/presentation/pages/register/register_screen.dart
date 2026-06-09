@@ -77,7 +77,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(height: size.height * 0.06),
-                    Icon(
+                    const Icon(
                       Icons.work_history_rounded,
                       size: 64,
                       color: AppColors.primary,
@@ -211,7 +211,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ? null
                                 : () => context.go(AppConstants.loginRoute),
                             child: const Text(
-                              "Already have an account? Sign In",
+                              'Already have an account? Sign In',
                             ),
                           ),
                         ],

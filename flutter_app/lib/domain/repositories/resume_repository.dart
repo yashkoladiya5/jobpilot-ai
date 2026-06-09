@@ -6,4 +6,5 @@ abstract class ResumeRepository {
   Future<Either<Failure, List<Resume>>> getResumes();
   Future<Either<Failure, Resume>> uploadResume(String filePath);
   Future<Either<Failure, void>> deleteResume(String id);
+  Future<Either<Failure, Resume>> setPrimaryResume(String id);
 }

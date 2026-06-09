@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
@@ -24,11 +26,14 @@ class AuthRepositoryImpl implements AuthRepository {
         response,
         (data) => data as Map<String, dynamic>,
       );
-      final data = apiResponse.data!;
+      final data = apiResponse.data;
+      if (data == null) {
+        return const Left(Failure.serverFailure(message: 'No data returned'));
+      }
       final user = User.fromJson(data['user'] as Map<String, dynamic>);
       final token = data['token'] as String;
       await _localDataSource.saveToken(token);
-      await _localDataSource.saveUserData(user.toJson().toString());
+      await _localDataSource.saveUserData(jsonEncode(user.toJson()));
       return Right(user);
     } on DioException catch (e) {
       return Left(_handleDioError(e));
@@ -44,11 +49,14 @@ class AuthRepositoryImpl implements AuthRepository {
         response,
         (data) => data as Map<String, dynamic>,
       );
-      final data = apiResponse.data!;
+      final data = apiResponse.data;
+      if (data == null) {
+        return const Left(Failure.serverFailure(message: 'No data returned'));
+      }
       final user = User.fromJson(data['user'] as Map<String, dynamic>);
       final token = data['token'] as String;
       await _localDataSource.saveToken(token);
-      await _localDataSource.saveUserData(user.toJson().toString());
+      await _localDataSource.saveUserData(jsonEncode(user.toJson()));
       return Right(user);
     } on DioException catch (e) {
       return Left(_handleDioError(e));
@@ -63,8 +71,11 @@ class AuthRepositoryImpl implements AuthRepository {
         response,
         (data) => User.fromJson(data as Map<String, dynamic>),
       );
-      final user = apiResponse.data!;
-      await _localDataSource.saveUserData(user.toJson().toString());
+      final user = apiResponse.data;
+      if (user == null) {
+        return const Left(Failure.serverFailure(message: 'No user data returned'));
+      }
+      await _localDataSource.saveUserData(jsonEncode(user.toJson()));
       return Right(user);
     } on DioException catch (e) {
       return Left(_handleDioError(e));
@@ -78,7 +89,7 @@ class AuthRepositoryImpl implements AuthRepository {
       await _localDataSource.deleteUserData();
       return const Right(null);
     } catch (e) {
-      return Left(Failure.cacheFailure(message: 'Failed to clear session data'));
+      return const Left(Failure.cacheFailure(message: 'Failed to clear session data'));
     }
   }
 

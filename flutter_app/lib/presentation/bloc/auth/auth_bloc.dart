@@ -1,10 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:jobpilot_ai/core/errors/failures.dart';
 import 'package:jobpilot_ai/domain/usecases/auth/login_usecase.dart';
-import 'package:jobpilot_ai/domain/usecases/auth/register_usecase.dart';
 import 'package:jobpilot_ai/domain/usecases/auth/logout_usecase.dart';
+import 'package:jobpilot_ai/domain/usecases/auth/register_usecase.dart';
 import 'package:jobpilot_ai/presentation/bloc/auth/auth_event.dart';
 import 'package:jobpilot_ai/presentation/bloc/auth/auth_state.dart';
 

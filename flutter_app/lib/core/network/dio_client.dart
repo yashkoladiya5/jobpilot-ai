@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
@@ -79,6 +81,22 @@ class DioClient {
     );
   }
 
+  Future<Response<T>> patch<T>(
+    String path, {
+    dynamic data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+  }) {
+    return _dio.patch<T>(
+      path,
+      data: data,
+      queryParameters: queryParameters,
+      options: options,
+      cancelToken: cancelToken,
+    );
+  }
+
   Future<Response<T>> delete<T>(
     String path, {
     dynamic data,
@@ -139,9 +157,9 @@ class _LoggingInterceptor extends Interceptor {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) {
-    print('[HTTP] --> ${options.method} ${options.path}');
+    developer.log('[HTTP] --> ${options.method} ${options.path}');
     if (options.data != null) {
-      print('[HTTP] Body: ${options.data}');
+      developer.log('[HTTP] Body: ${options.data}');
     }
     handler.next(options);
   }
@@ -151,7 +169,7 @@ class _LoggingInterceptor extends Interceptor {
     Response response,
     ResponseInterceptorHandler handler,
   ) {
-    print('[HTTP] <-- ${response.statusCode} ${response.requestOptions.path}');
+    developer.log('[HTTP] <-- ${response.statusCode} ${response.requestOptions.path}');
     handler.next(response);
   }
 
@@ -160,7 +178,7 @@ class _LoggingInterceptor extends Interceptor {
     DioException err,
     ErrorInterceptorHandler handler,
   ) {
-    print('[HTTP] ERROR: ${err.type} - ${err.message}');
+    developer.log('[HTTP] ERROR: ${err.type} - ${err.message}');
     handler.next(err);
   }
 }
@@ -209,8 +227,8 @@ class _ErrorInterceptor extends Interceptor {
             handler.reject(
               DioException(
                 requestOptions: err.requestOptions,
-                error:
-                    ServerException(message: message, statusCode: statusCode),
+                error: ValidationException(
+                    message: message, statusCode: statusCode),
               ),
             );
           case 500:

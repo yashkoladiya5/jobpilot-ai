@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:jobpilot_ai/domain/entities/job_application.dart';
 import 'package:jobpilot_ai/domain/repositories/job_repository.dart';
 import 'package:jobpilot_ai/presentation/bloc/job/job_bloc.dart';
@@ -54,15 +53,34 @@ class _EditJobScreenState extends State<EditJobScreen> {
   }
 
   Future<void> _pickResume() async {
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['pdf', 'doc', 'docx'],
+    final controller = TextEditingController();
+    final id = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Enter Resume ID'),
+        content: TextField(
+          controller: controller,
+          decoration: const InputDecoration(
+            hintText: 'Paste resume ID',
+            border: OutlineInputBorder(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.of(ctx).pop(controller.text),
+            child: const Text('Attach'),
+          ),
+        ],
+      ),
     );
-    if (result != null && result.files.isNotEmpty) {
-      setState(() {
-        _resumeId = result.files.first.name;
-      });
+    if (id != null && id.isNotEmpty) {
+      setState(() => _resumeId = id);
     }
+    controller.dispose();
   }
 
   void _submit() {
@@ -174,7 +192,7 @@ class _EditJobScreenState extends State<EditJobScreen> {
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<ApplicationStatus>(
-              value: _status,
+              initialValue: _status,
               decoration: const InputDecoration(
                 labelText: 'Status',
                 prefixIcon: Icon(Icons.flag_outlined),

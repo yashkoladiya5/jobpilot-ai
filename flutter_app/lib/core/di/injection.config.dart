@@ -56,6 +56,8 @@ import 'package:jobpilot_ai/domain/usecases/resume/delete_resume_usecase.dart'
     as _i344;
 import 'package:jobpilot_ai/domain/usecases/resume/get_resumes_usecase.dart'
     as _i1051;
+import 'package:jobpilot_ai/domain/usecases/resume/set_primary_resume_usecase.dart'
+    as _i292;
 import 'package:jobpilot_ai/domain/usecases/resume/upload_resume_usecase.dart'
     as _i388;
 import 'package:jobpilot_ai/presentation/bloc/auth/auth_bloc.dart' as _i653;
@@ -101,6 +103,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i621.ResumeRepository>(
       () => _i163.ResumeRepositoryImpl(gh<_i696.ResumeRemoteDataSource>()),
     );
+    gh.factory<_i292.SetPrimaryResumeUseCase>(
+      () => _i292.SetPrimaryResumeUseCase(gh<_i621.ResumeRepository>()),
+    );
     gh.factory<_i344.DeleteResumeUseCase>(
       () => _i344.DeleteResumeUseCase(gh<_i621.ResumeRepository>()),
     );
@@ -124,6 +129,14 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i817.GetJobsUseCase>(
       () => _i817.GetJobsUseCase(gh<_i92.JobRepository>()),
+    );
+    gh.factory<_i10.ResumeBloc>(
+      () => _i10.ResumeBloc(
+        gh<_i1051.GetResumesUseCase>(),
+        gh<_i388.UploadResumeUseCase>(),
+        gh<_i344.DeleteResumeUseCase>(),
+        gh<_i292.SetPrimaryResumeUseCase>(),
+      ),
     );
     gh.factory<_i517.GetStatsUseCase>(
       () => _i517.GetStatsUseCase(gh<_i989.DashboardRepository>()),
@@ -154,13 +167,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i1.LogoutUseCase>(
       () => _i1.LogoutUseCase(gh<_i498.AuthRepository>()),
-    );
-    gh.factory<_i10.ResumeBloc>(
-      () => _i10.ResumeBloc(
-        gh<_i1051.GetResumesUseCase>(),
-        gh<_i388.UploadResumeUseCase>(),
-        gh<_i344.DeleteResumeUseCase>(),
-      ),
     );
     gh.factory<_i653.AuthBloc>(
       () => _i653.AuthBloc(

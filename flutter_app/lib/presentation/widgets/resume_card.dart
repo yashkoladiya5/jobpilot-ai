@@ -62,11 +62,22 @@ class ResumeCard extends StatelessWidget {
               if (isPrimary)
                 _buildPrimaryBadge(theme)
               else
-                IconButton(
-                  onPressed: onDelete,
-                  icon: const Icon(Icons.delete_outline),
-                  color: AppColors.error,
-                  tooltip: 'Delete resume',
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      onPressed: onTap,
+                      icon: const Icon(Icons.star_border),
+                      color: AppColors.warning,
+                      tooltip: 'Set as primary',
+                    ),
+                    IconButton(
+                      onPressed: onDelete,
+                      icon: const Icon(Icons.delete_outline),
+                      color: AppColors.error,
+                      tooltip: 'Delete resume',
+                    ),
+                  ],
                 ),
             ],
           ),
@@ -103,7 +114,7 @@ class ResumeCard extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
+          const Icon(
             Icons.check_circle,
             size: 14,
             color: AppColors.success,

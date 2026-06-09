@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:jobpilot_ai/core/constants/app_constants.dart';
 import 'package:jobpilot_ai/core/theme/app_colors.dart';
 import 'package:jobpilot_ai/presentation/bloc/auth/auth_bloc.dart';
 import 'package:jobpilot_ai/presentation/bloc/auth/auth_event.dart';
 import 'package:jobpilot_ai/presentation/bloc/auth/auth_state.dart';
+import 'package:shimmer/shimmer.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -43,7 +43,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.work_history_rounded,
                       size: 80,
                       color: AppColors.primary,

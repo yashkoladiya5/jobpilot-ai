@@ -38,6 +38,9 @@ class ResumeRepositoryImpl implements ResumeRepository {
         response,
         (data) => Resume.fromJson(data as Map<String, dynamic>),
       );
+      if (apiResponse.data == null) {
+        return const Left(Failure.serverFailure(message: 'Failed to upload resume'));
+      }
       return Right(apiResponse.data!);
     } on DioException catch (e) {
       return Left(_handleDioError(e));
@@ -49,6 +52,24 @@ class ResumeRepositoryImpl implements ResumeRepository {
     try {
       await _remoteDataSource.deleteResume(id);
       return const Right(null);
+    } on DioException catch (e) {
+      return Left(_handleDioError(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Resume>> setPrimaryResume(String id) async {
+    try {
+      final response = await _remoteDataSource.setPrimaryResume(id);
+      final apiResponse = ApiResponseModel<Resume>.fromJson(
+        response,
+        (data) => Resume.fromJson(data as Map<String, dynamic>),
+      );
+      if (apiResponse.data == null) {
+        return const Left(
+            Failure.serverFailure(message: 'Failed to set primary resume'));
+      }
+      return Right(apiResponse.data!);
     } on DioException catch (e) {
       return Left(_handleDioError(e));
     }

@@ -13,6 +13,7 @@ import 'package:jobpilot_ai/presentation/widgets/empty_state.dart';
 import 'package:jobpilot_ai/presentation/widgets/error_display.dart';
 import 'package:jobpilot_ai/presentation/widgets/stats_card.dart';
 import 'package:jobpilot_ai/presentation/widgets/status_chip.dart';
+import 'package:shimmer/shimmer.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -49,9 +50,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           builder: (context, state) {
             return switch (state) {
               DashboardInitial() => const SizedBox.shrink(),
-              DashboardLoading() => const Center(
-                  child: CircularProgressIndicator(),
-                ),
+              DashboardLoading() => const _DashboardShimmer(),
               DashboardLoaded(:final stats) =>
                 _buildDashboardContent(context, stats),
               DashboardError(:final message) => ErrorDisplay(
@@ -68,10 +67,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _buildDashboardContent(BuildContext context, DashboardStats stats) {
     final interviewCount = stats.byStatus
-        .where((s) => s.status == 'interview')
+        .where((s) => s.status == 'INTERVIEW')
         .fold(0, (sum, s) => sum + s.count);
     final offerCount = stats.byStatus
-        .where((s) => s.status == 'offer')
+        .where((s) => s.status == 'OFFER')
         .fold(0, (sum, s) => sum + s.count);
 
     return ListView(
@@ -150,7 +149,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             app.companyName.isNotEmpty
                 ? app.companyName[0].toUpperCase()
                 : '?',
-            style: TextStyle(
+            style: const TextStyle(
               color: AppColors.primary,
               fontWeight: FontWeight.bold,
             ),
@@ -176,6 +175,66 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _DashboardShimmer extends StatelessWidget {
+  const _DashboardShimmer();
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: List.generate(4, (_) => Padding(
+              padding: const EdgeInsets.only(right: 12),
+              child: Shimmer.fromColors(
+                baseColor: Colors.grey.shade300,
+                highlightColor: Colors.grey.shade100,
+                child: Container(
+                  width: 150,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            )),
+          ),
+        ),
+        const SizedBox(height: 24),
+        Shimmer.fromColors(
+          baseColor: Colors.grey.shade300,
+          highlightColor: Colors.grey.shade100,
+          child: Container(
+            height: 24,
+            width: 200,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        ...List.generate(3, (_) => Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: Shimmer.fromColors(
+            baseColor: Colors.grey.shade300,
+            highlightColor: Colors.grey.shade100,
+            child: Container(
+              height: 72,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+        )),
+      ],
     );
   }
 }

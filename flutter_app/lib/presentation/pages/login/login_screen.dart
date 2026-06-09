@@ -71,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(height: size.height * 0.08),
-                    Icon(
+                    const Icon(
                       Icons.work_history_rounded,
                       size: 64,
                       color: AppColors.primary,

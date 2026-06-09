@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:jobpilot_ai/core/constants/app_constants.dart';
 import 'package:jobpilot_ai/domain/entities/job_application.dart';
 import 'package:jobpilot_ai/domain/repositories/job_repository.dart';
@@ -11,6 +10,7 @@ import 'package:jobpilot_ai/presentation/bloc/job/job_event.dart';
 import 'package:jobpilot_ai/presentation/bloc/job/job_state.dart';
 import 'package:jobpilot_ai/presentation/widgets/error_display.dart';
 import 'package:jobpilot_ai/presentation/widgets/status_chip.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class JobDetailScreen extends StatefulWidget {
   final String jobId;
@@ -211,7 +211,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
           ],
           const SizedBox(height: 24),
           DropdownButtonFormField<ApplicationStatus>(
-            value: job.status,
+            initialValue: job.status,
             decoration: const InputDecoration(
               labelText: 'Change Status',
               prefixIcon: Icon(Icons.swap_horiz),

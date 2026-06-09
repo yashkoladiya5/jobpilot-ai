@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
+import 'package:injectable/injectable.dart';
 import 'package:jobpilot_ai/core/errors/failures.dart';
 import 'package:jobpilot_ai/domain/entities/dashboard_stats.dart';
 import 'package:jobpilot_ai/domain/repositories/dashboard_repository.dart';
-import 'package:injectable/injectable.dart';
 
 @injectable
 class GetStatsUseCase {
