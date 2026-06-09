@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jobpilot_ai/core/constants/app_constants.dart';
+import 'package:jobpilot_ai/domain/entities/job_application.dart';
+import 'package:jobpilot_ai/presentation/pages/dashboard/dashboard_screen.dart';
+import 'package:jobpilot_ai/presentation/pages/jobs/add_job_screen.dart';
+import 'package:jobpilot_ai/presentation/pages/jobs/edit_job_screen.dart';
+import 'package:jobpilot_ai/presentation/pages/jobs/job_detail_screen.dart';
+import 'package:jobpilot_ai/presentation/pages/jobs/jobs_list_screen.dart';
 import 'package:jobpilot_ai/presentation/pages/login/login_screen.dart';
 import 'package:jobpilot_ai/presentation/pages/register/register_screen.dart';
+import 'package:jobpilot_ai/presentation/pages/resume/resume_screen.dart';
 import 'package:jobpilot_ai/presentation/pages/splash/splash_screen.dart';
 import 'package:jobpilot_ai/router/auth_guard.dart';
 
@@ -39,8 +46,7 @@ class AppRouter {
               GoRoute(
                 path: AppConstants.dashboardRoute,
                 name: 'dashboard',
-                builder: (context, state) =>
-                    const _PlaceholderScreen(title: 'Dashboard'),
+                builder: (context, state) => const DashboardScreen(),
               ),
             ],
           ),
@@ -49,29 +55,28 @@ class AppRouter {
               GoRoute(
                 path: AppConstants.jobsRoute,
                 name: 'jobs',
-                builder: (context, state) =>
-                    const _PlaceholderScreen(title: 'Jobs List'),
+                builder: (context, state) => const JobsListScreen(),
                 routes: [
                   GoRoute(
                     path: 'create',
                     name: 'jobCreate',
-                    builder: (context, state) =>
-                        const _PlaceholderScreen(title: 'Create Job'),
+                    builder: (context, state) => const AddJobScreen(),
                   ),
                   GoRoute(
                     path: ':id',
                     name: 'jobDetail',
                     builder: (context, state) {
                       final id = state.pathParameters['id']!;
-                      return _PlaceholderScreen(title: 'Job Detail: $id');
+                      return JobDetailScreen(jobId: id);
                     },
                     routes: [
                       GoRoute(
                         path: 'edit',
                         name: 'jobEdit',
                         builder: (context, state) {
-                          final id = state.pathParameters['id']!;
-                          return _PlaceholderScreen(title: 'Edit Job: $id');
+                          return EditJobScreen(
+                            job: state.extra as JobApplication,
+                          );
                         },
                       ),
                     ],
@@ -85,8 +90,7 @@ class AppRouter {
               GoRoute(
                 path: AppConstants.resumesRoute,
                 name: 'resumes',
-                builder: (context, state) =>
-                    const _PlaceholderScreen(title: 'Resumes'),
+                builder: (context, state) => const ResumeScreen(),
               ),
             ],
           ),
@@ -128,25 +132,6 @@ class AppShell extends StatelessWidget {
             label: 'Resumes',
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _PlaceholderScreen extends StatelessWidget {
-  final String title;
-
-  const _PlaceholderScreen({required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(title)),
-      body: Center(
-        child: Text(
-          title,
-          style: Theme.of(context).textTheme.headlineSmall,
-        ),
       ),
     );
   }

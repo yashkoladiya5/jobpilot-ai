@@ -21,16 +21,11 @@ DashboardStats _$DashboardStatsFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$DashboardStats {
-  @JsonKey(name: 'total_applications')
   int get totalApplications => throw _privateConstructorUsedError;
-  @JsonKey(name: 'by_status')
   List<StatusCount> get byStatus => throw _privateConstructorUsedError;
-  @JsonKey(name: 'recent_applications')
   List<RecentApplication> get recentApplications =>
       throw _privateConstructorUsedError;
-  @JsonKey(name: 'recent_activity')
   int get recentActivity => throw _privateConstructorUsedError;
-  @JsonKey(name: 'resume_count')
   int get resumeCount => throw _privateConstructorUsedError;
 
   /// Serializes this DashboardStats to a JSON map.
@@ -51,12 +46,11 @@ abstract class $DashboardStatsCopyWith<$Res> {
   ) = _$DashboardStatsCopyWithImpl<$Res, DashboardStats>;
   @useResult
   $Res call({
-    @JsonKey(name: 'total_applications') int totalApplications,
-    @JsonKey(name: 'by_status') List<StatusCount> byStatus,
-    @JsonKey(name: 'recent_applications')
+    int totalApplications,
+    List<StatusCount> byStatus,
     List<RecentApplication> recentApplications,
-    @JsonKey(name: 'recent_activity') int recentActivity,
-    @JsonKey(name: 'resume_count') int resumeCount,
+    int recentActivity,
+    int resumeCount,
   });
 }
 
@@ -119,12 +113,11 @@ abstract class _$$DashboardStatsImplCopyWith<$Res>
   @override
   @useResult
   $Res call({
-    @JsonKey(name: 'total_applications') int totalApplications,
-    @JsonKey(name: 'by_status') List<StatusCount> byStatus,
-    @JsonKey(name: 'recent_applications')
+    int totalApplications,
+    List<StatusCount> byStatus,
     List<RecentApplication> recentApplications,
-    @JsonKey(name: 'recent_activity') int recentActivity,
-    @JsonKey(name: 'resume_count') int resumeCount,
+    int recentActivity,
+    int resumeCount,
   });
 }
 
@@ -179,12 +172,11 @@ class __$$DashboardStatsImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$DashboardStatsImpl implements _DashboardStats {
   const _$DashboardStatsImpl({
-    @JsonKey(name: 'total_applications') required this.totalApplications,
-    @JsonKey(name: 'by_status') required final List<StatusCount> byStatus,
-    @JsonKey(name: 'recent_applications')
+    required this.totalApplications,
+    required final List<StatusCount> byStatus,
     required final List<RecentApplication> recentApplications,
-    @JsonKey(name: 'recent_activity') required this.recentActivity,
-    @JsonKey(name: 'resume_count') required this.resumeCount,
+    required this.recentActivity,
+    required this.resumeCount,
   }) : _byStatus = byStatus,
        _recentApplications = recentApplications;
 
@@ -192,11 +184,9 @@ class _$DashboardStatsImpl implements _DashboardStats {
       _$$DashboardStatsImplFromJson(json);
 
   @override
-  @JsonKey(name: 'total_applications')
   final int totalApplications;
   final List<StatusCount> _byStatus;
   @override
-  @JsonKey(name: 'by_status')
   List<StatusCount> get byStatus {
     if (_byStatus is EqualUnmodifiableListView) return _byStatus;
     // ignore: implicit_dynamic_type
@@ -205,7 +195,6 @@ class _$DashboardStatsImpl implements _DashboardStats {
 
   final List<RecentApplication> _recentApplications;
   @override
-  @JsonKey(name: 'recent_applications')
   List<RecentApplication> get recentApplications {
     if (_recentApplications is EqualUnmodifiableListView)
       return _recentApplications;
@@ -214,10 +203,8 @@ class _$DashboardStatsImpl implements _DashboardStats {
   }
 
   @override
-  @JsonKey(name: 'recent_activity')
   final int recentActivity;
   @override
-  @JsonKey(name: 'resume_count')
   final int resumeCount;
 
   @override
@@ -273,31 +260,25 @@ class _$DashboardStatsImpl implements _DashboardStats {
 
 abstract class _DashboardStats implements DashboardStats {
   const factory _DashboardStats({
-    @JsonKey(name: 'total_applications') required final int totalApplications,
-    @JsonKey(name: 'by_status') required final List<StatusCount> byStatus,
-    @JsonKey(name: 'recent_applications')
+    required final int totalApplications,
+    required final List<StatusCount> byStatus,
     required final List<RecentApplication> recentApplications,
-    @JsonKey(name: 'recent_activity') required final int recentActivity,
-    @JsonKey(name: 'resume_count') required final int resumeCount,
+    required final int recentActivity,
+    required final int resumeCount,
   }) = _$DashboardStatsImpl;
 
   factory _DashboardStats.fromJson(Map<String, dynamic> json) =
       _$DashboardStatsImpl.fromJson;
 
   @override
-  @JsonKey(name: 'total_applications')
   int get totalApplications;
   @override
-  @JsonKey(name: 'by_status')
   List<StatusCount> get byStatus;
   @override
-  @JsonKey(name: 'recent_applications')
   List<RecentApplication> get recentApplications;
   @override
-  @JsonKey(name: 'recent_activity')
   int get recentActivity;
   @override
-  @JsonKey(name: 'resume_count')
   int get resumeCount;
 
   /// Create a copy of DashboardStats
@@ -483,11 +464,9 @@ RecentApplication _$RecentApplicationFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$RecentApplication {
   String get id => throw _privateConstructorUsedError;
-  @JsonKey(name: 'company_name')
   String get companyName => throw _privateConstructorUsedError;
   String get role => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
-  @JsonKey(name: 'applied_date')
   DateTime get appliedDate => throw _privateConstructorUsedError;
 
   /// Serializes this RecentApplication to a JSON map.
@@ -509,10 +488,10 @@ abstract class $RecentApplicationCopyWith<$Res> {
   @useResult
   $Res call({
     String id,
-    @JsonKey(name: 'company_name') String companyName,
+    String companyName,
     String role,
     String status,
-    @JsonKey(name: 'applied_date') DateTime appliedDate,
+    DateTime appliedDate,
   });
 }
 
@@ -576,10 +555,10 @@ abstract class _$$RecentApplicationImplCopyWith<$Res>
   @useResult
   $Res call({
     String id,
-    @JsonKey(name: 'company_name') String companyName,
+    String companyName,
     String role,
     String status,
-    @JsonKey(name: 'applied_date') DateTime appliedDate,
+    DateTime appliedDate,
   });
 }
 
@@ -635,10 +614,10 @@ class __$$RecentApplicationImplCopyWithImpl<$Res>
 class _$RecentApplicationImpl implements _RecentApplication {
   const _$RecentApplicationImpl({
     required this.id,
-    @JsonKey(name: 'company_name') required this.companyName,
+    required this.companyName,
     required this.role,
     required this.status,
-    @JsonKey(name: 'applied_date') required this.appliedDate,
+    required this.appliedDate,
   });
 
   factory _$RecentApplicationImpl.fromJson(Map<String, dynamic> json) =>
@@ -647,14 +626,12 @@ class _$RecentApplicationImpl implements _RecentApplication {
   @override
   final String id;
   @override
-  @JsonKey(name: 'company_name')
   final String companyName;
   @override
   final String role;
   @override
   final String status;
   @override
-  @JsonKey(name: 'applied_date')
   final DateTime appliedDate;
 
   @override
@@ -701,10 +678,10 @@ class _$RecentApplicationImpl implements _RecentApplication {
 abstract class _RecentApplication implements RecentApplication {
   const factory _RecentApplication({
     required final String id,
-    @JsonKey(name: 'company_name') required final String companyName,
+    required final String companyName,
     required final String role,
     required final String status,
-    @JsonKey(name: 'applied_date') required final DateTime appliedDate,
+    required final DateTime appliedDate,
   }) = _$RecentApplicationImpl;
 
   factory _RecentApplication.fromJson(Map<String, dynamic> json) =
@@ -713,14 +690,12 @@ abstract class _RecentApplication implements RecentApplication {
   @override
   String get id;
   @override
-  @JsonKey(name: 'company_name')
   String get companyName;
   @override
   String get role;
   @override
   String get status;
   @override
-  @JsonKey(name: 'applied_date')
   DateTime get appliedDate;
 
   /// Create a copy of RecentApplication

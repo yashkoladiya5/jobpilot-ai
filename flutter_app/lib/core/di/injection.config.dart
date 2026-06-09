@@ -72,10 +72,10 @@ extension GetItInjectableX on _i174.GetIt {
   }) {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final registerModule = _$RegisterModule();
-    gh.lazySingleton<_i107.DioClient>(() => _i107.DioClient());
     gh.lazySingleton<_i558.FlutterSecureStorage>(
       () => registerModule.secureStorage,
     );
+    gh.lazySingleton<_i107.DioClient>(() => _i107.DioClient());
     gh.lazySingleton<_i165.DashboardRemoteDataSource>(
       () => _i165.DashboardRemoteDataSource(gh<_i107.DioClient>()),
     );

@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jobpilot_ai/core/di/injection.dart';
 import 'package:jobpilot_ai/core/theme/app_theme.dart';
 import 'package:jobpilot_ai/presentation/bloc/auth/auth_bloc.dart';
+import 'package:jobpilot_ai/presentation/bloc/dashboard/dashboard_bloc.dart';
+import 'package:jobpilot_ai/presentation/bloc/job/job_bloc.dart';
+import 'package:jobpilot_ai/presentation/bloc/resume/resume_bloc.dart';
 import 'package:jobpilot_ai/router/app_router.dart';
 import 'package:jobpilot_ai/router/auth_guard.dart';
 
@@ -14,8 +17,13 @@ class JobPilotApp extends StatelessWidget {
     final authGuard = AuthGuard();
     final appRouter = AppRouter(authGuard: authGuard);
 
-    return BlocProvider<AuthBloc>(
-      create: (_) => getIt<AuthBloc>(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthBloc>(create: (_) => getIt<AuthBloc>()),
+        BlocProvider<DashboardBloc>(create: (_) => getIt<DashboardBloc>()),
+        BlocProvider<JobBloc>(create: (_) => getIt<JobBloc>()),
+        BlocProvider<ResumeBloc>(create: (_) => getIt<ResumeBloc>()),
+      ],
       child: MaterialApp.router(
         title: 'JobPilot AI',
         debugShowCheckedModeBanner: false,

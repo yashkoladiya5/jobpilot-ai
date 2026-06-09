@@ -24,7 +24,6 @@ mixin _$User {
   String get id => throw _privateConstructorUsedError;
   String get email => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
-  @JsonKey(name: 'created_at')
   DateTime? get createdAt => throw _privateConstructorUsedError;
 
   /// Serializes this User to a JSON map.
@@ -41,12 +40,7 @@ abstract class $UserCopyWith<$Res> {
   factory $UserCopyWith(User value, $Res Function(User) then) =
       _$UserCopyWithImpl<$Res, User>;
   @useResult
-  $Res call({
-    String id,
-    String email,
-    String name,
-    @JsonKey(name: 'created_at') DateTime? createdAt,
-  });
+  $Res call({String id, String email, String name, DateTime? createdAt});
 }
 
 /// @nodoc
@@ -101,12 +95,7 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
   ) = __$$UserImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    String id,
-    String email,
-    String name,
-    @JsonKey(name: 'created_at') DateTime? createdAt,
-  });
+  $Res call({String id, String email, String name, DateTime? createdAt});
 }
 
 /// @nodoc
@@ -156,7 +145,7 @@ class _$UserImpl implements _User {
     required this.id,
     required this.email,
     required this.name,
-    @JsonKey(name: 'created_at') this.createdAt,
+    this.createdAt,
   });
 
   factory _$UserImpl.fromJson(Map<String, dynamic> json) =>
@@ -169,7 +158,6 @@ class _$UserImpl implements _User {
   @override
   final String name;
   @override
-  @JsonKey(name: 'created_at')
   final DateTime? createdAt;
 
   @override
@@ -212,7 +200,7 @@ abstract class _User implements User {
     required final String id,
     required final String email,
     required final String name,
-    @JsonKey(name: 'created_at') final DateTime? createdAt,
+    final DateTime? createdAt,
   }) = _$UserImpl;
 
   factory _User.fromJson(Map<String, dynamic> json) = _$UserImpl.fromJson;
@@ -224,7 +212,6 @@ abstract class _User implements User {
   @override
   String get name;
   @override
-  @JsonKey(name: 'created_at')
   DateTime? get createdAt;
 
   /// Create a copy of User
