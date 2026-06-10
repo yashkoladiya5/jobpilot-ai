@@ -127,6 +127,166 @@ async function main() {
     await prisma.jobApplication.create({ data: app });
   }
 
+  // --- AI Seed Data ---
+
+  // Interview Session for user1
+  const interviewSession = await prisma.interviewSession.upsert({
+    where: { id: '00000000-0000-0000-0000-000000000010' },
+    update: {},
+    create: {
+      id: '00000000-0000-0000-0000-000000000010',
+      userId: user1.id,
+      jobId: applications[0].id,
+      status: 'COMPLETED',
+      jobDescription: 'Software Engineer role at Google requiring distributed systems experience.',
+      hrQuestions: [
+        { question: 'Tell me about yourself.', category: 'HR' },
+        { question: 'Why do you want to work at Google?', category: 'HR' },
+      ],
+      technicalQuestions: [
+        { question: 'Explain how a hash map works.', category: 'TECHNICAL' },
+        { question: 'Design a rate limiter.', category: 'TECHNICAL' },
+      ],
+      behavioralQuestions: [
+        { question: 'Describe a time you handled a conflict.', category: 'BEHAVIORAL' },
+        { question: 'Tell me about a project you led.', category: 'BEHAVIORAL' },
+      ],
+      followUpQuestions: [],
+      currentQuestionIndex: 4,
+      totalQuestions: 4,
+      answeredQuestions: 4,
+      score: 85,
+      promptVersion: '1.0',
+      completedAt: new Date('2026-06-05'),
+    },
+  });
+
+  // Interview Questions
+  const interviewQuestions = [
+    {
+      id: '00000000-0000-0000-0000-000000000101',
+      sessionId: interviewSession.id,
+      category: 'HR',
+      question: 'Tell me about yourself.',
+      orderIndex: 0,
+      answer: 'I am a software engineer with 5 years of experience building distributed systems.',
+      feedback: 'Good concise introduction. Could mention specific technologies.',
+      score: 8,
+      answeredAt: new Date('2026-06-05T10:00:00Z'),
+    },
+    {
+      id: '00000000-0000-0000-0000-000000000102',
+      sessionId: interviewSession.id,
+      category: 'HR',
+      question: 'Why do you want to work at Google?',
+      orderIndex: 1,
+      answer: 'I admire Google\'s technical excellence and scale of impact.',
+      feedback: 'Mention specific products or teams to show research.',
+      score: 7,
+      answeredAt: new Date('2026-06-05T10:02:00Z'),
+    },
+    {
+      id: '00000000-0000-0000-0000-000000000103',
+      sessionId: interviewSession.id,
+      category: 'TECHNICAL',
+      question: 'Explain how a hash map works.',
+      orderIndex: 2,
+      answer: 'A hash map uses a hash function to compute an index into an array of buckets.',
+      feedback: 'Correct. Could elaborate on collision resolution strategies.',
+      score: 9,
+      answeredAt: new Date('2026-06-05T10:05:00Z'),
+    },
+    {
+      id: '00000000-0000-0000-0000-000000000104',
+      sessionId: interviewSession.id,
+      category: 'BEHAVIORAL',
+      question: 'Describe a time you handled a conflict.',
+      orderIndex: 3,
+      answer: 'I mediated a disagreement between team members over architecture choices.',
+      feedback: 'Good example. Use STAR format for more impact.',
+      score: 8,
+      answeredAt: new Date('2026-06-05T10:10:00Z'),
+    },
+  ];
+
+  for (const q of interviewQuestions) {
+    await prisma.interviewQuestion.upsert({
+      where: { id: q.id },
+      update: {},
+      create: q,
+    });
+  }
+
+  // Interview Result
+  await prisma.interviewResult.upsert({
+    where: { id: '00000000-0000-0000-0000-000000000201' },
+    update: {},
+    create: {
+      id: '00000000-0000-0000-0000-000000000201',
+      sessionId: interviewSession.id,
+      overallScore: 85,
+      categoryScores: { hr: 75, technical: 90, behavioral: 80 },
+      strengths: ['Clear communication', 'Strong technical foundation'],
+      improvements: ['Use STAR format', 'Be more specific about technologies'],
+      summary: 'Strong overall performance with room for improvement in behavioral responses.',
+    },
+  });
+
+  // Career Insights for user1
+  const careerInsight = await prisma.careerInsight.upsert({
+    where: { id: '00000000-0000-0000-0000-000000000301' },
+    update: {},
+    create: {
+      id: '00000000-0000-0000-0000-000000000301',
+      userId: user1.id,
+      careerScore: 72,
+      interviewReadiness: 68,
+      resumeStrength: 75,
+      jobMatchQuality: 70,
+      applicationSuccessRate: 60,
+      skillGaps: ['System Design', 'Kubernetes', 'GraphQL'],
+      weeklyProgress: {
+        applicationsSubmitted: 3,
+        interviews: 1,
+        offers: 0,
+        rejections: 1,
+      },
+      recommendations: [
+        'Focus on system design interview prep',
+        'Add Kubernetes projects to resume',
+        'Apply to 2 more positions this week',
+      ],
+      weekStart: new Date('2026-06-01'),
+    },
+  });
+
+  // Career Insights for user2
+  await prisma.careerInsight.upsert({
+    where: { id: '00000000-0000-0000-0000-000000000302' },
+    update: {},
+    create: {
+      id: '00000000-0000-0000-0000-000000000302',
+      userId: user2.id,
+      careerScore: 80,
+      interviewReadiness: 85,
+      resumeStrength: 78,
+      jobMatchQuality: 82,
+      applicationSuccessRate: 75,
+      skillGaps: ['Prototyping', 'Design Systems'],
+      weeklyProgress: {
+        applicationsSubmitted: 5,
+        interviews: 2,
+        offers: 1,
+        rejections: 1,
+      },
+      recommendations: [
+        'Build a design system portfolio piece',
+        'Practice whiteboarding exercises',
+      ],
+      weekStart: new Date('2026-06-01'),
+    },
+  });
+
   console.log('Seed completed successfully');
 }
 
