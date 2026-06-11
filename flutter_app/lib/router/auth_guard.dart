@@ -10,6 +10,7 @@ class AuthGuard {
       : _storage = storage ?? const FlutterSecureStorage();
 
   final Set<String> _publicRoutes = {
+    '/onboarding',
     AppConstants.splashRoute,
     AppConstants.loginRoute,
     AppConstants.registerRoute,

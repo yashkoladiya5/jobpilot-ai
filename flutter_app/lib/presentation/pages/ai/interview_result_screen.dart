@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:jobpilot_ai/core/theme/app_colors.dart';
 import 'package:jobpilot_ai/domain/entities/interview_result.dart';
 import 'package:jobpilot_ai/domain/entities/interview_session.dart';
@@ -78,77 +79,139 @@ class _InterviewResultScreenState extends State<InterviewResultScreen> {
             ],
           ),
         ),
-        const SizedBox(height: 24),
-        _buildOverallScore(result.overallScore),
         const SizedBox(height: 32),
-        Text('Category Scores',
-            style: theme.textTheme.titleMedium
-                ?.copyWith(fontWeight: FontWeight.bold)),
+        _buildOverallScore(result.overallScore),
+        const SizedBox(height: 36),
+        _buildSectionHeader(theme, 'Category Scores'),
         const SizedBox(height: 12),
         ...result.categoryScores.entries.map(
           (entry) => Padding(
-            padding: const EdgeInsets.only(bottom: 12),
+            padding: const EdgeInsets.only(bottom: 14),
             child: _buildCategoryBar(entry.key, entry.value),
           ),
         ),
-        const SizedBox(height: 24),
-        Text('Strengths',
-            style: theme.textTheme.titleMedium
-                ?.copyWith(fontWeight: FontWeight.bold)),
+        const SizedBox(height: 28),
+        _buildSectionHeader(theme, 'Strengths'),
         const SizedBox(height: 8),
         ...result.strengths.map(
           (s) => Padding(
-            padding: const EdgeInsets.only(bottom: 6),
+            padding: const EdgeInsets.only(bottom: 8),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.check_circle,
-                    size: 20, color: AppColors.success),
-                const SizedBox(width: 10),
-                Expanded(child: Text(s)),
+                Container(
+                  padding: const EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    color: AppColors.success.withValues(alpha: 0.12),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.check,
+                      size: 16, color: AppColors.success),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    s,
+                    style: theme.textTheme.bodyMedium?.copyWith(height: 1.4),
+                  ),
+                ),
               ],
             ),
           ),
         ),
-        const SizedBox(height: 20),
-        Text('Improvement Areas',
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: AppColors.warning,
-            )),
-        const SizedBox(height: 8),
-        ...result.improvementAreas.map(
-          (i) => Padding(
-            padding: const EdgeInsets.only(bottom: 6),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Icon(Icons.arrow_upward,
-                    size: 20, color: AppColors.warning),
-                const SizedBox(width: 10),
-                Expanded(child: Text(i)),
-              ],
-            ),
-          ),
-        ),
-        if (result.summary.isNotEmpty) ...[
+        if (result.improvementAreas.isNotEmpty) ...[
           const SizedBox(height: 24),
-          Text('Summary',
-              style: theme.textTheme.titleMedium
-                  ?.copyWith(fontWeight: FontWeight.bold)),
+          _buildSectionHeader(theme, 'Improvement Areas',
+              color: AppColors.warning),
+          const SizedBox(height: 8),
+          ...result.improvementAreas.map(
+            (i) => Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(Icons.circle,
+                      size: 8, color: AppColors.warning),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      i,
+                      style: theme.textTheme.bodyMedium?.copyWith(height: 1.4),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+        if (result.summary.isNotEmpty) ...[
+          const SizedBox(height: 28),
+          _buildSectionHeader(theme, 'Summary'),
           const SizedBox(height: 8),
           Card(
             margin: EdgeInsets.zero,
+            elevation: 1,
             child: Padding(
               padding: const EdgeInsets.all(16),
-              child: Text(
-                result.summary,
-                style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(Icons.summarize,
+                      color: AppColors.primary, size: 20),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      result.summary,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        height: 1.6,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
         ],
         const SizedBox(height: 32),
+        SafeArea(
+          child: Column(
+            children: [
+              ElevatedButton.icon(
+                onPressed: () => _backToSessions(),
+                icon: const Icon(Icons.arrow_back),
+                label: const Text('Back to Sessions'),
+              ),
+              const SizedBox(height: 12),
+              OutlinedButton.icon(
+                onPressed: () => _practiceAgain(),
+                icon: const Icon(Icons.refresh),
+                label: const Text('Practice Again'),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+      ],
+    );
+  }
+
+  Widget _buildSectionHeader(ThemeData theme, String title, {Color? color}) {
+    return Row(
+      children: [
+        Container(
+          width: 4,
+          height: 20,
+          decoration: BoxDecoration(
+            color: color ?? AppColors.primary,
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
+        const SizedBox(width: 10),
+        Text(
+          title,
+          style: theme.textTheme.titleMedium
+              ?.copyWith(fontWeight: FontWeight.bold, color: color),
+        ),
       ],
     );
   }
@@ -156,47 +219,86 @@ class _InterviewResultScreenState extends State<InterviewResultScreen> {
   Widget _buildOverallScore(double score) {
     final color = score >= 80
         ? AppColors.success
-        : score >= 60
+        : score >= 50
             ? AppColors.warning
             : AppColors.error;
 
     return Center(
-      child: SizedBox(
-        width: 180,
-        height: 180,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            SizedBox(
-              width: 180,
-              height: 180,
-              child: CircularProgressIndicator(
-                value: score / 100,
-                strokeWidth: 14,
-                backgroundColor: AppColors.divider,
-                valueColor: AlwaysStoppedAnimation(color),
-              ),
-            ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  '${score.round()}%',
-                  style: Theme.of(context)
-                      .textTheme
-                      .displayMedium
-                      ?.copyWith(fontWeight: FontWeight.bold, color: color),
-                ),
-                Text(
-                  'Overall Score',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppColors.textSecondary,
+      child: TweenAnimationBuilder<double>(
+        tween: Tween(begin: 0, end: score / 100),
+        duration: const Duration(milliseconds: 1500),
+        curve: Curves.easeOutCubic,
+        builder: (context, value, _) {
+          return Column(
+            children: [
+              SizedBox(
+                width: 180,
+                height: 180,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    SizedBox(
+                      width: 180,
+                      height: 180,
+                      child: CircularProgressIndicator(
+                        value: value,
+                        strokeWidth: 14,
+                        backgroundColor: AppColors.divider,
+                        valueColor: AlwaysStoppedAnimation(color),
+                        strokeCap: StrokeCap.round,
                       ),
+                    ),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '${(value * 100).round()}%',
+                          style: Theme.of(context)
+                              .textTheme
+                              .displayMedium
+                              ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: color,
+                              ),
+                        ),
+                        Text(
+                          'Overall Score',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(
+                                color: AppColors.textSecondary,
+                              ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ],
-        ),
+              ),
+              const SizedBox(height: 12),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  score >= 80
+                      ? 'Excellent!'
+                      : score >= 50
+                          ? 'Good Progress'
+                          : 'Needs Practice',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: color,
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -204,7 +306,7 @@ class _InterviewResultScreenState extends State<InterviewResultScreen> {
   Widget _buildCategoryBar(String category, double score) {
     final color = score >= 80
         ? AppColors.success
-        : score >= 60
+        : score >= 50
             ? AppColors.warning
             : AppColors.error;
 
@@ -214,8 +316,14 @@ class _InterviewResultScreenState extends State<InterviewResultScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(category,
-                style: const TextStyle(fontWeight: FontWeight.w500)),
+            Row(
+              children: [
+                Icon(Icons.fiber_manual_record, size: 10, color: color),
+                const SizedBox(width: 8),
+                Text(category,
+                    style: const TextStyle(fontWeight: FontWeight.w500)),
+              ],
+            ),
             Text('${score.round()}%',
                 style: TextStyle(
                     fontWeight: FontWeight.w600, color: color)),
@@ -234,10 +342,19 @@ class _InterviewResultScreenState extends State<InterviewResultScreen> {
       ],
     );
   }
+
+  void _backToSessions() {
+    context.go('/ai/interview/sessions');
+  }
+
+  void _practiceAgain() {
+    context.go('/ai/interview/sessions');
+  }
 }
 
 class _ResultShimmer extends StatelessWidget {
   const _ResultShimmer();
+
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -257,64 +374,70 @@ class _ResultShimmer extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 32),
-        ...List.generate(3, (_) => Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: Shimmer.fromColors(
-                baseColor: Colors.grey.shade300,
-                highlightColor: Colors.grey.shade100,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: 16,
-                      width: double.infinity,
+        const SizedBox(height: 12),
+        Center(
+          child: Shimmer.fromColors(
+            baseColor: Colors.grey.shade300,
+            highlightColor: Colors.grey.shade100,
+            child: Container(
+              height: 24,
+              width: 100,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 36),
+        ...List.generate(
+            3,
+            (_) => Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: Shimmer.fromColors(
+                    baseColor: Colors.grey.shade300,
+                    highlightColor: Colors.grey.shade100,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          height: 16,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Container(
+                          height: 10,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )),
+        const SizedBox(height: 24),
+        ...List.generate(
+            3,
+            (_) => Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Shimmer.fromColors(
+                    baseColor: Colors.grey.shade300,
+                    highlightColor: Colors.grey.shade100,
+                    child: Container(
+                      height: 20,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
-                    const SizedBox(height: 6),
-                    Container(
-                      height: 10,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            )),
-        const SizedBox(height: 24),
-        Shimmer.fromColors(
-          baseColor: Colors.grey.shade300,
-          highlightColor: Colors.grey.shade100,
-          child: Container(
-            height: 20,
-            width: 120,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(4),
-            ),
-          ),
-        ),
-        const SizedBox(height: 12),
-        ...List.generate(3, (_) => Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Shimmer.fromColors(
-                baseColor: Colors.grey.shade300,
-                highlightColor: Colors.grey.shade100,
-                child: Container(
-                  height: 20,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(4),
                   ),
-                ),
-              ),
-            )),
+                )),
       ],
     );
   }

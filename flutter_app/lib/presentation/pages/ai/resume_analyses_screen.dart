@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:jobpilot_ai/core/theme/app_colors.dart';
 import 'package:jobpilot_ai/domain/entities/resume_analysis.dart';
 import 'package:jobpilot_ai/presentation/bloc/ai_resume/ai_resume_bloc.dart';
+import 'package:jobpilot_ai/presentation/bloc/ai_resume/ai_resume_event.dart';
 import 'package:jobpilot_ai/presentation/bloc/ai_resume/ai_resume_state.dart';
 import 'package:jobpilot_ai/presentation/widgets/empty_state.dart';
 import 'package:jobpilot_ai/presentation/widgets/error_display.dart';
@@ -23,6 +24,12 @@ class _ResumeAnalysesScreenState extends State<ResumeAnalysesScreen> {
   @override
   void initState() {
     super.initState();
+    context.read<AiResumeBloc>().add(const LoadAllResumeAnalyses());
+  }
+
+  Future<void> _onRefresh() {
+    context.read<AiResumeBloc>().add(const LoadAllResumeAnalyses());
+    return Future.value();
   }
 
   @override
@@ -45,7 +52,8 @@ class _ResumeAnalysesScreenState extends State<ResumeAnalysesScreen> {
                 : const _AnalysesShimmer(),
             AiResumeError(:final message) => ErrorDisplay(
                 message: message,
-                onRetry: () {},
+                onRetry: () => context.read<AiResumeBloc>()
+                    .add(const LoadAllResumeAnalyses()),
               ),
           };
         },
@@ -57,12 +65,12 @@ class _ResumeAnalysesScreenState extends State<ResumeAnalysesScreen> {
     if (analyses.isEmpty) {
       return const EmptyState(
         icon: Icons.analytics_outlined,
-        message: 'No analyses yet.\nAnalyze a resume to get started.',
+        message: 'No analyses yet.\nUpload a resume and analyze it.',
       );
     }
 
     return RefreshIndicator(
-      onRefresh: () async {},
+      onRefresh: _onRefresh,
       child: ListView.builder(
         padding: const EdgeInsets.only(top: 8, bottom: 16),
         itemCount: analyses.length,
@@ -77,53 +85,87 @@ class _ResumeAnalysesScreenState extends State<ResumeAnalysesScreen> {
   Widget _buildAnalysisCard(ResumeAnalysis analysis) {
     final scoreColor = analysis.atsScore >= 80
         ? AppColors.success
-        : analysis.atsScore >= 60
+        : analysis.atsScore >= 50
             ? AppColors.warning
             : AppColors.error;
 
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      child: ListTile(
-        leading: SizedBox(
-          width: 48,
-          height: 48,
-          child: Stack(
-            alignment: Alignment.center,
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+      child: InkWell(
+        onTap: () {
+          context.read<AiResumeBloc>()
+              .add(LoadResumeAnalysis(analysis.resumeId));
+          context.push('/ai/resume/${analysis.resumeId}/analysis');
+        },
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
             children: [
-              CircularProgressIndicator(
-                value: analysis.atsScore / 100,
-                strokeWidth: 4,
-                backgroundColor: AppColors.divider,
-                valueColor: AlwaysStoppedAnimation(scoreColor),
-              ),
-              Text(
-                '${analysis.atsScore}',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 13,
-                  color: scoreColor,
+              SizedBox(
+                width: 52,
+                height: 52,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    CircularProgressIndicator(
+                      value: analysis.atsScore / 100,
+                      strokeWidth: 4,
+                      backgroundColor: AppColors.divider,
+                      valueColor: AlwaysStoppedAnimation(scoreColor),
+                      strokeCap: StrokeCap.round,
+                    ),
+                    Text(
+                      '${analysis.atsScore}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        color: scoreColor,
+                      ),
+                    ),
+                  ],
                 ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      analysis.resumeFileName,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '${analysis.strengths.length} strengths, ${analysis.weaknesses.length} weaknesses',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                DateFormat('MMM dd, yyyy').format(analysis.createdAt),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: AppColors.textSecondary,
+                ),
+              ),
+              const SizedBox(width: 4),
+              const Icon(
+                Icons.chevron_right,
+                size: 20,
+                color: AppColors.textHint,
               ),
             ],
           ),
         ),
-        title: Text(
-          analysis.resumeFileName,
-          style: const TextStyle(fontWeight: FontWeight.w600),
-        ),
-        subtitle: Text(
-          '${analysis.strengths.length} strengths, ${analysis.weaknesses.length} weaknesses',
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: AppColors.textSecondary,
-              ),
-        ),
-        trailing: Text(
-          DateFormat('MMM dd').format(analysis.createdAt),
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: AppColors.textSecondary,
-              ),
-        ),
-        onTap: () => context.push('/ai/resume/analysis/${analysis.id}'),
       ),
     );
   }
@@ -131,17 +173,18 @@ class _ResumeAnalysesScreenState extends State<ResumeAnalysesScreen> {
 
 class _AnalysesShimmer extends StatelessWidget {
   const _AnalysesShimmer();
+
   @override
   Widget build(BuildContext context) {
     return ListView(
       padding: const EdgeInsets.symmetric(vertical: 8),
       children: List.generate(4, (_) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
         child: Shimmer.fromColors(
           baseColor: Colors.grey.shade300,
           highlightColor: Colors.grey.shade100,
           child: Container(
-            height: 72,
+            height: 80,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),

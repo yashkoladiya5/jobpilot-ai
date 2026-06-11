@@ -19,6 +19,7 @@ import 'package:jobpilot_ai/presentation/pages/jobs/edit_job_screen.dart';
 import 'package:jobpilot_ai/presentation/pages/jobs/job_detail_screen.dart';
 import 'package:jobpilot_ai/presentation/pages/jobs/jobs_list_screen.dart';
 import 'package:jobpilot_ai/presentation/pages/login/login_screen.dart';
+import 'package:jobpilot_ai/presentation/pages/onboarding/onboarding_screen.dart';
 import 'package:jobpilot_ai/presentation/pages/register/register_screen.dart';
 import 'package:jobpilot_ai/presentation/pages/resume/resume_screen.dart';
 import 'package:jobpilot_ai/presentation/pages/splash/splash_screen.dart';
@@ -33,6 +34,11 @@ class AppRouter {
     initialLocation: AppConstants.splashRoute,
     redirect: (context, state) => authGuard.guard(context, state),
     routes: [
+      GoRoute(
+        path: '/onboarding',
+        name: 'onboarding',
+        builder: (context, state) => const OnboardingScreen(),
+      ),
       GoRoute(
         path: AppConstants.splashRoute,
         name: 'splash',
