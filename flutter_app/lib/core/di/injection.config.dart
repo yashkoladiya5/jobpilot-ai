@@ -16,6 +16,8 @@ import 'package:jobpilot_ai/core/di/register_module.dart' as _i301;
 import 'package:jobpilot_ai/core/network/dio_client.dart' as _i107;
 import 'package:jobpilot_ai/data/datasources/local/auth_local_datasource.dart'
     as _i73;
+import 'package:jobpilot_ai/data/datasources/remote/ai_remote_datasource.dart'
+    as _i972;
 import 'package:jobpilot_ai/data/datasources/remote/auth_remote_datasource.dart'
     as _i1014;
 import 'package:jobpilot_ai/data/datasources/remote/dashboard_remote_datasource.dart'
@@ -24,6 +26,7 @@ import 'package:jobpilot_ai/data/datasources/remote/job_remote_datasource.dart'
     as _i173;
 import 'package:jobpilot_ai/data/datasources/remote/resume_remote_datasource.dart'
     as _i696;
+import 'package:jobpilot_ai/data/repositories/ai_repository_impl.dart' as _i867;
 import 'package:jobpilot_ai/data/repositories/auth_repository_impl.dart'
     as _i70;
 import 'package:jobpilot_ai/data/repositories/dashboard_repository_impl.dart'
@@ -32,12 +35,43 @@ import 'package:jobpilot_ai/data/repositories/job_repository_impl.dart'
     as _i350;
 import 'package:jobpilot_ai/data/repositories/resume_repository_impl.dart'
     as _i163;
+import 'package:jobpilot_ai/domain/repositories/ai_repository.dart' as _i708;
 import 'package:jobpilot_ai/domain/repositories/auth_repository.dart' as _i498;
 import 'package:jobpilot_ai/domain/repositories/dashboard_repository.dart'
     as _i989;
 import 'package:jobpilot_ai/domain/repositories/job_repository.dart' as _i92;
 import 'package:jobpilot_ai/domain/repositories/resume_repository.dart'
     as _i621;
+import 'package:jobpilot_ai/domain/usecases/ai/analyze_job_usecase.dart'
+    as _i611;
+import 'package:jobpilot_ai/domain/usecases/ai/analyze_resume_usecase.dart'
+    as _i384;
+import 'package:jobpilot_ai/domain/usecases/ai/complete_interview_usecase.dart'
+    as _i741;
+import 'package:jobpilot_ai/domain/usecases/ai/generate_interview_usecase.dart'
+    as _i220;
+import 'package:jobpilot_ai/domain/usecases/ai/get_career_insights_history_usecase.dart'
+    as _i152;
+import 'package:jobpilot_ai/domain/usecases/ai/get_career_insights_usecase.dart'
+    as _i233;
+import 'package:jobpilot_ai/domain/usecases/ai/get_interview_result_usecase.dart'
+    as _i884;
+import 'package:jobpilot_ai/domain/usecases/ai/get_interview_session_usecase.dart'
+    as _i87;
+import 'package:jobpilot_ai/domain/usecases/ai/get_interview_sessions_usecase.dart'
+    as _i246;
+import 'package:jobpilot_ai/domain/usecases/ai/get_job_analyses_usecase.dart'
+    as _i430;
+import 'package:jobpilot_ai/domain/usecases/ai/get_job_analysis_usecase.dart'
+    as _i694;
+import 'package:jobpilot_ai/domain/usecases/ai/get_resume_analyses_usecase.dart'
+    as _i221;
+import 'package:jobpilot_ai/domain/usecases/ai/get_resume_analysis_usecase.dart'
+    as _i409;
+import 'package:jobpilot_ai/domain/usecases/ai/match_resume_job_usecase.dart'
+    as _i1028;
+import 'package:jobpilot_ai/domain/usecases/ai/submit_answer_usecase.dart'
+    as _i560;
 import 'package:jobpilot_ai/domain/usecases/auth/login_usecase.dart' as _i691;
 import 'package:jobpilot_ai/domain/usecases/auth/logout_usecase.dart' as _i1;
 import 'package:jobpilot_ai/domain/usecases/auth/register_usecase.dart'
@@ -60,9 +94,18 @@ import 'package:jobpilot_ai/domain/usecases/resume/set_primary_resume_usecase.da
     as _i292;
 import 'package:jobpilot_ai/domain/usecases/resume/upload_resume_usecase.dart'
     as _i388;
+import 'package:jobpilot_ai/presentation/bloc/ai_job/ai_job_bloc.dart' as _i97;
+import 'package:jobpilot_ai/presentation/bloc/ai_match/ai_match_bloc.dart'
+    as _i887;
+import 'package:jobpilot_ai/presentation/bloc/ai_resume/ai_resume_bloc.dart'
+    as _i998;
 import 'package:jobpilot_ai/presentation/bloc/auth/auth_bloc.dart' as _i653;
+import 'package:jobpilot_ai/presentation/bloc/career_insights/career_insights_bloc.dart'
+    as _i783;
 import 'package:jobpilot_ai/presentation/bloc/dashboard/dashboard_bloc.dart'
     as _i514;
+import 'package:jobpilot_ai/presentation/bloc/interview/interview_bloc.dart'
+    as _i711;
 import 'package:jobpilot_ai/presentation/bloc/job/job_bloc.dart' as _i365;
 import 'package:jobpilot_ai/presentation/bloc/resume/resume_bloc.dart' as _i10;
 
@@ -74,6 +117,11 @@ extension GetItInjectableX on _i174.GetIt {
   }) {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final registerModule = _$RegisterModule();
+    gh.factory<_i783.CareerInsightsBloc>(() => _i783.CareerInsightsBloc());
+    gh.factory<_i887.AiMatchBloc>(() => _i887.AiMatchBloc());
+    gh.factory<_i711.InterviewBloc>(() => _i711.InterviewBloc());
+    gh.factory<_i97.AiJobBloc>(() => _i97.AiJobBloc());
+    gh.factory<_i998.AiResumeBloc>(() => _i998.AiResumeBloc());
     gh.lazySingleton<_i558.FlutterSecureStorage>(
       () => registerModule.secureStorage,
     );
@@ -90,12 +138,63 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i1014.AuthRemoteDataSource>(
       () => _i1014.AuthRemoteDataSource(gh<_i107.DioClient>()),
     );
+    gh.lazySingleton<_i972.AiRemoteDataSource>(
+      () => _i972.AiRemoteDataSource(gh<_i107.DioClient>()),
+    );
+    gh.lazySingleton<_i708.AiRepository>(
+      () => _i867.AiRepositoryImpl(gh<_i972.AiRemoteDataSource>()),
+    );
     gh.lazySingleton<_i989.DashboardRepository>(
       () =>
           _i363.DashboardRepositoryImpl(gh<_i165.DashboardRemoteDataSource>()),
     );
     gh.lazySingleton<_i73.AuthLocalDataSource>(
       () => _i73.AuthLocalDataSource(gh<_i558.FlutterSecureStorage>()),
+    );
+    gh.factory<_i87.GetInterviewSessionUseCase>(
+      () => _i87.GetInterviewSessionUseCase(gh<_i708.AiRepository>()),
+    );
+    gh.factory<_i220.GenerateInterviewUseCase>(
+      () => _i220.GenerateInterviewUseCase(gh<_i708.AiRepository>()),
+    );
+    gh.factory<_i560.SubmitAnswerUseCase>(
+      () => _i560.SubmitAnswerUseCase(gh<_i708.AiRepository>()),
+    );
+    gh.factory<_i384.AnalyzeResumeUseCase>(
+      () => _i384.AnalyzeResumeUseCase(gh<_i708.AiRepository>()),
+    );
+    gh.factory<_i741.CompleteInterviewUseCase>(
+      () => _i741.CompleteInterviewUseCase(gh<_i708.AiRepository>()),
+    );
+    gh.factory<_i1028.MatchResumeJobUseCase>(
+      () => _i1028.MatchResumeJobUseCase(gh<_i708.AiRepository>()),
+    );
+    gh.factory<_i884.GetInterviewResultUseCase>(
+      () => _i884.GetInterviewResultUseCase(gh<_i708.AiRepository>()),
+    );
+    gh.factory<_i430.GetJobAnalysesUseCase>(
+      () => _i430.GetJobAnalysesUseCase(gh<_i708.AiRepository>()),
+    );
+    gh.factory<_i152.GetCareerInsightsHistoryUseCase>(
+      () => _i152.GetCareerInsightsHistoryUseCase(gh<_i708.AiRepository>()),
+    );
+    gh.factory<_i221.GetResumeAnalysesUseCase>(
+      () => _i221.GetResumeAnalysesUseCase(gh<_i708.AiRepository>()),
+    );
+    gh.factory<_i246.GetInterviewSessionsUseCase>(
+      () => _i246.GetInterviewSessionsUseCase(gh<_i708.AiRepository>()),
+    );
+    gh.factory<_i611.AnalyzeJobUseCase>(
+      () => _i611.AnalyzeJobUseCase(gh<_i708.AiRepository>()),
+    );
+    gh.factory<_i233.GetCareerInsightsUseCase>(
+      () => _i233.GetCareerInsightsUseCase(gh<_i708.AiRepository>()),
+    );
+    gh.factory<_i694.GetJobAnalysisUseCase>(
+      () => _i694.GetJobAnalysisUseCase(gh<_i708.AiRepository>()),
+    );
+    gh.factory<_i409.GetResumeAnalysisUseCase>(
+      () => _i409.GetResumeAnalysisUseCase(gh<_i708.AiRepository>()),
     );
     gh.lazySingleton<_i92.JobRepository>(
       () => _i350.JobRepositoryImpl(gh<_i173.JobRemoteDataSource>()),

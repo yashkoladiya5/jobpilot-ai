@@ -2,12 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jobpilot_ai/core/constants/app_constants.dart';
 import 'package:jobpilot_ai/domain/entities/job_application.dart';
+import 'package:jobpilot_ai/presentation/pages/ai/ai_hub_screen.dart';
+import 'package:jobpilot_ai/presentation/pages/ai/career_insights_screen.dart';
+import 'package:jobpilot_ai/presentation/pages/ai/interview_result_screen.dart';
+import 'package:jobpilot_ai/presentation/pages/ai/interview_session_screen.dart';
+import 'package:jobpilot_ai/presentation/pages/ai/interview_sessions_screen.dart';
+import 'package:jobpilot_ai/presentation/pages/ai/job_analyses_screen.dart';
+import 'package:jobpilot_ai/presentation/pages/ai/job_analysis_detail_screen.dart';
+import 'package:jobpilot_ai/presentation/pages/ai/job_analysis_screen.dart';
+import 'package:jobpilot_ai/presentation/pages/ai/matching_screen.dart';
+import 'package:jobpilot_ai/presentation/pages/ai/resume_analyses_screen.dart';
+import 'package:jobpilot_ai/presentation/pages/ai/resume_analysis_screen.dart';
 import 'package:jobpilot_ai/presentation/pages/dashboard/dashboard_screen.dart';
 import 'package:jobpilot_ai/presentation/pages/jobs/add_job_screen.dart';
 import 'package:jobpilot_ai/presentation/pages/jobs/edit_job_screen.dart';
 import 'package:jobpilot_ai/presentation/pages/jobs/job_detail_screen.dart';
 import 'package:jobpilot_ai/presentation/pages/jobs/jobs_list_screen.dart';
 import 'package:jobpilot_ai/presentation/pages/login/login_screen.dart';
+import 'package:jobpilot_ai/presentation/pages/onboarding/onboarding_screen.dart';
 import 'package:jobpilot_ai/presentation/pages/register/register_screen.dart';
 import 'package:jobpilot_ai/presentation/pages/resume/resume_screen.dart';
 import 'package:jobpilot_ai/presentation/pages/splash/splash_screen.dart';
@@ -22,6 +34,11 @@ class AppRouter {
     initialLocation: AppConstants.splashRoute,
     redirect: (context, state) => authGuard.guard(context, state),
     routes: [
+      GoRoute(
+        path: '/onboarding',
+        name: 'onboarding',
+        builder: (context, state) => const OnboardingScreen(),
+      ),
       GoRoute(
         path: AppConstants.splashRoute,
         name: 'splash',
@@ -94,6 +111,75 @@ class AppRouter {
               ),
             ],
           ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/ai',
+                name: 'aiHub',
+                builder: (context, state) => const AiHubScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'resume/analyses',
+                    name: 'resumeAnalyses',
+                    builder: (context, state) => const ResumeAnalysesScreen(),
+                  ),
+                  GoRoute(
+                    path: 'resume/:resumeId/analysis',
+                    name: 'resumeAnalysis',
+                    builder: (context, state) => ResumeAnalysisScreen(
+                      resumeId: state.pathParameters['resumeId']!,
+                    ),
+                  ),
+                  GoRoute(
+                    path: 'job/analyze',
+                    name: 'jobAnalyze',
+                    builder: (context, state) => const JobAnalysisScreen(),
+                  ),
+                  GoRoute(
+                    path: 'job/analysis/:analysisId',
+                    name: 'jobAnalysisDetail',
+                    builder: (context, state) => JobAnalysisDetailScreen(
+                      analysisId: state.pathParameters['analysisId']!,
+                    ),
+                  ),
+                  GoRoute(
+                    path: 'job/analyses',
+                    name: 'jobAnalyses',
+                    builder: (context, state) => const JobAnalysesScreen(),
+                  ),
+                  GoRoute(
+                    path: 'match',
+                    name: 'aiMatch',
+                    builder: (context, state) => const MatchingScreen(),
+                  ),
+                  GoRoute(
+                    path: 'interview/sessions',
+                    name: 'interviewSessions',
+                    builder: (context, state) => const InterviewSessionsScreen(),
+                  ),
+                  GoRoute(
+                    path: 'interview/session/:sessionId',
+                    name: 'interviewSession',
+                    builder: (context, state) => InterviewSessionScreen(
+                      sessionId: state.pathParameters['sessionId']!,
+                    ),
+                  ),
+                  GoRoute(
+                    path: 'interview/result/:sessionId',
+                    name: 'interviewResult',
+                    builder: (context, state) => InterviewResultScreen(
+                      sessionId: state.pathParameters['sessionId']!,
+                    ),
+                  ),
+                  GoRoute(
+                    path: 'insights',
+                    name: 'careerInsights',
+                    builder: (context, state) => const CareerInsightsScreen(),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ],
       ),
     ],
@@ -130,6 +216,11 @@ class AppShell extends StatelessWidget {
             icon: Icon(Icons.description_outlined),
             activeIcon: Icon(Icons.description),
             label: 'Resumes',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.auto_awesome_outlined),
+            activeIcon: Icon(Icons.auto_awesome),
+            label: 'AI Hub',
           ),
         ],
       ),

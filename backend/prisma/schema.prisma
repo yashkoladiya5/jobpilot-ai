@@ -16,6 +16,13 @@ enum ApplicationStatus {
   WITHDRAWN
 }
 
+enum AnalysisStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
 model User {
   id              String            @id @default(uuid())
   email           String            @unique
@@ -25,6 +32,10 @@ model User {
   updatedAt       DateTime          @updatedAt @map("updated_at")
   resumes         Resume[]
   jobApplications JobApplication[]
+  resumeAnalyses  ResumeAnalysis[]
+  jobAnalyses     JobAnalysis[]
+  interviewSessions InterviewSession[]
+  careerInsights  CareerInsight[]
 
   @@map("users")
 }
@@ -41,6 +52,7 @@ model Resume {
   updatedAt       DateTime          @updatedAt @map("updated_at")
   user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   jobApplications JobApplication[]
+  resumeAnalyses  ResumeAnalysis[]
 
   @@index([userId])
   @@map("resumes")
@@ -62,9 +74,151 @@ model JobApplication {
   updatedAt   DateTime          @updatedAt @map("updated_at")
   user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   resume      Resume?           @relation(fields: [resumeId], references: [id], onDelete: SetNull)
+  jobAnalyses JobAnalysis[]
+  interviewSessions InterviewSession[]
 
   @@index([userId])
   @@index([status])
   @@index([appliedDate])
   @@map("job_applications")
+}
+
+model ResumeAnalysis {
+  id              String         @id @default(uuid())
+  resumeId        String         @map("resume_id")
+  userId          String         @map("user_id")
+  status          AnalysisStatus @default(PENDING)
+  atsScore        Int?           @map("ats_score")
+  strengths       Json?          // string[]
+  weaknesses      Json?          // string[]
+  missingKeywords Json?          @map("missing_keywords") // string[]
+  suggestions     Json?          // string[]
+  experienceSummary String?      @map("experience_summary") @db.Text
+  skillsSummary   String?        @map("skills_summary") @db.Text
+  recruiterFeedback String?      @map("recruiter_feedback") @db.Text
+  rawResponse     Json?          @map("raw_response")
+  promptVersion   String         @default("1.0") @map("prompt_version")
+  errorMessage    String?        @map("error_message") @db.Text
+  analyzedAt      DateTime?      @map("analyzed_at")
+  createdAt       DateTime       @default(now()) @map("created_at")
+  updatedAt       DateTime       @updatedAt @map("updated_at")
+
+  resume          Resume         @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([resumeId])
+  @@map("resume_analyses")
+}
+
+model JobAnalysis {
+  id                  String         @id @default(uuid())
+  jobId               String?        @map("job_id")
+  userId              String         @map("user_id")
+  jobDescription      String         @map("job_description") @db.Text
+  status              AnalysisStatus @default(PENDING)
+  requiredSkills      Json?          @map("required_skills")
+  preferredSkills     Json?          @map("preferred_skills")
+  experienceRequired  String?        @map("experience_required")
+  missingSkills       Json?          @map("missing_skills")
+  resumeMatchScore    Int?           @map("resume_match_score")
+  recommendedChanges  Json?          @map("recommended_changes")
+  rawResponse         Json?          @map("raw_response")
+  promptVersion       String         @default("1.0") @map("prompt_version")
+  errorMessage        String?        @map("error_message") @db.Text
+  analyzedAt          DateTime?      @map("analyzed_at")
+  createdAt           DateTime       @default(now()) @map("created_at")
+  updatedAt           DateTime       @updatedAt @map("updated_at")
+
+  user                User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  job                 JobApplication? @relation(fields: [jobId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([jobId])
+  @@map("job_analyses")
+}
+
+model InterviewSession {
+  id              String         @id @default(uuid())
+  userId          String         @map("user_id")
+  jobId           String         @map("job_id")
+  status          AnalysisStatus @default(PENDING)
+  jobDescription  String?        @map("job_description") @db.Text
+  hrQuestions     Json?          @map("hr_questions")
+  technicalQuestions Json?       @map("technical_questions")
+  behavioralQuestions Json?      @map("behavioral_questions")
+  followUpQuestions Json?        @map("follow_up_questions")
+  currentQuestionIndex Int       @default(0) @map("current_question_index")
+  totalQuestions   Int           @default(0) @map("total_questions")
+  answeredQuestions Int          @default(0) @map("answered_questions")
+  score            Int?
+  rawResponse      Json?         @map("raw_response")
+  promptVersion    String        @default("1.0") @map("prompt_version")
+  completedAt      DateTime?     @map("completed_at")
+  createdAt        DateTime      @default(now()) @map("created_at")
+  updatedAt        DateTime      @updatedAt @map("updated_at")
+
+  user             User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  job              JobApplication @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  questions        InterviewQuestion[]
+  results          InterviewResult[]
+
+  @@index([userId])
+  @@index([jobId])
+  @@map("interview_sessions")
+}
+
+model InterviewQuestion {
+  id              String            @id @default(uuid())
+  sessionId       String            @map("session_id")
+  category        String
+  question        String            @db.Text
+  orderIndex      Int               @map("order_index")
+  answer          String?           @db.Text
+  feedback        String?           @db.Text
+  score           Int?
+  answeredAt      DateTime?         @map("answered_at")
+  createdAt       DateTime          @default(now()) @map("created_at")
+
+  session         InterviewSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@map("interview_questions")
+}
+
+model InterviewResult {
+  id              String            @id @default(uuid())
+  sessionId       String            @map("session_id")
+  overallScore    Int               @map("overall_score")
+  categoryScores  Json?             @map("category_scores")
+  strengths       Json?
+  improvements    Json?
+  summary         String?           @db.Text
+  createdAt       DateTime          @default(now()) @map("created_at")
+
+  session         InterviewSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@map("interview_results")
+}
+
+model CareerInsight {
+  id              String   @id @default(uuid())
+  userId          String   @map("user_id")
+  careerScore     Int?     @map("career_score")
+  interviewReadiness Int?  @map("interview_readiness")
+  resumeStrength  Int?     @map("resume_strength")
+  jobMatchQuality Int?     @map("job_match_quality")
+  applicationSuccessRate Int? @map("application_success_rate")
+  skillGaps       Json?    @map("skill_gaps")
+  weeklyProgress  Json?    @map("weekly_progress")
+  recommendations Json?
+  insightsData    Json?    @map("insights_data")
+  weekStart       DateTime @map("week_start")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("career_insights")
 }
