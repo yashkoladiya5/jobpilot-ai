@@ -37,3 +37,25 @@ class ApiConstants {
   static String get careerInsights => '$_baseUrl/ai/insights';
   static String get careerInsightsHistory => '$_baseUrl/ai/insights/history';
 }
+
+class ApiHeaders {
+  ApiHeaders._();
+
+  static const String contentType = 'Content-Type';
+  static const String accept = 'Accept';
+  static const String authorization = 'Authorization';
+  static const String acceptLanguage = 'Accept-Language';
+  static const String clientVersion = 'X-Client-Version';
+  static const String clientPlatform = 'X-Client-Platform';
+  
+  static Map<String, String> defaultHeaders({String? token}) {
+    final headers = {
+      contentType: 'application/json',
+      accept: 'application/json',
+    };
+    if (token != null) {
+      headers[authorization] = 'Bearer $token';
+    }
+    return headers;
+  }
+}

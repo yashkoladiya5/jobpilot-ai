@@ -88,3 +88,28 @@ class _StatusConfig {
     required this.textColor,
   });
 }
+
+extension ApplicationStatusExtensions on ApplicationStatus {
+  Color get color {
+    switch (this) {
+      case ApplicationStatus.saved:
+        return const Color(0xFF616161);
+      case ApplicationStatus.applied:
+        return const Color(0xFF1565C0);
+      case ApplicationStatus.interview:
+        return const Color(0xFFE65100);
+      case ApplicationStatus.offer:
+        return const Color(0xFF2E7D32);
+      case ApplicationStatus.rejected:
+        return const Color(0xFFC62828);
+      case ApplicationStatus.withdrawn:
+        return const Color(0xFF7B1FA2);
+    }
+  }
+
+  bool get isCompleted {
+    return this == ApplicationStatus.offer || 
+           this == ApplicationStatus.rejected || 
+           this == ApplicationStatus.withdrawn;
+  }
+}

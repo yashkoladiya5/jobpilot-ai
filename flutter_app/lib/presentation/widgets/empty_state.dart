@@ -63,3 +63,23 @@ class EmptyState extends StatelessWidget {
     );
   }
 }
+
+extension EmptyStatePresets on EmptyState {
+  static EmptyState noConnection({VoidCallback? onRetry}) {
+    return EmptyState(
+      icon: Icons.wifi_off_rounded,
+      message: 'No internet connection',
+      subtitle: 'Please check your connection and try again',
+      actionLabel: onRetry != null ? 'Retry' : null,
+      onAction: onRetry,
+    );
+  }
+
+  static EmptyState searchNoResults({String? query}) {
+    return EmptyState(
+      icon: Icons.search_off_rounded,
+      message: 'No results found',
+      subtitle: query != null ? 'We could not find anything matching "$query"' : 'Try refining your search keywords',
+    );
+  }
+}

@@ -60,4 +60,21 @@ class Validators {
     }
     return null;
   }
+
+  static String? phone(String? value) {
+    if (value == null || value.trim().isEmpty) return null;
+    final phoneRegex = RegExp(r'^\+?[0-9]{7,15}$');
+    if (!phoneRegex.hasMatch(value.trim())) {
+      return 'Please enter a valid phone number';
+    }
+    return null;
+  }
+
+  static String? minLength(String? value, int min, [String fieldName = 'Field']) {
+    if (value == null || value.trim().isEmpty) return null;
+    if (value.trim().length < min) {
+      return '$fieldName must be at least $min characters';
+    }
+    return null;
+  }
 }
