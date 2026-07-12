@@ -11,4 +11,14 @@ class DashboardRemoteDataSource {
     final response = await _dioClient.get(ApiConstants.dashboardStats);
     return response.data as Map<String, dynamic>;
   }
+
+  Future<Map<String, dynamic>> getPipelineAnalytics() async {
+    final response = await _dioClient.get(ApiConstants.pipelineAnalytics);
+    return response.data as Map<String, dynamic>;
+  }
+
+  Future<Map<String, dynamic>> getTimelineData() async {
+    final response = await _dioClient.get(ApiConstants.timelineAnalytics);
+    return response.data as Map<String, dynamic>;
+  }
 }

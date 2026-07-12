@@ -3,6 +3,9 @@ import 'package:go_router/go_router.dart';
 import 'package:jobpilot_ai/core/constants/app_constants.dart';
 import 'package:jobpilot_ai/domain/entities/job_application.dart';
 import 'package:jobpilot_ai/presentation/pages/ai/ai_hub_screen.dart';
+import 'package:jobpilot_ai/presentation/pages/analytics/analytics_screen.dart';
+import 'package:jobpilot_ai/presentation/pages/ai/cover_letter_screen.dart';
+import 'package:jobpilot_ai/presentation/pages/ai/cover_letters_list_screen.dart';
 import 'package:jobpilot_ai/presentation/pages/ai/career_insights_screen.dart';
 import 'package:jobpilot_ai/presentation/pages/ai/interview_result_screen.dart';
 import 'package:jobpilot_ai/presentation/pages/ai/interview_session_screen.dart';
@@ -175,6 +178,21 @@ class AppRouter {
                     path: 'insights',
                     name: 'careerInsights',
                     builder: (context, state) => const CareerInsightsScreen(),
+                  ),
+                  GoRoute(
+                    path: 'cover-letter',
+                    name: 'coverLetter',
+                    builder: (context, state) => const CoverLetterScreen(),
+                  ),
+                  GoRoute(
+                    path: 'cover-letters',
+                    name: 'coverLetters',
+                    builder: (context, state) => const CoverLettersListScreen(),
+                  ),
+                  GoRoute(
+                    path: 'pipeline',
+                    name: 'pipelineAnalytics',
+                    builder: (context, state) => const AnalyticsScreen(),
                   ),
                 ],
               ),

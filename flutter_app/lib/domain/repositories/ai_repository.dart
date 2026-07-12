@@ -4,6 +4,7 @@ import 'package:jobpilot_ai/domain/entities/career_insight.dart';
 import 'package:jobpilot_ai/domain/entities/interview_result.dart';
 import 'package:jobpilot_ai/domain/entities/interview_session.dart';
 import 'package:jobpilot_ai/domain/entities/job_analysis.dart';
+import 'package:jobpilot_ai/domain/entities/cover_letter.dart';
 import 'package:jobpilot_ai/domain/entities/resume_analysis.dart';
 
 abstract class AiRepository {
@@ -38,4 +39,11 @@ abstract class AiRepository {
   // Career Insights
   Future<Either<Failure, CareerInsight>> getCareerInsights();
   Future<Either<Failure, List<CareerInsight>>> getCareerInsightsHistory();
+
+  // Cover Letter
+  Future<Either<Failure, CoverLetter>> generateCoverLetter(
+      String resumeId, String jobDescription,
+      {String? jobId, String? tone});
+  Future<Either<Failure, CoverLetter>> getCoverLetter(String id);
+  Future<Either<Failure, List<CoverLetter>>> getCoverLetters();
 }

@@ -369,6 +369,22 @@ class _RecommendedActions extends StatelessWidget {
         description: 'Personalized recommendations and skill gap analysis',
         route: '/ai/insights',
       ),
+      _ActionData(
+        icon: Icons.mail_outline,
+        color: Colors.purple,
+        iconBgColor: Colors.purple.withValues(alpha: 0.1),
+        title: 'Generate cover letter',
+        description: 'AI-tailored cover letters for any job',
+        route: '/ai/cover-letter',
+      ),
+      _ActionData(
+        icon: Icons.analytics_outlined,
+        color: Colors.teal,
+        iconBgColor: Colors.teal.withValues(alpha: 0.1),
+        title: 'Pipeline analytics',
+        description: 'Visualize your application funnel & trends',
+        route: '/ai/pipeline',
+      ),
     ];
 
     return Padding(
@@ -501,6 +517,26 @@ class _QuickActionsGrid extends StatelessWidget {
                   icon: Icons.trending_up,
                   label: 'View Insights',
                   onTap: () => context.push('/ai/insights'),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: _QuickActionButton(
+                  icon: Icons.mail_outline,
+                  label: 'Cover Letter',
+                  onTap: () => context.push('/ai/cover-letter'),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _QuickActionButton(
+                  icon: Icons.analytics_outlined,
+                  label: 'Analytics',
+                  onTap: () => context.push('/ai/pipeline'),
                 ),
               ),
             ],

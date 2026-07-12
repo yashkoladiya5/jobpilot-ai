@@ -9,6 +9,7 @@ import 'package:jobpilot_ai/domain/entities/career_insight.dart';
 import 'package:jobpilot_ai/domain/entities/interview_result.dart';
 import 'package:jobpilot_ai/domain/entities/interview_session.dart';
 import 'package:jobpilot_ai/domain/entities/job_analysis.dart';
+import 'package:jobpilot_ai/domain/entities/cover_letter.dart';
 import 'package:jobpilot_ai/domain/entities/resume_analysis.dart';
 import 'package:jobpilot_ai/domain/repositories/ai_repository.dart';
 
@@ -315,6 +316,68 @@ class AiRepositoryImpl implements AiRepository {
         response,
         (data) => (data as List<dynamic>)
             .map((e) => CareerInsight.fromJson(e as Map<String, dynamic>))
+            .toList(),
+      );
+      return Right(apiResponse.data ?? []);
+    } on DioException catch (e) {
+      return Left(_handleDioError(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, CoverLetter>> generateCoverLetter(
+    String resumeId,
+    String jobDescription, {
+    String? jobId,
+    String? tone,
+  }) async {
+    try {
+      final response = await _remoteDataSource.generateCoverLetter(
+        resumeId,
+        jobDescription,
+        jobId: jobId,
+        tone: tone,
+      );
+      final apiResponse = ApiResponseModel<CoverLetter>.fromJson(
+        response,
+        (data) => CoverLetter.fromJson(data as Map<String, dynamic>),
+      );
+      if (apiResponse.data == null) {
+        return const Left(
+            Failure.serverFailure(message: 'Failed to generate cover letter'));
+      }
+      return Right(apiResponse.data!);
+    } on DioException catch (e) {
+      return Left(_handleDioError(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, CoverLetter>> getCoverLetter(String id) async {
+    try {
+      final response = await _remoteDataSource.getCoverLetter(id);
+      final apiResponse = ApiResponseModel<CoverLetter>.fromJson(
+        response,
+        (data) => CoverLetter.fromJson(data as Map<String, dynamic>),
+      );
+      if (apiResponse.data == null) {
+        return const Left(
+            Failure.serverFailure(message: 'Failed to get cover letter'));
+      }
+      return Right(apiResponse.data!);
+    } on DioException catch (e) {
+      return Left(_handleDioError(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<CoverLetter>>> getCoverLetters() async {
+    try {
+      final response = await _remoteDataSource.getCoverLetters();
+      final apiResponse = ApiResponseModel<List<CoverLetter>>.fromJson(
+        response,
+        (data) => (data as List<dynamic>)
+            .map((e) => CoverLetter.fromJson(e as Map<String, dynamic>))
             .toList(),
       );
       return Right(apiResponse.data ?? []);

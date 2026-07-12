@@ -108,6 +108,15 @@ import 'package:jobpilot_ai/presentation/bloc/interview/interview_bloc.dart'
     as _i711;
 import 'package:jobpilot_ai/presentation/bloc/job/job_bloc.dart' as _i365;
 import 'package:jobpilot_ai/presentation/bloc/resume/resume_bloc.dart' as _i10;
+import 'package:jobpilot_ai/data/repositories/analytics_repository_impl.dart' as _iAR;
+import 'package:jobpilot_ai/domain/repositories/analytics_repository.dart' as _iARI;
+import 'package:jobpilot_ai/domain/usecases/analytics/get_pipeline_analytics_usecase.dart' as _iGPA;
+import 'package:jobpilot_ai/domain/usecases/analytics/get_timeline_data_usecase.dart' as _iGTD;
+import 'package:jobpilot_ai/domain/usecases/ai/generate_cover_letter_usecase.dart' as _iGCL;
+import 'package:jobpilot_ai/domain/usecases/ai/get_cover_letter_usecase.dart' as _iGCOL;
+import 'package:jobpilot_ai/domain/usecases/ai/get_cover_letters_usecase.dart' as _iGCOS;
+import 'package:jobpilot_ai/presentation/bloc/analytics/analytics_bloc.dart' as _iAB;
+import 'package:jobpilot_ai/presentation/bloc/cover_letter/cover_letter_bloc.dart' as _iCLB;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -272,6 +281,37 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i691.LoginUseCase>(),
         gh<_i599.RegisterUseCase>(),
         gh<_i1.LogoutUseCase>(),
+      ),
+    );
+    gh.lazySingleton<_iARI.AnalyticsRepository>(
+      () => _iAR.AnalyticsRepositoryImpl(gh<_i165.DashboardRemoteDataSource>()),
+    );
+    gh.factory<_iGPA.GetPipelineAnalyticsUseCase>(
+      () => _iGPA.GetPipelineAnalyticsUseCase(gh<_iARI.AnalyticsRepository>()),
+    );
+    gh.factory<_iGTD.GetTimelineDataUseCase>(
+      () => _iGTD.GetTimelineDataUseCase(gh<_iARI.AnalyticsRepository>()),
+    );
+    gh.factory<_iGCL.GenerateCoverLetterUseCase>(
+      () => _iGCL.GenerateCoverLetterUseCase(gh<_i708.AiRepository>()),
+    );
+    gh.factory<_iGCOL.GetCoverLetterUseCase>(
+      () => _iGCOL.GetCoverLetterUseCase(gh<_i708.AiRepository>()),
+    );
+    gh.factory<_iGCOS.GetCoverLettersUseCase>(
+      () => _iGCOS.GetCoverLettersUseCase(gh<_i708.AiRepository>()),
+    );
+    gh.factory<_iAB.AnalyticsBloc>(
+      () => _iAB.AnalyticsBloc(
+        gh<_iGPA.GetPipelineAnalyticsUseCase>(),
+        gh<_iGTD.GetTimelineDataUseCase>(),
+      ),
+    );
+    gh.factory<_iCLB.CoverLetterBloc>(
+      () => _iCLB.CoverLetterBloc(
+        gh<_iGCL.GenerateCoverLetterUseCase>(),
+        gh<_iGCOL.GetCoverLetterUseCase>(),
+        gh<_iGCOS.GetCoverLettersUseCase>(),
       ),
     );
     return this;
