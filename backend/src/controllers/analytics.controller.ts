@@ -1,0 +1,18 @@
+import { Request, Response } from "express";
+import { asyncHandler } from "../utils/asyncHandler";
+import { AuthenticatedRequest } from "../middleware/auth";
+import { AnalyticsService } from "../services/analytics.service";
+
+const analyticsService = new AnalyticsService();
+
+export const getPipelineAnalytics = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const result = await analyticsService.getPipelineAnalytics(userId);
+  res.json({ success: true, message: "Pipeline analytics fetched successfully", data: result });
+});
+
+export const getTimelineData = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const result = await analyticsService.getTimelineData(userId);
+  res.json({ success: true, message: "Timeline data fetched successfully", data: result });
+});

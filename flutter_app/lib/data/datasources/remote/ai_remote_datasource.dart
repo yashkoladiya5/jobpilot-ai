@@ -133,4 +133,34 @@ class AiRemoteDataSource {
     final response = await _dioClient.get(ApiConstants.careerInsightsHistory);
     return response.data as Map<String, dynamic>;
   }
+
+  // Cover Letter
+  Future<Map<String, dynamic>> generateCoverLetter(
+    String resumeId,
+    String jobDescription, {
+    String? jobId,
+    String? tone,
+  }) async {
+    final response = await _dioClient.post(
+      ApiConstants.coverLetterGenerate(),
+      data: {
+        'resumeId': resumeId,
+        'jobDescription': jobDescription,
+        // ignore: use_null_aware_elements
+        if (jobId != null) 'jobId': jobId,
+        if (tone != null) 'tone': tone,
+      },
+    );
+    return response.data as Map<String, dynamic>;
+  }
+
+  Future<Map<String, dynamic>> getCoverLetter(String id) async {
+    final response = await _dioClient.get(ApiConstants.coverLetter(id));
+    return response.data as Map<String, dynamic>;
+  }
+
+  Future<Map<String, dynamic>> getCoverLetters() async {
+    final response = await _dioClient.get(ApiConstants.coverLetterList);
+    return response.data as Map<String, dynamic>;
+  }
 }

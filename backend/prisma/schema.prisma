@@ -36,6 +36,7 @@ model User {
   jobAnalyses     JobAnalysis[]
   interviewSessions InterviewSession[]
   careerInsights  CareerInsight[]
+  coverLetters    CoverLetter[]
 
   @@map("users")
 }
@@ -53,6 +54,7 @@ model Resume {
   user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   jobApplications JobApplication[]
   resumeAnalyses  ResumeAnalysis[]
+  coverLetters    CoverLetter[]
 
   @@index([userId])
   @@map("resumes")
@@ -76,6 +78,7 @@ model JobApplication {
   resume      Resume?           @relation(fields: [resumeId], references: [id], onDelete: SetNull)
   jobAnalyses JobAnalysis[]
   interviewSessions InterviewSession[]
+  coverLetters CoverLetter[]
 
   @@index([userId])
   @@index([status])
@@ -221,4 +224,29 @@ model CareerInsight {
 
   @@index([userId])
   @@map("career_insights")
+}
+
+model CoverLetter {
+  id              String         @id @default(uuid())
+  userId          String         @map("user_id")
+  resumeId        String         @map("resume_id")
+  jobId           String?        @map("job_id")
+  jobDescription  String         @map("job_description") @db.Text
+  tone            String         @default("professional")
+  coverLetterText String         @map("cover_letter_text") @db.Text
+  status          AnalysisStatus @default(PENDING)
+  rawResponse     Json?          @map("raw_response")
+  promptVersion   String         @default("1.0") @map("prompt_version")
+  errorMessage    String?        @map("error_message") @db.Text
+  generatedAt     DateTime?      @map("generated_at")
+  createdAt       DateTime       @default(now()) @map("created_at")
+  updatedAt       DateTime       @updatedAt @map("updated_at")
+
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resume          Resume         @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  job             JobApplication? @relation(fields: [jobId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([resumeId])
+  @@map("cover_letters")
 }

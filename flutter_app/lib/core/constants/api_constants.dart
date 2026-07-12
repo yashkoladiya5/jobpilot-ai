@@ -36,6 +36,12 @@ class ApiConstants {
   static String interviewResult(String id) => '$_baseUrl/ai/interview/result/$id';
   static String get careerInsights => '$_baseUrl/ai/insights';
   static String get careerInsightsHistory => '$_baseUrl/ai/insights/history';
+  static String coverLetterGenerate() => '$_baseUrl/ai/cover-letter/generate';
+  static String coverLetter(String id) => '$_baseUrl/ai/cover-letter/$id';
+  static String get coverLetterList => '$_baseUrl/ai/cover-letter/list';
+
+  static String get pipelineAnalytics => '$_baseUrl/analytics/pipeline';
+  static String get timelineAnalytics => '$_baseUrl/analytics/timeline';
 }
 
 class ApiHeaders {

@@ -11,6 +11,8 @@ import 'package:jobpilot_ai/presentation/bloc/dashboard/dashboard_bloc.dart';
 import 'package:jobpilot_ai/presentation/bloc/interview/interview_bloc.dart';
 import 'package:jobpilot_ai/presentation/bloc/job/job_bloc.dart';
 import 'package:jobpilot_ai/presentation/bloc/resume/resume_bloc.dart';
+import 'package:jobpilot_ai/presentation/bloc/analytics/analytics_bloc.dart';
+import 'package:jobpilot_ai/presentation/bloc/cover_letter/cover_letter_bloc.dart';
 import 'package:jobpilot_ai/router/app_router.dart';
 import 'package:jobpilot_ai/router/auth_guard.dart';
 
@@ -33,6 +35,8 @@ class JobPilotApp extends StatelessWidget {
         BlocProvider<AiMatchBloc>(create: (_) => getIt<AiMatchBloc>()),
         BlocProvider<InterviewBloc>(create: (_) => getIt<InterviewBloc>()),
         BlocProvider<CareerInsightsBloc>(create: (_) => getIt<CareerInsightsBloc>()),
+        BlocProvider<AnalyticsBloc>(create: (_) => getIt<AnalyticsBloc>()),
+        BlocProvider<CoverLetterBloc>(create: (_) => getIt<CoverLetterBloc>()),
       ],
       child: MaterialApp.router(
         title: 'JobPilot AI',
