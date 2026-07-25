@@ -21,9 +21,11 @@ import { authenticate } from "../middleware/auth";
 
 const router = Router();
 
+// Apply authentication middleware to all AI routes
 router.use(authenticate);
 
-// Resume analysis
+// Resume analysis endpoints
+// Triggers analysis and retrieves past AI evaluations
 router.post("/resume/:resumeId/analyze", analyzeResume);
 router.get("/resume/:resumeId/analysis", getResumeAnalysis);
 router.get("/resume/analyses", getResumeAnalyses);

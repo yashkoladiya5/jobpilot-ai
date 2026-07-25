@@ -10,8 +10,10 @@ import { authenticate } from "../middleware/auth";
 import { validate } from "../middleware/validate";
 import { createJobSchema, updateJobSchema } from "../validators/job.validator";
 
+// Router instance for managing job listings and tracking user applications
 const router = Router();
 
+// CRUD operations for jobs, all requiring user authentication
 router.get("/", authenticate, getJobs);
 router.post("/", authenticate, validate(createJobSchema), createJob);
 router.get("/:id", authenticate, getJobById);
