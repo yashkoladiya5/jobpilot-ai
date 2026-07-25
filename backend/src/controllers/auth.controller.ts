@@ -5,6 +5,10 @@ import { generateToken, AuthenticatedRequest } from "../middleware/auth";
 
 const authService = new AuthService();
 
+/**
+ * Handles user registration requests.
+ * Expects email, password, and name in the request body.
+ */
 export const register = asyncHandler(async (req: Request, res: Response) => {
   const { email, password, name } = req.body;
 
@@ -18,6 +22,10 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
   });
 });
 
+/**
+ * Handles user login requests.
+ * Expects email and password in the request body.
+ */
 export const login = asyncHandler(async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
@@ -31,6 +39,9 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
   });
 });
 
+/**
+ * Retrieves the currently authenticated user's profile information.
+ */
 export const getMe = asyncHandler(async (req: Request, res: Response) => {
   const userId = (req as AuthenticatedRequest).user.id;
 

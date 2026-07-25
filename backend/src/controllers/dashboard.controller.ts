@@ -5,6 +5,10 @@ import { DashboardService } from "../services/dashboard.service";
 
 const dashboardService = new DashboardService();
 
+/**
+ * Retrieves dashboard statistics for the currently authenticated user.
+ * Provides high-level aggregations of user activities.
+ */
 export const getStats = asyncHandler(async (req: Request, res: Response) => {
   const userId = (req as AuthenticatedRequest).user.id;
   const data = await dashboardService.getStats(userId);
