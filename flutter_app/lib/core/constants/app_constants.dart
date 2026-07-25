@@ -1,5 +1,6 @@
 import 'dart:io' show Platform;
 
+/// Global application configuration, routing constants, and environment variables.
 class AppConstants {
   AppConstants._();
 

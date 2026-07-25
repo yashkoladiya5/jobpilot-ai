@@ -1,5 +1,7 @@
 import 'package:jobpilot_ai/core/constants/app_constants.dart';
 
+/// Centralized repository for all backend API endpoints.
+/// Simplifies route management across the application layer.
 class ApiConstants {
   ApiConstants._();
 
