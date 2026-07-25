@@ -4,9 +4,16 @@ import 'package:jobpilot_ai/app.dart';
 import 'package:jobpilot_ai/core/di/injection.dart';
 import 'package:jobpilot_ai/presentation/bloc/app_bloc_observer.dart';
 
+/// The main entry point for the JobPilot AI Flutter application.
 void main() async {
+  // Ensure plugin services are initialized prior to configuring dependencies.
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Setup the dependency injection container.
   configureDependencies();
+  
+  // Initialize the global Bloc observer for state change logging.
   Bloc.observer = AppBlocObserver();
+  
   runApp(const JobPilotApp());
 }

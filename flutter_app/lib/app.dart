@@ -16,14 +16,20 @@ import 'package:jobpilot_ai/presentation/bloc/cover_letter/cover_letter_bloc.dar
 import 'package:jobpilot_ai/router/app_router.dart';
 import 'package:jobpilot_ai/router/auth_guard.dart';
 
+/// The root widget of the JobPilot AI application.
+/// It provides the global Bloc providers, routing, and theming.
 class JobPilotApp extends StatelessWidget {
   const JobPilotApp({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Initialize the authentication guard to protect private routes.
     final authGuard = AuthGuard();
+    
+    // Set up the application router with the auth guard.
     final appRouter = AppRouter(authGuard: authGuard);
 
+    // Provide all the necessary BLoCs at the root of the widget tree.
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthBloc>(create: (_) => getIt<AuthBloc>()),
