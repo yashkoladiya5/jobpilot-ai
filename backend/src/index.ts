@@ -8,11 +8,15 @@ import { config } from "./config";
 import { logger } from "./utils/logger";
 import { apiLimiter } from "./middleware/rateLimiter";
 
+// Load environment variables from the .env file
 dotenv.config();
 
+// Initialize the Express application instance
 const app = express();
 
+// Enable Cross-Origin Resource Sharing (CORS)
 app.use(cors());
+// Parse incoming JSON payloads
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
