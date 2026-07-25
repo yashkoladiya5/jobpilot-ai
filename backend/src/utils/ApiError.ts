@@ -1,3 +1,7 @@
+/**
+ * Custom error class for API-related exceptions.
+ * Extends the built-in Error class to include HTTP status codes.
+ */
 export class ApiError extends Error {
   public readonly statusCode: number;
   public readonly isOperational: boolean;
