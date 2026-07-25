@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:jobpilot_ai/core/theme/app_colors.dart';
 
+/// A centralized class for defining the application's overall theme and styling.
 class AppTheme {
   AppTheme._();
 
+  /// Retrieves the default light theme configuration for the application.
   static ThemeData get lightTheme {
     final colorScheme = ColorScheme.fromSeed(
       seedColor: AppColors.primary,
