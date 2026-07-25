@@ -5,6 +5,7 @@ import { validate } from "../middleware/validate";
 import { registerSchema, loginSchema } from "../validators/auth.validator";
 import { authLimiter } from "../middleware/rateLimiter";
 
+// Router instance specifically for authentication endpoints
 const router = Router();
 
 router.post("/register", validate(registerSchema), register);

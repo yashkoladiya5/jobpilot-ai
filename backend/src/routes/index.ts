@@ -7,6 +7,7 @@ import aiRoutes from "./ai.routes";
 import coverLetterRoutes from "./cover-letter.routes";
 import analyticsRoutes from "./analytics.routes";
 
+// Main router instance that aggregates all feature-specific routes
 const router = Router();
 
 router.use("/auth", authRoutes);
