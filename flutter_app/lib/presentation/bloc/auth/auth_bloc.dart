@@ -7,6 +7,8 @@ import 'package:jobpilot_ai/domain/usecases/auth/register_usecase.dart';
 import 'package:jobpilot_ai/presentation/bloc/auth/auth_event.dart';
 import 'package:jobpilot_ai/presentation/bloc/auth/auth_state.dart';
 
+/// The [AuthBloc] manages the authentication state for the entire application.
+/// It orchestrates login, registration, logout, and checking current auth status.
 @injectable
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final LoginUseCase _loginUseCase;
