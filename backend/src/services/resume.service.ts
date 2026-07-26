@@ -2,6 +2,9 @@ import fs from "fs";
 import prisma from "../config/prisma";
 import { ApiError } from "../utils/ApiError";
 
+/**
+ * Service managing user resumes, including file storage operations and database records.
+ */
 export class ResumeService {
   async uploadResume(userId: string, file: Express.Multer.File) {
     const count = await prisma.resume.count({ where: { userId } });

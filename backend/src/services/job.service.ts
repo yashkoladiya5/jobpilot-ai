@@ -1,6 +1,9 @@
 import prisma from "../config/prisma";
 import { ApiError } from "../utils/ApiError";
 
+/**
+ * Service handling all business logic and database interactions for Job Applications.
+ */
 export class JobService {
   async getJobs(
     userId: string,
