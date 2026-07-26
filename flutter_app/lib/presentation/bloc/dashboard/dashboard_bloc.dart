@@ -4,6 +4,8 @@ import 'package:jobpilot_ai/domain/usecases/dashboard/get_stats_usecase.dart';
 import 'package:jobpilot_ai/presentation/bloc/dashboard/dashboard_event.dart';
 import 'package:jobpilot_ai/presentation/bloc/dashboard/dashboard_state.dart';
 
+/// The [DashboardBloc] manages the state of the user's main dashboard view.
+/// It fetches and provides the statistical data required for the UI.
 @injectable
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   final GetStatsUseCase getStatsUseCase;
