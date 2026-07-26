@@ -1,5 +1,9 @@
 import prisma from "../config/prisma";
 
+/**
+ * Service for calculating advanced insights and aggregated metrics
+ * used in the user's pipeline and timeline analytics dashboards.
+ */
 export class AnalyticsService {
   async getPipelineAnalytics(userId: string) {
     const applications = await prisma.jobApplication.findMany({

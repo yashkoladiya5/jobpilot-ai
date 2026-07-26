@@ -3,6 +3,7 @@ import 'package:jobpilot_ai/domain/entities/user.dart';
 
 part 'auth_state.freezed.dart';
 
+/// Represents the various states of user authentication within the application.
 @freezed
 class AuthState with _$AuthState {
   const factory AuthState.authInitial() = AuthInitial;
