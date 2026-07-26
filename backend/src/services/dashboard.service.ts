@@ -1,5 +1,8 @@
 import prisma from "../config/prisma";
 
+/**
+ * Provides data aggregation and statistical analysis for the user dashboard.
+ */
 export class DashboardService {
   async getStats(userId: string) {
     const sevenDaysAgo = new Date();

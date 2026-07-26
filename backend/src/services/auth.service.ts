@@ -10,6 +10,9 @@ const userSelect = {
   updatedAt: true,
 } as const;
 
+/**
+ * Handles business logic for user authentication, registration, and profile retrieval.
+ */
 export class AuthService {
   async register(email: string, password: string, name: string) {
     const existingUser = await prisma.user.findUnique({ where: { email } });
