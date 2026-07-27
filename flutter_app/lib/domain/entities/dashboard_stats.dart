@@ -2,6 +2,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'dashboard_stats.freezed.dart';
 part 'dashboard_stats.g.dart';
 
+/// Data model representing the user's dashboard statistics.
+/// Includes application counts, breakdown by status, and recent activity.
 @freezed
 class DashboardStats with _$DashboardStats {
   const factory DashboardStats({

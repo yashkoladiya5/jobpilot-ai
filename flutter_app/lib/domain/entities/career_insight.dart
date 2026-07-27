@@ -17,6 +17,8 @@ class CareerHistoryPoint {
       );
 }
 
+/// Represents holistic AI-driven career insights.
+/// Tracks progress over time via [CareerHistoryPoint] and provides skill gap analysis.
 class CareerInsight {
   final double careerScore;
   final double interviewReadiness;
