@@ -1,5 +1,9 @@
 import { z } from "zod";
 
+/**
+ * Zod validation schemas for job application endpoints.
+ * Ensures data integrity when creating or updating job records.
+ */
 const jobStatusEnum = z.enum([
   "SAVED",
   "APPLIED",

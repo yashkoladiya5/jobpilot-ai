@@ -1,5 +1,9 @@
 import { z } from "zod";
 
+/**
+ * Zod validation schemas for authentication endpoints.
+ * Ensures incoming requests conform to required data types and constraints.
+ */
 export const registerSchema = z.object({
   body: z.object({
     email: z.string().email(),
