@@ -2,6 +2,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'job_application.freezed.dart';
 part 'job_application.g.dart';
 
+/// Represents a user's job application in the system.
+/// Tracks company, role, current status, and optional notes.
 @freezed
 class JobApplication with _$JobApplication {
   const factory JobApplication({

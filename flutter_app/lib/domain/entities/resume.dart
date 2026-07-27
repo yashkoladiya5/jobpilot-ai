@@ -2,6 +2,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'resume.freezed.dart';
 part 'resume.g.dart';
 
+/// Represents an uploaded resume file associated with a user.
+/// Contains metadata about the file such as size, type, and primary status.
 @freezed
 class Resume with _$Resume {
   const factory Resume({
