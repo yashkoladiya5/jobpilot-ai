@@ -4,6 +4,8 @@ import 'package:jobpilot_ai/core/errors/failures.dart';
 import 'package:jobpilot_ai/domain/entities/user.dart';
 import 'package:jobpilot_ai/domain/repositories/auth_repository.dart';
 
+/// UseCase encapsulating the user registration business logic.
+/// Delegates account creation to the [AuthRepository].
 @injectable
 class RegisterUseCase {
   final AuthRepository repository;
