@@ -1,3 +1,5 @@
+/// Represents the AI-generated feedback and scoring for an uploaded resume.
+/// Includes ATS score, strengths, weaknesses, and recruiter-like feedback.
 class ResumeAnalysis {
   final String id;
   final String resumeId;

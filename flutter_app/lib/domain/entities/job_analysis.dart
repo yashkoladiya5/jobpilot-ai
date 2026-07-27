@@ -1,3 +1,5 @@
+/// Represents the AI-generated analysis of a job description.
+/// Contains extracted skills, matching scores, and improvement recommendations.
 class JobAnalysis {
   final String id;
   final String? jobId;
