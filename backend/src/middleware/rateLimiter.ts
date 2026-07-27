@@ -1,5 +1,8 @@
 import rateLimit from "express-rate-limit";
 
+/**
+ * Limits the number of authentication attempts to prevent brute-force attacks.
+ */
 export const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 10,

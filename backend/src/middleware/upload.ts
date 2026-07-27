@@ -32,6 +32,10 @@ const fileFilter = (
   }
 };
 
+/**
+ * Multer configuration for handling file uploads safely.
+ * Restricts files to document formats (PDF, DOC, DOCX) and enforces size limits.
+ */
 export const upload = multer({
   storage,
   fileFilter,
