@@ -4,6 +4,10 @@ import { ApiError } from "../utils/ApiError";
 import { config } from "../config";
 import { logger } from "../utils/logger";
 
+/**
+ * Global error handling middleware for the Express application.
+ * Catches ApiError instances, syntax errors, and Multer upload errors, formatting them consistently.
+ */
 export const errorHandler = (
   err: Error,
   _req: Request,

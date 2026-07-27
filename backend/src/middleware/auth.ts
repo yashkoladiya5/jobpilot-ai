@@ -7,6 +7,10 @@ export interface AuthenticatedRequest extends Request {
   user: { id: string };
 }
 
+/**
+ * Middleware to protect routes by verifying JWT tokens.
+ * Extracts the user ID from the token and attaches it to the request object.
+ */
 export const authenticate = (
   req: Request,
   _res: Response,
