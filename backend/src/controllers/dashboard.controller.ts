@@ -3,6 +3,10 @@ import { asyncHandler } from "../utils/asyncHandler";
 import { AuthenticatedRequest } from "../middleware/auth";
 import { DashboardService } from "../services/dashboard.service";
 
+/**
+ * Controller for Dashboard operations.
+ * Fetches user statistics and recent activity for the home view.
+ */
 const dashboardService = new DashboardService();
 
 /**

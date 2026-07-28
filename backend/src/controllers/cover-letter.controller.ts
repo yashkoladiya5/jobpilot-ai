@@ -3,6 +3,10 @@ import { asyncHandler } from "../utils/asyncHandler";
 import { AuthenticatedRequest } from "../middleware/auth";
 import { CoverLetterService } from "../services/ai/cover-letter.service";
 
+/**
+ * Controller for Cover Letter operations.
+ * Handles generation and retrieval of AI cover letters.
+ */
 const coverLetterService = new CoverLetterService();
 
 export const generateCoverLetter = asyncHandler(async (req: Request, res: Response) => {
