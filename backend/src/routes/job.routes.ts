@@ -10,7 +10,10 @@ import { authenticate } from "../middleware/auth";
 import { validate } from "../middleware/validate";
 import { createJobSchema, updateJobSchema } from "../validators/job.validator";
 
-// Router instance for managing job listings and tracking user applications
+/**
+ * Express router for managing job application tracking.
+ * Provides CRUD operations for user job records.
+ */
 const router = Router();
 
 // CRUD operations for jobs, all requiring user authentication

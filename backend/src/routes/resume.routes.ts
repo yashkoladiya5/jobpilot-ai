@@ -9,6 +9,10 @@ import {
 import { authenticate } from "../middleware/auth";
 import { upload } from "../middleware/upload";
 
+/**
+ * Express router for resume file management.
+ * Supports secure uploading, deletion, and primary selection.
+ */
 const router = Router();
 
 router.post("/upload", authenticate, upload.single("resume"), uploadResume);
