@@ -8,6 +8,8 @@ import 'package:jobpilot_ai/data/models/api_response_model.dart';
 import 'package:jobpilot_ai/domain/entities/dashboard_stats.dart';
 import 'package:jobpilot_ai/domain/repositories/dashboard_repository.dart';
 
+/// Concrete implementation of the DashboardRepository.
+/// Fetches statistics from the remote API and maps them to domain entities.
 @LazySingleton(as: DashboardRepository)
 class DashboardRepositoryImpl implements DashboardRepository {
   final DashboardRemoteDataSource _remoteDataSource;

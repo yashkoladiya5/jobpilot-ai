@@ -11,6 +11,8 @@ import 'package:jobpilot_ai/data/models/api_response_model.dart';
 import 'package:jobpilot_ai/domain/entities/user.dart';
 import 'package:jobpilot_ai/domain/repositories/auth_repository.dart';
 
+/// Concrete implementation of the AuthRepository.
+/// Coordinates between local cache and remote API to manage user sessions.
 @LazySingleton(as: AuthRepository)
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource _remoteDataSource;
