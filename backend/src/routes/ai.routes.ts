@@ -19,6 +19,10 @@ import {
 } from "../controllers/ai.controller";
 import { authenticate } from "../middleware/auth";
 
+/**
+ * Express router for all AI-driven endpoints.
+ * Mounts routes for resume parsing, job matching, and career insights.
+ */
 const router = Router();
 
 // Apply authentication middleware to all AI routes
