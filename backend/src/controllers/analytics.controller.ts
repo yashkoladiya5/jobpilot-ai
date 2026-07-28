@@ -3,6 +3,10 @@ import { asyncHandler } from "../utils/asyncHandler";
 import { AuthenticatedRequest } from "../middleware/auth";
 import { AnalyticsService } from "../services/analytics.service";
 
+/**
+ * Controller for Analytics Operations.
+ * Exposes methods to retrieve pipeline metrics and historical timelines.
+ */
 const analyticsService = new AnalyticsService();
 
 export const getPipelineAnalytics = asyncHandler(async (req: Request, res: Response) => {

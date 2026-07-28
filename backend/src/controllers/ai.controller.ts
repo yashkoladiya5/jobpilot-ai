@@ -7,6 +7,10 @@ import { matchingService } from "../services/ai/matching.service";
 import { interviewService } from "../services/ai/interview.service";
 import { careerInsightsService } from "../services/ai/career-insights.service";
 
+/**
+ * Controller for AI Operations.
+ * Wraps service calls for Resume/Job analysis, matchmaking, and interview prep.
+ */
 const resumeAnalysisService = new ResumeAnalysisService();
 const jobAnalysisService = new JobAnalysisService();
 
