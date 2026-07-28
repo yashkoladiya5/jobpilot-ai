@@ -8,6 +8,8 @@ import 'package:jobpilot_ai/data/models/api_response_model.dart';
 import 'package:jobpilot_ai/domain/entities/resume.dart';
 import 'package:jobpilot_ai/domain/repositories/resume_repository.dart';
 
+/// Concrete implementation of the ResumeRepository.
+/// Uploads and manages resume files via the remote API.
 @LazySingleton(as: ResumeRepository)
 class ResumeRepositoryImpl implements ResumeRepository {
   final ResumeRemoteDataSource _remoteDataSource;

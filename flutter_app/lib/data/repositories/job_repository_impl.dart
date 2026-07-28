@@ -8,6 +8,8 @@ import 'package:jobpilot_ai/data/models/api_response_model.dart';
 import 'package:jobpilot_ai/domain/entities/job_application.dart';
 import 'package:jobpilot_ai/domain/repositories/job_repository.dart';
 
+/// Concrete implementation of the JobRepository.
+/// Interacts with the remote API to manage user job applications.
 @LazySingleton(as: JobRepository)
 class JobRepositoryImpl implements JobRepository {
   final JobRemoteDataSource _remoteDataSource;
