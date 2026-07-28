@@ -50,6 +50,8 @@ class UpdateJobParams {
   });
 }
 
+/// Abstract definition of the Job Repository.
+/// Handles CRUD operations for job applications and related metadata.
 abstract class JobRepository {
   Future<Either<Failure, List<JobApplication>>> getJobs();
   Future<Either<Failure, JobApplication>> getJobById(String id);
