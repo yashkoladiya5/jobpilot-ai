@@ -7,6 +7,8 @@ import 'package:jobpilot_ai/domain/entities/job_analysis.dart';
 import 'package:jobpilot_ai/domain/entities/cover_letter.dart';
 import 'package:jobpilot_ai/domain/entities/resume_analysis.dart';
 
+/// Abstract definition of the AI Repository.
+/// Defines contracts for resume parsing, job matching, interview generation, and career insights.
 abstract class AiRepository {
   // Resume Analysis
   Future<Either<Failure, ResumeAnalysis>> analyzeResume(String resumeId);
