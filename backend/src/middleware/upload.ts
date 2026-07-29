@@ -4,6 +4,10 @@ import { v4 as uuidv4 } from "uuid";
 import { config } from "../config";
 import { ApiError } from "../utils/ApiError";
 
+/**
+ * Disk storage configuration for uploaded files.
+ * Uses UUIDs for filenames to prevent collisions.
+ */
 const storage = multer.diskStorage({
   destination: (_req, _file, cb) => {
     cb(null, config.uploadDir);

@@ -33,6 +33,12 @@ export const authenticate = (
   }
 };
 
+/**
+ * Generates a new JWT for an authenticated user.
+ * 
+ * @param userId - The unique identifier of the user
+ * @returns A signed JWT string
+ */
 export const generateToken = (userId: string): string => {
   return jwt.sign({ userId }, config.jwtSecret, {
     expiresIn: config.jwtExpiresIn as jwt.SignOptions["expiresIn"],
