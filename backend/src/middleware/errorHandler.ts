@@ -18,6 +18,7 @@ export const errorHandler = (
     logger.error("Error:", err);
   }
 
+  // Intercept explicit API errors and format their payload
   if (err instanceof ApiError) {
     res.status(err.statusCode).json({
       success: false,

@@ -1,6 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 import { ZodSchema, ZodError } from "zod";
 
+/**
+ * Generic validation middleware using Zod schemas.
+ * Intercepts requests, parses the body/query/params against a given schema,
+ * and returns formatted errors if validation fails.
+ */
 export const validate = (schema: ZodSchema) => {
   return (req: Request, res: Response, next: NextFunction): void => {
     try {
