@@ -3,6 +3,7 @@ import { config } from "../config";
 
 /**
  * Pre-configured Winston logger setup for standardizing application logs.
+ * Supports different log formats based on the environment (dev vs prod).
  */
 const levels = { error: 0, warn: 1, info: 2, http: 3, debug: 4 };
 const level = config.nodeEnv === "development" ? "debug" : "warn";
