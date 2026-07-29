@@ -1,7 +1,9 @@
 import { PrismaClient } from '@prisma/client';
 
-// Initialize the Prisma Client for database interaction.
-// Query logging is enabled only in the development environment for easier debugging.
+/**
+ * Shared Prisma Client instance for database interactions.
+ * Configured to log queries in development for easier debugging.
+ */
 const prisma = new PrismaClient({
   log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
 });

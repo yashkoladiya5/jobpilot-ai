@@ -3,7 +3,10 @@ import dotenv from "dotenv";
 // Load environment variables from the .env file into process.env
 dotenv.config();
 
-// Centralized configuration object for the backend application
+/**
+ * Centralized configuration object for the backend application.
+ * Parses and exports all required environment variables with default fallbacks.
+ */
 export const config = {
   port: parseInt(process.env.PORT || "3000", 10),
   databaseUrl: process.env.DATABASE_URL || "postgresql://postgres:postgres@localhost:5432/jobpilot_ai?schema=public",
