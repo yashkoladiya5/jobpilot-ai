@@ -5,6 +5,9 @@ import { resumeMatchingSchema, ResumeMatchingOutput } from "./schemas/resume-mat
 import { ApiError } from "../../utils/ApiError";
 import fs from "fs/promises";
 
+/**
+ * Service that uses AI to score and match user resumes against specific job descriptions.
+ */
 export class MatchingService {
   async matchResumeAndJob(
     userId: string,

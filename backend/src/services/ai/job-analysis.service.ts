@@ -5,6 +5,9 @@ import { jobAnalysisSchema } from "./schemas/job-analysis.schema";
 import { buildJobAnalysisPrompt } from "./prompts/job-analysis.prompt";
 import fs from "fs/promises";
 
+/**
+ * Service for analyzing job descriptions using AI to extract key skills and requirements.
+ */
 export class JobAnalysisService {
   async analyzeJobDescription(userId: string, jobDescription: string, jobId?: string) {
     let resumeText: string | undefined;
