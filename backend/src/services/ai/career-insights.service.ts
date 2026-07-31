@@ -5,6 +5,10 @@ import { careerInsightsSchema, CareerInsightsOutput } from "./schemas/career-ins
 import { ApiError } from "../../utils/ApiError";
 import { startOfWeek } from "date-fns";
 
+/**
+ * Service responsible for aggregating user career data and leveraging AI
+ * to generate personalized career insights and recommendations.
+ */
 export class CareerInsightsService {
   async computeInsights(userId: string): Promise<CareerInsightsOutput> {
     const totalApplications = await prisma.jobApplication.count({ where: { userId } });

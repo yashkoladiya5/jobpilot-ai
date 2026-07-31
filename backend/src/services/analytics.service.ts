@@ -6,6 +6,7 @@ import prisma from "../config/prisma";
  */
 export class AnalyticsService {
   async getPipelineAnalytics(userId: string) {
+    // Retrieve all job applications for the user, ordered by newest first
     const applications = await prisma.jobApplication.findMany({
       where: { userId },
       orderBy: { createdAt: "desc" },
