@@ -14,6 +14,7 @@ export class JobService {
       sortOrder?: string;
     }
   ) {
+    // Initialize base query filtering by the authenticated user
     const where: any = { userId };
     if (query?.status) {
       where.status = query.status;

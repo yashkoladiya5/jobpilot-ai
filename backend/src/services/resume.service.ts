@@ -7,6 +7,7 @@ import { ApiError } from "../utils/ApiError";
  */
 export class ResumeService {
   async uploadResume(userId: string, file: Express.Multer.File) {
+    // Make the first uploaded resume primary by default
     const count = await prisma.resume.count({ where: { userId } });
 
     const resume = await prisma.resume.create({
