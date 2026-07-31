@@ -5,6 +5,9 @@ import { coverLetterSchema } from "./schemas/cover-letter.schema";
 import { buildCoverLetterPrompt } from "./prompts/cover-letter.prompt";
 import fs from "fs/promises";
 
+/**
+ * Service for generating AI-powered cover letters using user resumes and job descriptions.
+ */
 export class CoverLetterService {
   async generateCoverLetter(
     userId: string,

@@ -6,6 +6,10 @@ import { ApiError } from "../../utils/ApiError";
 import fs from "fs/promises";
 import { z } from "zod";
 
+/**
+ * Service for orchestrating AI-driven interview simulation sessions.
+ * Manages question generation, answer evaluation, and scoring.
+ */
 export class InterviewService {
   async generateQuestions(userId: string, jobId: string) {
     const job = await prisma.jobApplication.findFirst({
