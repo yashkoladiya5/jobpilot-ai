@@ -15,6 +15,7 @@ const userSelect = {
  */
 export class AuthService {
   async register(email: string, password: string, name: string) {
+    // Check if the provided email already exists in the system
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
       throw ApiError.badRequest("Email already in use");
