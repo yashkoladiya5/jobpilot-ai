@@ -25,6 +25,7 @@ class JobApplication with _$JobApplication {
       _$JobApplicationFromJson(json);
 }
 
+/// Standardized enum representing all possible stages of a job application.
 @JsonEnum(valueField: 'value')
 enum ApplicationStatus {
   @JsonValue('SAVED')

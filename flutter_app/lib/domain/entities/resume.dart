@@ -6,6 +6,7 @@ part 'resume.g.dart';
 /// Contains metadata about the file such as size, type, and primary status.
 @freezed
 class Resume with _$Resume {
+  /// Factory constructor for generating a Resume instance.
   const factory Resume({
     required String id,
     required String userId,
