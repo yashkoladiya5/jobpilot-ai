@@ -10,6 +10,7 @@ class AuthState with _$AuthState {
 
   const factory AuthState.authLoading() = AuthLoading;
 
+  /// The user has successfully authenticated and their profile data is available.
   const factory AuthState.authenticated({required User user}) = Authenticated;
 
   const factory AuthState.unauthenticated({String? message}) = Unauthenticated;

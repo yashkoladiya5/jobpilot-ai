@@ -5,6 +5,7 @@ part 'auth_event.freezed.dart';
 /// Defines all the events that can be dispatched to the [AuthBloc].
 @freezed
 class AuthEvent with _$AuthEvent {
+  /// Triggered when the user attempts to log in with email and password.
   const factory AuthEvent.loginSubmitted({
     required String email,
     required String password,
