@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:jobpilot_ai/core/errors/failures.dart';
 import 'package:jobpilot_ai/domain/entities/job_application.dart';
 
+/// Parameters required to create a new job application.
 class CreateJobParams {
   final String companyName;
   final String role;
