@@ -11,6 +11,7 @@ class RegisterUseCase {
   final AuthRepository repository;
   RegisterUseCase(this.repository);
 
+  /// Executes the registration operation.
   Future<Either<Failure, User>> call(
       String email, String password, String name) {
     return repository.register(email, password, name);
