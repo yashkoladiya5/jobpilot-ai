@@ -31,6 +31,7 @@ class AppConstants {
   static const String resumesRoute = '/resumes';
 }
 
+/// Contains standardized padding, margin, and size constants for consistent UI.
 class AppLayoutConstants {
   AppLayoutConstants._();
 
