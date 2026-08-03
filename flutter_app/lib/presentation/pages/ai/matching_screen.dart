@@ -149,7 +149,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
     if (result != null) _lastResult = result;
 
     return ListView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(18),
       children: [
         Text(
           'Select a resume and paste a job description to check compatibility.',
