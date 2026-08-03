@@ -71,7 +71,7 @@ class _SplashScreenState extends State<SplashScreen>
                         size: 80,
                         color: AppColors.primary,
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 20),
                       Text(
                         AppConstants.appName,
                         style: Theme.of(context)

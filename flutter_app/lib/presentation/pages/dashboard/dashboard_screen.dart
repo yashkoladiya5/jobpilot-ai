@@ -85,7 +85,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       padding: const EdgeInsets.all(16),
       children: [
         _buildCareerInsightsSection(context),
-        const SizedBox(height: 24),
+        const SizedBox(height: 28),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
