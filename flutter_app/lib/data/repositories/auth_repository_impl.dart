@@ -23,6 +23,7 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Either<Failure, User>> login(String email, String password) async {
     try {
+      // Send login credentials to the remote API
       final response = await _remoteDataSource.login(email, password);
       final apiResponse = ApiResponseModel<Map<String, dynamic>>.fromJson(
         response,

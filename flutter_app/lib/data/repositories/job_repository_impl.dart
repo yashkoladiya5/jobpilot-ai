@@ -19,6 +19,7 @@ class JobRepositoryImpl implements JobRepository {
   @override
   Future<Either<Failure, List<JobApplication>>> getJobs() async {
     try {
+      // Retrieve the user's jobs from the backend
       final response = await _remoteDataSource.getJobs();
       final apiResponse = ApiResponseModel<List<JobApplication>>.fromJson(
         response,
