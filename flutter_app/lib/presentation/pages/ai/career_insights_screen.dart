@@ -92,7 +92,7 @@ class _CareerInsightsScreenState extends State<CareerInsightsScreen> {
         ),
         const SizedBox(height: 24),
         _buildCareerScore(insight.careerScore),
-        const SizedBox(height: 28),
+        const SizedBox(height: 30),
         Text(
           'Score Breakdown',
           style: theme.textTheme.titleMedium
