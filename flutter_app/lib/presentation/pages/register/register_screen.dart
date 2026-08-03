@@ -93,7 +93,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             color: AppColors.primary,
                           ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 10),
                     Text(
                       'Create your account to get started',
                       style: Theme.of(context)
