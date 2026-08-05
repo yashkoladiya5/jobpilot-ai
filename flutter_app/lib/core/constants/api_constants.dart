@@ -5,7 +5,9 @@ import 'package:jobpilot_ai/core/constants/app_constants.dart';
 class ApiConstants {
   ApiConstants._();
 
-  static String get _baseUrl => AppConstants.apiBaseUrl;
+  static String get _baseUrl {
+    return AppConstants.apiBaseUrl;
+  }
 
   static String get login => '$_baseUrl/auth/login';
   static String get register => '$_baseUrl/auth/register';

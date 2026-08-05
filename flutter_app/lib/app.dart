@@ -46,6 +46,10 @@ class JobPilotApp extends StatelessWidget {
       ],
       child: MaterialApp.router(
         title: 'JobPilot AI',
+        builder: (context, child) => MediaQuery(
+          data: MediaQuery.of(context).copyWith(textScaler: const TextScaler.linear(1.0)),
+          child: child!,
+        ),
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,
         routerConfig: appRouter.router,

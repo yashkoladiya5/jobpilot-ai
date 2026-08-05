@@ -37,7 +37,7 @@ export class AuthService {
       throw ApiError.unauthorized("Invalid email or password");
     }
 
-    const isMatch = await bcrypt.compare(password, user.passwordHash);
+    const isMatch: boolean = await bcrypt.compare(password, user.passwordHash);
     if (!isMatch) {
       throw ApiError.unauthorized("Invalid email or password");
     }
