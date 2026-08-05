@@ -112,7 +112,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
 
   Widget _buildDetailContent(BuildContext context, JobApplication job) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

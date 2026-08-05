@@ -54,7 +54,7 @@ class _AiHubScreenState extends State<AiHubScreen> {
                   child: _ScoreCardsRow(
                       insight: insight, isLoading: isLoading),
                 ),
-                const SliverToBoxAdapter(child: SizedBox(height: 10)),
+                const SliverToBoxAdapter(child: SizedBox(height: 12)),
                 const SliverToBoxAdapter(
                   child: _SectionHeader(title: 'Recommended Actions'),
                 ),
