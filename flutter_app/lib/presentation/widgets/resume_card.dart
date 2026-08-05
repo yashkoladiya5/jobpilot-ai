@@ -23,7 +23,7 @@ class ResumeCard extends StatelessWidget {
     final isPdf = mimeType.contains('pdf');
 
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
