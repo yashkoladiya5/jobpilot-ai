@@ -72,7 +72,7 @@ class _JobAnalysesScreenState extends State<JobAnalysesScreen> {
     return RefreshIndicator(
       onRefresh: _onRefresh,
       child: ListView.builder(
-        padding: const EdgeInsets.only(top: 8, bottom: 18),
+        padding: const EdgeInsets.only(top: 8, bottom: 20),
         itemCount: analyses.length,
         itemBuilder: (context, index) {
           final analysis = analyses[index];
