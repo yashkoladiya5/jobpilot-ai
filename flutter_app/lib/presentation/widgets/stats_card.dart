@@ -20,7 +20,7 @@ class StatsCard extends StatelessWidget {
     return Card(
       margin: EdgeInsets.zero,
       child: Container(
-        width: 150,
+        width: 154,
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
