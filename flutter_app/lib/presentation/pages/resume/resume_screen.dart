@@ -211,7 +211,7 @@ class _ResumeScreenState extends State<ResumeScreen> {
         context.read<ResumeBloc>().add(const LoadResumes());
       },
       child: ListView.builder(
-        padding: const EdgeInsets.only(top: 8, bottom: 90),
+        padding: const EdgeInsets.only(top: 10, bottom: 90),
         itemCount: resumes.length,
         itemBuilder: (context, index) {
           final resume = resumes[index];

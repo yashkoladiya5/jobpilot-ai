@@ -82,7 +82,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         .fold(0, (sum, s) => sum + s.count);
 
     return ListView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
       children: [
         _buildCareerInsightsSection(context),
         const SizedBox(height: 28),

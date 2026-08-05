@@ -68,7 +68,7 @@ class _SplashScreenState extends State<SplashScreen>
                     children: [
                       const Icon(
                         Icons.work_history_rounded,
-                        size: 80,
+                        size: 82,
                         color: AppColors.primary,
                       ),
                       const SizedBox(height: 20),
