@@ -79,7 +79,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     SizedBox(height: size.height * 0.06),
                     const Icon(
                       Icons.work_history_rounded,
-                      size: 64,
+                      size: 66,
                       color: AppColors.primary,
                     ),
                     const SizedBox(height: 12),

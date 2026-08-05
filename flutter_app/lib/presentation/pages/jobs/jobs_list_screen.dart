@@ -97,7 +97,7 @@ class _JobsListScreenState extends State<JobsListScreen> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(16, 10, 16, 4),
+          padding: const EdgeInsets.fromLTRB(16, 10, 16, 6),
           child: TextField(
             controller: _searchController,
             decoration: InputDecoration(

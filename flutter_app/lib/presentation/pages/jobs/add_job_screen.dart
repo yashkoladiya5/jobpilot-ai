@@ -125,7 +125,7 @@ class _AddJobScreenState extends State<AddJobScreen> {
 
   Widget _buildForm(BuildContext context, {required bool isLoading}) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
       child: Form(
         key: _formKey,
         child: Column(
