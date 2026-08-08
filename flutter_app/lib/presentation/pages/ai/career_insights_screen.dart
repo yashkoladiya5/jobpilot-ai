@@ -71,7 +71,7 @@ class _CareerInsightsScreenState extends State<CareerInsightsScreen> {
         : 'Today';
 
     return ListView(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(24),
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
