@@ -16,5 +16,5 @@ const dashboardService = new DashboardService();
 export const getStats = asyncHandler(async (req: Request, res: Response) => {
   const userId = (req as AuthenticatedRequest).user.id;
   const data = await dashboardService.getStats(userId);
-  res.status(200).json({ success: true, data });
+  res.status(200).json({ success: true, message: "Dashboard stats fetched successfully", data });
 });
