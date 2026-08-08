@@ -11,7 +11,7 @@ class LoginUseCase {
   final AuthRepository repository;
   LoginUseCase(this.repository);
 
-  /// Executes the login operation.
+  /// Executes the login operation with email and password.
   Future<Either<Failure, User>> call(String email, String password) {
     return repository.login(email, password);
   }

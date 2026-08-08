@@ -129,7 +129,7 @@ class AuthRepositoryImpl implements AuthRepository {
       );
     }
     return Failure.serverFailure(
-      message: e.message ?? 'An unexpected error occurred',
+      message: e.message ?? 'An unexpected network error occurred',
     );
   }
 }
