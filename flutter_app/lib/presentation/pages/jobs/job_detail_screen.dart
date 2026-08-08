@@ -294,7 +294,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
     VoidCallback? onTap,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 10),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(8),
