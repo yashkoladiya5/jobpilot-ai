@@ -6,6 +6,8 @@ part 'resume.g.dart';
 /// Contains metadata about the file such as size, type, and primary status.
 @freezed
 class Resume with _$Resume {
+  const Resume._(); // Added for custom getters
+
   /// Factory constructor for generating a Resume instance.
   const factory Resume({
     required String id,
@@ -19,4 +21,7 @@ class Resume with _$Resume {
   }) = _Resume;
 
   factory Resume.fromJson(Map<String, dynamic> json) => _$ResumeFromJson(json);
+
+  /// Returns the extension of the file name, in lowercase.
+  String get fileExtension => fileName.split('.').last.toLowerCase();
 }

@@ -44,4 +44,7 @@ class ResumeAnalysis {
         recruiterFeedback: json['recruiterFeedback'] as String,
         createdAt: DateTime.parse(json['createdAt'] as String),
       );
+
+  /// Returns whether the ATS score is considered excellent (>= 80).
+  bool get isExcellentScore => atsScore >= 80;
 }
