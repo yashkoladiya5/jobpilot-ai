@@ -22,7 +22,7 @@ class ErrorDisplay extends StatelessWidget {
           children: [
             Icon(
               icon,
-              size: 66,
+              size: 68,
               color: Theme.of(context).colorScheme.error,
             ),
             const SizedBox(height: 16),
