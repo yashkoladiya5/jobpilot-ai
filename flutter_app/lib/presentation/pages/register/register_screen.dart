@@ -72,14 +72,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
           return SafeArea(
             child: Center(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(height: size.height * 0.06),
                     const Icon(
                       Icons.work_history_rounded,
-                      size: 66,
+                      size: 68,
                       color: AppColors.primary,
                     ),
                     const SizedBox(height: 12),
