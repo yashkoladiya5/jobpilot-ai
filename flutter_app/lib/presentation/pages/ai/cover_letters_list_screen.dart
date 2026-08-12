@@ -106,8 +106,8 @@ class _CoverLettersListScreenState extends State<CoverLettersListScreen> {
           child: Row(
             children: [
               Container(
-                width: 48,
-                height: 48,
+                width: 50,
+                height: 50,
                 decoration: BoxDecoration(
                   color: toneColor.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(12),

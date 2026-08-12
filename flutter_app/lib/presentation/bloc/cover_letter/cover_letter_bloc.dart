@@ -6,6 +6,7 @@ import 'package:jobpilot_ai/domain/usecases/ai/get_cover_letters_usecase.dart';
 import 'package:jobpilot_ai/presentation/bloc/cover_letter/cover_letter_event.dart';
 import 'package:jobpilot_ai/presentation/bloc/cover_letter/cover_letter_state.dart';
 
+/// Manages the state for cover letter generation and viewing operations.
 @injectable
 class CoverLetterBloc extends Bloc<CoverLetterEvent, CoverLetterState> {
   final GenerateCoverLetterUseCase _generateUseCase;
