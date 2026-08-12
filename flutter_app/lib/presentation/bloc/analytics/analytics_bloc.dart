@@ -5,6 +5,7 @@ import 'package:jobpilot_ai/domain/usecases/analytics/get_timeline_data_usecase.
 import 'package:jobpilot_ai/presentation/bloc/analytics/analytics_event.dart';
 import 'package:jobpilot_ai/presentation/bloc/analytics/analytics_state.dart';
 
+/// Manages the state of the analytics screen, fetching both pipeline and timeline data.
 @injectable
 class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
   final GetPipelineAnalyticsUseCase _getPipeline;
