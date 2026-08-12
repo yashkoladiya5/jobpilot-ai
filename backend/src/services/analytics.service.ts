@@ -43,7 +43,7 @@ export class AnalyticsService {
       countWithDates++;
     }
     const averageDaysInPipeline =
-      countWithDates > 0 ? Math.round((totalDays / countWithDates) * 10) / 10 : 0;
+      countWithDates > 0 ? Number((totalDays / countWithDates).toFixed(1)) : 0;
 
     const companyCounts: Record<string, number> = {};
     for (const app of applications) {

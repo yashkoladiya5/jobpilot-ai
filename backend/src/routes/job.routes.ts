@@ -12,7 +12,7 @@ import { createJobSchema, updateJobSchema } from "../validators/job.validator";
 
 /**
  * Express router for managing job application tracking.
- * Provides CRUD operations for user job records.
+ * Provides CRUD operations for user job records securely.
  */
 const router = Router();
 

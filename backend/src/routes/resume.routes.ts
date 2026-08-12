@@ -11,7 +11,7 @@ import { upload } from "../middleware/upload";
 
 /**
  * Express router for resume file management.
- * Supports secure uploading, deletion, and primary selection.
+ * Supports secure uploading, deletion, and primary selection operations.
  */
 const router = Router();
 
