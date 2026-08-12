@@ -23,6 +23,8 @@ class JobApplication with _$JobApplication {
 
   factory JobApplication.fromJson(Map<String, dynamic> json) =>
       _$JobApplicationFromJson(json);
+
+  bool get hasNotes => notes != null && notes!.trim().isNotEmpty;
 }
 
 /// Standardized enum representing all possible stages of a job application.

@@ -29,6 +29,7 @@ class AppConstants {
   static const String jobDetailRoute = '/jobs/:id';
   static const String jobEditRoute = '/jobs/:id/edit';
   static const String resumesRoute = '/resumes';
+  static const String profileRoute = '/profile';
 }
 
 /// Contains standardized padding, margin, and size constants for consistent UI.
