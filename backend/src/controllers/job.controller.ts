@@ -35,6 +35,18 @@ export const getJobById = asyncHandler(async (req: Request, res: Response) => {
 
 export const createJob = asyncHandler(async (req: Request, res: Response) => {
   const userId = (req as AuthenticatedRequest).user.id;
+  const { companyName, role } = req.body;
+  
+  if (!companyName || companyName.trim() === "") {
+     res.status(400).json({ success: false, message: "Company name is required." });
+     return;
+  }
+  
+  if (!role || role.trim() === "") {
+     res.status(400).json({ success: false, message: "Role is required." });
+     return;
+  }
+
   const job = await jobService.createJob(userId, req.body);
 
   res.status(201).json({

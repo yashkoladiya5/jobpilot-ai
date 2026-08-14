@@ -58,11 +58,20 @@ class JobBloc extends Bloc<JobEvent, JobState> {
     CreateJob event,
     Emitter<JobState> emit,
   ) async {
+    final params = event.params;
+    if (params.companyName.isEmpty || params.role.isEmpty) {
+       emit(const JobError('Company Name and Role cannot be empty'));
+       return;
+    }
+
     emit(const JobLoading());
     final result = await createJobUseCase(event.params);
     result.fold(
       (failure) => emit(JobError(failure.message)),
-      (_) => emit(const JobOperationSuccess('Job created successfully')),
+      (_) {
+        emit(const JobOperationSuccess('Job created successfully'));
+        add(const LoadJobs()); // Auto reload the jobs list in background
+      },
     );
   }
 

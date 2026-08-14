@@ -70,6 +70,18 @@ class _AddJobScreenState extends State<AddJobScreen> {
   void _submit() {
     if (!_formKey.currentState!.validate()) return;
 
+    // Additional validation for URL before submitting
+    final urlText = _jobUrlController.text.trim();
+    if (urlText.isNotEmpty && !Uri.parse(urlText).isAbsolute) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter a valid absolute URL for the job.'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
+
     final params = CreateJobParams(
       companyName: _companyNameController.text.trim(),
       role: _roleController.text.trim(),
