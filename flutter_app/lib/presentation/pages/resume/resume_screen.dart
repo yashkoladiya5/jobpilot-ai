@@ -98,22 +98,29 @@ class _ResumeScreenState extends State<ResumeScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Delete Resume'),
-        content: Text('Are you sure you want to delete "${resume.fileName}"?'),
+        title: Row(
+          children: [
+            const Icon(Icons.warning_amber_rounded, color: AppColors.error),
+            const SizedBox(width: 8),
+            const Text('Delete Resume'),
+          ],
+        ),
+        content: Text('Are you sure you want to delete "${resume.fileName}"? This action cannot be undone.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('Cancel'),
+            child: const Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.error,
+              foregroundColor: Colors.white,
             ),
             onPressed: () {
               Navigator.of(ctx).pop();
               context.read<ResumeBloc>().add(DeleteResume(resume.id));
             },
-            child: const Text('Delete'),
+            child: const Text('Delete Permanently'),
           ),
         ],
       ),

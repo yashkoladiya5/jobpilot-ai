@@ -43,6 +43,12 @@ class ResumeBloc extends Bloc<ResumeEvent, ResumeState> {
     UploadResume event,
     Emitter<ResumeState> emit,
   ) async {
+    final filePath = event.filePath.toLowerCase();
+    if (!filePath.endsWith('.pdf') && !filePath.endsWith('.doc') && !filePath.endsWith('.docx')) {
+      emit(const ResumeError('Invalid file format. Only PDF, DOC, and DOCX are allowed.'));
+      return;
+    }
+    
     emit(const ResumeLoading());
     final result = await _uploadResumeUseCase(event.filePath);
     await result.fold(
