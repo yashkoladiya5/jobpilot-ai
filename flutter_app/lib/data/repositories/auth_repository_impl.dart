@@ -101,6 +101,23 @@ class AuthRepositoryImpl implements AuthRepository {
     return await _localDataSource.isAuthenticated();
   }
 
+  /// Helper method to safely decode a JWT token payload without verifying the signature.
+  /// This is useful for checking claims like expiration time on the client side.
+  Future<Map<String, dynamic>?> _decodeToken(String token) async {
+    try {
+      final parts = token.split('.');
+      if (parts.length != 3) return null;
+      
+      String normalized = base64Url.normalize(parts[1]);
+      String decoded = utf8.decode(base64Url.decode(normalized));
+      
+      return jsonDecode(decoded) as Map<String, dynamic>;
+    } catch (e) {
+      // In case of any decoding errors, simply return null rather than crashing
+      return null;
+    }
+  }
+
   Failure _handleDioError(DioException e) {
     if (e.error is AuthException) {
       return Failure.authFailure(

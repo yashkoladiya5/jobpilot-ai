@@ -16,8 +16,19 @@ class DashboardRepositoryImpl implements DashboardRepository {
 
   DashboardRepositoryImpl(this._remoteDataSource);
 
+  DashboardStats? _cachedStats;
+  DateTime? _lastFetchTime;
+  static const _cacheDuration = Duration(minutes: 5);
+
   @override
   Future<Either<Failure, DashboardStats>> getStats() async {
+    // Check if we have a valid cached version first to save network calls
+    if (_cachedStats != null && _lastFetchTime != null) {
+      if (DateTime.now().difference(_lastFetchTime!) < _cacheDuration) {
+        return Right(_cachedStats!);
+      }
+    }
+    
     try {
       final response = await _remoteDataSource.getStats();
       final apiResponse = ApiResponseModel<DashboardStats>.fromJson(
@@ -28,10 +39,21 @@ class DashboardRepositoryImpl implements DashboardRepository {
       if (apiResponse.data == null) {
         return const Left(Failure.serverFailure(message: 'No stats data returned'));
       }
+      
+      // Update the cache on successful fetch
+      _cachedStats = apiResponse.data!;
+      _lastFetchTime = DateTime.now();
+      
       return Right(apiResponse.data!);
     } on DioException catch (e) {
       return Left(_handleDioError(e));
     }
+  }
+
+  /// Manually clear the cache to force a fresh fetch on the next request.
+  void clearCache() {
+    _cachedStats = null;
+    _lastFetchTime = null;
   }
 
   Failure _handleDioError(DioException e) {

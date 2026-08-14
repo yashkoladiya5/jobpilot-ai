@@ -9,7 +9,7 @@ export class DashboardService {
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-    const [totalApplications, grouped, recentApplications, recentActivity, resumeCount] =
+    const [totalApplications, grouped, recentApplications, recentActivity, resumeCount, activeInterviews] =
       await Promise.all([
         prisma.jobApplication.count({ where: { userId } }),
 
@@ -37,6 +37,10 @@ export class DashboardService {
         }),
 
         prisma.resume.count({ where: { userId } }),
+
+        prisma.jobApplication.count({
+          where: { userId, status: 'INTERVIEW' },
+        }),
       ]);
 
     const byStatus = grouped.map((g) => ({
@@ -44,12 +48,17 @@ export class DashboardService {
       count: g._count.status,
     }));
 
+    // Calculate ratio of active interviews to total applications
+    const activeInterviewRate = totalApplications > 0 ? (activeInterviews / totalApplications) * 100 : 0;
+
     return {
       totalApplications,
       byStatus,
       recentApplications,
       recentActivity,
       resumeCount,
+      activeInterviews,
+      activeInterviewRate: parseFloat(activeInterviewRate.toFixed(1)),
     };
   }
 }
