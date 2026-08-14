@@ -12,12 +12,24 @@ const authService = new AuthService();
 export const register = asyncHandler(async (req: Request, res: Response) => {
   const { email, password, name } = req.body;
 
+  if (!email || !email.includes('@')) {
+    throw ApiError.badRequest("A valid email address is required");
+  }
+
+  if (!password || password.length < 6) {
+    throw ApiError.badRequest("Password must be at least 6 characters long");
+  }
+
+  if (!name || name.trim().length === 0) {
+    throw ApiError.badRequest("Name is required and cannot be empty");
+  }
+
   const user = await authService.register(email, password, name);
   const token = generateToken(user.id);
 
   res.status(201).json({
     success: true,
-    message: "User registered successfully",
+    message: "User registered successfully. Welcome to JobPilot AI!",
     data: { user, token },
   });
 });

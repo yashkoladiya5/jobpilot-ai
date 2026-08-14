@@ -25,13 +25,27 @@ export const uploadResume = asyncHandler(async (req: Request, res: Response) => 
 
 export const getResumes = asyncHandler(async (req: Request, res: Response) => {
   const { id: userId } = (req as AuthenticatedRequest).user;
+  const { limit, offset } = req.query;
+
+  // Optional pagination parsing
+  const parsedLimit = limit ? parseInt(limit as string, 10) : undefined;
+  const parsedOffset = offset ? parseInt(offset as string, 10) : undefined;
+  
+  if (parsedLimit && isNaN(parsedLimit)) {
+    throw ApiError.badRequest("Limit must be a valid number");
+  }
 
   const resumes = await resumeService.getResumes(userId);
 
   res.status(200).json({
     success: true,
-    message: "Resumes fetched successfully",
+    message: `Resumes fetched successfully for user ${userId}`,
     data: resumes,
+    meta: {
+       totalCount: resumes.length,
+       limit: parsedLimit || resumes.length,
+       offset: parsedOffset || 0
+    }
   });
 });
 

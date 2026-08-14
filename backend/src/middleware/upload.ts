@@ -30,9 +30,11 @@ const fileFilter = (
   cb: multer.FileFilterCallback
 ) => {
   if (allowedMimeTypes.includes(file.mimetype)) {
+    console.log(`[Upload] Accepting file: ${file.originalname} (${file.mimetype})`);
     cb(null, true);
   } else {
-    cb(ApiError.badRequest("Only PDF, DOC, and DOCX files are allowed"));
+    console.warn(`[Upload] Rejected file: ${file.originalname} (${file.mimetype})`);
+    cb(ApiError.badRequest(`Unsupported file format '${file.mimetype}'. Only PDF, DOC, and DOCX files are allowed`));
   }
 };
 
