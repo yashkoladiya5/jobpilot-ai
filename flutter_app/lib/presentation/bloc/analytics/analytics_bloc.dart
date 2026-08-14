@@ -22,11 +22,21 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
     LoadPipelineAnalytics event,
     Emitter<AnalyticsState> emit,
   ) async {
-    emit(AnalyticsLoading());
+    final isAlreadyLoaded = state is AnalyticsLoaded;
+    if (!isAlreadyLoaded) emit(AnalyticsLoading());
+    
     final result = await _getPipeline();
     result.fold(
-      (failure) => emit(AnalyticsError(failure.message)),
-      (analytics) => emit(AnalyticsLoaded(analytics: analytics)),
+      (failure) {
+        if (!isAlreadyLoaded) emit(AnalyticsError(failure.message));
+      },
+      (analytics) {
+        if (state is AnalyticsLoaded) {
+          emit((state as AnalyticsLoaded).copyWith(analytics: analytics));
+        } else {
+          emit(AnalyticsLoaded(analytics: analytics));
+        }
+      },
     );
   }
 
@@ -35,15 +45,22 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
     Emitter<AnalyticsState> emit,
   ) async {
     final currentState = state;
+    if (currentState is AnalyticsLoaded) {
+      emit(currentState.copyWith(isRefreshing: true));
+    }
+
     final timelineResult = await _getTimeline();
     timelineResult.fold(
-      (failure) => emit(AnalyticsError(failure.message)),
+      (failure) {
+        if (currentState is! AnalyticsLoaded) {
+          emit(AnalyticsError(failure.message));
+        } else {
+          emit(currentState.copyWith(isRefreshing: false));
+        }
+      },
       (timeline) {
         if (currentState is AnalyticsLoaded) {
-          emit(AnalyticsLoaded(
-            analytics: currentState.analytics,
-            timeline: timeline,
-          ));
+          emit(currentState.copyWith(timeline: timeline, isRefreshing: false));
         }
       },
     );
