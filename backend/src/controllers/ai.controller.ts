@@ -19,10 +19,19 @@ const jobAnalysisService = new JobAnalysisService();
 export const analyzeResume = asyncHandler(async (req: Request, res: Response) => {
   const userId = (req as AuthenticatedRequest).user.id;
   const { resumeId } = req.params;
+  
+  if (!resumeId) {
+     res.status(400).json({ success: false, message: "Resume ID is required for analysis." });
+     return;
+  }
+  
+  console.log(`[AI Controller] Starting resume analysis for user ${userId}, resume ${resumeId}`);
   const analysis = await resumeAnalysisService.analyzeResume(userId, resumeId);
+  console.log(`[AI Controller] Finished resume analysis for resume ${resumeId}`);
+  
   res.status(200).json({
     success: true,
-    message: "Resume analysis completed",
+    message: "Resume analysis completed successfully",
     data: analysis,
   });
 });

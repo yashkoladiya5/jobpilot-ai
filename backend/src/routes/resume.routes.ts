@@ -15,9 +15,21 @@ import { upload } from "../middleware/upload";
  */
 const router = Router();
 
+// Define rate limiting config placeholder for file uploads to prevent abuse
+// e.g. const uploadLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 10 });
+// router.post("/upload", authenticate, uploadLimiter, upload.single("resume"), uploadResume);
+
 router.post("/upload", authenticate, upload.single("resume"), uploadResume);
+
+// -----------------------------------------------------------------------
+// Fetching operations
+// -----------------------------------------------------------------------
 router.get("/", authenticate, getResumes);
 router.get("/:id", authenticate, getResume);
+
+// -----------------------------------------------------------------------
+// Mutation operations
+// -----------------------------------------------------------------------
 router.delete("/:id", authenticate, deleteResume);
 router.patch("/:id/primary", authenticate, setPrimaryResume);
 
