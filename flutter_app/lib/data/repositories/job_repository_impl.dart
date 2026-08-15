@@ -28,7 +28,16 @@ class JobRepositoryImpl implements JobRepository {
                 JobApplication.fromJson(e as Map<String, dynamic>))
             .toList(),
       );
-      return Right(apiResponse.data ?? []);
+      
+      final jobs = apiResponse.data ?? [];
+      
+      // Fallback local sorting to ensure newest applications are shown first
+      // In case the backend doesn't sort them correctly.
+      if (jobs.isNotEmpty) {
+        jobs.sort((a, b) => b.appliedDate.compareTo(a.appliedDate));
+      }
+      
+      return Right(jobs);
     } on DioException catch (e) {
       return Left(_handleDioError(e));
     }

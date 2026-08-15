@@ -24,4 +24,12 @@ class Resume with _$Resume {
 
   /// Returns the extension of the file name, in lowercase.
   String get fileExtension => fileName.split('.').last.toLowerCase();
+
+  /// Formats the file size into a readable string (KB/MB).
+  String get formattedSize {
+    if (fileSize == null || fileSize! <= 0) return 'Unknown Size';
+    if (fileSize! < 1024) return '$fileSize B';
+    if (fileSize! < 1024 * 1024) return '${(fileSize! / 1024).toStringAsFixed(1)} KB';
+    return '${(fileSize! / (1024 * 1024)).toStringAsFixed(1)} MB';
+  }
 }

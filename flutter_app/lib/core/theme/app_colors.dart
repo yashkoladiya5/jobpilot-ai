@@ -23,4 +23,14 @@ class AppColors {
   static const Color divider = Color(0xFFE0E0E0);
   static const Color cardBackground = Color(0xFFFFFFFF);
   static const Color scaffoldBackground = Color(0xFFF5F7FA);
+
+  // Informational colors
+  static const Color info = Color(0xFF1976D2);
+  static const Color infoLight = Color(0xFF64B5F6);
+
+  // Neutral grays for detailed UI elements
+  static const Color neutral100 = Color(0xFFF5F5F5);
+  static const Color neutral200 = Color(0xFFEEEEEE);
+  static const Color neutral300 = Color(0xFFE0E0E0);
+  static const Color neutral400 = Color(0xFFBDBDBD);
 }
