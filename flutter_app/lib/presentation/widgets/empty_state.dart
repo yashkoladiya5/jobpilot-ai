@@ -82,4 +82,22 @@ extension EmptyStatePresets on EmptyState {
       subtitle: query != null ? 'We could not find anything matching "$query"' : 'Try refining your search keywords',
     );
   }
+
+  static EmptyState generic({String? message}) {
+    return EmptyState(
+      icon: Icons.inbox_outlined,
+      message: message ?? 'Nothing to see here',
+      subtitle: 'Check back later for updates',
+    );
+  }
+
+  static EmptyState unauthorized({VoidCallback? onLogin}) {
+    return EmptyState(
+      icon: Icons.lock_outline_rounded,
+      message: 'Access Denied',
+      subtitle: 'You need to be logged in to view this content',
+      actionLabel: onLogin != null ? 'Log In' : null,
+      onAction: onLogin,
+    );
+  }
 }
