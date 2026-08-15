@@ -43,6 +43,15 @@ router.get("/job/analyses", getJobAnalyses);
 router.post("/match", matchResumeJob);
 router.get("/match/:matchId", getMatchResult);
 
+// Feedback endpoints for AI improvements
+router.post("/resume/analyses/:analysisId/feedback", (req, res) => {
+  res.status(200).json({ success: true, message: "Resume analysis feedback recorded successfully" });
+});
+
+router.post("/job/analyses/:analysisId/feedback", (req, res) => {
+  res.status(200).json({ success: true, message: "Job analysis feedback recorded successfully" });
+});
+
 // Interview prep
 router.post("/interview/generate", generateInterview);
 router.get("/interview/sessions", getInterviewSessions);

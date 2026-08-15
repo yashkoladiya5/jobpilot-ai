@@ -32,12 +32,25 @@ export const errorHandler = (
   if (err instanceof SyntaxError) {
     res.status(400).json({
       success: false,
-      message: "Invalid JSON in request body",
+      message: "Invalid JSON format in the request body. Please verify the syntax.",
       errors: null,
       data: null,
     });
     return;
   }
+
+  if (err.name === 'ValidationError') {
+    res.status(400).json({
+      success: false,
+      message: "Validation Error: " + err.message,
+      errors: null,
+      data: null,
+    });
+    return;
+  }
+
+  // Enhanced unhandled error logging
+  logger.error(`[Unhandled Error] ${err.name}: ${err.message}`, { stack: err.stack });
 
   if (err instanceof MulterError) {
     const message =
