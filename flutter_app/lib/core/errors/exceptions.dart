@@ -47,3 +47,28 @@ class CacheException implements Exception {
   @override
   String toString() => 'CacheException: $message (statusCode: $statusCode)';
 }
+
+class AiProcessingException implements Exception {
+  final String message;
+  final int? statusCode;
+  final String? modelError;
+
+  const AiProcessingException({
+    required this.message, 
+    this.statusCode,
+    this.modelError,
+  });
+
+  @override
+  String toString() => 'AiProcessingException: $message (statusCode: $statusCode, modelError: $modelError)';
+}
+
+class TimeoutException implements Exception {
+  final String message;
+  final int? statusCode;
+
+  const TimeoutException({required this.message, this.statusCode});
+
+  @override
+  String toString() => 'TimeoutException: $message (statusCode: $statusCode)';
+}

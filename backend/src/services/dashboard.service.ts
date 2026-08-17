@@ -5,11 +5,14 @@ import prisma from "../config/prisma";
  */
 export class DashboardService {
   async getStats(userId: string) {
-    // Calculate the threshold for recent activity (last 7 days)
+    // Calculate the threshold for recent activity (last 7 days and 30 days)
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-    const [totalApplications, grouped, recentApplications, recentActivity, resumeCount, activeInterviews] =
+    const [totalApplications, grouped, recentApplications, recentActivity, monthlyActivity, resumeCount, activeInterviews] =
       await Promise.all([
         prisma.jobApplication.count({ where: { userId } }),
 
@@ -35,6 +38,10 @@ export class DashboardService {
         prisma.jobApplication.count({
           where: { userId, appliedDate: { gte: sevenDaysAgo } },
         }),
+        
+        prisma.jobApplication.count({
+          where: { userId, appliedDate: { gte: thirtyDaysAgo } },
+        }),
 
         prisma.resume.count({ where: { userId } }),
 
@@ -56,6 +63,7 @@ export class DashboardService {
       byStatus,
       recentApplications,
       recentActivity,
+      monthlyActivity,
       resumeCount,
       activeInterviews,
       activeInterviewRate: parseFloat(activeInterviewRate.toFixed(1)),
