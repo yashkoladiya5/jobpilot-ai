@@ -13,6 +13,9 @@ export const config = {
   jwtSecret: process.env.JWT_SECRET || "your-super-secret-jwt-key-change-in-production",
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || "30d",
   uploadDir: process.env.UPLOAD_DIR || "./uploads",
-  maxFileSize: parseInt(process.env.MAX_FILE_SIZE || "5242880", 10),
+  maxFileSize: parseInt(process.env.MAX_FILE_SIZE || "5242880", 10), // Default 5MB
   nodeEnv: process.env.NODE_ENV || "development",
+  corsOrigin: process.env.CORS_ORIGIN || "*",
+  apiPrefix: process.env.API_PREFIX || "/api",
+  enableRateLimiting: process.env.ENABLE_RATE_LIMITING !== 'false', // Enabled by default
 };

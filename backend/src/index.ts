@@ -14,17 +14,26 @@ dotenv.config();
 // Initialize the Express application instance
 const app = express();
 
-// Enable Cross-Origin Resource Sharing (CORS)
-app.use(cors());
-// Parse incoming JSON payloads
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Enable Cross-Origin Resource Sharing (CORS) with configurable origin
+app.use(cors({
+  origin: config.corsOrigin,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+}));
+
+// Parse incoming JSON payloads with size limits
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 const morganStream = { write: (message: string) => logger.http(message.trim()) };
-app.use(morgan(":method :url :status :response-time ms", { stream: morganStream }));
+app.use(morgan(":method :url :status :response-time ms - :res[content-length]", { stream: morganStream }));
 
-app.use("/api", apiLimiter);
-app.use("/api", routes);
+if (config.enableRateLimiting) {
+  logger.info("Rate limiting is enabled");
+  app.use(config.apiPrefix, apiLimiter);
+}
+
+app.use(config.apiPrefix, routes);
 
 app.use(errorHandler);
 

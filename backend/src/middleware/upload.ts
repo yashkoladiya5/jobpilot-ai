@@ -22,6 +22,7 @@ const allowedMimeTypes = [
   "application/pdf",
   "application/msword",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "text/plain", // Adding basic text format support
 ];
 
 const fileFilter = (
@@ -30,11 +31,11 @@ const fileFilter = (
   cb: multer.FileFilterCallback
 ) => {
   if (allowedMimeTypes.includes(file.mimetype)) {
-    console.log(`[Upload] Accepting file: ${file.originalname} (${file.mimetype})`);
+    console.log(`[Upload] Accepting file: ${file.originalname} (${file.mimetype}), Size validation pending`);
     cb(null, true);
   } else {
-    console.warn(`[Upload] Rejected file: ${file.originalname} (${file.mimetype})`);
-    cb(ApiError.badRequest(`Unsupported file format '${file.mimetype}'. Only PDF, DOC, and DOCX files are allowed`));
+    console.warn(`[Upload] Rejected file: ${file.originalname} (${file.mimetype}) - Unauthorized format`);
+    cb(ApiError.badRequest(`Unsupported file format '${file.mimetype}'. Only PDF, DOC, DOCX, and TXT files are allowed`));
   }
 };
 
