@@ -8,21 +8,30 @@ class AuthRemoteDataSource {
   AuthRemoteDataSource(this._dioClient);
 
   Future<Map<String, dynamic>> login(String email, String password) async {
-    final response = await _dioClient.post(ApiConstants.login, data: {
-      'email': email,
-      'password': password,
-    });
-    return response.data as Map<String, dynamic>;
+    try {
+      final response = await _dioClient.post(ApiConstants.login, data: {
+        'email': email.trim().toLowerCase(),
+        'password': password,
+      });
+      return response.data as Map<String, dynamic>;
+    } catch (e) {
+      // Allow custom interceptors to pass their specific exceptions up
+      rethrow;
+    }
   }
 
   Future<Map<String, dynamic>> register(
       String email, String password, String name) async {
-    final response = await _dioClient.post(ApiConstants.register, data: {
-      'email': email,
-      'password': password,
-      'name': name,
-    });
-    return response.data as Map<String, dynamic>;
+    try {
+      final response = await _dioClient.post(ApiConstants.register, data: {
+        'email': email.trim().toLowerCase(),
+        'password': password,
+        'name': name.trim(),
+      });
+      return response.data as Map<String, dynamic>;
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<Map<String, dynamic>> getMe() async {

@@ -196,8 +196,9 @@ class _ErrorInterceptor extends Interceptor {
         handler.reject(
           DioException(
             requestOptions: err.requestOptions,
-            error: const NetworkException(
-              message: 'Connection timed out. Please try again.',
+            error: const TimeoutException(
+              message: 'The connection timed out after 30 seconds. Please check your network and try again.',
+              statusCode: 408,
             ),
           ),
         );

@@ -33,4 +33,14 @@ sealed class Failure with _$Failure {
     required String message,
     int? code,
   }) = NotFoundFailure;
+
+  const factory Failure.timeoutFailure({
+    required String message,
+    int? code,
+  }) = TimeoutFailure;
+
+  const factory Failure.aiProcessingFailure({
+    required String message,
+    int? code,
+  }) = AiProcessingFailure;
 }
