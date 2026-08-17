@@ -13,7 +13,18 @@ class RegisterUseCase {
 
   /// Executes the registration operation.
   Future<Either<Failure, User>> call(
-      String email, String password, String name) {
+      String email, String password, String name) async {
+    // Fail fast on invalid inputs before propagating to remote datasource
+    if (email.trim().isEmpty || !email.contains('@')) {
+      return const Left(Failure.validationFailure(message: 'Please provide a valid email address'));
+    }
+    if (password.length < 6) {
+      return const Left(Failure.validationFailure(message: 'Password must be at least 6 characters long'));
+    }
+    if (name.trim().isEmpty) {
+      return const Left(Failure.validationFailure(message: 'Name cannot be empty'));
+    }
+      
     return repository.register(email, password, name);
   }
 }

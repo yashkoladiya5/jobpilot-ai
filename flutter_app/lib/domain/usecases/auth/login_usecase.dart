@@ -12,7 +12,15 @@ class LoginUseCase {
   LoginUseCase(this.repository);
 
   /// Executes the login operation with email and password.
-  Future<Either<Failure, User>> call(String email, String password) {
+  Future<Either<Failure, User>> call(String email, String password) async {
+    // Fail fast on empty credentials before hitting the network layer
+    if (email.trim().isEmpty) {
+      return const Left(Failure.validationFailure(message: 'Email address cannot be empty'));
+    }
+    if (password.isEmpty) {
+      return const Left(Failure.validationFailure(message: 'Password cannot be empty'));
+    }
+    
     return repository.login(email, password);
   }
 }

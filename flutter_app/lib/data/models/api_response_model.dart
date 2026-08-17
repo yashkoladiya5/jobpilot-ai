@@ -2,11 +2,13 @@ class ApiResponseModel<T> {
   final bool success;
   final String message;
   final T? data;
+  final Map<String, dynamic>? meta;
 
   const ApiResponseModel({
     required this.success,
     required this.message,
     this.data,
+    this.meta,
   });
 
   factory ApiResponseModel.fromJson(
@@ -19,6 +21,7 @@ class ApiResponseModel<T> {
       data: json['data'] != null && fromJsonT != null
           ? fromJsonT(json['data'])
           : json['data'] as T?,
+      meta: json['meta'] as Map<String, dynamic>?,
     );
   }
 }
