@@ -12,6 +12,12 @@ class ApiConstants {
   static String get login => '$_baseUrl/auth/login';
   static String get register => '$_baseUrl/auth/register';
   static String get me => '$_baseUrl/auth/me';
+  static String get logout => '$_baseUrl/auth/logout';
+  static String get refresh => '$_baseUrl/auth/refresh';
+  static String get forgotPassword => '$_baseUrl/auth/forgot-password';
+  static String get resetPassword => '$_baseUrl/auth/reset-password';
+  static String get changePassword => '$_baseUrl/auth/change-password';
+  static String get updateProfile => '$_baseUrl/auth/update-profile';
 
   static String get jobs => '$_baseUrl/jobs';
   static String jobDetail(String id) => '$_baseUrl/jobs/$id';

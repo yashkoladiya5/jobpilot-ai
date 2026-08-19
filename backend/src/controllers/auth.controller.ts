@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
 import { AuthService } from "../services/auth.service";
 import { generateToken, AuthenticatedRequest } from "../middleware/auth";
+import { ApiError } from "../utils/ApiError";
 
 const authService = new AuthService();
 
@@ -41,12 +42,20 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
 export const login = asyncHandler(async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
-  const user = await authService.login(email, password);
+  if (!email || typeof email !== 'string' || !email.includes('@')) {
+    throw ApiError.badRequest("A valid email address is required for login");
+  }
+
+  if (!password || typeof password !== 'string') {
+    throw ApiError.badRequest("Password is required for login");
+  }
+
+  const user = await authService.login(email.toLowerCase().trim(), password);
   const token = generateToken(user.id);
 
   res.status(200).json({
     success: true,
-    message: "Login successful",
+    message: "Login successful. Welcome back!",
     data: { user, token },
   });
 });
