@@ -11,7 +11,16 @@ class AuthState with _$AuthState {
   const factory AuthState.authLoading() = AuthLoading;
 
   /// The user has successfully authenticated and their profile data is available.
-  const factory AuthState.authenticated({required User user}) = Authenticated;
+  const factory AuthState.authenticated({
+    required User user,
+    @Default(false) bool isSessionExpiringSoon,
+  }) = Authenticated;
+  
+  /// The user is partially authenticated (e.g. requires email verification or 2FA).
+  const factory AuthState.partiallyAuthenticated({
+    required User user,
+    required String pendingAction,
+  }) = PartiallyAuthenticated;
 
   const factory AuthState.unauthenticated({String? message}) = Unauthenticated;
 

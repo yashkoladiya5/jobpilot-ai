@@ -9,15 +9,19 @@ class AuthEvent with _$AuthEvent {
   const factory AuthEvent.loginSubmitted({
     required String email,
     required String password,
+    @Default(false) bool rememberMe,
   }) = LoginSubmitted;
 
   const factory AuthEvent.registerSubmitted({
     required String email,
     required String password,
     required String name,
+    @Default(false) bool subscribeToNewsletter,
   }) = RegisterSubmitted;
 
   const factory AuthEvent.checkAuthStatus() = CheckAuthStatus;
 
   const factory AuthEvent.logoutRequested() = LogoutRequested;
+  
+  const factory AuthEvent.sessionExpiringWarningReceived() = SessionExpiringWarningReceived;
 }

@@ -92,6 +92,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       validationFailure: (message, code) => message,
       cacheFailure: (message, code) => message,
       notFoundFailure: (message, code) => message,
+      timeoutFailure: (message, code) => message,
+      aiProcessingFailure: (message, code) => message,
     );
   }
 }
