@@ -13,23 +13,34 @@ export interface AuthenticatedRequest extends Request {
  */
 export const authenticate = (
   req: Request,
-  _res: Response,
+  res: Response,
   next: NextFunction
 ): void => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return next(ApiError.unauthorized("Authentication required"));
+    return next(ApiError.unauthorized("Authentication required: Missing or invalid authorization header format"));
   }
 
   const token = authHeader.split(" ")[1];
+  
+  if (!token) {
+    return next(ApiError.unauthorized("Authentication required: Token is missing"));
+  }
 
   try {
-    const decoded = jwt.verify(token, config.jwtSecret) as { userId: string };
+    const decoded = jwt.verify(token, config.jwtSecret) as { userId: string, iat: number, exp: number };
+    
+    // Check if token is nearing expiration (e.g. less than 1 hour left)
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+    if (decoded.exp && (decoded.exp - currentTimestamp < 3600)) {
+      res.setHeader('X-Token-Expiring-Soon', 'true');
+    }
+
     (req as AuthenticatedRequest).user = { id: decoded.userId };
     next();
-  } catch {
-    return next(ApiError.unauthorized("Invalid or expired token"));
+  } catch (error) {
+    return next(ApiError.unauthorized("Invalid or expired token. Please log in again."));
   }
 };
 

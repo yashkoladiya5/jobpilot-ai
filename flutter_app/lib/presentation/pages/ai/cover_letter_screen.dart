@@ -52,6 +52,26 @@ class _CoverLetterScreenState extends State<CoverLetterScreen> {
   }
 
   void _generate() {
+    if (_selectedResume == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select a resume first.'),
+          backgroundColor: Colors.redAccent,
+        ),
+      );
+      return;
+    }
+    
+    if (_descriptionController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please provide a job description.'),
+          backgroundColor: Colors.redAccent,
+        ),
+      );
+      return;
+    }
+
     if (_selectedResume != null &&
         _descriptionController.text.trim().isNotEmpty) {
       context.read<CoverLetterBloc>().add(

@@ -19,6 +19,8 @@ class AppConstants {
   static const String refreshTokenKey = 'refresh_token';
   static const String userKey = 'user_data';
   static const String onboardingDoneKey = 'onboarding_done';
+  static const String themeModeKey = 'app_theme_mode';
+  static const String languageKey = 'app_language_code';
 
   static const String splashRoute = '/splash';
   static const String loginRoute = '/login';
@@ -30,6 +32,8 @@ class AppConstants {
   static const String jobEditRoute = '/jobs/:id/edit';
   static const String resumesRoute = '/resumes';
   static const String profileRoute = '/profile';
+  static const String settingsRoute = '/settings';
+  static const String aiCoverLetterRoute = '/ai/cover-letter';
 }
 
 /// Contains standardized padding, margin, and size constants for consistent UI.
