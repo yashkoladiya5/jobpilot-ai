@@ -25,6 +25,18 @@ export class ApiError extends Error {
     return new ApiError(404, message);
   }
 
+  static forbidden(message: string): ApiError {
+    return new ApiError(403, message);
+  }
+
+  static unprocessableEntity(message: string): ApiError {
+    return new ApiError(422, message);
+  }
+
+  static tooManyRequests(message: string): ApiError {
+    return new ApiError(429, message);
+  }
+
   static internal(message: string): ApiError {
     return new ApiError(500, message);
   }

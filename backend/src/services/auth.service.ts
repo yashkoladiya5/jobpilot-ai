@@ -53,7 +53,12 @@ export class AuthService {
     });
 
     if (!user) {
-      throw ApiError.notFound("User not found");
+      throw ApiError.notFound("User not found in the system");
+    }
+
+    // Ensure the user account hasn't been deactivated
+    if (user.email.endsWith('@deactivated.local')) {
+      throw ApiError.forbidden("Your account has been deactivated. Please contact support.");
     }
 
     return user;
