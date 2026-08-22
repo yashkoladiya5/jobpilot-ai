@@ -19,12 +19,17 @@ class JobApplication with _$JobApplication {
     required DateTime appliedDate,
     DateTime? createdAt,
     DateTime? updatedAt,
+    @Default(false) bool isFavorite,
+    @Default(0) int interviewRounds,
   }) = _JobApplication;
+
+  const JobApplication._(); // Added for custom getters in Freezed
 
   factory JobApplication.fromJson(Map<String, dynamic> json) =>
       _$JobApplicationFromJson(json);
 
   bool get hasNotes => notes != null && notes!.trim().isNotEmpty;
+  bool get hasSalaryInfo => salaryRange != null && salaryRange!.trim().isNotEmpty;
 }
 
 /// Standardized enum representing all possible stages of a job application.

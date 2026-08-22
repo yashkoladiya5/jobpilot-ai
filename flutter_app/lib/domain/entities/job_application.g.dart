@@ -24,6 +24,8 @@ _$JobApplicationImpl _$$JobApplicationImplFromJson(Map<String, dynamic> json) =>
       updatedAt: json['updatedAt'] == null
           ? null
           : DateTime.parse(json['updatedAt'] as String),
+      isFavorite: json['isFavorite'] as bool? ?? false,
+      interviewRounds: (json['interviewRounds'] as num?)?.toInt() ?? 0,
     );
 
 Map<String, dynamic> _$$JobApplicationImplToJson(
@@ -41,6 +43,8 @@ Map<String, dynamic> _$$JobApplicationImplToJson(
   'appliedDate': instance.appliedDate.toIso8601String(),
   'createdAt': instance.createdAt?.toIso8601String(),
   'updatedAt': instance.updatedAt?.toIso8601String(),
+  'isFavorite': instance.isFavorite,
+  'interviewRounds': instance.interviewRounds,
 };
 
 const _$ApplicationStatusEnumMap = {

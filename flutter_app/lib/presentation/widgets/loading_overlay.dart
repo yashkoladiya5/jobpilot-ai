@@ -39,8 +39,11 @@ class LoadingOverlay extends StatelessWidget {
                           const SizedBox(height: 20),
                           Text(
                             message!,
+                            textAlign: TextAlign.center,
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.w500,
+                              fontWeight: FontWeight.w600,
+                              color: Theme.of(context).colorScheme.primary,
+                              letterSpacing: 0.5,
                             ),
                           ),
                         ],

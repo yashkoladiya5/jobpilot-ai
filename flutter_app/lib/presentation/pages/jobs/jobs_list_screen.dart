@@ -69,20 +69,25 @@ class _JobsListScreenState extends State<JobsListScreen> {
   Widget _buildStateContent(JobState state) {
     switch (state) {
       case JobInitial():
-        return const SizedBox.shrink();
+        return const Center(
+          child: Text(
+            'Initializing jobs data...',
+            style: TextStyle(color: Colors.grey),
+          )
+        );
       case JobLoading():
-        return _lastLoadedJobs != null
+        return _lastLoadedJobs != null && _lastLoadedJobs!.isNotEmpty
             ? _buildJobsList(context, _lastLoadedJobs!)
             : const _JobsShimmer();
       case JobsLoaded(:final jobs):
         _lastLoadedJobs = jobs;
         return _buildJobsList(context, jobs);
       case JobOperationSuccess():
-        return _lastLoadedJobs != null
+        return _lastLoadedJobs != null && _lastLoadedJobs!.isNotEmpty
             ? _buildJobsList(context, _lastLoadedJobs!)
             : const _JobsShimmer();
       case JobDetailLoaded():
-        return _lastLoadedJobs != null
+        return _lastLoadedJobs != null && _lastLoadedJobs!.isNotEmpty
             ? _buildJobsList(context, _lastLoadedJobs!)
             : const _JobsShimmer();
       case JobError(:final message):

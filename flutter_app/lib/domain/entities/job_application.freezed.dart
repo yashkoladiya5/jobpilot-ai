@@ -33,6 +33,8 @@ mixin _$JobApplication {
   DateTime get appliedDate => throw _privateConstructorUsedError;
   DateTime? get createdAt => throw _privateConstructorUsedError;
   DateTime? get updatedAt => throw _privateConstructorUsedError;
+  bool get isFavorite => throw _privateConstructorUsedError;
+  int get interviewRounds => throw _privateConstructorUsedError;
 
   /// Serializes this JobApplication to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -64,6 +66,8 @@ abstract class $JobApplicationCopyWith<$Res> {
     DateTime appliedDate,
     DateTime? createdAt,
     DateTime? updatedAt,
+    bool isFavorite,
+    int interviewRounds,
   });
 }
 
@@ -94,6 +98,8 @@ class _$JobApplicationCopyWithImpl<$Res, $Val extends JobApplication>
     Object? appliedDate = null,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
+    Object? isFavorite = null,
+    Object? interviewRounds = null,
   }) {
     return _then(
       _value.copyWith(
@@ -145,6 +151,14 @@ class _$JobApplicationCopyWithImpl<$Res, $Val extends JobApplication>
                 ? _value.updatedAt
                 : updatedAt // ignore: cast_nullable_to_non_nullable
                       as DateTime?,
+            isFavorite: null == isFavorite
+                ? _value.isFavorite
+                : isFavorite // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            interviewRounds: null == interviewRounds
+                ? _value.interviewRounds
+                : interviewRounds // ignore: cast_nullable_to_non_nullable
+                      as int,
           )
           as $Val,
     );
@@ -173,6 +187,8 @@ abstract class _$$JobApplicationImplCopyWith<$Res>
     DateTime appliedDate,
     DateTime? createdAt,
     DateTime? updatedAt,
+    bool isFavorite,
+    int interviewRounds,
   });
 }
 
@@ -202,6 +218,8 @@ class __$$JobApplicationImplCopyWithImpl<$Res>
     Object? appliedDate = null,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
+    Object? isFavorite = null,
+    Object? interviewRounds = null,
   }) {
     return _then(
       _$JobApplicationImpl(
@@ -253,6 +271,14 @@ class __$$JobApplicationImplCopyWithImpl<$Res>
             ? _value.updatedAt
             : updatedAt // ignore: cast_nullable_to_non_nullable
                   as DateTime?,
+        isFavorite: null == isFavorite
+            ? _value.isFavorite
+            : isFavorite // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        interviewRounds: null == interviewRounds
+            ? _value.interviewRounds
+            : interviewRounds // ignore: cast_nullable_to_non_nullable
+                  as int,
       ),
     );
   }
@@ -260,7 +286,7 @@ class __$$JobApplicationImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$JobApplicationImpl implements _JobApplication {
+class _$JobApplicationImpl extends _JobApplication {
   const _$JobApplicationImpl({
     required this.id,
     required this.companyName,
@@ -274,7 +300,9 @@ class _$JobApplicationImpl implements _JobApplication {
     required this.appliedDate,
     this.createdAt,
     this.updatedAt,
-  });
+    this.isFavorite = false,
+    this.interviewRounds = 0,
+  }) : super._();
 
   factory _$JobApplicationImpl.fromJson(Map<String, dynamic> json) =>
       _$$JobApplicationImplFromJson(json);
@@ -303,10 +331,16 @@ class _$JobApplicationImpl implements _JobApplication {
   final DateTime? createdAt;
   @override
   final DateTime? updatedAt;
+  @override
+  @JsonKey()
+  final bool isFavorite;
+  @override
+  @JsonKey()
+  final int interviewRounds;
 
   @override
   String toString() {
-    return 'JobApplication(id: $id, companyName: $companyName, role: $role, jobUrl: $jobUrl, salaryRange: $salaryRange, location: $location, status: $status, notes: $notes, resumeId: $resumeId, appliedDate: $appliedDate, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'JobApplication(id: $id, companyName: $companyName, role: $role, jobUrl: $jobUrl, salaryRange: $salaryRange, location: $location, status: $status, notes: $notes, resumeId: $resumeId, appliedDate: $appliedDate, createdAt: $createdAt, updatedAt: $updatedAt, isFavorite: $isFavorite, interviewRounds: $interviewRounds)';
   }
 
   @override
@@ -332,7 +366,11 @@ class _$JobApplicationImpl implements _JobApplication {
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
-                other.updatedAt == updatedAt));
+                other.updatedAt == updatedAt) &&
+            (identical(other.isFavorite, isFavorite) ||
+                other.isFavorite == isFavorite) &&
+            (identical(other.interviewRounds, interviewRounds) ||
+                other.interviewRounds == interviewRounds));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -351,6 +389,8 @@ class _$JobApplicationImpl implements _JobApplication {
     appliedDate,
     createdAt,
     updatedAt,
+    isFavorite,
+    interviewRounds,
   );
 
   /// Create a copy of JobApplication
@@ -370,7 +410,7 @@ class _$JobApplicationImpl implements _JobApplication {
   }
 }
 
-abstract class _JobApplication implements JobApplication {
+abstract class _JobApplication extends JobApplication {
   const factory _JobApplication({
     required final String id,
     required final String companyName,
@@ -384,7 +424,10 @@ abstract class _JobApplication implements JobApplication {
     required final DateTime appliedDate,
     final DateTime? createdAt,
     final DateTime? updatedAt,
+    final bool isFavorite,
+    final int interviewRounds,
   }) = _$JobApplicationImpl;
+  const _JobApplication._() : super._();
 
   factory _JobApplication.fromJson(Map<String, dynamic> json) =
       _$JobApplicationImpl.fromJson;
@@ -413,6 +456,10 @@ abstract class _JobApplication implements JobApplication {
   DateTime? get createdAt;
   @override
   DateTime? get updatedAt;
+  @override
+  bool get isFavorite;
+  @override
+  int get interviewRounds;
 
   /// Create a copy of JobApplication
   /// with the given fields replaced by the non-null parameter values.
