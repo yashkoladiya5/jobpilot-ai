@@ -5,6 +5,7 @@ import {
   getJobById,
   updateJob,
   deleteJob,
+  getJobsAnalytics,
 } from "../controllers/job.controller";
 import { authenticate } from "../middleware/auth";
 import { validate } from "../middleware/validate";
@@ -15,6 +16,9 @@ import { createJobSchema, updateJobSchema } from "../validators/job.validator";
  * Provides CRUD operations for user job records securely.
  */
 const router = Router();
+
+// Custom endpoints
+router.get("/analytics/summary", authenticate, getJobsAnalytics);
 
 // CRUD operations for jobs, all requiring user authentication
 router.get("/", authenticate, getJobs);

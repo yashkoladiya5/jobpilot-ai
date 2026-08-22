@@ -113,4 +113,23 @@ export class JobService {
       where: { id },
     });
   }
+
+  async getJobsAnalytics(userId: string) {
+    const jobs = await prisma.jobApplication.findMany({
+      where: { userId },
+      select: { status: true },
+    });
+
+    const analytics = {
+      total: jobs.length,
+      saved: jobs.filter(j => j.status === 'SAVED').length,
+      applied: jobs.filter(j => j.status === 'APPLIED').length,
+      interviewing: jobs.filter(j => j.status === 'INTERVIEW').length,
+      offers: jobs.filter(j => j.status === 'OFFER').length,
+      rejected: jobs.filter(j => j.status === 'REJECTED').length,
+      withdrawn: jobs.filter(j => j.status === 'WITHDRAWN').length,
+    };
+
+    return analytics;
+  }
 }

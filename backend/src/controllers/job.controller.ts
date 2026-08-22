@@ -79,3 +79,15 @@ export const deleteJob = asyncHandler(async (req: Request, res: Response) => {
     data: null,
   });
 });
+
+export const getJobsAnalytics = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  const analytics = await jobService.getJobsAnalytics(userId);
+
+  res.status(200).json({
+    success: true,
+    message: "Job analytics fetched successfully",
+    data: analytics,
+  });
+});
