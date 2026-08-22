@@ -32,4 +32,14 @@ class JobRemoteDataSource {
     final response = await _dioClient.delete(ApiConstants.jobDetail(id));
     return response.data as Map<String, dynamic>;
   }
+
+  Future<Map<String, dynamic>> getJobsAnalytics() async {
+    final response = await _dioClient.get('${AppConstants.apiBaseUrl}/jobs/analytics/summary');
+    return response.data as Map<String, dynamic>;
+  }
+
+  Future<Map<String, dynamic>> searchJobs(String query) async {
+    final response = await _dioClient.get(ApiConstants.jobs, queryParameters: {'search': query});
+    return response.data as Map<String, dynamic>;
+  }
 }

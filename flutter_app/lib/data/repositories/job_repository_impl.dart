@@ -133,6 +133,36 @@ class JobRepositoryImpl implements JobRepository {
     }
   }
 
+  @override
+  Future<Either<Failure, Map<String, dynamic>>> getJobsAnalytics() async {
+    try {
+      final response = await _remoteDataSource.getJobsAnalytics();
+      final apiResponse = ApiResponseModel<Map<String, dynamic>>.fromJson(
+        response,
+        (data) => data as Map<String, dynamic>,
+      );
+      return Right(apiResponse.data ?? {});
+    } on DioException catch (e) {
+      return Left(_handleDioError(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<JobApplication>>> searchJobs(String query) async {
+    try {
+      final response = await _remoteDataSource.searchJobs(query);
+      final apiResponse = ApiResponseModel<List<JobApplication>>.fromJson(
+        response,
+        (data) => (data as List<dynamic>)
+            .map((e) => JobApplication.fromJson(e as Map<String, dynamic>))
+            .toList(),
+      );
+      return Right(apiResponse.data ?? []);
+    } on DioException catch (e) {
+      return Left(_handleDioError(e));
+    }
+  }
+
   Failure _handleDioError(DioException e) {
     if (e.error is AuthException) {
       return Failure.authFailure(

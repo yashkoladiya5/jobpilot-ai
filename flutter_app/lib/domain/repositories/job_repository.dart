@@ -60,4 +60,6 @@ abstract class JobRepository {
   Future<Either<Failure, JobApplication>> updateJob(
       String id, UpdateJobParams params);
   Future<Either<Failure, void>> deleteJob(String id);
+  Future<Either<Failure, Map<String, dynamic>>> getJobsAnalytics();
+  Future<Either<Failure, List<JobApplication>>> searchJobs(String query);
 }
