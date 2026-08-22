@@ -5,6 +5,7 @@ import 'package:jobpilot_ai/domain/usecases/job/delete_job_usecase.dart';
 import 'package:jobpilot_ai/domain/usecases/job/get_job_usecase.dart';
 import 'package:jobpilot_ai/domain/usecases/job/get_jobs_usecase.dart';
 import 'package:jobpilot_ai/domain/usecases/job/update_job_usecase.dart';
+import 'package:jobpilot_ai/domain/repositories/job_repository.dart';
 import 'package:jobpilot_ai/presentation/bloc/job/job_event.dart';
 import 'package:jobpilot_ai/presentation/bloc/job/job_state.dart';
 
@@ -15,6 +16,7 @@ class JobBloc extends Bloc<JobEvent, JobState> {
   final CreateJobUseCase createJobUseCase;
   final UpdateJobUseCase updateJobUseCase;
   final DeleteJobUseCase deleteJobUseCase;
+  final JobRepository jobRepository;
 
   JobBloc({
     required this.getJobsUseCase,
@@ -22,12 +24,15 @@ class JobBloc extends Bloc<JobEvent, JobState> {
     required this.createJobUseCase,
     required this.updateJobUseCase,
     required this.deleteJobUseCase,
+    required this.jobRepository,
   }) : super(const JobInitial()) {
     on<LoadJobs>(_onLoadJobs);
     on<LoadJobDetail>(_onLoadJobDetail);
     on<CreateJob>(_onCreateJob);
     on<UpdateJob>(_onUpdateJob);
     on<DeleteJob>(_onDeleteJob);
+    on<LoadJobsAnalytics>(_onLoadJobsAnalytics);
+    on<SearchJobs>(_onSearchJobs);
   }
 
   Future<void> _onLoadJobs(
@@ -96,6 +101,30 @@ class JobBloc extends Bloc<JobEvent, JobState> {
     result.fold(
       (failure) => emit(JobError(failure.message)),
       (_) => emit(const JobOperationSuccess('Job deleted successfully')),
+    );
+  }
+
+  Future<void> _onLoadJobsAnalytics(
+    LoadJobsAnalytics event,
+    Emitter<JobState> emit,
+  ) async {
+    emit(const JobLoading());
+    final result = await jobRepository.getJobsAnalytics();
+    result.fold(
+      (failure) => emit(JobError(failure.message)),
+      (analytics) => emit(AnalyticsLoaded(analytics)),
+    );
+  }
+
+  Future<void> _onSearchJobs(
+    SearchJobs event,
+    Emitter<JobState> emit,
+  ) async {
+    emit(const JobLoading());
+    final result = await jobRepository.searchJobs(event.query);
+    result.fold(
+      (failure) => emit(JobError(failure.message)),
+      (results) => emit(SearchResultsLoaded(results)),
     );
   }
 }

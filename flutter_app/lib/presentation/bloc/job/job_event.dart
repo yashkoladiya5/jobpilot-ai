@@ -11,4 +11,6 @@ sealed class JobEvent with _$JobEvent {
   const factory JobEvent.updateJob(String id, UpdateJobParams params) =
       UpdateJob;
   const factory JobEvent.deleteJob(String id) = DeleteJob;
+  const factory JobEvent.loadJobsAnalytics() = LoadJobsAnalytics;
+  const factory JobEvent.searchJobs(String query) = SearchJobs;
 }

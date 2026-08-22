@@ -9,6 +9,8 @@ sealed class JobState with _$JobState {
   const factory JobState.loading() = JobLoading;
   const factory JobState.jobsLoaded(List<JobApplication> jobs) = JobsLoaded;
   const factory JobState.jobDetailLoaded(JobApplication job) = JobDetailLoaded;
+  const factory JobState.analyticsLoaded(Map<String, dynamic> analytics) = AnalyticsLoaded;
+  const factory JobState.searchResultsLoaded(List<JobApplication> results) = SearchResultsLoaded;
   const factory JobState.operationSuccess(String message) = JobOperationSuccess;
   const factory JobState.error(String message) = JobError;
 }
