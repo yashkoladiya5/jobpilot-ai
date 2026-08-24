@@ -34,6 +34,11 @@ class AppConstants {
   static const String profileRoute = '/profile';
   static const String settingsRoute = '/settings';
   static const String aiCoverLetterRoute = '/ai/cover-letter';
+  
+  // Analytics and tracking
+  static const String analyticsDashboardRoute = '/analytics/dashboard';
+  static const String analyticsSkillsMatchRoute = '/analytics/skills-match';
+  static const String interviewPrepRoute = '/ai/interview-prep';
 }
 
 /// Contains standardized padding, margin, and size constants for consistent UI.

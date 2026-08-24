@@ -32,6 +32,15 @@ class DioClient {
       _AuthInterceptor(_storage),
       _LoggingInterceptor(),
       _ErrorInterceptor(),
+      // Ensure requests don't get cached inappropriately
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          options.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate';
+          options.headers['Pragma'] = 'no-cache';
+          options.headers['Expires'] = '0';
+          handler.next(options);
+        },
+      ),
     ]);
   }
 
