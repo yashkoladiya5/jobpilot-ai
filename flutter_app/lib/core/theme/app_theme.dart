@@ -168,7 +168,6 @@ class AppTheme {
           fontWeight: FontWeight.w600,
         ),
       ),
-      ),
     );
   }
 }

@@ -53,4 +53,19 @@ sealed class Failure with _$Failure {
     required String message,
     int? code,
   }) = PermissionFailure;
+
+  const factory Failure.unknownFailure({
+    required String message,
+    int? code,
+  }) = UnknownFailure;
+
+  const factory Failure.databaseFailure({
+    required String message,
+    int? code,
+  }) = DatabaseFailure;
+  
+  const factory Failure.unauthorizedFailure({
+    required String message,
+    int? code,
+  }) = UnauthorizedFailure;
 }

@@ -72,3 +72,23 @@ class TimeoutException implements Exception {
   @override
   String toString() => 'TimeoutException: $message (statusCode: $statusCode)';
 }
+
+class PermissionException implements Exception {
+  final String message;
+  final int? statusCode;
+
+  const PermissionException({required this.message, this.statusCode});
+
+  @override
+  String toString() => 'PermissionException: $message (statusCode: $statusCode)';
+}
+
+class RateLimitException implements Exception {
+  final String message;
+  final int? statusCode;
+
+  const RateLimitException({required this.message, this.statusCode});
+
+  @override
+  String toString() => 'RateLimitException: $message (statusCode: $statusCode)';
+}

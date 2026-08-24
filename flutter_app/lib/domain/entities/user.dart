@@ -10,6 +10,9 @@ class User with _$User {
     required String id,
     required String email,
     required String name,
+    String? profilePictureUrl,
+    String? bio,
+    @Default(false) bool isEmailVerified,
     DateTime? createdAt,
   }) = _User;
 
