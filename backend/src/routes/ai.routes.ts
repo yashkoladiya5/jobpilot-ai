@@ -24,6 +24,7 @@ import {
   getCareerInsights,
   computeCareerInsights,
   getCareerInsightsHistory,
+  deleteCareerInsightsHistory,
 } from "../controllers/ai.controller";
 import { authenticate } from "../middleware/auth";
 
@@ -79,5 +80,6 @@ router.delete("/interview/session/:sessionId", deleteInterviewSession);
 router.get("/career/insights", getCareerInsights);
 router.post("/career/insights/compute", computeCareerInsights);
 router.get("/career/insights/history", getCareerInsightsHistory);
+router.delete("/career/insights/history", deleteCareerInsightsHistory);
 
 export default router;

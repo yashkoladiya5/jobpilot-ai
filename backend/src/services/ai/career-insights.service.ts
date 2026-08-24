@@ -168,6 +168,14 @@ export class CareerInsightsService {
     });
   }
 
+  async deleteInsightsHistory(userId: string) {
+    const deleted = await prisma.careerInsight.deleteMany({
+      where: { userId },
+    });
+
+    return { count: deleted.count };
+  }
+
   private computeFallbackScore(data: CareerDataInput): number {
     let score = 50;
     if (data.totalApplications > 0) score += 5;

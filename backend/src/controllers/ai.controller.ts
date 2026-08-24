@@ -271,3 +271,16 @@ export const getCareerInsightsHistory = asyncHandler(async (req: Request, res: R
   const result = await careerInsightsService.getInsightsHistory(userId);
   res.json({ success: true, message: "Career insights history fetched", data: result });
 });
+
+export const deleteCareerInsightsHistory = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  console.log(`[AI Controller] Deleting career insights history for user ${userId}`);
+  const result = await careerInsightsService.deleteInsightsHistory(userId);
+  
+  res.status(200).json({
+    success: true,
+    message: "Career insights history deleted successfully",
+    data: result,
+  });
+});
