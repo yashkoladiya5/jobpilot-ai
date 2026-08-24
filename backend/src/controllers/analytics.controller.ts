@@ -38,3 +38,9 @@ export const getOfferAnalytics = asyncHandler(async (req: Request, res: Response
   const result = await analyticsService.getOfferAnalytics(userId);
   res.json({ success: true, message: "Offer analytics fetched successfully", data: result });
 });
+
+export const getInterviewAnalytics = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const result = await analyticsService.getInterviewAnalytics(userId);
+  res.json({ success: true, message: "Interview analytics fetched successfully", data: result });
+});

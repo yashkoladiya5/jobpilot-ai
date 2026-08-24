@@ -202,4 +202,24 @@ export class AnalyticsService {
       })),
     };
   }
+
+  async getInterviewAnalytics(userId: string) {
+    const interviewApplications = await prisma.jobApplication.findMany({
+      where: { userId, status: "INTERVIEW" },
+      orderBy: { updatedAt: "desc" },
+    });
+
+    const totalInterviews = interviewApplications.length;
+    const interviewCompanies = interviewApplications.map(app => app.companyName);
+
+    return {
+      totalInterviews,
+      interviewCompanies,
+      recentInterviews: interviewApplications.slice(0, 5).map(app => ({
+        company: app.companyName,
+        role: app.role,
+        date: app.updatedAt,
+      })),
+    };
+  }
 }
