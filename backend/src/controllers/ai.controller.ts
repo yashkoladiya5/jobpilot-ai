@@ -140,6 +140,24 @@ export const getTopMatches = asyncHandler(async (req: Request, res: Response) =>
   });
 });
 
+export const getMatchDetails = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { matchId } = req.params;
+  
+  if (!matchId) {
+     res.status(400).json({ success: false, message: "Match ID is required to fetch details." });
+     return;
+  }
+
+  const result = await matchingService.getMatchDetails(matchId, userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Match detailed breakdown fetched successfully", 
+    data: result 
+  });
+});
+
 // Interview Prep
 
 export const generateInterview = asyncHandler(async (req: Request, res: Response) => {

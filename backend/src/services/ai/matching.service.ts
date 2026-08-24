@@ -82,6 +82,34 @@ export class MatchingService {
       include: { job: { select: { companyName: true, role: true } } },
     });
   }
+
+  async getMatchDetails(analysisId: string, userId: string) {
+    const analysis = await prisma.jobAnalysis.findFirst({
+      where: { id: analysisId, userId },
+      include: {
+        job: true,
+        resume: true,
+      }
+    });
+
+    if (!analysis) {
+      throw ApiError.notFound("Match analysis not found");
+    }
+
+    if (!analysis.resumeMatchScore) {
+      throw ApiError.badRequest("This analysis does not have a match score computed yet.");
+    }
+
+    return {
+      score: analysis.resumeMatchScore,
+      missingSkills: analysis.missingSkills || [],
+      recommendedChanges: analysis.recommendedChanges || [],
+      jobRole: analysis.job?.role || "Unknown",
+      company: analysis.job?.companyName || "Unknown",
+      resumeName: analysis.resume?.fileName || "Unknown",
+      analyzedAt: analysis.analyzedAt,
+    };
+  }
 }
 
 export const matchingService = new MatchingService();

@@ -11,6 +11,7 @@ import {
   matchResumeJob,
   getMatchResult,
   getTopMatches,
+  getMatchDetails,
   generateInterview,
   getInterviewSessions,
   getInterviewSession,
@@ -49,6 +50,7 @@ router.delete("/resume/analysis/:analysisId", deleteResumeAnalysis);
 // Resume-Job matching
 router.post("/match", matchResumeJob);
 router.get("/match/:matchId", getMatchResult);
+router.get("/match/:matchId/details", getMatchDetails);
 router.get("/match/resume/:resumeId/top", getTopMatches);
 
 // Feedback endpoints for AI improvements
