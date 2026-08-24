@@ -264,6 +264,22 @@ export class InterviewService {
 
     return updatedSession;
   }
+
+  async deleteSession(sessionId: string, userId: string) {
+    const session = await prisma.interviewSession.findFirst({
+      where: { id: sessionId, userId },
+    });
+    
+    if (!session) {
+      throw ApiError.notFound("Interview session not found");
+    }
+
+    await prisma.interviewSession.delete({
+      where: { id: sessionId },
+    });
+
+    return { deletedId: sessionId };
+  }
 }
 
 export const interviewService = new InterviewService();

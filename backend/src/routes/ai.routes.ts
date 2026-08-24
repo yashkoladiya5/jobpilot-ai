@@ -19,6 +19,7 @@ import {
   completeInterview,
   getInterviewResult,
   resetInterviewSession,
+  deleteInterviewSession,
   getCareerInsights,
   computeCareerInsights,
   getCareerInsightsHistory,
@@ -70,6 +71,7 @@ router.post("/interview/session/:sessionId/answer", submitAnswer);
 router.post("/interview/session/:sessionId/complete", completeInterview);
 router.post("/interview/session/:sessionId/reset", resetInterviewSession);
 router.get("/interview/session/:sessionId/result", getInterviewResult);
+router.delete("/interview/session/:sessionId", deleteInterviewSession);
 
 // Career insights
 router.get("/career/insights", getCareerInsights);

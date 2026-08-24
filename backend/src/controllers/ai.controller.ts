@@ -212,6 +212,24 @@ export const resetInterviewSession = asyncHandler(async (req: Request, res: Resp
   res.json({ success: true, message: "Interview session reset successfully", data: result });
 });
 
+export const deleteInterviewSession = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { sessionId } = req.params;
+  
+  if (!sessionId) {
+     res.status(400).json({ success: false, message: "Session ID is required for deletion." });
+     return;
+  }
+
+  const result = await interviewService.deleteSession(sessionId, userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Interview session permanently deleted", 
+    data: result 
+  });
+});
+
 // Career Insights
 
 export const getCareerInsights = asyncHandler(async (req: Request, res: Response) => {
