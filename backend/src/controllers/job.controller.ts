@@ -52,6 +52,24 @@ export const updateJobStatus = asyncHandler(async (req: Request, res: Response) 
   });
 });
 
+export const bulkUpdateStatus = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { jobIds, status } = req.body;
+  
+  if (!status) {
+     res.status(400).json({ success: false, message: "Status is required for bulk update." });
+     return;
+  }
+  
+  const result = await jobService.bulkUpdateJobStatus(userId, jobIds, status);
+
+  res.status(200).json({
+    success: true,
+    message: `${result.count} job(s) updated successfully to ${status}`,
+    data: result,
+  });
+});
+
 export const createJob = asyncHandler(async (req: Request, res: Response) => {
   const userId = (req as AuthenticatedRequest).user.id;
   const { companyName, role } = req.body;

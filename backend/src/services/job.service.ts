@@ -146,4 +146,25 @@ export class JobService {
 
     return analytics;
   }
+
+  async bulkUpdateJobStatus(userId: string, jobIds: string[], status: string) {
+    const validStatuses = ["SAVED", "APPLIED", "INTERVIEW", "OFFER", "REJECTED", "WITHDRAWN"];
+    if (!validStatuses.includes(status)) {
+      throw ApiError.badRequest("Invalid job status provided");
+    }
+
+    if (!jobIds || jobIds.length === 0) {
+      throw ApiError.badRequest("No job IDs provided for bulk update");
+    }
+
+    const updated = await prisma.jobApplication.updateMany({
+      where: { 
+        id: { in: jobIds },
+        userId 
+      },
+      data: { status: status as any },
+    });
+
+    return { count: updated.count };
+  }
 }
