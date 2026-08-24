@@ -208,8 +208,8 @@ class _ResumeScreenState extends State<ResumeScreen> {
   Widget _buildResumeList(List<Resume> resumes) {
     if (resumes.isEmpty) {
       return const EmptyState(
-        icon: Icons.description_outlined,
-        message: 'No resumes yet.\nUpload your first resume!',
+        icon: Icons.upload_file,
+        message: 'Your resume vault is empty.\nUpload a resume to unlock AI matching!',
       );
     }
 

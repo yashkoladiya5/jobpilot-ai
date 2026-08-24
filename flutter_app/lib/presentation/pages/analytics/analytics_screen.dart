@@ -135,14 +135,15 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Application Pipeline',
+                'My Application Pipeline',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
+                      color: AppColors.primaryDark,
                     ),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 6),
               Text(
-                '${analytics.totalApplications} total applications',
+                'Tracking ${analytics.totalApplications} total applications across the board',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: AppColors.textSecondary,
                     ),
