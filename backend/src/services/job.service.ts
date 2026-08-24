@@ -114,6 +114,20 @@ export class JobService {
     });
   }
 
+  async updateJobStatus(userId: string, id: string, status: string) {
+    const validStatuses = ["SAVED", "APPLIED", "INTERVIEW", "OFFER", "REJECTED", "WITHDRAWN"];
+    if (!validStatuses.includes(status)) {
+      throw ApiError.badRequest("Invalid job status provided");
+    }
+
+    await this.getJobById(userId, id);
+
+    return prisma.jobApplication.update({
+      where: { id },
+      data: { status: status as any },
+    });
+  }
+
   async getJobsAnalytics(userId: string) {
     const jobs = await prisma.jobApplication.findMany({
       where: { userId },

@@ -33,6 +33,25 @@ export const getJobById = asyncHandler(async (req: Request, res: Response) => {
   });
 });
 
+export const updateJobStatus = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { id } = req.params;
+  const { status } = req.body;
+  
+  if (!status) {
+     res.status(400).json({ success: false, message: "Status is required." });
+     return;
+  }
+  
+  const job = await jobService.updateJobStatus(userId, id, status);
+
+  res.status(200).json({
+    success: true,
+    message: "Job status updated successfully",
+    data: job,
+  });
+});
+
 export const createJob = asyncHandler(async (req: Request, res: Response) => {
   const userId = (req as AuthenticatedRequest).user.id;
   const { companyName, role } = req.body;
