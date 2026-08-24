@@ -114,3 +114,16 @@ export const getPrimaryResume = asyncHandler(async (req: Request, res: Response)
     data: resume,
   });
 });
+
+export const duplicateResume = asyncHandler(async (req: Request, res: Response) => {
+  const { id: userId } = (req as AuthenticatedRequest).user;
+  const { id } = req.params;
+  
+  const duplicatedResume = await resumeService.duplicateResume(userId, id);
+  
+  res.status(201).json({
+    success: true,
+    message: "Resume duplicated successfully",
+    data: duplicatedResume,
+  });
+});

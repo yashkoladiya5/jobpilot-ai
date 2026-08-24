@@ -7,6 +7,7 @@ import {
   setPrimaryResume,
   renameResume,
   getPrimaryResume,
+  duplicateResume,
 } from "../controllers/resume.controller";
 import { authenticate } from "../middleware/auth";
 import { upload } from "../middleware/upload";
@@ -36,5 +37,6 @@ router.get("/:id", authenticate, getResume);
 router.delete("/:id", authenticate, deleteResume);
 router.patch("/:id/primary", authenticate, setPrimaryResume);
 router.patch("/:id/rename", authenticate, renameResume);
+router.post("/:id/duplicate", authenticate, duplicateResume);
 
 export default router;

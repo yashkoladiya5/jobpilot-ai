@@ -96,4 +96,32 @@ export class ResumeService {
 
     return resume;
   }
+
+  async duplicateResume(userId: string, id: string) {
+    const resume = await prisma.resume.findUnique({ where: { id } });
+    
+    if (!resume || resume.userId !== userId) {
+      throw ApiError.notFound("Resume not found");
+    }
+
+    const newFileName = `Copy of ${resume.fileName}`;
+    const newFilePath = `${resume.filePath}_copy_${Date.now()}`;
+    
+    try {
+      fs.copyFileSync(resume.filePath, newFilePath);
+    } catch (e) {
+      throw ApiError.internal("Failed to duplicate resume file");
+    }
+
+    return prisma.resume.create({
+      data: {
+        userId,
+        fileName: newFileName,
+        filePath: newFilePath,
+        fileSize: resume.fileSize,
+        mimeType: resume.mimeType,
+        isPrimary: false,
+      },
+    });
+  }
 }
