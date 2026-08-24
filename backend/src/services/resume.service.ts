@@ -71,4 +71,17 @@ export class ResumeService {
       data: { isPrimary: true },
     });
   }
+
+  async renameResume(userId: string, id: string, newName: string) {
+    const resume = await prisma.resume.findUnique({ where: { id } });
+    
+    if (!resume || resume.userId !== userId) {
+      throw ApiError.notFound("Resume not found");
+    }
+
+    return prisma.resume.update({
+      where: { id },
+      data: { fileName: newName },
+    });
+  }
 }

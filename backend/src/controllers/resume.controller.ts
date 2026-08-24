@@ -85,3 +85,20 @@ export const setPrimaryResume = asyncHandler(async (req: Request, res: Response)
     data: resume,
   });
 });
+
+export const renameResume = asyncHandler(async (req: Request, res: Response) => {
+  const { id: userId } = (req as AuthenticatedRequest).user;
+  const { id } = req.params;
+  const { newName } = req.body;
+  
+  if (!newName || typeof newName !== 'string' || newName.trim().length === 0) {
+    throw ApiError.badRequest("New name is required and must be a valid string");
+  }
+
+  const resume = await resumeService.renameResume(userId, id, newName.trim());
+  res.status(200).json({
+    success: true,
+    message: "Resume renamed successfully",
+    data: resume,
+  });
+});
