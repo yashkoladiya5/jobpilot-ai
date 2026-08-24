@@ -138,4 +138,45 @@ export class DashboardService {
       summaryText,
     };
   }
+
+  async getDashboardAlerts(userId: string) {
+    const now = new Date();
+    
+    // Find jobs in INTERVIEW status that were recently updated
+    const upcomingInterviews = await prisma.jobApplication.findMany({
+      where: {
+        userId,
+        status: 'INTERVIEW',
+        updatedAt: { gte: new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000) }
+      },
+      select: { companyName: true, role: true },
+      take: 2
+    });
+
+    const alerts = [];
+    
+    if (upcomingInterviews.length > 0) {
+      upcomingInterviews.forEach(interview => {
+        alerts.push({
+          type: "URGENT",
+          title: `Upcoming Interview: ${interview.companyName}`,
+          message: `You have an active interview process for the ${interview.role} role. Make sure to prepare!`,
+        });
+      });
+    }
+
+    const pendingOffers = await prisma.jobApplication.count({
+      where: { userId, status: 'OFFER' }
+    });
+
+    if (pendingOffers > 0) {
+      alerts.push({
+        type: "ACTION_REQUIRED",
+        title: "Offers Awaiting Decision",
+        message: `You have ${pendingOffers} offer(s) pending. Don't forget to respond to the recruiters.`,
+      });
+    }
+
+    return alerts;
+  }
 }

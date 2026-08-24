@@ -86,3 +86,20 @@ export const getDashboardSummary = asyncHandler(async (req: Request, res: Respon
     data: summary,
   });
 });
+
+export const getDashboardAlerts = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  if (!userId) {
+     res.status(401).json({ success: false, message: "Unauthorized access: user ID is missing" });
+     return;
+  }
+
+  const alerts = await dashboardService.getDashboardAlerts(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Dashboard alerts fetched successfully", 
+    data: alerts,
+  });
+});
