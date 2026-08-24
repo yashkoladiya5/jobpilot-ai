@@ -8,4 +8,9 @@ part 'dashboard_event.freezed.dart';
 sealed class DashboardEvent with _$DashboardEvent {
   const factory DashboardEvent.loadDashboard() = LoadDashboard;
   const factory DashboardEvent.refreshDashboard() = RefreshDashboard;
+  const factory DashboardEvent.exportDashboardData({
+    @Default('PDF') String format,
+    DateTime? startDate,
+    DateTime? endDate,
+  }) = ExportDashboardData;
 }

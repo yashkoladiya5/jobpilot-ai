@@ -14,6 +14,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       : super(const DashboardInitial()) {
     on<LoadDashboard>(_onLoadDashboard);
     on<RefreshDashboard>(_onRefreshDashboard);
+    on<ExportDashboardData>(_onExportDashboard);
   }
 
   Future<void> _onLoadDashboard(
@@ -38,5 +39,27 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       (failure) => emit(DashboardError(failure.message)),
       (stats) => emit(DashboardLoaded(stats)),
     );
+  }
+
+  Future<void> _onExportDashboard(
+    ExportDashboardData event,
+    Emitter<DashboardState> emit,
+  ) async {
+    final currentState = state;
+    if (currentState is DashboardLoaded) {
+      emit(const DashboardLoading());
+      try {
+        // Simulate an export processing delay
+        await Future.delayed(const Duration(seconds: 2));
+        emit(DashboardExportSuccess(
+          currentState.stats, 
+          "Data exported successfully to ${event.format} format"
+        ));
+        // Revert back to the loaded state to restore normal UI
+        emit(currentState);
+      } catch (e) {
+        emit(DashboardError('Failed to export data: ${e.toString()}'));
+      }
+    }
   }
 }

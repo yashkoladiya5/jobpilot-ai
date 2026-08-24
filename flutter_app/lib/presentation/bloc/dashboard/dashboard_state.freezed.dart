@@ -22,6 +22,8 @@ mixin _$DashboardState {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(DashboardStats stats) loaded,
+    required TResult Function(DashboardStats stats, String message)
+    exportSuccess,
     required TResult Function(String message) error,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -29,6 +31,7 @@ mixin _$DashboardState {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(DashboardStats stats)? loaded,
+    TResult? Function(DashboardStats stats, String message)? exportSuccess,
     TResult? Function(String message)? error,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -36,6 +39,7 @@ mixin _$DashboardState {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(DashboardStats stats)? loaded,
+    TResult Function(DashboardStats stats, String message)? exportSuccess,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) => throw _privateConstructorUsedError;
@@ -44,6 +48,7 @@ mixin _$DashboardState {
     required TResult Function(DashboardInitial value) initial,
     required TResult Function(DashboardLoading value) loading,
     required TResult Function(DashboardLoaded value) loaded,
+    required TResult Function(DashboardExportSuccess value) exportSuccess,
     required TResult Function(DashboardError value) error,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -51,6 +56,7 @@ mixin _$DashboardState {
     TResult? Function(DashboardInitial value)? initial,
     TResult? Function(DashboardLoading value)? loading,
     TResult? Function(DashboardLoaded value)? loaded,
+    TResult? Function(DashboardExportSuccess value)? exportSuccess,
     TResult? Function(DashboardError value)? error,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -58,6 +64,7 @@ mixin _$DashboardState {
     TResult Function(DashboardInitial value)? initial,
     TResult Function(DashboardLoading value)? loading,
     TResult Function(DashboardLoaded value)? loaded,
+    TResult Function(DashboardExportSuccess value)? exportSuccess,
     TResult Function(DashboardError value)? error,
     required TResult orElse(),
   }) => throw _privateConstructorUsedError;
@@ -131,6 +138,8 @@ class _$DashboardInitialImpl implements DashboardInitial {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(DashboardStats stats) loaded,
+    required TResult Function(DashboardStats stats, String message)
+    exportSuccess,
     required TResult Function(String message) error,
   }) {
     return initial();
@@ -142,6 +151,7 @@ class _$DashboardInitialImpl implements DashboardInitial {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(DashboardStats stats)? loaded,
+    TResult? Function(DashboardStats stats, String message)? exportSuccess,
     TResult? Function(String message)? error,
   }) {
     return initial?.call();
@@ -153,6 +163,7 @@ class _$DashboardInitialImpl implements DashboardInitial {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(DashboardStats stats)? loaded,
+    TResult Function(DashboardStats stats, String message)? exportSuccess,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
@@ -168,6 +179,7 @@ class _$DashboardInitialImpl implements DashboardInitial {
     required TResult Function(DashboardInitial value) initial,
     required TResult Function(DashboardLoading value) loading,
     required TResult Function(DashboardLoaded value) loaded,
+    required TResult Function(DashboardExportSuccess value) exportSuccess,
     required TResult Function(DashboardError value) error,
   }) {
     return initial(this);
@@ -179,6 +191,7 @@ class _$DashboardInitialImpl implements DashboardInitial {
     TResult? Function(DashboardInitial value)? initial,
     TResult? Function(DashboardLoading value)? loading,
     TResult? Function(DashboardLoaded value)? loaded,
+    TResult? Function(DashboardExportSuccess value)? exportSuccess,
     TResult? Function(DashboardError value)? error,
   }) {
     return initial?.call(this);
@@ -190,6 +203,7 @@ class _$DashboardInitialImpl implements DashboardInitial {
     TResult Function(DashboardInitial value)? initial,
     TResult Function(DashboardLoading value)? loading,
     TResult Function(DashboardLoaded value)? loaded,
+    TResult Function(DashboardExportSuccess value)? exportSuccess,
     TResult Function(DashboardError value)? error,
     required TResult orElse(),
   }) {
@@ -250,6 +264,8 @@ class _$DashboardLoadingImpl implements DashboardLoading {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(DashboardStats stats) loaded,
+    required TResult Function(DashboardStats stats, String message)
+    exportSuccess,
     required TResult Function(String message) error,
   }) {
     return loading();
@@ -261,6 +277,7 @@ class _$DashboardLoadingImpl implements DashboardLoading {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(DashboardStats stats)? loaded,
+    TResult? Function(DashboardStats stats, String message)? exportSuccess,
     TResult? Function(String message)? error,
   }) {
     return loading?.call();
@@ -272,6 +289,7 @@ class _$DashboardLoadingImpl implements DashboardLoading {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(DashboardStats stats)? loaded,
+    TResult Function(DashboardStats stats, String message)? exportSuccess,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
@@ -287,6 +305,7 @@ class _$DashboardLoadingImpl implements DashboardLoading {
     required TResult Function(DashboardInitial value) initial,
     required TResult Function(DashboardLoading value) loading,
     required TResult Function(DashboardLoaded value) loaded,
+    required TResult Function(DashboardExportSuccess value) exportSuccess,
     required TResult Function(DashboardError value) error,
   }) {
     return loading(this);
@@ -298,6 +317,7 @@ class _$DashboardLoadingImpl implements DashboardLoading {
     TResult? Function(DashboardInitial value)? initial,
     TResult? Function(DashboardLoading value)? loading,
     TResult? Function(DashboardLoaded value)? loaded,
+    TResult? Function(DashboardExportSuccess value)? exportSuccess,
     TResult? Function(DashboardError value)? error,
   }) {
     return loading?.call(this);
@@ -309,6 +329,7 @@ class _$DashboardLoadingImpl implements DashboardLoading {
     TResult Function(DashboardInitial value)? initial,
     TResult Function(DashboardLoading value)? loading,
     TResult Function(DashboardLoaded value)? loaded,
+    TResult Function(DashboardExportSuccess value)? exportSuccess,
     TResult Function(DashboardError value)? error,
     required TResult orElse(),
   }) {
@@ -411,6 +432,8 @@ class _$DashboardLoadedImpl implements DashboardLoaded {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(DashboardStats stats) loaded,
+    required TResult Function(DashboardStats stats, String message)
+    exportSuccess,
     required TResult Function(String message) error,
   }) {
     return loaded(stats);
@@ -422,6 +445,7 @@ class _$DashboardLoadedImpl implements DashboardLoaded {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(DashboardStats stats)? loaded,
+    TResult? Function(DashboardStats stats, String message)? exportSuccess,
     TResult? Function(String message)? error,
   }) {
     return loaded?.call(stats);
@@ -433,6 +457,7 @@ class _$DashboardLoadedImpl implements DashboardLoaded {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(DashboardStats stats)? loaded,
+    TResult Function(DashboardStats stats, String message)? exportSuccess,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
@@ -448,6 +473,7 @@ class _$DashboardLoadedImpl implements DashboardLoaded {
     required TResult Function(DashboardInitial value) initial,
     required TResult Function(DashboardLoading value) loading,
     required TResult Function(DashboardLoaded value) loaded,
+    required TResult Function(DashboardExportSuccess value) exportSuccess,
     required TResult Function(DashboardError value) error,
   }) {
     return loaded(this);
@@ -459,6 +485,7 @@ class _$DashboardLoadedImpl implements DashboardLoaded {
     TResult? Function(DashboardInitial value)? initial,
     TResult? Function(DashboardLoading value)? loading,
     TResult? Function(DashboardLoaded value)? loaded,
+    TResult? Function(DashboardExportSuccess value)? exportSuccess,
     TResult? Function(DashboardError value)? error,
   }) {
     return loaded?.call(this);
@@ -470,6 +497,7 @@ class _$DashboardLoadedImpl implements DashboardLoaded {
     TResult Function(DashboardInitial value)? initial,
     TResult Function(DashboardLoading value)? loading,
     TResult Function(DashboardLoaded value)? loaded,
+    TResult Function(DashboardExportSuccess value)? exportSuccess,
     TResult Function(DashboardError value)? error,
     required TResult orElse(),
   }) {
@@ -491,6 +519,194 @@ abstract class DashboardLoaded implements DashboardState {
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$DashboardLoadedImplCopyWith<_$DashboardLoadedImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$DashboardExportSuccessImplCopyWith<$Res> {
+  factory _$$DashboardExportSuccessImplCopyWith(
+    _$DashboardExportSuccessImpl value,
+    $Res Function(_$DashboardExportSuccessImpl) then,
+  ) = __$$DashboardExportSuccessImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({DashboardStats stats, String message});
+
+  $DashboardStatsCopyWith<$Res> get stats;
+}
+
+/// @nodoc
+class __$$DashboardExportSuccessImplCopyWithImpl<$Res>
+    extends _$DashboardStateCopyWithImpl<$Res, _$DashboardExportSuccessImpl>
+    implements _$$DashboardExportSuccessImplCopyWith<$Res> {
+  __$$DashboardExportSuccessImplCopyWithImpl(
+    _$DashboardExportSuccessImpl _value,
+    $Res Function(_$DashboardExportSuccessImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of DashboardState
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? stats = null, Object? message = null}) {
+    return _then(
+      _$DashboardExportSuccessImpl(
+        null == stats
+            ? _value.stats
+            : stats // ignore: cast_nullable_to_non_nullable
+                  as DashboardStats,
+        null == message
+            ? _value.message
+            : message // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
+  }
+
+  /// Create a copy of DashboardState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $DashboardStatsCopyWith<$Res> get stats {
+    return $DashboardStatsCopyWith<$Res>(_value.stats, (value) {
+      return _then(_value.copyWith(stats: value));
+    });
+  }
+}
+
+/// @nodoc
+
+class _$DashboardExportSuccessImpl implements DashboardExportSuccess {
+  const _$DashboardExportSuccessImpl(this.stats, this.message);
+
+  @override
+  final DashboardStats stats;
+  @override
+  final String message;
+
+  @override
+  String toString() {
+    return 'DashboardState.exportSuccess(stats: $stats, message: $message)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$DashboardExportSuccessImpl &&
+            (identical(other.stats, stats) || other.stats == stats) &&
+            (identical(other.message, message) || other.message == message));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, stats, message);
+
+  /// Create a copy of DashboardState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$DashboardExportSuccessImplCopyWith<_$DashboardExportSuccessImpl>
+  get copyWith =>
+      __$$DashboardExportSuccessImplCopyWithImpl<_$DashboardExportSuccessImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function() loading,
+    required TResult Function(DashboardStats stats) loaded,
+    required TResult Function(DashboardStats stats, String message)
+    exportSuccess,
+    required TResult Function(String message) error,
+  }) {
+    return exportSuccess(stats, message);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function(DashboardStats stats)? loaded,
+    TResult? Function(DashboardStats stats, String message)? exportSuccess,
+    TResult? Function(String message)? error,
+  }) {
+    return exportSuccess?.call(stats, message);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function()? loading,
+    TResult Function(DashboardStats stats)? loaded,
+    TResult Function(DashboardStats stats, String message)? exportSuccess,
+    TResult Function(String message)? error,
+    required TResult orElse(),
+  }) {
+    if (exportSuccess != null) {
+      return exportSuccess(stats, message);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(DashboardInitial value) initial,
+    required TResult Function(DashboardLoading value) loading,
+    required TResult Function(DashboardLoaded value) loaded,
+    required TResult Function(DashboardExportSuccess value) exportSuccess,
+    required TResult Function(DashboardError value) error,
+  }) {
+    return exportSuccess(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(DashboardInitial value)? initial,
+    TResult? Function(DashboardLoading value)? loading,
+    TResult? Function(DashboardLoaded value)? loaded,
+    TResult? Function(DashboardExportSuccess value)? exportSuccess,
+    TResult? Function(DashboardError value)? error,
+  }) {
+    return exportSuccess?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(DashboardInitial value)? initial,
+    TResult Function(DashboardLoading value)? loading,
+    TResult Function(DashboardLoaded value)? loaded,
+    TResult Function(DashboardExportSuccess value)? exportSuccess,
+    TResult Function(DashboardError value)? error,
+    required TResult orElse(),
+  }) {
+    if (exportSuccess != null) {
+      return exportSuccess(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class DashboardExportSuccess implements DashboardState {
+  const factory DashboardExportSuccess(
+    final DashboardStats stats,
+    final String message,
+  ) = _$DashboardExportSuccessImpl;
+
+  DashboardStats get stats;
+  String get message;
+
+  /// Create a copy of DashboardState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$DashboardExportSuccessImplCopyWith<_$DashboardExportSuccessImpl>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -569,6 +785,8 @@ class _$DashboardErrorImpl implements DashboardError {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(DashboardStats stats) loaded,
+    required TResult Function(DashboardStats stats, String message)
+    exportSuccess,
     required TResult Function(String message) error,
   }) {
     return error(message);
@@ -580,6 +798,7 @@ class _$DashboardErrorImpl implements DashboardError {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(DashboardStats stats)? loaded,
+    TResult? Function(DashboardStats stats, String message)? exportSuccess,
     TResult? Function(String message)? error,
   }) {
     return error?.call(message);
@@ -591,6 +810,7 @@ class _$DashboardErrorImpl implements DashboardError {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(DashboardStats stats)? loaded,
+    TResult Function(DashboardStats stats, String message)? exportSuccess,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
@@ -606,6 +826,7 @@ class _$DashboardErrorImpl implements DashboardError {
     required TResult Function(DashboardInitial value) initial,
     required TResult Function(DashboardLoading value) loading,
     required TResult Function(DashboardLoaded value) loaded,
+    required TResult Function(DashboardExportSuccess value) exportSuccess,
     required TResult Function(DashboardError value) error,
   }) {
     return error(this);
@@ -617,6 +838,7 @@ class _$DashboardErrorImpl implements DashboardError {
     TResult? Function(DashboardInitial value)? initial,
     TResult? Function(DashboardLoading value)? loading,
     TResult? Function(DashboardLoaded value)? loaded,
+    TResult? Function(DashboardExportSuccess value)? exportSuccess,
     TResult? Function(DashboardError value)? error,
   }) {
     return error?.call(this);
@@ -628,6 +850,7 @@ class _$DashboardErrorImpl implements DashboardError {
     TResult Function(DashboardInitial value)? initial,
     TResult Function(DashboardLoading value)? loading,
     TResult Function(DashboardLoaded value)? loaded,
+    TResult Function(DashboardExportSuccess value)? exportSuccess,
     TResult Function(DashboardError value)? error,
     required TResult orElse(),
   }) {

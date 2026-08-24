@@ -21,32 +21,45 @@ mixin _$DashboardEvent {
   TResult when<TResult extends Object?>({
     required TResult Function() loadDashboard,
     required TResult Function() refreshDashboard,
+    required TResult Function(
+      String format,
+      DateTime? startDate,
+      DateTime? endDate,
+    )
+    exportDashboardData,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loadDashboard,
     TResult? Function()? refreshDashboard,
+    TResult? Function(String format, DateTime? startDate, DateTime? endDate)?
+    exportDashboardData,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loadDashboard,
     TResult Function()? refreshDashboard,
+    TResult Function(String format, DateTime? startDate, DateTime? endDate)?
+    exportDashboardData,
     required TResult orElse(),
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(LoadDashboard value) loadDashboard,
     required TResult Function(RefreshDashboard value) refreshDashboard,
+    required TResult Function(ExportDashboardData value) exportDashboardData,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(LoadDashboard value)? loadDashboard,
     TResult? Function(RefreshDashboard value)? refreshDashboard,
+    TResult? Function(ExportDashboardData value)? exportDashboardData,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(LoadDashboard value)? loadDashboard,
     TResult Function(RefreshDashboard value)? refreshDashboard,
+    TResult Function(ExportDashboardData value)? exportDashboardData,
     required TResult orElse(),
   }) => throw _privateConstructorUsedError;
 }
@@ -118,6 +131,12 @@ class _$LoadDashboardImpl implements LoadDashboard {
   TResult when<TResult extends Object?>({
     required TResult Function() loadDashboard,
     required TResult Function() refreshDashboard,
+    required TResult Function(
+      String format,
+      DateTime? startDate,
+      DateTime? endDate,
+    )
+    exportDashboardData,
   }) {
     return loadDashboard();
   }
@@ -127,6 +146,8 @@ class _$LoadDashboardImpl implements LoadDashboard {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loadDashboard,
     TResult? Function()? refreshDashboard,
+    TResult? Function(String format, DateTime? startDate, DateTime? endDate)?
+    exportDashboardData,
   }) {
     return loadDashboard?.call();
   }
@@ -136,6 +157,8 @@ class _$LoadDashboardImpl implements LoadDashboard {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loadDashboard,
     TResult Function()? refreshDashboard,
+    TResult Function(String format, DateTime? startDate, DateTime? endDate)?
+    exportDashboardData,
     required TResult orElse(),
   }) {
     if (loadDashboard != null) {
@@ -149,6 +172,7 @@ class _$LoadDashboardImpl implements LoadDashboard {
   TResult map<TResult extends Object?>({
     required TResult Function(LoadDashboard value) loadDashboard,
     required TResult Function(RefreshDashboard value) refreshDashboard,
+    required TResult Function(ExportDashboardData value) exportDashboardData,
   }) {
     return loadDashboard(this);
   }
@@ -158,6 +182,7 @@ class _$LoadDashboardImpl implements LoadDashboard {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(LoadDashboard value)? loadDashboard,
     TResult? Function(RefreshDashboard value)? refreshDashboard,
+    TResult? Function(ExportDashboardData value)? exportDashboardData,
   }) {
     return loadDashboard?.call(this);
   }
@@ -167,6 +192,7 @@ class _$LoadDashboardImpl implements LoadDashboard {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(LoadDashboard value)? loadDashboard,
     TResult Function(RefreshDashboard value)? refreshDashboard,
+    TResult Function(ExportDashboardData value)? exportDashboardData,
     required TResult orElse(),
   }) {
     if (loadDashboard != null) {
@@ -225,6 +251,12 @@ class _$RefreshDashboardImpl implements RefreshDashboard {
   TResult when<TResult extends Object?>({
     required TResult Function() loadDashboard,
     required TResult Function() refreshDashboard,
+    required TResult Function(
+      String format,
+      DateTime? startDate,
+      DateTime? endDate,
+    )
+    exportDashboardData,
   }) {
     return refreshDashboard();
   }
@@ -234,6 +266,8 @@ class _$RefreshDashboardImpl implements RefreshDashboard {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loadDashboard,
     TResult? Function()? refreshDashboard,
+    TResult? Function(String format, DateTime? startDate, DateTime? endDate)?
+    exportDashboardData,
   }) {
     return refreshDashboard?.call();
   }
@@ -243,6 +277,8 @@ class _$RefreshDashboardImpl implements RefreshDashboard {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loadDashboard,
     TResult Function()? refreshDashboard,
+    TResult Function(String format, DateTime? startDate, DateTime? endDate)?
+    exportDashboardData,
     required TResult orElse(),
   }) {
     if (refreshDashboard != null) {
@@ -256,6 +292,7 @@ class _$RefreshDashboardImpl implements RefreshDashboard {
   TResult map<TResult extends Object?>({
     required TResult Function(LoadDashboard value) loadDashboard,
     required TResult Function(RefreshDashboard value) refreshDashboard,
+    required TResult Function(ExportDashboardData value) exportDashboardData,
   }) {
     return refreshDashboard(this);
   }
@@ -265,6 +302,7 @@ class _$RefreshDashboardImpl implements RefreshDashboard {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(LoadDashboard value)? loadDashboard,
     TResult? Function(RefreshDashboard value)? refreshDashboard,
+    TResult? Function(ExportDashboardData value)? exportDashboardData,
   }) {
     return refreshDashboard?.call(this);
   }
@@ -274,6 +312,7 @@ class _$RefreshDashboardImpl implements RefreshDashboard {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(LoadDashboard value)? loadDashboard,
     TResult Function(RefreshDashboard value)? refreshDashboard,
+    TResult Function(ExportDashboardData value)? exportDashboardData,
     required TResult orElse(),
   }) {
     if (refreshDashboard != null) {
@@ -285,4 +324,192 @@ class _$RefreshDashboardImpl implements RefreshDashboard {
 
 abstract class RefreshDashboard implements DashboardEvent {
   const factory RefreshDashboard() = _$RefreshDashboardImpl;
+}
+
+/// @nodoc
+abstract class _$$ExportDashboardDataImplCopyWith<$Res> {
+  factory _$$ExportDashboardDataImplCopyWith(
+    _$ExportDashboardDataImpl value,
+    $Res Function(_$ExportDashboardDataImpl) then,
+  ) = __$$ExportDashboardDataImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String format, DateTime? startDate, DateTime? endDate});
+}
+
+/// @nodoc
+class __$$ExportDashboardDataImplCopyWithImpl<$Res>
+    extends _$DashboardEventCopyWithImpl<$Res, _$ExportDashboardDataImpl>
+    implements _$$ExportDashboardDataImplCopyWith<$Res> {
+  __$$ExportDashboardDataImplCopyWithImpl(
+    _$ExportDashboardDataImpl _value,
+    $Res Function(_$ExportDashboardDataImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of DashboardEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? format = null,
+    Object? startDate = freezed,
+    Object? endDate = freezed,
+  }) {
+    return _then(
+      _$ExportDashboardDataImpl(
+        format: null == format
+            ? _value.format
+            : format // ignore: cast_nullable_to_non_nullable
+                  as String,
+        startDate: freezed == startDate
+            ? _value.startDate
+            : startDate // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        endDate: freezed == endDate
+            ? _value.endDate
+            : endDate // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+
+class _$ExportDashboardDataImpl implements ExportDashboardData {
+  const _$ExportDashboardDataImpl({
+    this.format = 'PDF',
+    this.startDate,
+    this.endDate,
+  });
+
+  @override
+  @JsonKey()
+  final String format;
+  @override
+  final DateTime? startDate;
+  @override
+  final DateTime? endDate;
+
+  @override
+  String toString() {
+    return 'DashboardEvent.exportDashboardData(format: $format, startDate: $startDate, endDate: $endDate)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ExportDashboardDataImpl &&
+            (identical(other.format, format) || other.format == format) &&
+            (identical(other.startDate, startDate) ||
+                other.startDate == startDate) &&
+            (identical(other.endDate, endDate) || other.endDate == endDate));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, format, startDate, endDate);
+
+  /// Create a copy of DashboardEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ExportDashboardDataImplCopyWith<_$ExportDashboardDataImpl> get copyWith =>
+      __$$ExportDashboardDataImplCopyWithImpl<_$ExportDashboardDataImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() loadDashboard,
+    required TResult Function() refreshDashboard,
+    required TResult Function(
+      String format,
+      DateTime? startDate,
+      DateTime? endDate,
+    )
+    exportDashboardData,
+  }) {
+    return exportDashboardData(format, startDate, endDate);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? loadDashboard,
+    TResult? Function()? refreshDashboard,
+    TResult? Function(String format, DateTime? startDate, DateTime? endDate)?
+    exportDashboardData,
+  }) {
+    return exportDashboardData?.call(format, startDate, endDate);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? loadDashboard,
+    TResult Function()? refreshDashboard,
+    TResult Function(String format, DateTime? startDate, DateTime? endDate)?
+    exportDashboardData,
+    required TResult orElse(),
+  }) {
+    if (exportDashboardData != null) {
+      return exportDashboardData(format, startDate, endDate);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(LoadDashboard value) loadDashboard,
+    required TResult Function(RefreshDashboard value) refreshDashboard,
+    required TResult Function(ExportDashboardData value) exportDashboardData,
+  }) {
+    return exportDashboardData(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(LoadDashboard value)? loadDashboard,
+    TResult? Function(RefreshDashboard value)? refreshDashboard,
+    TResult? Function(ExportDashboardData value)? exportDashboardData,
+  }) {
+    return exportDashboardData?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(LoadDashboard value)? loadDashboard,
+    TResult Function(RefreshDashboard value)? refreshDashboard,
+    TResult Function(ExportDashboardData value)? exportDashboardData,
+    required TResult orElse(),
+  }) {
+    if (exportDashboardData != null) {
+      return exportDashboardData(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class ExportDashboardData implements DashboardEvent {
+  const factory ExportDashboardData({
+    final String format,
+    final DateTime? startDate,
+    final DateTime? endDate,
+  }) = _$ExportDashboardDataImpl;
+
+  String get format;
+  DateTime? get startDate;
+  DateTime? get endDate;
+
+  /// Create a copy of DashboardEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$ExportDashboardDataImplCopyWith<_$ExportDashboardDataImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
