@@ -125,6 +125,21 @@ export const getMatchResult = asyncHandler(async (req: Request, res: Response) =
   res.json({ success: true, message: "Match result fetched", data: result });
 });
 
+export const getTopMatches = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { resumeId } = req.params;
+  const { limit } = req.query;
+  
+  const parsedLimit = limit ? parseInt(limit as string, 10) : 5;
+  const matches = await matchingService.getTopMatchesForResume(resumeId, userId, parsedLimit);
+  
+  res.status(200).json({
+    success: true,
+    message: "Top matches fetched successfully",
+    data: matches,
+  });
+});
+
 // Interview Prep
 
 export const generateInterview = asyncHandler(async (req: Request, res: Response) => {

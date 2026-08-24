@@ -10,6 +10,7 @@ import {
   deleteJobAnalysis,
   matchResumeJob,
   getMatchResult,
+  getTopMatches,
   generateInterview,
   getInterviewSessions,
   getInterviewSession,
@@ -48,6 +49,7 @@ router.delete("/resume/analysis/:analysisId", deleteResumeAnalysis);
 // Resume-Job matching
 router.post("/match", matchResumeJob);
 router.get("/match/:matchId", getMatchResult);
+router.get("/match/resume/:resumeId/top", getTopMatches);
 
 // Feedback endpoints for AI improvements
 router.post("/resume/analyses/:analysisId/feedback", (req, res) => {

@@ -67,6 +67,21 @@ export class MatchingService {
     if (!analysis) throw ApiError.notFound("Match analysis not found");
     return analysis;
   }
+
+  async getTopMatchesForResume(resumeId: string, userId: string, limit: number = 5) {
+    const resume = await prisma.resume.findFirst({
+      where: { id: resumeId, userId },
+    });
+
+    if (!resume) throw ApiError.notFound("Resume not found");
+
+    return prisma.jobAnalysis.findMany({
+      where: { userId, resumeMatchScore: { not: null } },
+      orderBy: { resumeMatchScore: "desc" },
+      take: limit,
+      include: { job: { select: { companyName: true, role: true } } },
+    });
+  }
 }
 
 export const matchingService = new MatchingService();
