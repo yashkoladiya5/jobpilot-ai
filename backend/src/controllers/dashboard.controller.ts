@@ -52,3 +52,20 @@ export const getRecentActivityLogs = asyncHandler(async (req: Request, res: Resp
     data: activityLogs,
   });
 });
+
+export const getActionItems = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  if (!userId) {
+     res.status(401).json({ success: false, message: "Unauthorized access: user ID is missing" });
+     return;
+  }
+
+  const actionItems = await dashboardService.getActionItems(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Action items fetched successfully", 
+    data: actionItems,
+  });
+});

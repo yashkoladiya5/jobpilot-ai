@@ -94,4 +94,26 @@ export class DashboardService {
       type: "JOB_UPDATE",
     }));
   }
+
+  async getActionItems(userId: string) {
+    const jobsNeedingFollowUp = await prisma.jobApplication.findMany({
+      where: { 
+        userId, 
+        status: 'INTERVIEW', 
+        updatedAt: { lte: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000) } // No update in 3 days
+      },
+      select: { id: true, companyName: true, role: true },
+      take: 5
+    });
+
+    const pendingAIAnalyses = await prisma.jobAnalysis.count({
+      where: { userId, status: 'PROCESSING' }
+    });
+
+    return {
+      jobsNeedingFollowUp,
+      pendingAIAnalyses,
+      suggestedAction: jobsNeedingFollowUp.length > 0 ? "Follow up on your recent interviews." : "Apply to some new jobs today!"
+    };
+  }
 }
