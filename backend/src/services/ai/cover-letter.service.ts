@@ -95,4 +95,20 @@ export class CoverLetterService {
       },
     });
   }
+
+  async updateCoverLetter(userId: string, id: string, coverLetterText: string, tone?: string) {
+    const coverLetter = await this.getCoverLetter(id, userId);
+
+    if (coverLetter.status !== "COMPLETED") {
+      throw ApiError.badRequest("Cannot update a cover letter that has not finished generating");
+    }
+
+    return prisma.coverLetter.update({
+      where: { id },
+      data: {
+        coverLetterText,
+        ...(tone ? { tone } : {}),
+      },
+    });
+  }
 }

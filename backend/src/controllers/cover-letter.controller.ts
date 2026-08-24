@@ -44,3 +44,22 @@ export const getCoverLetters = asyncHandler(async (req: Request, res: Response) 
     data: result,
   });
 });
+
+export const updateCoverLetter = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { id } = req.params;
+  const { coverLetterText, tone } = req.body;
+  
+  if (!coverLetterText) {
+    res.status(400).json({ success: false, message: "Cover letter text is required for update", data: null });
+    return;
+  }
+
+  const result = await coverLetterService.updateCoverLetter(userId, id, coverLetterText, tone);
+  
+  res.status(200).json({
+    success: true,
+    message: "Cover letter manually updated successfully",
+    data: result,
+  });
+});
