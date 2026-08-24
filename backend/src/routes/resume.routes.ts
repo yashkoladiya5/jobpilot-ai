@@ -6,6 +6,7 @@ import {
   deleteResume,
   setPrimaryResume,
   renameResume,
+  getPrimaryResume,
 } from "../controllers/resume.controller";
 import { authenticate } from "../middleware/auth";
 import { upload } from "../middleware/upload";
@@ -26,6 +27,7 @@ router.post("/upload", authenticate, upload.single("resume"), uploadResume);
 // Fetching operations
 // -----------------------------------------------------------------------
 router.get("/", authenticate, getResumes);
+router.get("/primary", authenticate, getPrimaryResume);
 router.get("/:id", authenticate, getResume);
 
 // -----------------------------------------------------------------------

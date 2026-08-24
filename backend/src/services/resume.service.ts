@@ -84,4 +84,16 @@ export class ResumeService {
       data: { fileName: newName },
     });
   }
+
+  async getPrimaryResume(userId: string) {
+    const resume = await prisma.resume.findFirst({
+      where: { userId, isPrimary: true },
+    });
+
+    if (!resume) {
+      throw ApiError.notFound("No primary resume found for this user");
+    }
+
+    return resume;
+  }
 }

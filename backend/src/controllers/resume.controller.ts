@@ -102,3 +102,15 @@ export const renameResume = asyncHandler(async (req: Request, res: Response) => 
     data: resume,
   });
 });
+
+export const getPrimaryResume = asyncHandler(async (req: Request, res: Response) => {
+  const { id: userId } = (req as AuthenticatedRequest).user;
+  
+  const resume = await resumeService.getPrimaryResume(userId);
+  
+  res.status(200).json({
+    success: true,
+    message: "Primary resume fetched successfully",
+    data: resume,
+  });
+});
