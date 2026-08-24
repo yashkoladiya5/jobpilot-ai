@@ -55,3 +55,20 @@ export const generateToken = (userId: string): string => {
     expiresIn: config.jwtExpiresIn as jwt.SignOptions["expiresIn"],
   });
 };
+
+/**
+ * Utility to decode and inspect a token without throwing errors.
+ * Useful for debugging or logging token metadata before actual validation.
+ */
+export const inspectToken = (token: string): { decoded: any, isValid: boolean, expired: boolean } => {
+  try {
+    const decoded = jwt.verify(token, config.jwtSecret);
+    return { decoded, isValid: true, expired: false };
+  } catch (error: any) {
+    return { 
+      decoded: jwt.decode(token), 
+      isValid: false, 
+      expired: error.name === 'TokenExpiredError' 
+    };
+  }
+};

@@ -40,4 +40,16 @@ export class ApiError extends Error {
   static internal(message: string): ApiError {
     return new ApiError(500, message);
   }
+
+  static notImplemented(message: string = "Not Implemented"): ApiError {
+    return new ApiError(501, message);
+  }
+
+  static badGateway(message: string = "Bad Gateway"): ApiError {
+    return new ApiError(502, message);
+  }
+  
+  static serviceUnavailable(message: string = "Service Unavailable"): ApiError {
+    return new ApiError(503, message);
+  }
 }
