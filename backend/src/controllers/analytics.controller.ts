@@ -44,3 +44,9 @@ export const getInterviewAnalytics = asyncHandler(async (req: Request, res: Resp
   const result = await analyticsService.getInterviewAnalytics(userId);
   res.json({ success: true, message: "Interview analytics fetched successfully", data: result });
 });
+
+export const getWeeklyActivitySummary = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const result = await analyticsService.getWeeklyActivitySummary(userId);
+  res.json({ success: true, message: "Weekly activity summary fetched successfully", data: result });
+});

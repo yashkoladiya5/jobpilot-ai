@@ -222,4 +222,30 @@ export class AnalyticsService {
       })),
     };
   }
+
+  async getWeeklyActivitySummary(userId: string) {
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+    const applicationsThisWeek = await prisma.jobApplication.findMany({
+      where: {
+        userId,
+        createdAt: { gte: oneWeekAgo },
+      },
+    });
+
+    const totalApplied = applicationsThisWeek.length;
+    const interviewCount = applicationsThisWeek.filter(app => app.status === "INTERVIEW").length;
+    const offerCount = applicationsThisWeek.filter(app => app.status === "OFFER").length;
+    const rejectionCount = applicationsThisWeek.filter(app => app.status === "REJECTED").length;
+
+    return {
+      timeframe: "Last 7 days",
+      totalApplied,
+      interviewCount,
+      offerCount,
+      rejectionCount,
+      activeCompanies: [...new Set(applicationsThisWeek.map(app => app.companyName))],
+    };
+  }
 }
