@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { authenticate } from "../middleware/auth";
-import { getStats } from "../controllers/dashboard.controller";
+import { getStats, getRecentActivityLogs } from "../controllers/dashboard.controller";
 
 /**
  * Express router for dashboard endpoints.
@@ -9,5 +9,6 @@ import { getStats } from "../controllers/dashboard.controller";
 const router = Router();
 
 router.get("/stats", authenticate, getStats);
+router.get("/activity", authenticate, getRecentActivityLogs);
 
 export default router;

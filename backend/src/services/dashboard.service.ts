@@ -69,4 +69,29 @@ export class DashboardService {
       activeInterviewRate: parseFloat(activeInterviewRate.toFixed(1)),
     };
   }
+
+  async getRecentActivityLogs(userId: string, limit: number = 10) {
+    // A simplified activity log based on job applications for now,
+    // in a real app this might aggregate from multiple tables (interviews, resume analysis, etc.)
+    const recentJobs = await prisma.jobApplication.findMany({
+      where: { userId },
+      orderBy: { updatedAt: "desc" },
+      take: limit,
+      select: {
+        id: true,
+        companyName: true,
+        role: true,
+        status: true,
+        updatedAt: true,
+      },
+    });
+
+    return recentJobs.map(job => ({
+      id: job.id,
+      title: `Job Application: ${job.companyName}`,
+      description: `Status updated to ${job.status} for ${job.role}`,
+      timestamp: job.updatedAt,
+      type: "JOB_UPDATE",
+    }));
+  }
 }

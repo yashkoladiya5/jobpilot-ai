@@ -33,3 +33,22 @@ export const getStats = asyncHandler(async (req: Request, res: Response) => {
     }
   });
 });
+
+export const getRecentActivityLogs = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { limit } = req.query;
+  
+  if (!userId) {
+     res.status(401).json({ success: false, message: "Unauthorized access: user ID is missing" });
+     return;
+  }
+
+  const parsedLimit = limit ? parseInt(limit as string, 10) : 10;
+  const activityLogs = await dashboardService.getRecentActivityLogs(userId, parsedLimit);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Recent activity logs fetched successfully", 
+    data: activityLogs,
+  });
+});
