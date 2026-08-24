@@ -171,6 +171,16 @@ export const getCareerInsights = asyncHandler(async (req: Request, res: Response
   res.json({ success: true, message: "Career insights fetched", data: insights });
 });
 
+export const computeCareerInsights = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  // Force a re-computation of insights rather than using cached
+  console.log(`[AI Controller] Forcing compute career insights for user ${userId}`);
+  const result = await careerInsightsService.computeInsights(userId, { forceRefresh: true });
+  
+  res.json({ success: true, message: "Career insights forcefully re-computed", data: result });
+});
+
 export const getCareerInsightsHistory = asyncHandler(async (req: Request, res: Response) => {
   const userId = (req as AuthenticatedRequest).user.id;
   const result = await careerInsightsService.getInsightsHistory(userId);

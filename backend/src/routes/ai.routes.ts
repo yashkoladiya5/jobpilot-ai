@@ -15,6 +15,7 @@ import {
   completeInterview,
   getInterviewResult,
   getCareerInsights,
+  computeCareerInsights,
   getCareerInsightsHistory,
 } from "../controllers/ai.controller";
 import { authenticate } from "../middleware/auth";
@@ -62,6 +63,7 @@ router.get("/interview/session/:sessionId/result", getInterviewResult);
 
 // Career insights
 router.get("/career/insights", getCareerInsights);
+router.post("/career/insights/compute", computeCareerInsights);
 router.get("/career/insights/history", getCareerInsightsHistory);
 
 export default router;

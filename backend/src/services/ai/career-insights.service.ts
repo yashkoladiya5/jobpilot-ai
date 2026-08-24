@@ -10,7 +10,26 @@ import { startOfWeek } from "date-fns";
  * to generate personalized career insights and recommendations.
  */
 export class CareerInsightsService {
-  async computeInsights(userId: string): Promise<CareerInsightsOutput> {
+  async computeInsights(userId: string, options?: { forceRefresh?: boolean }): Promise<CareerInsightsOutput> {
+    const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
+    
+    if (!options?.forceRefresh) {
+      const existing = await prisma.careerInsight.findFirst({
+        where: { userId, weekStart },
+      });
+      if (existing) {
+        return {
+          careerScore: existing.careerScore,
+          interviewReadiness: existing.interviewReadiness,
+          resumeStrength: existing.resumeStrength,
+          jobMatchQuality: existing.jobMatchQuality,
+          applicationSuccessRate: existing.applicationSuccessRate,
+          skillGaps: existing.skillGaps,
+          recommendations: existing.recommendations,
+        };
+      }
+    }
+
     const totalApplications = await prisma.jobApplication.count({ where: { userId } });
 
     const applicationsByStatusRaw = await prisma.jobApplication.groupBy({
