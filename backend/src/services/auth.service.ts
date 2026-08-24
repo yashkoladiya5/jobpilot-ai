@@ -93,4 +93,25 @@ export class AuthService {
 
     return { deletedId: userId };
   }
+
+  async updatePassword(userId: string, oldPassword: string, newPassword: string) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      throw ApiError.notFound("User not found");
+    }
+
+    const isMatch: boolean = await bcrypt.compare(oldPassword, user.passwordHash);
+    if (!isMatch) {
+      throw ApiError.badRequest("Incorrect old password");
+    }
+
+    const passwordHash = await bcrypt.hash(newPassword, 10);
+    
+    await prisma.user.update({
+      where: { id: userId },
+      data: { passwordHash },
+    });
+
+    return { success: true };
+  }
 }

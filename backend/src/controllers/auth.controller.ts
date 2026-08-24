@@ -103,3 +103,24 @@ export const deleteAccount = asyncHandler(async (req: Request, res: Response) =>
     data: null,
   });
 });
+
+export const updatePassword = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { oldPassword, newPassword } = req.body;
+  
+  if (!oldPassword || !newPassword) {
+    throw ApiError.badRequest("Both old and new passwords are required");
+  }
+
+  if (newPassword.length < 6) {
+    throw ApiError.badRequest("New password must be at least 6 characters long");
+  }
+
+  await authService.updatePassword(userId, oldPassword, newPassword);
+  
+  res.status(200).json({
+    success: true,
+    message: "Password updated successfully",
+    data: null,
+  });
+});
