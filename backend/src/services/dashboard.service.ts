@@ -116,4 +116,26 @@ export class DashboardService {
       suggestedAction: jobsNeedingFollowUp.length > 0 ? "Follow up on your recent interviews." : "Apply to some new jobs today!"
     };
   }
+
+  async getDashboardSummary(userId: string) {
+    const totalJobs = await prisma.jobApplication.count({ where: { userId } });
+    const interviews = await prisma.jobApplication.count({ where: { userId, status: 'INTERVIEW' } });
+    const offers = await prisma.jobApplication.count({ where: { userId, status: 'OFFER' } });
+    
+    let summaryText = "You're off to a great start. Keep applying!";
+    if (offers > 0) {
+      summaryText = `Congratulations! You have ${offers} offer(s) to review.`;
+    } else if (interviews > 0) {
+      summaryText = `You have ${interviews} interview(s) in progress. Prepare well!`;
+    } else if (totalJobs > 10) {
+      summaryText = "You've been applying consistently. The right opportunity is coming.";
+    }
+
+    return {
+      totalJobs,
+      interviews,
+      offers,
+      summaryText,
+    };
+  }
 }
