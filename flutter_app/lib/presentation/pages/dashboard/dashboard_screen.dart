@@ -48,6 +48,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ],
       ),
       body: RefreshIndicator(
+        color: AppColors.primary,
+        backgroundColor: Colors.white,
+        strokeWidth: 3.0,
         onRefresh: () async {
           context.read<DashboardBloc>().add(const RefreshDashboard());
           context
@@ -77,6 +80,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final interviewCount = stats.byStatus
         .where((s) => s.status == 'INTERVIEW')
         .fold(0, (sum, s) => sum + s.count);
+    final savedCount = stats.byStatus
+        .where((s) => s.status == 'SAVED')
+        .fold(0, (sum, s) => sum + s.count);
     final offerCount = stats.byStatus
         .where((s) => s.status == 'OFFER')
         .fold(0, (sum, s) => sum + s.count);
@@ -98,8 +104,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
               const SizedBox(width: 12),
               StatsCard(
-                icon: Icons.people_outline,
+                icon: Icons.star_border,
                 iconBackgroundColor: AppColors.warning,
+                number: savedCount.toString(),
+                label: 'Saved Jobs',
+              ),
+              const SizedBox(width: 12),
+              StatsCard(
+                icon: Icons.people_outline,
+                iconBackgroundColor: AppColors.secondary,
                 number: interviewCount.toString(),
                 label: 'Interviews',
               ),

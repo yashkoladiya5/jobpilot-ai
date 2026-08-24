@@ -47,8 +47,8 @@ class StatusChip extends StatelessWidget {
     switch (status) {
       case ApplicationStatus.saved:
         return const _StatusConfig(
-          backgroundColor: Color(0xFFE0E0E0),
-          textColor: Color(0xFF616161),
+          backgroundColor: Color(0xFFF5F5F5),
+          textColor: Color(0xFF424242),
         );
       case ApplicationStatus.applied:
         return const _StatusConfig(
@@ -72,8 +72,8 @@ class StatusChip extends StatelessWidget {
         );
       case ApplicationStatus.withdrawn:
         return const _StatusConfig(
-          backgroundColor: Color(0xFFF3E5F5),
-          textColor: Color(0xFF7B1FA2),
+          backgroundColor: Color(0xFFEDE7F6),
+          textColor: Color(0xFF512DA8),
         );
     }
   }

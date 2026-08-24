@@ -50,20 +50,21 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             Expanded(
               child: PageView(
                 controller: _pageController,
+                physics: const BouncingScrollPhysics(),
                 onPageChanged: (page) => setState(() => _currentPage = page),
                 children: [
                   _buildPage(
                     icon: Icons.work_outline,
                     title: 'Track Every Application',
                     description:
-                        'Keep track of jobs, resumes, and applications all in one place',
+                        'Keep track of jobs, resumes, and applications all in one place with powerful AI insights.',
                     color: AppColors.primary,
                   ),
                   _buildPage(
                     icon: Icons.auto_awesome,
                     title: 'AI That Helps You Get Hired',
                     description:
-                        'Analyze your resume, match with jobs, and ace your interviews with AI guidance',
+                        'Analyze your resume, match with jobs, and ace your interviews with AI guidance tailored to your career goals.',
                     color: AppColors.secondary,
                   ),
                   _buildLastPage(),
