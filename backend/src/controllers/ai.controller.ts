@@ -57,6 +57,19 @@ export const getResumeAnalyses = asyncHandler(async (req: Request, res: Response
   });
 });
 
+export const getLatestResumeAnalysis = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  console.log(`[AI Controller] Fetching latest resume analysis for user ${userId}`);
+  const analysis = await resumeAnalysisService.getLatestResumeAnalysis(userId);
+  
+  res.status(200).json({
+    success: true,
+    message: "Latest resume analysis fetched successfully",
+    data: analysis,
+  });
+});
+
 // Job Analysis
 
 export const analyzeJob = asyncHandler(async (req: Request, res: Response) => {

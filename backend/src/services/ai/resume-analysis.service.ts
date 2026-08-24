@@ -110,4 +110,22 @@ export class ResumeAnalysisService {
       where: { id: analysisId },
     });
   }
+
+  async getLatestResumeAnalysis(userId: string) {
+    const latestAnalysis = await prisma.resumeAnalysis.findFirst({
+      where: { userId },
+      orderBy: { analyzedAt: "desc" },
+      include: {
+        resume: {
+          select: { id: true, fileName: true },
+        },
+      },
+    });
+
+    if (!latestAnalysis) {
+      throw ApiError.notFound("No resume analyses found for this user");
+    }
+
+    return latestAnalysis;
+  }
 }
