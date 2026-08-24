@@ -91,3 +91,15 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
     data: null,
   });
 });
+
+export const deleteAccount = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  await authService.deleteAccount(userId);
+  
+  res.status(200).json({
+    success: true,
+    message: "Account permanently deleted successfully",
+    data: null,
+  });
+});
