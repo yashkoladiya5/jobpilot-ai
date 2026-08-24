@@ -128,6 +128,16 @@ export class JobService {
     });
   }
 
+  async updateJobNote(userId: string, id: string, notes: string) {
+    // We get the job to ensure it belongs to the user and exists
+    await this.getJobById(userId, id);
+
+    return prisma.jobApplication.update({
+      where: { id },
+      data: { notes },
+    });
+  }
+
   async getJobsAnalytics(userId: string) {
     const jobs = await prisma.jobApplication.findMany({
       where: { userId },

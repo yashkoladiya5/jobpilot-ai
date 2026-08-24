@@ -52,6 +52,25 @@ export const updateJobStatus = asyncHandler(async (req: Request, res: Response) 
   });
 });
 
+export const updateJobNote = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { id } = req.params;
+  const { notes } = req.body;
+  
+  if (notes === undefined) {
+     res.status(400).json({ success: false, message: "Notes content is required." });
+     return;
+  }
+  
+  const job = await jobService.updateJobNote(userId, id, notes);
+
+  res.status(200).json({
+    success: true,
+    message: "Job note updated successfully",
+    data: job,
+  });
+});
+
 export const bulkUpdateStatus = asyncHandler(async (req: Request, res: Response) => {
   const userId = (req as AuthenticatedRequest).user.id;
   const { jobIds, status } = req.body;

@@ -9,6 +9,7 @@ import {
   updateJobStatus,
   bulkUpdateStatus,
   bulkDeleteJobs,
+  updateJobNote,
 } from "../controllers/job.controller";
 import { authenticate } from "../middleware/auth";
 import { validate } from "../middleware/validate";
@@ -25,6 +26,7 @@ router.get("/analytics/summary", authenticate, getJobsAnalytics);
 router.patch("/bulk/status", authenticate, bulkUpdateStatus);
 router.post("/bulk/delete", authenticate, bulkDeleteJobs);
 router.patch("/:id/status", authenticate, updateJobStatus);
+router.patch("/:id/note", authenticate, updateJobNote);
 
 // CRUD operations for jobs, all requiring user authentication
 router.get("/", authenticate, getJobs);
