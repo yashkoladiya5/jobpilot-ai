@@ -150,4 +150,35 @@ export class AnalyticsService {
       skillsToImprove: mockSkillData.slice(3),
     };
   }
+
+  async getRejectionAnalytics(userId: string) {
+    const rejectedApplications = await prisma.jobApplication.findMany({
+      where: { userId, status: "REJECTED" },
+      orderBy: { updatedAt: "desc" },
+    });
+
+    const totalRejections = rejectedApplications.length;
+    
+    // Group rejections by role
+    const roleCounts: Record<string, number> = {};
+    for (const app of rejectedApplications) {
+      const role = app.role.toLowerCase();
+      roleCounts[role] = (roleCounts[role] || 0) + 1;
+    }
+
+    const topRejectedRoles = Object.entries(roleCounts)
+      .map(([role, count]) => ({ role, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5);
+
+    return {
+      totalRejections,
+      topRejectedRoles,
+      recentRejections: rejectedApplications.slice(0, 5).map(app => ({
+        company: app.companyName,
+        role: app.role,
+        date: app.updatedAt,
+      })),
+    };
+  }
 }

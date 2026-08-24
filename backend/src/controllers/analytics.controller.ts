@@ -26,3 +26,9 @@ export const getSkillMatchAnalytics = asyncHandler(async (req: Request, res: Res
   const result = await analyticsService.getSkillMatchAnalytics(userId);
   res.json({ success: true, message: "Skill match analytics fetched successfully", data: result });
 });
+
+export const getRejectionAnalytics = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const result = await analyticsService.getRejectionAnalytics(userId);
+  res.json({ success: true, message: "Rejection analytics fetched successfully", data: result });
+});
