@@ -8,6 +8,7 @@ import {
   getJobsAnalytics,
   updateJobStatus,
   bulkUpdateStatus,
+  bulkDeleteJobs,
 } from "../controllers/job.controller";
 import { authenticate } from "../middleware/auth";
 import { validate } from "../middleware/validate";
@@ -22,6 +23,7 @@ const router = Router();
 // Custom endpoints
 router.get("/analytics/summary", authenticate, getJobsAnalytics);
 router.patch("/bulk/status", authenticate, bulkUpdateStatus);
+router.post("/bulk/delete", authenticate, bulkDeleteJobs);
 router.patch("/:id/status", authenticate, updateJobStatus);
 
 // CRUD operations for jobs, all requiring user authentication

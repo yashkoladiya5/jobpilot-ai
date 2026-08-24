@@ -167,4 +167,19 @@ export class JobService {
 
     return { count: updated.count };
   }
+
+  async bulkDeleteJobs(userId: string, jobIds: string[]) {
+    if (!jobIds || jobIds.length === 0) {
+      throw ApiError.badRequest("No job IDs provided for bulk deletion");
+    }
+
+    const deleted = await prisma.jobApplication.deleteMany({
+      where: { 
+        id: { in: jobIds },
+        userId 
+      },
+    });
+
+    return { count: deleted.count };
+  }
 }

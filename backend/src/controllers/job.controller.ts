@@ -70,6 +70,24 @@ export const bulkUpdateStatus = asyncHandler(async (req: Request, res: Response)
   });
 });
 
+export const bulkDeleteJobs = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { jobIds } = req.body;
+  
+  if (!jobIds || !Array.isArray(jobIds)) {
+     res.status(400).json({ success: false, message: "A valid array of job IDs is required." });
+     return;
+  }
+  
+  const result = await jobService.bulkDeleteJobs(userId, jobIds);
+
+  res.status(200).json({
+    success: true,
+    message: `${result.count} job(s) permanently deleted`,
+    data: result,
+  });
+});
+
 export const createJob = asyncHandler(async (req: Request, res: Response) => {
   const userId = (req as AuthenticatedRequest).user.id;
   const { companyName, role } = req.body;
