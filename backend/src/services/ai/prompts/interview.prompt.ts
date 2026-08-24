@@ -9,6 +9,7 @@ Respond ONLY with valid JSON matching this exact schema:
   "hrQuestions": { "question": string, "category": "HR", "difficulty": "EASY" | "MEDIUM" | "HARD", "expectedPoints": string[] }[] (5 questions),
   "technicalQuestions": { "question": string, "category": "TECHNICAL", "difficulty": "EASY" | "MEDIUM" | "HARD", "expectedPoints": string[] }[] (5 questions),
   "behavioralQuestions": { "question": string, "category": "BEHAVIORAL", "difficulty": "EASY" | "MEDIUM" | "HARD", "expectedPoints": string[] }[] (5 questions),
+  "situationalQuestions": { "question": string, "category": "SITUATIONAL", "difficulty": "EASY" | "MEDIUM" | "HARD", "expectedPoints": string[] }[] (5 questions),
   "followUpQuestions": { "question": string, "category": "FOLLOW_UP", "difficulty": "EASY" | "MEDIUM" | "HARD", "expectedPoints": string[] }[] (3 questions)
 }
 

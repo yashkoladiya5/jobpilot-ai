@@ -52,7 +52,8 @@ export class InterviewService {
       ...response.data.hrQuestions.map((q, i) => ({ ...q, orderIndex: i })),
       ...response.data.technicalQuestions.map((q, i) => ({ ...q, orderIndex: i + 5 })),
       ...response.data.behavioralQuestions.map((q, i) => ({ ...q, orderIndex: i + 10 })),
-      ...response.data.followUpQuestions.map((q, i) => ({ ...q, orderIndex: i + 15 })),
+      ...response.data.situationalQuestions.map((q, i) => ({ ...q, orderIndex: i + 15 })),
+      ...response.data.followUpQuestions.map((q, i) => ({ ...q, orderIndex: i + 20 })),
     ];
 
     const totalQuestions = allQuestions.length;
@@ -64,6 +65,7 @@ export class InterviewService {
         hrQuestions: response.data.hrQuestions as any,
         technicalQuestions: response.data.technicalQuestions as any,
         behavioralQuestions: response.data.behavioralQuestions as any,
+        situationalQuestions: response.data.situationalQuestions as any,
         followUpQuestions: response.data.followUpQuestions as any,
         totalQuestions,
         rawResponse: response.rawResponse ? { text: response.rawResponse } : undefined,
@@ -181,7 +183,7 @@ export class InterviewService {
     const overallScore = answered.length > 0 ? Math.round((totalScore / answered.length) * 10) : 0;
 
     const categoryScores: Record<string, number> = {};
-    for (const category of ["HR", "TECHNICAL", "BEHAVIORAL", "FOLLOW_UP"]) {
+    for (const category of ["HR", "TECHNICAL", "BEHAVIORAL", "SITUATIONAL", "FOLLOW_UP"]) {
       const catQuestions = session.questions.filter(q => q.category === category);
       const catAnswered = catQuestions.filter(q => q.answeredAt);
       if (catAnswered.length > 0) {
