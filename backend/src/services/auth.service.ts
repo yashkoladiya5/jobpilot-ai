@@ -114,4 +114,28 @@ export class AuthService {
 
     return { success: true };
   }
+
+  async updateEmail(userId: string, newEmail: string) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      throw ApiError.notFound("User not found");
+    }
+
+    if (user.email === newEmail) {
+      throw ApiError.badRequest("New email must be different from current email");
+    }
+
+    const existingUser = await prisma.user.findUnique({ where: { email: newEmail } });
+    if (existingUser) {
+      throw ApiError.badRequest("Email already in use by another account");
+    }
+    
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: { email: newEmail },
+      select: userSelect,
+    });
+
+    return updatedUser;
+  }
 }

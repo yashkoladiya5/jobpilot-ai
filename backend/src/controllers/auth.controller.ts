@@ -124,3 +124,20 @@ export const updatePassword = asyncHandler(async (req: Request, res: Response) =
     data: null,
   });
 });
+
+export const updateEmail = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { newEmail } = req.body;
+  
+  if (!newEmail || typeof newEmail !== 'string' || !newEmail.includes('@')) {
+    throw ApiError.badRequest("A valid new email address is required");
+  }
+
+  const user = await authService.updateEmail(userId, newEmail.toLowerCase().trim());
+  
+  res.status(200).json({
+    success: true,
+    message: "Email address updated successfully",
+    data: { user },
+  });
+});
