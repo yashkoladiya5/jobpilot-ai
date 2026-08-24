@@ -20,3 +20,9 @@ export const getTimelineData = asyncHandler(async (req: Request, res: Response) 
   const result = await analyticsService.getTimelineData(userId);
   res.json({ success: true, message: "Timeline data fetched successfully", data: result });
 });
+
+export const getSkillMatchAnalytics = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const result = await analyticsService.getSkillMatchAnalytics(userId);
+  res.json({ success: true, message: "Skill match analytics fetched successfully", data: result });
+});

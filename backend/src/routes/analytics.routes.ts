@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { authenticate } from "../middleware/auth";
-import { getPipelineAnalytics, getTimelineData } from "../controllers/analytics.controller";
+import { getPipelineAnalytics, getTimelineData, getSkillMatchAnalytics } from "../controllers/analytics.controller";
 
 /**
  * Express router for analytics and reporting endpoints.
@@ -12,5 +12,6 @@ router.use(authenticate);
 
 router.get("/pipeline", getPipelineAnalytics);
 router.get("/timeline", getTimelineData);
+router.get("/skills-match", getSkillMatchAnalytics);
 
 export default router;

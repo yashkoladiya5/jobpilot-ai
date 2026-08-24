@@ -133,4 +133,21 @@ export class AnalyticsService {
 
     return timeline;
   }
+
+  async getSkillMatchAnalytics(userId: string) {
+    // Basic mock implementation for skill match insights based on user profile
+    const mockSkillData = [
+      { skill: "React", matchScore: 90, frequency: 15 },
+      { skill: "Node.js", matchScore: 85, frequency: 12 },
+      { skill: "TypeScript", matchScore: 95, frequency: 18 },
+      { skill: "AWS", matchScore: 70, frequency: 8 },
+      { skill: "Docker", matchScore: 65, frequency: 5 },
+    ];
+    
+    return {
+      averageMatchScore: 81,
+      topMatchedSkills: mockSkillData.slice(0, 3),
+      skillsToImprove: mockSkillData.slice(3),
+    };
+  }
 }
