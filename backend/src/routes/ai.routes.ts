@@ -14,6 +14,7 @@ import {
   submitAnswer,
   completeInterview,
   getInterviewResult,
+  resetInterviewSession,
   getCareerInsights,
   computeCareerInsights,
   getCareerInsightsHistory,
@@ -59,6 +60,7 @@ router.get("/interview/sessions", getInterviewSessions);
 router.get("/interview/session/:sessionId", getInterviewSession);
 router.post("/interview/session/:sessionId/answer", submitAnswer);
 router.post("/interview/session/:sessionId/complete", completeInterview);
+router.post("/interview/session/:sessionId/reset", resetInterviewSession);
 router.get("/interview/session/:sessionId/result", getInterviewResult);
 
 // Career insights

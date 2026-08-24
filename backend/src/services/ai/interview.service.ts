@@ -225,6 +225,43 @@ export class InterviewService {
     if (!result) throw ApiError.notFound("Interview result not found");
     return result;
   }
+
+  async resetSession(sessionId: string, userId: string) {
+    const session = await prisma.interviewSession.findFirst({
+      where: { id: sessionId, userId },
+    });
+    if (!session) throw ApiError.notFound("Interview session not found");
+
+    // Clear answers and feedbacks from all questions
+    await prisma.interviewQuestion.updateMany({
+      where: { sessionId },
+      data: {
+        answer: null,
+        feedback: null,
+        score: null,
+        answeredAt: null,
+      },
+    });
+
+    // Reset session progress
+    const updatedSession = await prisma.interviewSession.update({
+      where: { id: sessionId },
+      data: {
+        status: "COMPLETED",
+        answeredQuestions: 0,
+        currentQuestionIndex: 0,
+        score: null,
+        completedAt: null,
+      },
+    });
+
+    // Remove any associated results if they exist
+    await prisma.interviewResult.deleteMany({
+      where: { sessionId },
+    });
+
+    return updatedSession;
+  }
 }
 
 export const interviewService = new InterviewService();

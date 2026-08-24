@@ -158,6 +158,13 @@ export const getInterviewResult = asyncHandler(async (req: Request, res: Respons
   res.json({ success: true, message: "Interview result fetched", data: result });
 });
 
+export const resetInterviewSession = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { sessionId } = req.params;
+  const result = await interviewService.resetSession(sessionId, userId);
+  res.json({ success: true, message: "Interview session reset successfully", data: result });
+});
+
 // Career Insights
 
 export const getCareerInsights = asyncHandler(async (req: Request, res: Response) => {
