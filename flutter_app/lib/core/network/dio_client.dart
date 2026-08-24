@@ -216,6 +216,16 @@ class _ErrorInterceptor extends Interceptor {
                 error: AuthException(message: message, statusCode: statusCode),
               ),
             );
+          case 403:
+            handler.reject(
+              DioException(
+                requestOptions: err.requestOptions,
+                error: ServerException(
+                  message: 'Access denied. You do not have permission for this action.',
+                  statusCode: statusCode,
+                ),
+              ),
+            );
           case 404:
             handler.reject(
               DioException(
@@ -230,6 +240,16 @@ class _ErrorInterceptor extends Interceptor {
                 requestOptions: err.requestOptions,
                 error: ValidationException(
                     message: message, statusCode: statusCode),
+              ),
+            );
+          case 429:
+            handler.reject(
+              DioException(
+                requestOptions: err.requestOptions,
+                error: ServerException(
+                  message: 'Too many requests. Please try again later.',
+                  statusCode: statusCode,
+                ),
               ),
             );
           case 500:

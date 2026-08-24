@@ -27,6 +27,10 @@ mixin _$Failure {
     required TResult Function(String message, int? code) validationFailure,
     required TResult Function(String message, int? code) cacheFailure,
     required TResult Function(String message, int? code) notFoundFailure,
+    required TResult Function(String message, int? code) timeoutFailure,
+    required TResult Function(String message, int? code) aiProcessingFailure,
+    required TResult Function(String message, int? code) rateLimitFailure,
+    required TResult Function(String message, int? code) permissionFailure,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
@@ -36,6 +40,10 @@ mixin _$Failure {
     TResult? Function(String message, int? code)? validationFailure,
     TResult? Function(String message, int? code)? cacheFailure,
     TResult? Function(String message, int? code)? notFoundFailure,
+    TResult? Function(String message, int? code)? timeoutFailure,
+    TResult? Function(String message, int? code)? aiProcessingFailure,
+    TResult? Function(String message, int? code)? rateLimitFailure,
+    TResult? Function(String message, int? code)? permissionFailure,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
@@ -45,6 +53,10 @@ mixin _$Failure {
     TResult Function(String message, int? code)? validationFailure,
     TResult Function(String message, int? code)? cacheFailure,
     TResult Function(String message, int? code)? notFoundFailure,
+    TResult Function(String message, int? code)? timeoutFailure,
+    TResult Function(String message, int? code)? aiProcessingFailure,
+    TResult Function(String message, int? code)? rateLimitFailure,
+    TResult Function(String message, int? code)? permissionFailure,
     required TResult orElse(),
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -55,6 +67,10 @@ mixin _$Failure {
     required TResult Function(ValidationFailure value) validationFailure,
     required TResult Function(CacheFailure value) cacheFailure,
     required TResult Function(NotFoundFailure value) notFoundFailure,
+    required TResult Function(TimeoutFailure value) timeoutFailure,
+    required TResult Function(AiProcessingFailure value) aiProcessingFailure,
+    required TResult Function(RateLimitFailure value) rateLimitFailure,
+    required TResult Function(PermissionFailure value) permissionFailure,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
@@ -64,6 +80,10 @@ mixin _$Failure {
     TResult? Function(ValidationFailure value)? validationFailure,
     TResult? Function(CacheFailure value)? cacheFailure,
     TResult? Function(NotFoundFailure value)? notFoundFailure,
+    TResult? Function(TimeoutFailure value)? timeoutFailure,
+    TResult? Function(AiProcessingFailure value)? aiProcessingFailure,
+    TResult? Function(RateLimitFailure value)? rateLimitFailure,
+    TResult? Function(PermissionFailure value)? permissionFailure,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
@@ -73,6 +93,10 @@ mixin _$Failure {
     TResult Function(ValidationFailure value)? validationFailure,
     TResult Function(CacheFailure value)? cacheFailure,
     TResult Function(NotFoundFailure value)? notFoundFailure,
+    TResult Function(TimeoutFailure value)? timeoutFailure,
+    TResult Function(AiProcessingFailure value)? aiProcessingFailure,
+    TResult Function(RateLimitFailure value)? rateLimitFailure,
+    TResult Function(PermissionFailure value)? permissionFailure,
     required TResult orElse(),
   }) => throw _privateConstructorUsedError;
 
@@ -206,6 +230,10 @@ class _$ServerFailureImpl implements ServerFailure {
     required TResult Function(String message, int? code) validationFailure,
     required TResult Function(String message, int? code) cacheFailure,
     required TResult Function(String message, int? code) notFoundFailure,
+    required TResult Function(String message, int? code) timeoutFailure,
+    required TResult Function(String message, int? code) aiProcessingFailure,
+    required TResult Function(String message, int? code) rateLimitFailure,
+    required TResult Function(String message, int? code) permissionFailure,
   }) {
     return serverFailure(message, code);
   }
@@ -219,6 +247,10 @@ class _$ServerFailureImpl implements ServerFailure {
     TResult? Function(String message, int? code)? validationFailure,
     TResult? Function(String message, int? code)? cacheFailure,
     TResult? Function(String message, int? code)? notFoundFailure,
+    TResult? Function(String message, int? code)? timeoutFailure,
+    TResult? Function(String message, int? code)? aiProcessingFailure,
+    TResult? Function(String message, int? code)? rateLimitFailure,
+    TResult? Function(String message, int? code)? permissionFailure,
   }) {
     return serverFailure?.call(message, code);
   }
@@ -232,6 +264,10 @@ class _$ServerFailureImpl implements ServerFailure {
     TResult Function(String message, int? code)? validationFailure,
     TResult Function(String message, int? code)? cacheFailure,
     TResult Function(String message, int? code)? notFoundFailure,
+    TResult Function(String message, int? code)? timeoutFailure,
+    TResult Function(String message, int? code)? aiProcessingFailure,
+    TResult Function(String message, int? code)? rateLimitFailure,
+    TResult Function(String message, int? code)? permissionFailure,
     required TResult orElse(),
   }) {
     if (serverFailure != null) {
@@ -249,6 +285,10 @@ class _$ServerFailureImpl implements ServerFailure {
     required TResult Function(ValidationFailure value) validationFailure,
     required TResult Function(CacheFailure value) cacheFailure,
     required TResult Function(NotFoundFailure value) notFoundFailure,
+    required TResult Function(TimeoutFailure value) timeoutFailure,
+    required TResult Function(AiProcessingFailure value) aiProcessingFailure,
+    required TResult Function(RateLimitFailure value) rateLimitFailure,
+    required TResult Function(PermissionFailure value) permissionFailure,
   }) {
     return serverFailure(this);
   }
@@ -262,6 +302,10 @@ class _$ServerFailureImpl implements ServerFailure {
     TResult? Function(ValidationFailure value)? validationFailure,
     TResult? Function(CacheFailure value)? cacheFailure,
     TResult? Function(NotFoundFailure value)? notFoundFailure,
+    TResult? Function(TimeoutFailure value)? timeoutFailure,
+    TResult? Function(AiProcessingFailure value)? aiProcessingFailure,
+    TResult? Function(RateLimitFailure value)? rateLimitFailure,
+    TResult? Function(PermissionFailure value)? permissionFailure,
   }) {
     return serverFailure?.call(this);
   }
@@ -275,6 +319,10 @@ class _$ServerFailureImpl implements ServerFailure {
     TResult Function(ValidationFailure value)? validationFailure,
     TResult Function(CacheFailure value)? cacheFailure,
     TResult Function(NotFoundFailure value)? notFoundFailure,
+    TResult Function(TimeoutFailure value)? timeoutFailure,
+    TResult Function(AiProcessingFailure value)? aiProcessingFailure,
+    TResult Function(RateLimitFailure value)? rateLimitFailure,
+    TResult Function(PermissionFailure value)? permissionFailure,
     required TResult orElse(),
   }) {
     if (serverFailure != null) {
@@ -391,6 +439,10 @@ class _$NetworkFailureImpl implements NetworkFailure {
     required TResult Function(String message, int? code) validationFailure,
     required TResult Function(String message, int? code) cacheFailure,
     required TResult Function(String message, int? code) notFoundFailure,
+    required TResult Function(String message, int? code) timeoutFailure,
+    required TResult Function(String message, int? code) aiProcessingFailure,
+    required TResult Function(String message, int? code) rateLimitFailure,
+    required TResult Function(String message, int? code) permissionFailure,
   }) {
     return networkFailure(message, code);
   }
@@ -404,6 +456,10 @@ class _$NetworkFailureImpl implements NetworkFailure {
     TResult? Function(String message, int? code)? validationFailure,
     TResult? Function(String message, int? code)? cacheFailure,
     TResult? Function(String message, int? code)? notFoundFailure,
+    TResult? Function(String message, int? code)? timeoutFailure,
+    TResult? Function(String message, int? code)? aiProcessingFailure,
+    TResult? Function(String message, int? code)? rateLimitFailure,
+    TResult? Function(String message, int? code)? permissionFailure,
   }) {
     return networkFailure?.call(message, code);
   }
@@ -417,6 +473,10 @@ class _$NetworkFailureImpl implements NetworkFailure {
     TResult Function(String message, int? code)? validationFailure,
     TResult Function(String message, int? code)? cacheFailure,
     TResult Function(String message, int? code)? notFoundFailure,
+    TResult Function(String message, int? code)? timeoutFailure,
+    TResult Function(String message, int? code)? aiProcessingFailure,
+    TResult Function(String message, int? code)? rateLimitFailure,
+    TResult Function(String message, int? code)? permissionFailure,
     required TResult orElse(),
   }) {
     if (networkFailure != null) {
@@ -434,6 +494,10 @@ class _$NetworkFailureImpl implements NetworkFailure {
     required TResult Function(ValidationFailure value) validationFailure,
     required TResult Function(CacheFailure value) cacheFailure,
     required TResult Function(NotFoundFailure value) notFoundFailure,
+    required TResult Function(TimeoutFailure value) timeoutFailure,
+    required TResult Function(AiProcessingFailure value) aiProcessingFailure,
+    required TResult Function(RateLimitFailure value) rateLimitFailure,
+    required TResult Function(PermissionFailure value) permissionFailure,
   }) {
     return networkFailure(this);
   }
@@ -447,6 +511,10 @@ class _$NetworkFailureImpl implements NetworkFailure {
     TResult? Function(ValidationFailure value)? validationFailure,
     TResult? Function(CacheFailure value)? cacheFailure,
     TResult? Function(NotFoundFailure value)? notFoundFailure,
+    TResult? Function(TimeoutFailure value)? timeoutFailure,
+    TResult? Function(AiProcessingFailure value)? aiProcessingFailure,
+    TResult? Function(RateLimitFailure value)? rateLimitFailure,
+    TResult? Function(PermissionFailure value)? permissionFailure,
   }) {
     return networkFailure?.call(this);
   }
@@ -460,6 +528,10 @@ class _$NetworkFailureImpl implements NetworkFailure {
     TResult Function(ValidationFailure value)? validationFailure,
     TResult Function(CacheFailure value)? cacheFailure,
     TResult Function(NotFoundFailure value)? notFoundFailure,
+    TResult Function(TimeoutFailure value)? timeoutFailure,
+    TResult Function(AiProcessingFailure value)? aiProcessingFailure,
+    TResult Function(RateLimitFailure value)? rateLimitFailure,
+    TResult Function(PermissionFailure value)? permissionFailure,
     required TResult orElse(),
   }) {
     if (networkFailure != null) {
@@ -573,6 +645,10 @@ class _$AuthFailureImpl implements AuthFailure {
     required TResult Function(String message, int? code) validationFailure,
     required TResult Function(String message, int? code) cacheFailure,
     required TResult Function(String message, int? code) notFoundFailure,
+    required TResult Function(String message, int? code) timeoutFailure,
+    required TResult Function(String message, int? code) aiProcessingFailure,
+    required TResult Function(String message, int? code) rateLimitFailure,
+    required TResult Function(String message, int? code) permissionFailure,
   }) {
     return authFailure(message, code);
   }
@@ -586,6 +662,10 @@ class _$AuthFailureImpl implements AuthFailure {
     TResult? Function(String message, int? code)? validationFailure,
     TResult? Function(String message, int? code)? cacheFailure,
     TResult? Function(String message, int? code)? notFoundFailure,
+    TResult? Function(String message, int? code)? timeoutFailure,
+    TResult? Function(String message, int? code)? aiProcessingFailure,
+    TResult? Function(String message, int? code)? rateLimitFailure,
+    TResult? Function(String message, int? code)? permissionFailure,
   }) {
     return authFailure?.call(message, code);
   }
@@ -599,6 +679,10 @@ class _$AuthFailureImpl implements AuthFailure {
     TResult Function(String message, int? code)? validationFailure,
     TResult Function(String message, int? code)? cacheFailure,
     TResult Function(String message, int? code)? notFoundFailure,
+    TResult Function(String message, int? code)? timeoutFailure,
+    TResult Function(String message, int? code)? aiProcessingFailure,
+    TResult Function(String message, int? code)? rateLimitFailure,
+    TResult Function(String message, int? code)? permissionFailure,
     required TResult orElse(),
   }) {
     if (authFailure != null) {
@@ -616,6 +700,10 @@ class _$AuthFailureImpl implements AuthFailure {
     required TResult Function(ValidationFailure value) validationFailure,
     required TResult Function(CacheFailure value) cacheFailure,
     required TResult Function(NotFoundFailure value) notFoundFailure,
+    required TResult Function(TimeoutFailure value) timeoutFailure,
+    required TResult Function(AiProcessingFailure value) aiProcessingFailure,
+    required TResult Function(RateLimitFailure value) rateLimitFailure,
+    required TResult Function(PermissionFailure value) permissionFailure,
   }) {
     return authFailure(this);
   }
@@ -629,6 +717,10 @@ class _$AuthFailureImpl implements AuthFailure {
     TResult? Function(ValidationFailure value)? validationFailure,
     TResult? Function(CacheFailure value)? cacheFailure,
     TResult? Function(NotFoundFailure value)? notFoundFailure,
+    TResult? Function(TimeoutFailure value)? timeoutFailure,
+    TResult? Function(AiProcessingFailure value)? aiProcessingFailure,
+    TResult? Function(RateLimitFailure value)? rateLimitFailure,
+    TResult? Function(PermissionFailure value)? permissionFailure,
   }) {
     return authFailure?.call(this);
   }
@@ -642,6 +734,10 @@ class _$AuthFailureImpl implements AuthFailure {
     TResult Function(ValidationFailure value)? validationFailure,
     TResult Function(CacheFailure value)? cacheFailure,
     TResult Function(NotFoundFailure value)? notFoundFailure,
+    TResult Function(TimeoutFailure value)? timeoutFailure,
+    TResult Function(AiProcessingFailure value)? aiProcessingFailure,
+    TResult Function(RateLimitFailure value)? rateLimitFailure,
+    TResult Function(PermissionFailure value)? permissionFailure,
     required TResult orElse(),
   }) {
     if (authFailure != null) {
@@ -756,6 +852,10 @@ class _$ValidationFailureImpl implements ValidationFailure {
     required TResult Function(String message, int? code) validationFailure,
     required TResult Function(String message, int? code) cacheFailure,
     required TResult Function(String message, int? code) notFoundFailure,
+    required TResult Function(String message, int? code) timeoutFailure,
+    required TResult Function(String message, int? code) aiProcessingFailure,
+    required TResult Function(String message, int? code) rateLimitFailure,
+    required TResult Function(String message, int? code) permissionFailure,
   }) {
     return validationFailure(message, code);
   }
@@ -769,6 +869,10 @@ class _$ValidationFailureImpl implements ValidationFailure {
     TResult? Function(String message, int? code)? validationFailure,
     TResult? Function(String message, int? code)? cacheFailure,
     TResult? Function(String message, int? code)? notFoundFailure,
+    TResult? Function(String message, int? code)? timeoutFailure,
+    TResult? Function(String message, int? code)? aiProcessingFailure,
+    TResult? Function(String message, int? code)? rateLimitFailure,
+    TResult? Function(String message, int? code)? permissionFailure,
   }) {
     return validationFailure?.call(message, code);
   }
@@ -782,6 +886,10 @@ class _$ValidationFailureImpl implements ValidationFailure {
     TResult Function(String message, int? code)? validationFailure,
     TResult Function(String message, int? code)? cacheFailure,
     TResult Function(String message, int? code)? notFoundFailure,
+    TResult Function(String message, int? code)? timeoutFailure,
+    TResult Function(String message, int? code)? aiProcessingFailure,
+    TResult Function(String message, int? code)? rateLimitFailure,
+    TResult Function(String message, int? code)? permissionFailure,
     required TResult orElse(),
   }) {
     if (validationFailure != null) {
@@ -799,6 +907,10 @@ class _$ValidationFailureImpl implements ValidationFailure {
     required TResult Function(ValidationFailure value) validationFailure,
     required TResult Function(CacheFailure value) cacheFailure,
     required TResult Function(NotFoundFailure value) notFoundFailure,
+    required TResult Function(TimeoutFailure value) timeoutFailure,
+    required TResult Function(AiProcessingFailure value) aiProcessingFailure,
+    required TResult Function(RateLimitFailure value) rateLimitFailure,
+    required TResult Function(PermissionFailure value) permissionFailure,
   }) {
     return validationFailure(this);
   }
@@ -812,6 +924,10 @@ class _$ValidationFailureImpl implements ValidationFailure {
     TResult? Function(ValidationFailure value)? validationFailure,
     TResult? Function(CacheFailure value)? cacheFailure,
     TResult? Function(NotFoundFailure value)? notFoundFailure,
+    TResult? Function(TimeoutFailure value)? timeoutFailure,
+    TResult? Function(AiProcessingFailure value)? aiProcessingFailure,
+    TResult? Function(RateLimitFailure value)? rateLimitFailure,
+    TResult? Function(PermissionFailure value)? permissionFailure,
   }) {
     return validationFailure?.call(this);
   }
@@ -825,6 +941,10 @@ class _$ValidationFailureImpl implements ValidationFailure {
     TResult Function(ValidationFailure value)? validationFailure,
     TResult Function(CacheFailure value)? cacheFailure,
     TResult Function(NotFoundFailure value)? notFoundFailure,
+    TResult Function(TimeoutFailure value)? timeoutFailure,
+    TResult Function(AiProcessingFailure value)? aiProcessingFailure,
+    TResult Function(RateLimitFailure value)? rateLimitFailure,
+    TResult Function(PermissionFailure value)? permissionFailure,
     required TResult orElse(),
   }) {
     if (validationFailure != null) {
@@ -938,6 +1058,10 @@ class _$CacheFailureImpl implements CacheFailure {
     required TResult Function(String message, int? code) validationFailure,
     required TResult Function(String message, int? code) cacheFailure,
     required TResult Function(String message, int? code) notFoundFailure,
+    required TResult Function(String message, int? code) timeoutFailure,
+    required TResult Function(String message, int? code) aiProcessingFailure,
+    required TResult Function(String message, int? code) rateLimitFailure,
+    required TResult Function(String message, int? code) permissionFailure,
   }) {
     return cacheFailure(message, code);
   }
@@ -951,6 +1075,10 @@ class _$CacheFailureImpl implements CacheFailure {
     TResult? Function(String message, int? code)? validationFailure,
     TResult? Function(String message, int? code)? cacheFailure,
     TResult? Function(String message, int? code)? notFoundFailure,
+    TResult? Function(String message, int? code)? timeoutFailure,
+    TResult? Function(String message, int? code)? aiProcessingFailure,
+    TResult? Function(String message, int? code)? rateLimitFailure,
+    TResult? Function(String message, int? code)? permissionFailure,
   }) {
     return cacheFailure?.call(message, code);
   }
@@ -964,6 +1092,10 @@ class _$CacheFailureImpl implements CacheFailure {
     TResult Function(String message, int? code)? validationFailure,
     TResult Function(String message, int? code)? cacheFailure,
     TResult Function(String message, int? code)? notFoundFailure,
+    TResult Function(String message, int? code)? timeoutFailure,
+    TResult Function(String message, int? code)? aiProcessingFailure,
+    TResult Function(String message, int? code)? rateLimitFailure,
+    TResult Function(String message, int? code)? permissionFailure,
     required TResult orElse(),
   }) {
     if (cacheFailure != null) {
@@ -981,6 +1113,10 @@ class _$CacheFailureImpl implements CacheFailure {
     required TResult Function(ValidationFailure value) validationFailure,
     required TResult Function(CacheFailure value) cacheFailure,
     required TResult Function(NotFoundFailure value) notFoundFailure,
+    required TResult Function(TimeoutFailure value) timeoutFailure,
+    required TResult Function(AiProcessingFailure value) aiProcessingFailure,
+    required TResult Function(RateLimitFailure value) rateLimitFailure,
+    required TResult Function(PermissionFailure value) permissionFailure,
   }) {
     return cacheFailure(this);
   }
@@ -994,6 +1130,10 @@ class _$CacheFailureImpl implements CacheFailure {
     TResult? Function(ValidationFailure value)? validationFailure,
     TResult? Function(CacheFailure value)? cacheFailure,
     TResult? Function(NotFoundFailure value)? notFoundFailure,
+    TResult? Function(TimeoutFailure value)? timeoutFailure,
+    TResult? Function(AiProcessingFailure value)? aiProcessingFailure,
+    TResult? Function(RateLimitFailure value)? rateLimitFailure,
+    TResult? Function(PermissionFailure value)? permissionFailure,
   }) {
     return cacheFailure?.call(this);
   }
@@ -1007,6 +1147,10 @@ class _$CacheFailureImpl implements CacheFailure {
     TResult Function(ValidationFailure value)? validationFailure,
     TResult Function(CacheFailure value)? cacheFailure,
     TResult Function(NotFoundFailure value)? notFoundFailure,
+    TResult Function(TimeoutFailure value)? timeoutFailure,
+    TResult Function(AiProcessingFailure value)? aiProcessingFailure,
+    TResult Function(RateLimitFailure value)? rateLimitFailure,
+    TResult Function(PermissionFailure value)? permissionFailure,
     required TResult orElse(),
   }) {
     if (cacheFailure != null) {
@@ -1121,6 +1265,10 @@ class _$NotFoundFailureImpl implements NotFoundFailure {
     required TResult Function(String message, int? code) validationFailure,
     required TResult Function(String message, int? code) cacheFailure,
     required TResult Function(String message, int? code) notFoundFailure,
+    required TResult Function(String message, int? code) timeoutFailure,
+    required TResult Function(String message, int? code) aiProcessingFailure,
+    required TResult Function(String message, int? code) rateLimitFailure,
+    required TResult Function(String message, int? code) permissionFailure,
   }) {
     return notFoundFailure(message, code);
   }
@@ -1134,6 +1282,10 @@ class _$NotFoundFailureImpl implements NotFoundFailure {
     TResult? Function(String message, int? code)? validationFailure,
     TResult? Function(String message, int? code)? cacheFailure,
     TResult? Function(String message, int? code)? notFoundFailure,
+    TResult? Function(String message, int? code)? timeoutFailure,
+    TResult? Function(String message, int? code)? aiProcessingFailure,
+    TResult? Function(String message, int? code)? rateLimitFailure,
+    TResult? Function(String message, int? code)? permissionFailure,
   }) {
     return notFoundFailure?.call(message, code);
   }
@@ -1147,6 +1299,10 @@ class _$NotFoundFailureImpl implements NotFoundFailure {
     TResult Function(String message, int? code)? validationFailure,
     TResult Function(String message, int? code)? cacheFailure,
     TResult Function(String message, int? code)? notFoundFailure,
+    TResult Function(String message, int? code)? timeoutFailure,
+    TResult Function(String message, int? code)? aiProcessingFailure,
+    TResult Function(String message, int? code)? rateLimitFailure,
+    TResult Function(String message, int? code)? permissionFailure,
     required TResult orElse(),
   }) {
     if (notFoundFailure != null) {
@@ -1164,6 +1320,10 @@ class _$NotFoundFailureImpl implements NotFoundFailure {
     required TResult Function(ValidationFailure value) validationFailure,
     required TResult Function(CacheFailure value) cacheFailure,
     required TResult Function(NotFoundFailure value) notFoundFailure,
+    required TResult Function(TimeoutFailure value) timeoutFailure,
+    required TResult Function(AiProcessingFailure value) aiProcessingFailure,
+    required TResult Function(RateLimitFailure value) rateLimitFailure,
+    required TResult Function(PermissionFailure value) permissionFailure,
   }) {
     return notFoundFailure(this);
   }
@@ -1177,6 +1337,10 @@ class _$NotFoundFailureImpl implements NotFoundFailure {
     TResult? Function(ValidationFailure value)? validationFailure,
     TResult? Function(CacheFailure value)? cacheFailure,
     TResult? Function(NotFoundFailure value)? notFoundFailure,
+    TResult? Function(TimeoutFailure value)? timeoutFailure,
+    TResult? Function(AiProcessingFailure value)? aiProcessingFailure,
+    TResult? Function(RateLimitFailure value)? rateLimitFailure,
+    TResult? Function(PermissionFailure value)? permissionFailure,
   }) {
     return notFoundFailure?.call(this);
   }
@@ -1190,6 +1354,10 @@ class _$NotFoundFailureImpl implements NotFoundFailure {
     TResult Function(ValidationFailure value)? validationFailure,
     TResult Function(CacheFailure value)? cacheFailure,
     TResult Function(NotFoundFailure value)? notFoundFailure,
+    TResult Function(TimeoutFailure value)? timeoutFailure,
+    TResult Function(AiProcessingFailure value)? aiProcessingFailure,
+    TResult Function(RateLimitFailure value)? rateLimitFailure,
+    TResult Function(PermissionFailure value)? permissionFailure,
     required TResult orElse(),
   }) {
     if (notFoundFailure != null) {
@@ -1215,5 +1383,841 @@ abstract class NotFoundFailure implements Failure {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$NotFoundFailureImplCopyWith<_$NotFoundFailureImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$TimeoutFailureImplCopyWith<$Res>
+    implements $FailureCopyWith<$Res> {
+  factory _$$TimeoutFailureImplCopyWith(
+    _$TimeoutFailureImpl value,
+    $Res Function(_$TimeoutFailureImpl) then,
+  ) = __$$TimeoutFailureImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String message, int? code});
+}
+
+/// @nodoc
+class __$$TimeoutFailureImplCopyWithImpl<$Res>
+    extends _$FailureCopyWithImpl<$Res, _$TimeoutFailureImpl>
+    implements _$$TimeoutFailureImplCopyWith<$Res> {
+  __$$TimeoutFailureImplCopyWithImpl(
+    _$TimeoutFailureImpl _value,
+    $Res Function(_$TimeoutFailureImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of Failure
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? message = null, Object? code = freezed}) {
+    return _then(
+      _$TimeoutFailureImpl(
+        message: null == message
+            ? _value.message
+            : message // ignore: cast_nullable_to_non_nullable
+                  as String,
+        code: freezed == code
+            ? _value.code
+            : code // ignore: cast_nullable_to_non_nullable
+                  as int?,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+
+class _$TimeoutFailureImpl implements TimeoutFailure {
+  const _$TimeoutFailureImpl({required this.message, this.code});
+
+  @override
+  final String message;
+  @override
+  final int? code;
+
+  @override
+  String toString() {
+    return 'Failure.timeoutFailure(message: $message, code: $code)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$TimeoutFailureImpl &&
+            (identical(other.message, message) || other.message == message) &&
+            (identical(other.code, code) || other.code == code));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, message, code);
+
+  /// Create a copy of Failure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$TimeoutFailureImplCopyWith<_$TimeoutFailureImpl> get copyWith =>
+      __$$TimeoutFailureImplCopyWithImpl<_$TimeoutFailureImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String message, int? code) serverFailure,
+    required TResult Function(String message, int? code) networkFailure,
+    required TResult Function(String message, int? code) authFailure,
+    required TResult Function(String message, int? code) validationFailure,
+    required TResult Function(String message, int? code) cacheFailure,
+    required TResult Function(String message, int? code) notFoundFailure,
+    required TResult Function(String message, int? code) timeoutFailure,
+    required TResult Function(String message, int? code) aiProcessingFailure,
+    required TResult Function(String message, int? code) rateLimitFailure,
+    required TResult Function(String message, int? code) permissionFailure,
+  }) {
+    return timeoutFailure(message, code);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String message, int? code)? serverFailure,
+    TResult? Function(String message, int? code)? networkFailure,
+    TResult? Function(String message, int? code)? authFailure,
+    TResult? Function(String message, int? code)? validationFailure,
+    TResult? Function(String message, int? code)? cacheFailure,
+    TResult? Function(String message, int? code)? notFoundFailure,
+    TResult? Function(String message, int? code)? timeoutFailure,
+    TResult? Function(String message, int? code)? aiProcessingFailure,
+    TResult? Function(String message, int? code)? rateLimitFailure,
+    TResult? Function(String message, int? code)? permissionFailure,
+  }) {
+    return timeoutFailure?.call(message, code);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String message, int? code)? serverFailure,
+    TResult Function(String message, int? code)? networkFailure,
+    TResult Function(String message, int? code)? authFailure,
+    TResult Function(String message, int? code)? validationFailure,
+    TResult Function(String message, int? code)? cacheFailure,
+    TResult Function(String message, int? code)? notFoundFailure,
+    TResult Function(String message, int? code)? timeoutFailure,
+    TResult Function(String message, int? code)? aiProcessingFailure,
+    TResult Function(String message, int? code)? rateLimitFailure,
+    TResult Function(String message, int? code)? permissionFailure,
+    required TResult orElse(),
+  }) {
+    if (timeoutFailure != null) {
+      return timeoutFailure(message, code);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(ServerFailure value) serverFailure,
+    required TResult Function(NetworkFailure value) networkFailure,
+    required TResult Function(AuthFailure value) authFailure,
+    required TResult Function(ValidationFailure value) validationFailure,
+    required TResult Function(CacheFailure value) cacheFailure,
+    required TResult Function(NotFoundFailure value) notFoundFailure,
+    required TResult Function(TimeoutFailure value) timeoutFailure,
+    required TResult Function(AiProcessingFailure value) aiProcessingFailure,
+    required TResult Function(RateLimitFailure value) rateLimitFailure,
+    required TResult Function(PermissionFailure value) permissionFailure,
+  }) {
+    return timeoutFailure(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(ServerFailure value)? serverFailure,
+    TResult? Function(NetworkFailure value)? networkFailure,
+    TResult? Function(AuthFailure value)? authFailure,
+    TResult? Function(ValidationFailure value)? validationFailure,
+    TResult? Function(CacheFailure value)? cacheFailure,
+    TResult? Function(NotFoundFailure value)? notFoundFailure,
+    TResult? Function(TimeoutFailure value)? timeoutFailure,
+    TResult? Function(AiProcessingFailure value)? aiProcessingFailure,
+    TResult? Function(RateLimitFailure value)? rateLimitFailure,
+    TResult? Function(PermissionFailure value)? permissionFailure,
+  }) {
+    return timeoutFailure?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(ServerFailure value)? serverFailure,
+    TResult Function(NetworkFailure value)? networkFailure,
+    TResult Function(AuthFailure value)? authFailure,
+    TResult Function(ValidationFailure value)? validationFailure,
+    TResult Function(CacheFailure value)? cacheFailure,
+    TResult Function(NotFoundFailure value)? notFoundFailure,
+    TResult Function(TimeoutFailure value)? timeoutFailure,
+    TResult Function(AiProcessingFailure value)? aiProcessingFailure,
+    TResult Function(RateLimitFailure value)? rateLimitFailure,
+    TResult Function(PermissionFailure value)? permissionFailure,
+    required TResult orElse(),
+  }) {
+    if (timeoutFailure != null) {
+      return timeoutFailure(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class TimeoutFailure implements Failure {
+  const factory TimeoutFailure({
+    required final String message,
+    final int? code,
+  }) = _$TimeoutFailureImpl;
+
+  @override
+  String get message;
+  @override
+  int? get code;
+
+  /// Create a copy of Failure
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$TimeoutFailureImplCopyWith<_$TimeoutFailureImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$AiProcessingFailureImplCopyWith<$Res>
+    implements $FailureCopyWith<$Res> {
+  factory _$$AiProcessingFailureImplCopyWith(
+    _$AiProcessingFailureImpl value,
+    $Res Function(_$AiProcessingFailureImpl) then,
+  ) = __$$AiProcessingFailureImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String message, int? code});
+}
+
+/// @nodoc
+class __$$AiProcessingFailureImplCopyWithImpl<$Res>
+    extends _$FailureCopyWithImpl<$Res, _$AiProcessingFailureImpl>
+    implements _$$AiProcessingFailureImplCopyWith<$Res> {
+  __$$AiProcessingFailureImplCopyWithImpl(
+    _$AiProcessingFailureImpl _value,
+    $Res Function(_$AiProcessingFailureImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of Failure
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? message = null, Object? code = freezed}) {
+    return _then(
+      _$AiProcessingFailureImpl(
+        message: null == message
+            ? _value.message
+            : message // ignore: cast_nullable_to_non_nullable
+                  as String,
+        code: freezed == code
+            ? _value.code
+            : code // ignore: cast_nullable_to_non_nullable
+                  as int?,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+
+class _$AiProcessingFailureImpl implements AiProcessingFailure {
+  const _$AiProcessingFailureImpl({required this.message, this.code});
+
+  @override
+  final String message;
+  @override
+  final int? code;
+
+  @override
+  String toString() {
+    return 'Failure.aiProcessingFailure(message: $message, code: $code)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$AiProcessingFailureImpl &&
+            (identical(other.message, message) || other.message == message) &&
+            (identical(other.code, code) || other.code == code));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, message, code);
+
+  /// Create a copy of Failure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$AiProcessingFailureImplCopyWith<_$AiProcessingFailureImpl> get copyWith =>
+      __$$AiProcessingFailureImplCopyWithImpl<_$AiProcessingFailureImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String message, int? code) serverFailure,
+    required TResult Function(String message, int? code) networkFailure,
+    required TResult Function(String message, int? code) authFailure,
+    required TResult Function(String message, int? code) validationFailure,
+    required TResult Function(String message, int? code) cacheFailure,
+    required TResult Function(String message, int? code) notFoundFailure,
+    required TResult Function(String message, int? code) timeoutFailure,
+    required TResult Function(String message, int? code) aiProcessingFailure,
+    required TResult Function(String message, int? code) rateLimitFailure,
+    required TResult Function(String message, int? code) permissionFailure,
+  }) {
+    return aiProcessingFailure(message, code);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String message, int? code)? serverFailure,
+    TResult? Function(String message, int? code)? networkFailure,
+    TResult? Function(String message, int? code)? authFailure,
+    TResult? Function(String message, int? code)? validationFailure,
+    TResult? Function(String message, int? code)? cacheFailure,
+    TResult? Function(String message, int? code)? notFoundFailure,
+    TResult? Function(String message, int? code)? timeoutFailure,
+    TResult? Function(String message, int? code)? aiProcessingFailure,
+    TResult? Function(String message, int? code)? rateLimitFailure,
+    TResult? Function(String message, int? code)? permissionFailure,
+  }) {
+    return aiProcessingFailure?.call(message, code);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String message, int? code)? serverFailure,
+    TResult Function(String message, int? code)? networkFailure,
+    TResult Function(String message, int? code)? authFailure,
+    TResult Function(String message, int? code)? validationFailure,
+    TResult Function(String message, int? code)? cacheFailure,
+    TResult Function(String message, int? code)? notFoundFailure,
+    TResult Function(String message, int? code)? timeoutFailure,
+    TResult Function(String message, int? code)? aiProcessingFailure,
+    TResult Function(String message, int? code)? rateLimitFailure,
+    TResult Function(String message, int? code)? permissionFailure,
+    required TResult orElse(),
+  }) {
+    if (aiProcessingFailure != null) {
+      return aiProcessingFailure(message, code);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(ServerFailure value) serverFailure,
+    required TResult Function(NetworkFailure value) networkFailure,
+    required TResult Function(AuthFailure value) authFailure,
+    required TResult Function(ValidationFailure value) validationFailure,
+    required TResult Function(CacheFailure value) cacheFailure,
+    required TResult Function(NotFoundFailure value) notFoundFailure,
+    required TResult Function(TimeoutFailure value) timeoutFailure,
+    required TResult Function(AiProcessingFailure value) aiProcessingFailure,
+    required TResult Function(RateLimitFailure value) rateLimitFailure,
+    required TResult Function(PermissionFailure value) permissionFailure,
+  }) {
+    return aiProcessingFailure(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(ServerFailure value)? serverFailure,
+    TResult? Function(NetworkFailure value)? networkFailure,
+    TResult? Function(AuthFailure value)? authFailure,
+    TResult? Function(ValidationFailure value)? validationFailure,
+    TResult? Function(CacheFailure value)? cacheFailure,
+    TResult? Function(NotFoundFailure value)? notFoundFailure,
+    TResult? Function(TimeoutFailure value)? timeoutFailure,
+    TResult? Function(AiProcessingFailure value)? aiProcessingFailure,
+    TResult? Function(RateLimitFailure value)? rateLimitFailure,
+    TResult? Function(PermissionFailure value)? permissionFailure,
+  }) {
+    return aiProcessingFailure?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(ServerFailure value)? serverFailure,
+    TResult Function(NetworkFailure value)? networkFailure,
+    TResult Function(AuthFailure value)? authFailure,
+    TResult Function(ValidationFailure value)? validationFailure,
+    TResult Function(CacheFailure value)? cacheFailure,
+    TResult Function(NotFoundFailure value)? notFoundFailure,
+    TResult Function(TimeoutFailure value)? timeoutFailure,
+    TResult Function(AiProcessingFailure value)? aiProcessingFailure,
+    TResult Function(RateLimitFailure value)? rateLimitFailure,
+    TResult Function(PermissionFailure value)? permissionFailure,
+    required TResult orElse(),
+  }) {
+    if (aiProcessingFailure != null) {
+      return aiProcessingFailure(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class AiProcessingFailure implements Failure {
+  const factory AiProcessingFailure({
+    required final String message,
+    final int? code,
+  }) = _$AiProcessingFailureImpl;
+
+  @override
+  String get message;
+  @override
+  int? get code;
+
+  /// Create a copy of Failure
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$AiProcessingFailureImplCopyWith<_$AiProcessingFailureImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$RateLimitFailureImplCopyWith<$Res>
+    implements $FailureCopyWith<$Res> {
+  factory _$$RateLimitFailureImplCopyWith(
+    _$RateLimitFailureImpl value,
+    $Res Function(_$RateLimitFailureImpl) then,
+  ) = __$$RateLimitFailureImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String message, int? code});
+}
+
+/// @nodoc
+class __$$RateLimitFailureImplCopyWithImpl<$Res>
+    extends _$FailureCopyWithImpl<$Res, _$RateLimitFailureImpl>
+    implements _$$RateLimitFailureImplCopyWith<$Res> {
+  __$$RateLimitFailureImplCopyWithImpl(
+    _$RateLimitFailureImpl _value,
+    $Res Function(_$RateLimitFailureImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of Failure
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? message = null, Object? code = freezed}) {
+    return _then(
+      _$RateLimitFailureImpl(
+        message: null == message
+            ? _value.message
+            : message // ignore: cast_nullable_to_non_nullable
+                  as String,
+        code: freezed == code
+            ? _value.code
+            : code // ignore: cast_nullable_to_non_nullable
+                  as int?,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+
+class _$RateLimitFailureImpl implements RateLimitFailure {
+  const _$RateLimitFailureImpl({required this.message, this.code});
+
+  @override
+  final String message;
+  @override
+  final int? code;
+
+  @override
+  String toString() {
+    return 'Failure.rateLimitFailure(message: $message, code: $code)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$RateLimitFailureImpl &&
+            (identical(other.message, message) || other.message == message) &&
+            (identical(other.code, code) || other.code == code));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, message, code);
+
+  /// Create a copy of Failure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$RateLimitFailureImplCopyWith<_$RateLimitFailureImpl> get copyWith =>
+      __$$RateLimitFailureImplCopyWithImpl<_$RateLimitFailureImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String message, int? code) serverFailure,
+    required TResult Function(String message, int? code) networkFailure,
+    required TResult Function(String message, int? code) authFailure,
+    required TResult Function(String message, int? code) validationFailure,
+    required TResult Function(String message, int? code) cacheFailure,
+    required TResult Function(String message, int? code) notFoundFailure,
+    required TResult Function(String message, int? code) timeoutFailure,
+    required TResult Function(String message, int? code) aiProcessingFailure,
+    required TResult Function(String message, int? code) rateLimitFailure,
+    required TResult Function(String message, int? code) permissionFailure,
+  }) {
+    return rateLimitFailure(message, code);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String message, int? code)? serverFailure,
+    TResult? Function(String message, int? code)? networkFailure,
+    TResult? Function(String message, int? code)? authFailure,
+    TResult? Function(String message, int? code)? validationFailure,
+    TResult? Function(String message, int? code)? cacheFailure,
+    TResult? Function(String message, int? code)? notFoundFailure,
+    TResult? Function(String message, int? code)? timeoutFailure,
+    TResult? Function(String message, int? code)? aiProcessingFailure,
+    TResult? Function(String message, int? code)? rateLimitFailure,
+    TResult? Function(String message, int? code)? permissionFailure,
+  }) {
+    return rateLimitFailure?.call(message, code);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String message, int? code)? serverFailure,
+    TResult Function(String message, int? code)? networkFailure,
+    TResult Function(String message, int? code)? authFailure,
+    TResult Function(String message, int? code)? validationFailure,
+    TResult Function(String message, int? code)? cacheFailure,
+    TResult Function(String message, int? code)? notFoundFailure,
+    TResult Function(String message, int? code)? timeoutFailure,
+    TResult Function(String message, int? code)? aiProcessingFailure,
+    TResult Function(String message, int? code)? rateLimitFailure,
+    TResult Function(String message, int? code)? permissionFailure,
+    required TResult orElse(),
+  }) {
+    if (rateLimitFailure != null) {
+      return rateLimitFailure(message, code);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(ServerFailure value) serverFailure,
+    required TResult Function(NetworkFailure value) networkFailure,
+    required TResult Function(AuthFailure value) authFailure,
+    required TResult Function(ValidationFailure value) validationFailure,
+    required TResult Function(CacheFailure value) cacheFailure,
+    required TResult Function(NotFoundFailure value) notFoundFailure,
+    required TResult Function(TimeoutFailure value) timeoutFailure,
+    required TResult Function(AiProcessingFailure value) aiProcessingFailure,
+    required TResult Function(RateLimitFailure value) rateLimitFailure,
+    required TResult Function(PermissionFailure value) permissionFailure,
+  }) {
+    return rateLimitFailure(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(ServerFailure value)? serverFailure,
+    TResult? Function(NetworkFailure value)? networkFailure,
+    TResult? Function(AuthFailure value)? authFailure,
+    TResult? Function(ValidationFailure value)? validationFailure,
+    TResult? Function(CacheFailure value)? cacheFailure,
+    TResult? Function(NotFoundFailure value)? notFoundFailure,
+    TResult? Function(TimeoutFailure value)? timeoutFailure,
+    TResult? Function(AiProcessingFailure value)? aiProcessingFailure,
+    TResult? Function(RateLimitFailure value)? rateLimitFailure,
+    TResult? Function(PermissionFailure value)? permissionFailure,
+  }) {
+    return rateLimitFailure?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(ServerFailure value)? serverFailure,
+    TResult Function(NetworkFailure value)? networkFailure,
+    TResult Function(AuthFailure value)? authFailure,
+    TResult Function(ValidationFailure value)? validationFailure,
+    TResult Function(CacheFailure value)? cacheFailure,
+    TResult Function(NotFoundFailure value)? notFoundFailure,
+    TResult Function(TimeoutFailure value)? timeoutFailure,
+    TResult Function(AiProcessingFailure value)? aiProcessingFailure,
+    TResult Function(RateLimitFailure value)? rateLimitFailure,
+    TResult Function(PermissionFailure value)? permissionFailure,
+    required TResult orElse(),
+  }) {
+    if (rateLimitFailure != null) {
+      return rateLimitFailure(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class RateLimitFailure implements Failure {
+  const factory RateLimitFailure({
+    required final String message,
+    final int? code,
+  }) = _$RateLimitFailureImpl;
+
+  @override
+  String get message;
+  @override
+  int? get code;
+
+  /// Create a copy of Failure
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$RateLimitFailureImplCopyWith<_$RateLimitFailureImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$PermissionFailureImplCopyWith<$Res>
+    implements $FailureCopyWith<$Res> {
+  factory _$$PermissionFailureImplCopyWith(
+    _$PermissionFailureImpl value,
+    $Res Function(_$PermissionFailureImpl) then,
+  ) = __$$PermissionFailureImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String message, int? code});
+}
+
+/// @nodoc
+class __$$PermissionFailureImplCopyWithImpl<$Res>
+    extends _$FailureCopyWithImpl<$Res, _$PermissionFailureImpl>
+    implements _$$PermissionFailureImplCopyWith<$Res> {
+  __$$PermissionFailureImplCopyWithImpl(
+    _$PermissionFailureImpl _value,
+    $Res Function(_$PermissionFailureImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of Failure
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? message = null, Object? code = freezed}) {
+    return _then(
+      _$PermissionFailureImpl(
+        message: null == message
+            ? _value.message
+            : message // ignore: cast_nullable_to_non_nullable
+                  as String,
+        code: freezed == code
+            ? _value.code
+            : code // ignore: cast_nullable_to_non_nullable
+                  as int?,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+
+class _$PermissionFailureImpl implements PermissionFailure {
+  const _$PermissionFailureImpl({required this.message, this.code});
+
+  @override
+  final String message;
+  @override
+  final int? code;
+
+  @override
+  String toString() {
+    return 'Failure.permissionFailure(message: $message, code: $code)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$PermissionFailureImpl &&
+            (identical(other.message, message) || other.message == message) &&
+            (identical(other.code, code) || other.code == code));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, message, code);
+
+  /// Create a copy of Failure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$PermissionFailureImplCopyWith<_$PermissionFailureImpl> get copyWith =>
+      __$$PermissionFailureImplCopyWithImpl<_$PermissionFailureImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String message, int? code) serverFailure,
+    required TResult Function(String message, int? code) networkFailure,
+    required TResult Function(String message, int? code) authFailure,
+    required TResult Function(String message, int? code) validationFailure,
+    required TResult Function(String message, int? code) cacheFailure,
+    required TResult Function(String message, int? code) notFoundFailure,
+    required TResult Function(String message, int? code) timeoutFailure,
+    required TResult Function(String message, int? code) aiProcessingFailure,
+    required TResult Function(String message, int? code) rateLimitFailure,
+    required TResult Function(String message, int? code) permissionFailure,
+  }) {
+    return permissionFailure(message, code);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String message, int? code)? serverFailure,
+    TResult? Function(String message, int? code)? networkFailure,
+    TResult? Function(String message, int? code)? authFailure,
+    TResult? Function(String message, int? code)? validationFailure,
+    TResult? Function(String message, int? code)? cacheFailure,
+    TResult? Function(String message, int? code)? notFoundFailure,
+    TResult? Function(String message, int? code)? timeoutFailure,
+    TResult? Function(String message, int? code)? aiProcessingFailure,
+    TResult? Function(String message, int? code)? rateLimitFailure,
+    TResult? Function(String message, int? code)? permissionFailure,
+  }) {
+    return permissionFailure?.call(message, code);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String message, int? code)? serverFailure,
+    TResult Function(String message, int? code)? networkFailure,
+    TResult Function(String message, int? code)? authFailure,
+    TResult Function(String message, int? code)? validationFailure,
+    TResult Function(String message, int? code)? cacheFailure,
+    TResult Function(String message, int? code)? notFoundFailure,
+    TResult Function(String message, int? code)? timeoutFailure,
+    TResult Function(String message, int? code)? aiProcessingFailure,
+    TResult Function(String message, int? code)? rateLimitFailure,
+    TResult Function(String message, int? code)? permissionFailure,
+    required TResult orElse(),
+  }) {
+    if (permissionFailure != null) {
+      return permissionFailure(message, code);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(ServerFailure value) serverFailure,
+    required TResult Function(NetworkFailure value) networkFailure,
+    required TResult Function(AuthFailure value) authFailure,
+    required TResult Function(ValidationFailure value) validationFailure,
+    required TResult Function(CacheFailure value) cacheFailure,
+    required TResult Function(NotFoundFailure value) notFoundFailure,
+    required TResult Function(TimeoutFailure value) timeoutFailure,
+    required TResult Function(AiProcessingFailure value) aiProcessingFailure,
+    required TResult Function(RateLimitFailure value) rateLimitFailure,
+    required TResult Function(PermissionFailure value) permissionFailure,
+  }) {
+    return permissionFailure(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(ServerFailure value)? serverFailure,
+    TResult? Function(NetworkFailure value)? networkFailure,
+    TResult? Function(AuthFailure value)? authFailure,
+    TResult? Function(ValidationFailure value)? validationFailure,
+    TResult? Function(CacheFailure value)? cacheFailure,
+    TResult? Function(NotFoundFailure value)? notFoundFailure,
+    TResult? Function(TimeoutFailure value)? timeoutFailure,
+    TResult? Function(AiProcessingFailure value)? aiProcessingFailure,
+    TResult? Function(RateLimitFailure value)? rateLimitFailure,
+    TResult? Function(PermissionFailure value)? permissionFailure,
+  }) {
+    return permissionFailure?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(ServerFailure value)? serverFailure,
+    TResult Function(NetworkFailure value)? networkFailure,
+    TResult Function(AuthFailure value)? authFailure,
+    TResult Function(ValidationFailure value)? validationFailure,
+    TResult Function(CacheFailure value)? cacheFailure,
+    TResult Function(NotFoundFailure value)? notFoundFailure,
+    TResult Function(TimeoutFailure value)? timeoutFailure,
+    TResult Function(AiProcessingFailure value)? aiProcessingFailure,
+    TResult Function(RateLimitFailure value)? rateLimitFailure,
+    TResult Function(PermissionFailure value)? permissionFailure,
+    required TResult orElse(),
+  }) {
+    if (permissionFailure != null) {
+      return permissionFailure(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class PermissionFailure implements Failure {
+  const factory PermissionFailure({
+    required final String message,
+    final int? code,
+  }) = _$PermissionFailureImpl;
+
+  @override
+  String get message;
+  @override
+  int? get code;
+
+  /// Create a copy of Failure
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$PermissionFailureImplCopyWith<_$PermissionFailureImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

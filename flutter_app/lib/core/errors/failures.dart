@@ -43,4 +43,14 @@ sealed class Failure with _$Failure {
     required String message,
     int? code,
   }) = AiProcessingFailure;
+
+  const factory Failure.rateLimitFailure({
+    required String message,
+    int? code,
+  }) = RateLimitFailure;
+
+  const factory Failure.permissionFailure({
+    required String message,
+    int? code,
+  }) = PermissionFailure;
 }
