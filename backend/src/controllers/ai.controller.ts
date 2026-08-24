@@ -91,6 +91,20 @@ export const getJobAnalyses = asyncHandler(async (req: Request, res: Response) =
   });
 });
 
+export const deleteJobAnalysis = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { analysisId } = req.params;
+  await jobAnalysisService.deleteJobAnalysis(analysisId, userId);
+  res.status(200).json({ success: true, message: "Job analysis deleted successfully", data: null });
+});
+
+export const deleteResumeAnalysis = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { analysisId } = req.params;
+  await resumeAnalysisService.deleteResumeAnalysis(analysisId, userId);
+  res.status(200).json({ success: true, message: "Resume analysis deleted successfully", data: null });
+});
+
 // Resume Matching
 
 export const matchResumeJob = asyncHandler(async (req: Request, res: Response) => {

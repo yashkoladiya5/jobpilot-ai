@@ -3,9 +3,11 @@ import {
   analyzeResume,
   getResumeAnalysis,
   getResumeAnalyses,
+  deleteResumeAnalysis,
   analyzeJob,
   getJobAnalysis,
   getJobAnalyses,
+  deleteJobAnalysis,
   matchResumeJob,
   getMatchResult,
   generateInterview,
@@ -40,6 +42,8 @@ router.get("/resume/analyses", getResumeAnalyses);
 router.post("/job/analyze", analyzeJob);
 router.get("/job/analysis/:analysisId", getJobAnalysis);
 router.get("/job/analyses", getJobAnalyses);
+router.delete("/job/analysis/:analysisId", deleteJobAnalysis);
+router.delete("/resume/analysis/:analysisId", deleteResumeAnalysis);
 
 // Resume-Job matching
 router.post("/match", matchResumeJob);

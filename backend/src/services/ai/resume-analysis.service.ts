@@ -96,4 +96,18 @@ export class ResumeAnalysisService {
       },
     });
   }
+
+  async deleteResumeAnalysis(analysisId: string, userId: string) {
+    const analysis = await prisma.resumeAnalysis.findFirst({
+      where: { id: analysisId, userId },
+    });
+
+    if (!analysis) {
+      throw ApiError.notFound("Resume analysis not found");
+    }
+
+    await prisma.resumeAnalysis.delete({
+      where: { id: analysisId },
+    });
+  }
 }
