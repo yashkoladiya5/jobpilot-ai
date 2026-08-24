@@ -39,6 +39,26 @@ export const errorHandler = (
     return;
   }
 
+  if (err.name === 'JsonWebTokenError') {
+    res.status(401).json({
+      success: false,
+      message: "Invalid or malformed authentication token provided.",
+      errors: null,
+      data: null,
+    });
+    return;
+  }
+
+  if (err.name === 'TokenExpiredError') {
+    res.status(401).json({
+      success: false,
+      message: "Authentication token has expired. Please log in again.",
+      errors: null,
+      data: null,
+    });
+    return;
+  }
+
   if (err.name === 'ValidationError') {
     res.status(400).json({
       success: false,

@@ -63,4 +63,19 @@ export class AuthService {
 
     return user;
   }
+
+  async updateProfile(userId: string, data: { name?: string; bio?: string }) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      throw ApiError.notFound("User not found in the system");
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data,
+      select: userSelect,
+    });
+
+    return updatedUser;
+  }
 }
