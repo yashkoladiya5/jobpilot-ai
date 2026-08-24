@@ -181,4 +181,25 @@ export class AnalyticsService {
       })),
     };
   }
+
+  async getOfferAnalytics(userId: string) {
+    const offerApplications = await prisma.jobApplication.findMany({
+      where: { userId, status: "OFFER" },
+      orderBy: { updatedAt: "desc" },
+    });
+
+    const totalOffers = offerApplications.length;
+
+    const offerCompanies = offerApplications.map(app => app.companyName);
+
+    return {
+      totalOffers,
+      offerCompanies,
+      recentOffers: offerApplications.slice(0, 5).map(app => ({
+        company: app.companyName,
+        role: app.role,
+        date: app.updatedAt,
+      })),
+    };
+  }
 }
