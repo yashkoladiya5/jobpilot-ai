@@ -84,16 +84,18 @@ class _LoginScreenState extends State<LoginScreen> {
                           .headlineSmall
                           ?.copyWith(
                             fontWeight: FontWeight.bold,
-                            color: AppColors.primary,
+                            color: AppColors.primaryDark,
+                            letterSpacing: -0.5,
                           ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 12),
                     Text(
-                      'Welcome back! Sign in to continue',
+                      'Welcome back! Please sign in to continue managing your career journey.',
+                      textAlign: TextAlign.center,
                       style: Theme.of(context)
                           .textTheme
                           .bodyMedium
-                          ?.copyWith(color: AppColors.textSecondary),
+                          ?.copyWith(color: AppColors.textSecondary, height: 1.4),
                     ),
                     SizedBox(height: size.height * 0.04),
                     Form(

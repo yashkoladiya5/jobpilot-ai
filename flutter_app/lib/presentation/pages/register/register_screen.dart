@@ -90,16 +90,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           .headlineSmall
                           ?.copyWith(
                             fontWeight: FontWeight.bold,
-                            color: AppColors.primary,
+                            color: AppColors.primaryDark,
+                            letterSpacing: -0.5,
                           ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 12),
                     Text(
-                      'Create your account to get started',
+                      'Create your new account and take the next step in your career journey.',
+                      textAlign: TextAlign.center,
                       style: Theme.of(context)
                           .textTheme
                           .bodyMedium
-                          ?.copyWith(color: AppColors.textSecondary),
+                          ?.copyWith(color: AppColors.textSecondary, height: 1.4),
                     ),
                     SizedBox(height: size.height * 0.03),
                     Form(
