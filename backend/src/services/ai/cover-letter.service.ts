@@ -111,4 +111,14 @@ export class CoverLetterService {
       },
     });
   }
+
+  async deleteCoverLetter(id: string, userId: string) {
+    const coverLetter = await this.getCoverLetter(id, userId);
+
+    await prisma.coverLetter.delete({
+      where: { id: coverLetter.id },
+    });
+
+    return { deletedId: id };
+  }
 }

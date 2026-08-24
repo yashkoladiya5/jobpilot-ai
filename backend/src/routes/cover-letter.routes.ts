@@ -4,6 +4,7 @@ import {
   getCoverLetter,
   getCoverLetters,
   updateCoverLetter,
+  deleteCoverLetter,
 } from "../controllers/cover-letter.controller";
 import { authenticate } from "../middleware/auth";
 
@@ -19,5 +20,6 @@ router.post("/generate", generateCoverLetter);
 router.get("/list", getCoverLetters);
 router.get("/:id", getCoverLetter);
 router.patch("/:id", updateCoverLetter);
+router.delete("/:id", deleteCoverLetter);
 
 export default router;

@@ -63,3 +63,16 @@ export const updateCoverLetter = asyncHandler(async (req: Request, res: Response
     data: result,
   });
 });
+
+export const deleteCoverLetter = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { id } = req.params;
+  
+  await coverLetterService.deleteCoverLetter(id, userId);
+  
+  res.status(200).json({
+    success: true,
+    message: "Cover letter deleted successfully",
+    data: null,
+  });
+});
