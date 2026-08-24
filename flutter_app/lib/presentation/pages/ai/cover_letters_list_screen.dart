@@ -74,11 +74,12 @@ class _CoverLettersListScreenState extends State<CoverLettersListScreen> {
 
   Widget _buildList(List<CoverLetter> letters) {
     if (letters.isEmpty) {
-      return const EmptyState(
-        icon: Icons.mail_outline,
-        message:
-            'No cover letters yet.\nGenerate your first AI-tailored cover letter!',
-        actionLabel: 'Generate Cover Letter',
+      return EmptyState(
+        icon: Icons.mark_email_unread_outlined,
+        message: 'No AI Cover Letters Found',
+        subtitle: 'Stand out from the crowd! Generate a highly personalized cover letter tailored specifically to your resume and target job.',
+        actionLabel: 'Generate New Letter',
+        onAction: () => context.push('/ai/cover-letter'),
       );
     }
 

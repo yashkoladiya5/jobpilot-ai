@@ -17,11 +17,13 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
   
-  // Set system UI overlay style for a cleaner look
+  // Set system UI overlay style for a cleaner look and navigation bar
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
+      systemNavigationBarColor: Colors.white,
+      systemNavigationBarIconBrightness: Brightness.dark,
     ),
   );
   

@@ -35,17 +35,19 @@ class EmptyState extends StatelessWidget {
               message,
               textAlign: TextAlign.center,
               style: theme.textTheme.titleMedium?.copyWith(
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                fontWeight: FontWeight.w600,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
+                fontWeight: FontWeight.bold,
+                letterSpacing: -0.2,
               ),
             ),
             if (subtitle != null) ...[
-              const SizedBox(height: 8),
+              const SizedBox(height: 12),
               Text(
                 subtitle!,
                 textAlign: TextAlign.center,
                 style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                  height: 1.4,
                 ),
               ),
             ],
