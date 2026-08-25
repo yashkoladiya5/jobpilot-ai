@@ -137,3 +137,20 @@ export const getDailyGoals = asyncHandler(async (req: Request, res: Response) =>
     data: goals,
   });
 });
+
+export const getRecommendedJobs = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  if (!userId) {
+     res.status(401).json({ success: false, message: "Unauthorized access: user ID is missing" });
+     return;
+  }
+
+  const recommendations = await dashboardService.getRecommendedJobs(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Recommended jobs fetched successfully", 
+    data: recommendations,
+  });
+});

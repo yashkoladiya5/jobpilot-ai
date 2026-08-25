@@ -257,4 +257,52 @@ export class DashboardService {
       goals
     };
   }
+
+  async getRecommendedJobs(userId: string) {
+    // Mock recommendations based on user's active applications
+    const applications = await prisma.jobApplication.findMany({
+      where: { userId },
+      select: { role: true },
+      take: 5
+    });
+
+    const defaultRoles = ["Software Engineer", "Full Stack Developer", "Frontend Engineer"];
+    const preferredRoles = applications.length > 0 
+      ? applications.map(app => app.role) 
+      : defaultRoles;
+
+    const baseRole = preferredRoles[0] || "Software Engineer";
+
+    const recommendations = [
+      {
+        id: "rec_1",
+        title: `Senior ${baseRole}`,
+        company: "TechNova Inc.",
+        location: "Remote",
+        matchScore: 92,
+        salary: "$130k - $160k",
+        postedAt: new Date(Date.now() - 1000 * 60 * 60 * 2) // 2 hours ago
+      },
+      {
+        id: "rec_2",
+        title: baseRole,
+        company: "Global Systems Ltd",
+        location: "New York, NY (Hybrid)",
+        matchScore: 88,
+        salary: "$110k - $140k",
+        postedAt: new Date(Date.now() - 1000 * 60 * 60 * 24) // 1 day ago
+      },
+      {
+        id: "rec_3",
+        title: `Lead ${baseRole}`,
+        company: "Innovate AI",
+        location: "San Francisco, CA",
+        matchScore: 85,
+        salary: "$150k - $190k",
+        postedAt: new Date(Date.now() - 1000 * 60 * 60 * 48) // 2 days ago
+      }
+    ];
+
+    return recommendations;
+  }
 }
