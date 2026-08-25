@@ -28,6 +28,7 @@ import {
   getInterviewTips,
   getInterviewCategoryStats,
   getInterviewReadinessScore,
+  generateMockTechnicalAssessment,
   getCareerInsights,
   computeCareerInsights,
   getCareerInsightsHistory,
@@ -89,6 +90,7 @@ router.patch("/interview/session/:sessionId/archive", archiveInterviewSession);
 router.get("/interview/tips", getInterviewTips);
 router.get("/interview/stats/category", getInterviewCategoryStats);
 router.get("/interview/readiness-score", getInterviewReadinessScore);
+router.post("/interview/job/:jobId/technical-assessment", generateMockTechnicalAssessment);
 
 // Career insights
 router.get("/career/insights", getCareerInsights);

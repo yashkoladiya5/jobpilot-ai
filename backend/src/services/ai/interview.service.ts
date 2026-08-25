@@ -420,6 +420,48 @@ export class InterviewService {
       recentTrend: recentResults.map(r => r.overallScore).reverse()
     };
   }
+
+  async generateMockTechnicalAssessment(userId: string, jobId: string) {
+    const job = await prisma.jobApplication.findFirst({
+      where: { id: jobId, userId }
+    });
+
+    if (!job) throw ApiError.notFound("Job not found");
+    
+    // Simulate generation of a take-home assignment based on the job role
+    const roleUpper = job.role.toUpperCase();
+    
+    let assignment = {
+      title: "Build a REST API",
+      description: "Create a simple REST API with Node.js and Express that manages a to-do list. Include basic CRUD operations.",
+      estimatedTime: "2-3 hours",
+      skillsTested: ["Node.js", "Express", "RESTful Design"]
+    };
+    
+    if (roleUpper.includes("FRONTEND") || roleUpper.includes("REACT")) {
+      assignment = {
+        title: "Build a Dynamic Dashboard",
+        description: "Create a React dashboard that fetches data from a mock public API and displays it in a responsive grid or chart.",
+        estimatedTime: "3-4 hours",
+        skillsTested: ["React", "State Management", "CSS/Styling"]
+      };
+    } else if (roleUpper.includes("DATA") || roleUpper.includes("PYTHON")) {
+      assignment = {
+        title: "Data Cleaning Pipeline",
+        description: "Write a Python script using Pandas to clean a provided dirty dataset, handle missing values, and output basic statistics.",
+        estimatedTime: "2 hours",
+        skillsTested: ["Python", "Pandas", "Data Cleaning"]
+      };
+    }
+    
+    return {
+      jobId,
+      role: job.role,
+      company: job.companyName,
+      assessment: assignment,
+      generatedAt: new Date()
+    };
+  }
 }
 
 export const interviewService = new InterviewService();
