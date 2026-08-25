@@ -215,3 +215,15 @@ export const getJobActionItems = asyncHandler(async (req: Request, res: Response
     data: actionItems,
   });
 });
+
+export const getJobApplicationVelocity = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  const velocity = await jobService.getJobApplicationVelocity(userId);
+
+  res.status(200).json({
+    success: true,
+    message: "Job application velocity calculated successfully",
+    data: velocity,
+  });
+});

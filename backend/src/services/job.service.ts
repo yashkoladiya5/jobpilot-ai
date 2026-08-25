@@ -304,4 +304,44 @@ export class JobService {
 
     return actionItems.slice(0, 5); // Return top 5 most relevant action items
   }
+
+  async getJobApplicationVelocity(userId: string) {
+    const fourWeeksAgo = new Date();
+    fourWeeksAgo.setDate(fourWeeksAgo.getDate() - 28);
+    
+    const applications = await prisma.jobApplication.findMany({
+      where: {
+        userId,
+        createdAt: { gte: fourWeeksAgo },
+      },
+      select: { createdAt: true },
+    });
+
+    const weeklyVelocity = [0, 0, 0, 0]; // Week 1 (oldest), Week 2, Week 3, Week 4 (current)
+    const now = new Date().getTime();
+
+    for (const app of applications) {
+      const daysAgo = Math.floor((now - app.createdAt.getTime()) / (1000 * 60 * 60 * 24));
+      
+      if (daysAgo < 7) weeklyVelocity[3]++;
+      else if (daysAgo < 14) weeklyVelocity[2]++;
+      else if (daysAgo < 21) weeklyVelocity[1]++;
+      else if (daysAgo < 28) weeklyVelocity[0]++;
+    }
+
+    const currentPace = weeklyVelocity[3];
+    const previousPace = weeklyVelocity[2];
+    
+    let trend = "stable";
+    if (currentPace > previousPace) trend = "increasing";
+    else if (currentPace < previousPace) trend = "decreasing";
+
+    return {
+      totalLast4Weeks: applications.length,
+      weeklyVelocity,
+      currentPace,
+      trend,
+      message: trend === "decreasing" ? "Your application velocity has dropped recently. Try to submit a few more this week!" : "Great job maintaining your application momentum!"
+    };
+  }
 }

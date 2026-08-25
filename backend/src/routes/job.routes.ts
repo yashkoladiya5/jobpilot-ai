@@ -14,6 +14,7 @@ import {
   getJobsNeedingFollowUp,
   getJobNotesSummary,
   getJobActionItems,
+  getJobApplicationVelocity,
 } from "../controllers/job.controller";
 import { authenticate } from "../middleware/auth";
 import { validate } from "../middleware/validate";
@@ -27,6 +28,7 @@ const router = Router();
 
 // Custom endpoints
 router.get("/analytics/summary", authenticate, getJobsAnalytics);
+router.get("/analytics/velocity", authenticate, getJobApplicationVelocity);
 router.get("/needs-follow-up", authenticate, getJobsNeedingFollowUp);
 router.get("/notes/summary", authenticate, getJobNotesSummary);
 router.get("/action-items", authenticate, getJobActionItems);
