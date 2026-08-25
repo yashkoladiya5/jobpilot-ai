@@ -141,3 +141,20 @@ export const updateEmail = asyncHandler(async (req: Request, res: Response) => {
     data: { user },
   });
 });
+
+export const updateName = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { newName } = req.body;
+  
+  if (!newName || typeof newName !== 'string' || newName.trim().length === 0) {
+    throw ApiError.badRequest("A valid new name is required");
+  }
+
+  const user = await authService.updateName(userId, newName.trim());
+  
+  res.status(200).json({
+    success: true,
+    message: "Profile name updated successfully",
+    data: { user },
+  });
+});

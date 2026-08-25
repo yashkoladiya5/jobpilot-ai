@@ -138,4 +138,23 @@ export class AuthService {
 
     return updatedUser;
   }
+
+  async updateName(userId: string, newName: string) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      throw ApiError.notFound("User not found");
+    }
+
+    if (user.name === newName) {
+      throw ApiError.badRequest("New name must be different from current name");
+    }
+    
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: { name: newName },
+      select: userSelect,
+    });
+
+    return updatedUser;
+  }
 }
