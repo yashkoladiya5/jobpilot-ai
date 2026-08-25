@@ -158,3 +158,18 @@ export const updateName = asyncHandler(async (req: Request, res: Response) => {
     data: { user },
   });
 });
+
+export const getActiveSessions = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  // Extract client IP (e.g. from x-forwarded-for or connection)
+  const clientIp = req.headers['x-forwarded-for']?.toString() || req.socket.remoteAddress;
+  
+  const sessions = await authService.getActiveSessions(userId, clientIp);
+  
+  res.status(200).json({
+    success: true,
+    message: "Active sessions fetched successfully",
+    data: sessions,
+  });
+});

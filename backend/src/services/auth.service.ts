@@ -157,4 +157,34 @@ export class AuthService {
 
     return updatedUser;
   }
+
+  async getActiveSessions(userId: string, currentIp?: string) {
+    // In a real app, you'd fetch from a Session table or Redis
+    // We mock active sessions for the user's dashboard view here
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      throw ApiError.notFound("User not found");
+    }
+
+    const sessions = [
+      {
+        id: "sess_1",
+        device: "MacBook Pro - Chrome",
+        ipAddress: currentIp || "192.168.1.1",
+        lastActive: new Date(),
+        isCurrent: true,
+        location: "San Francisco, CA"
+      },
+      {
+        id: "sess_2",
+        device: "iPhone 14 - Safari",
+        ipAddress: "192.168.1.5",
+        lastActive: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2), // 2 days ago
+        isCurrent: false,
+        location: "San Francisco, CA"
+      }
+    ];
+
+    return sessions;
+  }
 }
