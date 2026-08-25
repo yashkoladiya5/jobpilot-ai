@@ -98,3 +98,15 @@ export const getSkillsGapAnalytics = asyncHandler(async (req: Request, res: Resp
     data: result 
   });
 });
+
+export const getOfferNegotiationInsights = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  const result = await analyticsService.getOfferNegotiationInsights(userId);
+  
+  res.json({ 
+    success: true, 
+    message: "Offer negotiation insights generated successfully", 
+    data: result 
+  });
+});

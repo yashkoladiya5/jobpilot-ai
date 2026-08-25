@@ -399,4 +399,44 @@ export class AnalyticsService {
         : "Your skill set is highly aligned with your target roles!"
     };
   }
+
+  async getOfferNegotiationInsights(userId: string) {
+    const offerApplications = await prisma.jobApplication.findMany({
+      where: { userId, status: "OFFER" },
+      orderBy: { updatedAt: "desc" },
+    });
+
+    if (offerApplications.length === 0) {
+      return {
+        hasOffers: false,
+        message: "You don't have any recorded offers yet. Keep applying!",
+        insights: null
+      };
+    }
+
+    const averageSalaryString = offerApplications
+      .map(app => app.salaryRange)
+      .filter(Boolean)
+      .join(", ");
+      
+    // Mock parsing salary ranges and giving negotiation insights
+    const mockAverageOfferValue = 120000;
+    const marketAverage = 115000;
+    
+    return {
+      hasOffers: true,
+      totalOffers: offerApplications.length,
+      averageOfferValue: `$${mockAverageOfferValue.toLocaleString()}`,
+      marketAverage: `$${marketAverage.toLocaleString()}`,
+      negotiationLeverage: offerApplications.length > 1 ? "High" : "Medium",
+      topAdvice: offerApplications.length > 1 
+        ? "You have multiple offers! Use them to negotiate higher base pay or sign-on bonuses."
+        : "Always negotiate your first offer. Ask for 5-10% more base or additional equity.",
+      recentOffers: offerApplications.slice(0, 3).map(app => ({
+        company: app.companyName,
+        role: app.role,
+        salaryRange: app.salaryRange || "Not specified"
+      }))
+    };
+  }
 }
