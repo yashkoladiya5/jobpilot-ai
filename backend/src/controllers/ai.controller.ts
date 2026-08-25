@@ -257,6 +257,24 @@ export const deleteInterviewSession = asyncHandler(async (req: Request, res: Res
   });
 });
 
+export const archiveInterviewSession = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { sessionId } = req.params;
+  
+  if (!sessionId) {
+     res.status(400).json({ success: false, message: "Session ID is required for archiving." });
+     return;
+  }
+
+  const result = await interviewService.archiveInterviewSession(sessionId, userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Interview session archived successfully", 
+    data: result 
+  });
+});
+
 export const getInterviewTips = asyncHandler(async (req: Request, res: Response) => {
   const userId = (req as AuthenticatedRequest).user.id;
   

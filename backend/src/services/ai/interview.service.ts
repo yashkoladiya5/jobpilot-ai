@@ -281,6 +281,30 @@ export class InterviewService {
     return { deletedId: sessionId };
   }
 
+  async archiveInterviewSession(sessionId: string, userId: string) {
+    const session = await prisma.interviewSession.findFirst({
+      where: { id: sessionId, userId },
+    });
+    
+    if (!session) {
+      throw ApiError.notFound("Interview session not found");
+    }
+
+    // We use a prefix on jobDescription as a lightweight archive flag 
+    // since status might be strictly constrained by Prisma enums.
+    const prefix = "[ARCHIVED]";
+    if (session.jobDescription?.startsWith(prefix)) {
+      throw ApiError.badRequest("Session is already archived");
+    }
+
+    return prisma.interviewSession.update({
+      where: { id: sessionId },
+      data: {
+        jobDescription: `${prefix} ${session.jobDescription || ''}`
+      },
+    });
+  }
+
   async getInterviewTips(userId: string) {
     const recentSessions = await prisma.interviewSession.findMany({
       where: { userId, status: "COMPLETED" },

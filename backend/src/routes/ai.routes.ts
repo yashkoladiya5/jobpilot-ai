@@ -22,6 +22,7 @@ import {
   getInterviewResult,
   resetInterviewSession,
   deleteInterviewSession,
+  archiveInterviewSession,
   getInterviewTips,
   getInterviewCategoryStats,
   getCareerInsights,
@@ -79,6 +80,7 @@ router.post("/interview/session/:sessionId/complete", completeInterview);
 router.post("/interview/session/:sessionId/reset", resetInterviewSession);
 router.get("/interview/session/:sessionId/result", getInterviewResult);
 router.delete("/interview/session/:sessionId", deleteInterviewSession);
+router.patch("/interview/session/:sessionId/archive", archiveInterviewSession);
 router.get("/interview/tips", getInterviewTips);
 router.get("/interview/stats/category", getInterviewCategoryStats);
 
