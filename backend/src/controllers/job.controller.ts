@@ -179,3 +179,15 @@ export const getJobsAnalytics = asyncHandler(async (req: Request, res: Response)
     data: analytics,
   });
 });
+
+export const getJobsNeedingFollowUp = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  const jobs = await jobService.getJobsNeedingFollowUp(userId);
+
+  res.status(200).json({
+    success: true,
+    message: "Stale jobs needing follow-up fetched successfully",
+    data: jobs,
+  });
+});

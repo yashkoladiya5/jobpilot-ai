@@ -207,4 +207,30 @@ export class JobService {
 
     return { count: deleted.count };
   }
+
+  async getJobsNeedingFollowUp(userId: string) {
+    const fourteenDaysAgo = new Date();
+    fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
+
+    const jobs = await prisma.jobApplication.findMany({
+      where: {
+        userId,
+        status: { in: ["APPLIED", "INTERVIEW"] },
+        updatedAt: { lte: fourteenDaysAgo }
+      },
+      orderBy: { updatedAt: "asc" },
+      take: 10
+    });
+
+    return jobs.map(job => ({
+      id: job.id,
+      companyName: job.companyName,
+      role: job.role,
+      status: job.status,
+      daysSinceLastUpdate: Math.floor((new Date().getTime() - job.updatedAt.getTime()) / (1000 * 60 * 60 * 24)),
+      suggestedAction: job.status === "APPLIED" 
+        ? "Send a polite follow-up email to the recruiter."
+        : "Check in on your interview feedback."
+    }));
+  }
 }
