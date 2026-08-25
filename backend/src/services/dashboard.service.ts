@@ -305,4 +305,41 @@ export class DashboardService {
 
     return recommendations;
   }
+
+  async getWeeklySnapshot(userId: string) {
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+    const thisWeekApps = await prisma.jobApplication.findMany({
+      where: {
+        userId,
+        createdAt: { gte: oneWeekAgo }
+      }
+    });
+
+    const twoWeeksAgo = new Date();
+    twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+    
+    const lastWeekApps = await prisma.jobApplication.findMany({
+      where: {
+        userId,
+        createdAt: { gte: twoWeeksAgo, lt: oneWeekAgo }
+      }
+    });
+
+    const thisWeekCount = thisWeekApps.length;
+    const lastWeekCount = lastWeekApps.length;
+    const changePercentage = lastWeekCount > 0 
+      ? Math.round(((thisWeekCount - lastWeekCount) / lastWeekCount) * 100) 
+      : 100;
+
+    return {
+      timeframe: "Last 7 days",
+      applicationsSubmitted: thisWeekCount,
+      comparisonToLastWeek: `${changePercentage > 0 ? '+' : ''}${changePercentage}%`,
+      interviewsScheduled: thisWeekApps.filter(app => app.status === "INTERVIEW").length,
+      offersReceived: thisWeekApps.filter(app => app.status === "OFFER").length,
+      topCompanyThisWeek: thisWeekApps.length > 0 ? thisWeekApps[0].companyName : "None yet"
+    };
+  }
 }

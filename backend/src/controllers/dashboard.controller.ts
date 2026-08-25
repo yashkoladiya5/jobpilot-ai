@@ -154,3 +154,20 @@ export const getRecommendedJobs = asyncHandler(async (req: Request, res: Respons
     data: recommendations,
   });
 });
+
+export const getWeeklySnapshot = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  if (!userId) {
+     res.status(401).json({ success: false, message: "Unauthorized access: user ID is missing" });
+     return;
+  }
+
+  const snapshot = await dashboardService.getWeeklySnapshot(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Weekly snapshot fetched successfully", 
+    data: snapshot,
+  });
+});
