@@ -233,4 +233,30 @@ export class JobService {
         : "Check in on your interview feedback."
     }));
   }
+
+  async getJobNotesSummary(userId: string) {
+    const jobsWithNotes = await prisma.jobApplication.findMany({
+      where: {
+        userId,
+        notes: { not: null, not: "" }
+      },
+      select: {
+        id: true,
+        companyName: true,
+        role: true,
+        notes: true,
+        updatedAt: true
+      },
+      orderBy: { updatedAt: "desc" },
+      take: 20
+    });
+
+    const totalNotesLength = jobsWithNotes.reduce((acc, job) => acc + (job.notes?.length || 0), 0);
+
+    return {
+      totalJobsWithNotes: jobsWithNotes.length,
+      averageNoteLength: jobsWithNotes.length > 0 ? Math.round(totalNotesLength / jobsWithNotes.length) : 0,
+      recentNotes: jobsWithNotes.slice(0, 5)
+    };
+  }
 }

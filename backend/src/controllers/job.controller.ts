@@ -191,3 +191,15 @@ export const getJobsNeedingFollowUp = asyncHandler(async (req: Request, res: Res
     data: jobs,
   });
 });
+
+export const getJobNotesSummary = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  const summary = await jobService.getJobNotesSummary(userId);
+
+  res.status(200).json({
+    success: true,
+    message: "Job notes summary fetched successfully",
+    data: summary,
+  });
+});
