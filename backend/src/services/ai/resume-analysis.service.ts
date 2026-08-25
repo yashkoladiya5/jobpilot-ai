@@ -160,4 +160,35 @@ export class ResumeAnalysisService {
       redFlags
     };
   }
+
+  async getResumeKeywordOptimization(userId: string, resumeId: string) {
+    const analysis = await this.getAnalysisByResume(resumeId, userId);
+    
+    // Simulate keyword optimization feature where we recommend
+    // industry standard keywords based on the resume's missing keywords
+    const missingKeywords = (analysis.missingKeywords as string[]) || [];
+    
+    if (missingKeywords.length === 0) {
+      return {
+        resumeId,
+        score: 95,
+        message: "Your resume is highly optimized for keywords!",
+        recommendations: []
+      };
+    }
+
+    const keywordImpacts = missingKeywords.map((kw, index) => ({
+      keyword: kw,
+      importance: index < 2 ? "HIGH" : "MEDIUM",
+      impactScore: index < 2 ? "+10%" : "+5%",
+      contextSuggestion: `Add '${kw}' to your skills section or a relevant project description.`
+    }));
+
+    return {
+      resumeId,
+      score: analysis.atsScore,
+      message: `Adding these keywords could boost your ATS score to ${Math.min(100, analysis.atsScore + 15)}`,
+      recommendations: keywordImpacts
+    };
+  }
 }
