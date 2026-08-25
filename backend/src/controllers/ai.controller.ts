@@ -118,6 +118,24 @@ export const deleteResumeAnalysis = asyncHandler(async (req: Request, res: Respo
   res.status(200).json({ success: true, message: "Resume analysis deleted successfully", data: null });
 });
 
+export const generateCoverLetter = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { jobDescription, resumeId } = req.body;
+  
+  if (!jobDescription) {
+     res.status(400).json({ success: false, message: "Job description is required to generate a cover letter." });
+     return;
+  }
+
+  const coverLetter = await jobAnalysisService.generateCoverLetter(userId, jobDescription, resumeId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Cover letter generated successfully", 
+    data: coverLetter 
+  });
+});
+
 // Resume Matching
 
 export const matchResumeJob = asyncHandler(async (req: Request, res: Response) => {

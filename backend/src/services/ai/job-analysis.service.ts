@@ -4,6 +4,7 @@ import { generateStructuredResponse } from "./gemini.client";
 import { jobAnalysisSchema } from "./schemas/job-analysis.schema";
 import { buildJobAnalysisPrompt } from "./prompts/job-analysis.prompt";
 import fs from "fs/promises";
+import { z } from "zod";
 
 /**
  * Service for analyzing job descriptions using AI to extract key skills and requirements.
@@ -108,5 +109,33 @@ export class JobAnalysisService {
     await prisma.jobAnalysis.delete({
       where: { id: analysisId },
     });
+  }
+
+  async generateCoverLetter(userId: string, jobDescription: string, resumeId?: string) {
+    let resumeText = "";
+    if (resumeId) {
+      const resume = await prisma.resume.findFirst({ where: { id: resumeId, userId } });
+      if (resume) {
+        try {
+          resumeText = await fs.readFile(resume.filePath, "utf-8");
+        } catch {
+          resumeText = `[Binary file - text extraction not supported yet]`;
+        }
+      }
+    }
+
+    const prompt = `Write a professional, compelling, and tailored cover letter for the following job description.\n\nJob Description:\n${jobDescription}\n\n${resumeText ? `Use my resume information below to highlight relevant skills and experience:\n${resumeText}` : 'Highlight general enthusiasm and strong communication skills.'}\n\nKeep it under 400 words, use standard professional formatting, and make it engaging.`;
+
+    const result = await generateStructuredResponse(prompt, z.object({
+      coverLetterText: z.string().describe("The full text of the cover letter"),
+      suggestedSubjectLine: z.string().describe("A suggested subject line if sending via email"),
+      keyPointsHighlighted: z.array(z.string()).describe("Key skills or experiences highlighted in this letter")
+    }));
+
+    if (!result.success || !result.data) {
+      throw ApiError.internal("Failed to generate cover letter: " + (result.error || "Unknown error"));
+    }
+
+    return result.data;
   }
 }

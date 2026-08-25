@@ -9,6 +9,7 @@ import {
   getJobAnalysis,
   getJobAnalyses,
   deleteJobAnalysis,
+  generateCoverLetter,
   matchResumeJob,
   getMatchResult,
   getTopMatches,
@@ -54,6 +55,7 @@ router.get("/job/analysis/:analysisId", getJobAnalysis);
 router.get("/job/analyses", getJobAnalyses);
 router.delete("/job/analysis/:analysisId", deleteJobAnalysis);
 router.delete("/resume/analysis/:analysisId", deleteResumeAnalysis);
+router.post("/cover-letter/generate", generateCoverLetter);
 
 // Resume-Job matching
 router.post("/match", matchResumeJob);
