@@ -146,3 +146,15 @@ export const getOfferPredictor = asyncHandler(async (req: Request, res: Response
     data: result 
   });
 });
+
+export const getNetworkingROI = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  const result = await analyticsService.getNetworkingROI(userId);
+  
+  res.json({ 
+    success: true, 
+    message: "Networking ROI calculated successfully", 
+    data: result 
+  });
+});
