@@ -542,4 +542,41 @@ export class AnalyticsService {
         : "Your interview rate is below average. Consider optimizing your resume keywords."
     };
   }
+
+  async getOfferPredictor(userId: string) {
+    // Mock predicting the likelihood of an offer based on pipeline status
+    const applications = await prisma.jobApplication.findMany({
+      where: { userId },
+      select: { role: true, status: true, companyName: true }
+    });
+
+    const activeInterviews = applications.filter(a => a.status === "INTERVIEW");
+    
+    if (activeInterviews.length === 0) {
+      return {
+        hasActiveInterviews: false,
+        message: "You don't have any active interviews. Keep applying to increase your chances!",
+        predictor: null
+      };
+    }
+
+    // Mock probability calculation
+    const baseProbability = 20; // 20% base chance for any interview
+    const extraPerInterview = 5; // +5% for each additional interview
+    
+    let totalProbability = baseProbability + ((activeInterviews.length - 1) * extraPerInterview);
+    if (totalProbability > 85) totalProbability = 85; // Cap at 85%
+
+    return {
+      hasActiveInterviews: true,
+      activeInterviewCount: activeInterviews.length,
+      offerProbability: totalProbability,
+      topProspects: activeInterviews.slice(0, 3).map(a => ({
+        company: a.companyName,
+        role: a.role,
+        probability: Math.round(baseProbability + Math.random() * 20) // Random between 20-40% for individual
+      })),
+      insight: `With ${activeInterviews.length} active interviews, you have an estimated ${totalProbability}% chance of receiving at least one offer in the next 30 days.`
+    };
+  }
 }

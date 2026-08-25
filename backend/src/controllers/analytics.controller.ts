@@ -134,3 +134,15 @@ export const getPeerComparisonAnalytics = asyncHandler(async (req: Request, res:
     data: result 
   });
 });
+
+export const getOfferPredictor = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  const result = await analyticsService.getOfferPredictor(userId);
+  
+  res.json({ 
+    success: true, 
+    message: "Offer predictor generated successfully", 
+    data: result 
+  });
+});
