@@ -223,3 +223,15 @@ export const verifyMfaSetup = asyncHandler(async (req: Request, res: Response) =
     data: mfaData,
   });
 });
+
+export const generateBackupCodes = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  const backupData = await authService.generateBackupCodes(userId);
+  
+  res.status(200).json({
+    success: true,
+    message: "Backup codes generated successfully",
+    data: backupData,
+  });
+});

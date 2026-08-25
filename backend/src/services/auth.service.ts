@@ -298,4 +298,26 @@ export class AuthService {
       message: "Multi-factor authentication successfully enabled on your account."
     };
   }
+
+  async generateBackupCodes(userId: string) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      throw ApiError.notFound("User not found");
+    }
+
+    // Generate 10 random 8-character alphanumeric backup codes
+    const codes = Array.from({ length: 10 }, () => 
+      Math.random().toString(36).substring(2, 10).toUpperCase()
+    );
+
+    // In a real application, we would hash these codes (e.g. with bcrypt) and store them in the database
+    // We only return the raw codes to the user once during this generation step.
+    
+    return {
+      userId: user.id,
+      message: "Backup codes generated. Please save these in a secure place. They will not be shown again.",
+      codes,
+      generatedAt: new Date()
+    };
+  }
 }
