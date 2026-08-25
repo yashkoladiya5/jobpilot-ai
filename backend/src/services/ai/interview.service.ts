@@ -493,6 +493,48 @@ export class InterviewService {
       generatedAt: new Date()
     };
   }
+
+  async generateMockSystemDesignAssessment(userId: string, jobId: string) {
+    const job = await prisma.jobApplication.findFirst({
+      where: { id: jobId, userId }
+    });
+
+    if (!job) throw ApiError.notFound("Job not found");
+    
+    const roleUpper = job.role.toUpperCase();
+    
+    // Default assessment for non-senior or unknown roles
+    let assessment = {
+      title: "System Design Basics",
+      description: "Design a scalable URL shortener (like bit.ly) handling 100M requests per day.",
+      estimatedTime: "45-60 mins",
+      focusAreas: ["API Design", "Database Schema", "Caching Strategy"]
+    };
+    
+    if (roleUpper.includes("SENIOR") || roleUpper.includes("STAFF") || roleUpper.includes("ARCHITECT")) {
+      assessment = {
+        title: "Advanced System Design",
+        description: "Design a global real-time chat application (like WhatsApp) with end-to-end encryption and media sharing.",
+        estimatedTime: "60-90 mins",
+        focusAreas: ["Microservices", "Data Partitioning", "WebSocket/Real-time", "Eventual Consistency"]
+      };
+    } else if (roleUpper.includes("DATA")) {
+      assessment = {
+        title: "Data Pipeline Design",
+        description: "Design a real-time analytics pipeline for an e-commerce platform processing 10k events per second.",
+        estimatedTime: "45-60 mins",
+        focusAreas: ["Stream Processing", "Data Warehousing", "ETL Architecture"]
+      };
+    }
+
+    return {
+      jobId,
+      role: job.role,
+      company: job.companyName,
+      assessment,
+      generatedAt: new Date()
+    };
+  }
 }
 
 export const interviewService = new InterviewService();

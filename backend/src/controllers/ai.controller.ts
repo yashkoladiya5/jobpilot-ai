@@ -402,6 +402,24 @@ export const generateMockBehavioralAssessment = asyncHandler(async (req: Request
   });
 });
 
+export const generateMockSystemDesignAssessment = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { jobId } = req.params;
+  
+  if (!jobId) {
+     res.status(400).json({ success: false, message: "Job ID is required." });
+     return;
+  }
+  
+  const assessment = await interviewService.generateMockSystemDesignAssessment(userId, jobId);
+  
+  res.status(200).json({
+    success: true,
+    message: "Mock system design assessment generated successfully",
+    data: assessment,
+  });
+});
+
 // Career Insights
 
 export const getCareerInsights = asyncHandler(async (req: Request, res: Response) => {
