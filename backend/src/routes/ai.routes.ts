@@ -30,6 +30,7 @@ import {
   getInterviewCategoryStats,
   getInterviewReadinessScore,
   generateMockTechnicalAssessment,
+  generateMockBehavioralAssessment,
   getCareerInsights,
   computeCareerInsights,
   getCareerInsightsHistory,
@@ -93,6 +94,7 @@ router.get("/interview/tips", getInterviewTips);
 router.get("/interview/stats/category", getInterviewCategoryStats);
 router.get("/interview/readiness-score", getInterviewReadinessScore);
 router.post("/interview/job/:jobId/technical-assessment", generateMockTechnicalAssessment);
+router.post("/interview/job/:jobId/behavioral-assessment", generateMockBehavioralAssessment);
 
 // Career insights
 router.get("/career/insights", getCareerInsights);

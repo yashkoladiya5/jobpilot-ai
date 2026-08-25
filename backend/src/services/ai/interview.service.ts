@@ -462,6 +462,37 @@ export class InterviewService {
       generatedAt: new Date()
     };
   }
+
+  async generateMockBehavioralAssessment(userId: string, jobId: string) {
+    const job = await prisma.jobApplication.findFirst({
+      where: { id: jobId, userId }
+    });
+
+    if (!job) throw ApiError.notFound("Job not found");
+    
+    // Simulate generation of a behavioral assessment based on company culture/role
+    const roleUpper = job.role.toUpperCase();
+    
+    const assessment = {
+      title: "Behavioral & Cultural Fit Interview",
+      description: "A focused session to evaluate alignment with company culture, conflict resolution, and leadership principles.",
+      estimatedTime: "30-45 mins",
+      focusAreas: ["Conflict Resolution", "Teamwork", "Adaptability"]
+    };
+    
+    if (roleUpper.includes("LEAD") || roleUpper.includes("MANAGER")) {
+      assessment.focusAreas = ["Leadership", "Stakeholder Management", "Strategic Vision"];
+      assessment.description = "A focused session evaluating leadership approach, handling difficult team dynamics, and cross-functional collaboration.";
+    }
+
+    return {
+      jobId,
+      role: job.role,
+      company: job.companyName,
+      assessment,
+      generatedAt: new Date()
+    };
+  }
 }
 
 export const interviewService = new InterviewService();
