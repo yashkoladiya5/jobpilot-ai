@@ -128,4 +128,36 @@ export class ResumeAnalysisService {
 
     return latestAnalysis;
   }
+
+  async getResumeRedFlags(userId: string, resumeId: string) {
+    const analysis = await this.getAnalysisByResume(resumeId, userId);
+    
+    // In a real implementation we'd prompt Gemini specifically for formatting 
+    // and layout red flags. Here we derive them from the existing weaknesses array
+    // to simulate catching critical CV mistakes.
+    const redFlags = [];
+    
+    if (analysis.atsScore < 60) {
+      redFlags.push({ type: "CRITICAL", issue: "Severe ATS parse failure. Use a standard single-column layout." });
+    }
+    
+    for (const w of (analysis.weaknesses as string[] || [])) {
+      if (w.toLowerCase().includes("typo") || w.toLowerCase().includes("grammar")) {
+        redFlags.push({ type: "CRITICAL", issue: "Typos or grammatical errors detected. Needs proofreading." });
+      }
+      if (w.toLowerCase().includes("contact") || w.toLowerCase().includes("email")) {
+        redFlags.push({ type: "HIGH", issue: "Contact information may be missing or unreadable." });
+      }
+    }
+    
+    if (redFlags.length === 0) {
+      redFlags.push({ type: "LOW", issue: "No major formatting red flags detected." });
+    }
+    
+    return {
+      resumeId,
+      flagCount: redFlags.length,
+      redFlags
+    };
+  }
 }

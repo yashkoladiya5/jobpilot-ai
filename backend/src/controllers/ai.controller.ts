@@ -70,6 +70,24 @@ export const getLatestResumeAnalysis = asyncHandler(async (req: Request, res: Re
   });
 });
 
+export const getResumeRedFlags = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { resumeId } = req.params;
+  
+  if (!resumeId) {
+     res.status(400).json({ success: false, message: "Resume ID is required." });
+     return;
+  }
+  
+  const result = await resumeAnalysisService.getResumeRedFlags(userId, resumeId);
+  
+  res.status(200).json({
+    success: true,
+    message: "Resume red flags generated successfully",
+    data: result,
+  });
+});
+
 // Job Analysis
 
 export const analyzeJob = asyncHandler(async (req: Request, res: Response) => {

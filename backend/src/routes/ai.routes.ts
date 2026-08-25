@@ -5,6 +5,7 @@ import {
   getResumeAnalyses,
   getLatestResumeAnalysis,
   deleteResumeAnalysis,
+  getResumeRedFlags,
   analyzeJob,
   getJobAnalysis,
   getJobAnalyses,
@@ -45,6 +46,7 @@ router.use(authenticate);
 // Resume analysis endpoints
 // Triggers analysis and retrieves past AI evaluations
 router.post("/resume/:resumeId/analyze", analyzeResume);
+router.get("/resume/:resumeId/red-flags", getResumeRedFlags);
 router.get("/resume/analyses/latest", getLatestResumeAnalysis);
 router.get("/resume/:resumeId/analysis", getResumeAnalysis);
 router.get("/resume/analyses", getResumeAnalyses);
