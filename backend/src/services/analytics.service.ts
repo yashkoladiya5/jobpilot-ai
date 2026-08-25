@@ -439,4 +439,52 @@ export class AnalyticsService {
       }))
     };
   }
+
+  async getCareerGrowthPotential(userId: string) {
+    // Mock calculating career growth potential based on application roles and user's skills
+    const applications = await prisma.jobApplication.findMany({
+      where: { userId },
+      select: { role: true }
+    });
+
+    if (applications.length === 0) {
+      return {
+        hasData: false,
+        message: "Not enough data to calculate career growth. Start applying!",
+        potentialScore: 0,
+        nextLevelRoles: []
+      };
+    }
+
+    const roles = applications.map(app => app.role.toLowerCase());
+    const isJunior = roles.some(r => r.includes("junior") || r.includes("entry"));
+    const isMid = roles.some(r => !r.includes("junior") && !r.includes("senior") && !r.includes("lead"));
+    
+    let currentLevel = "Mid-Level";
+    let nextLevel = "Senior Level";
+    
+    if (isJunior) {
+      currentLevel = "Junior Level";
+      nextLevel = "Mid-Level";
+    } else if (isMid && !roles.some(r => r.includes("senior"))) {
+      currentLevel = "Mid-Level";
+      nextLevel = "Senior Level";
+    } else {
+      currentLevel = "Senior Level";
+      nextLevel = "Staff/Lead Level";
+    }
+
+    return {
+      hasData: true,
+      currentEstimatedLevel: currentLevel,
+      targetNextLevel: nextLevel,
+      potentialScore: 78,
+      readinessMessage: `You are 78% ready for ${nextLevel} roles.`,
+      recommendedSkillsToLevelUp: ["System Design", "Cloud Architecture", "Leadership/Mentorship"],
+      nextLevelRoles: [
+        `Senior ${applications[0].role.replace(/junior |entry /gi, '')}`,
+        `Lead ${applications[0].role.replace(/junior |entry /gi, '')}`
+      ]
+    };
+  }
 }

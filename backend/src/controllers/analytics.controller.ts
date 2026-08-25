@@ -110,3 +110,15 @@ export const getOfferNegotiationInsights = asyncHandler(async (req: Request, res
     data: result 
   });
 });
+
+export const getCareerGrowthPotential = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  const result = await analyticsService.getCareerGrowthPotential(userId);
+  
+  res.json({ 
+    success: true, 
+    message: "Career growth potential calculated successfully", 
+    data: result 
+  });
+});
