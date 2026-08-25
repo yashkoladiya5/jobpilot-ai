@@ -286,4 +286,48 @@ export class AnalyticsService {
       }))
     };
   }
+
+  async getInterviewTrends(userId: string) {
+    const interviewResults = await prisma.interviewResult.findMany({
+      where: { session: { userId } },
+      orderBy: { createdAt: "asc" },
+      include: { session: { select: { completedAt: true } } }
+    });
+
+    if (interviewResults.length === 0) {
+      return { trend: [], improvementRate: 0 };
+    }
+
+    // Group by month
+    const monthlyScores: Record<string, { sum: number, count: number }> = {};
+    
+    for (const result of interviewResults) {
+      if (!result.session.completedAt) continue;
+      
+      const monthYear = result.session.completedAt.toISOString().slice(0, 7); // YYYY-MM
+      if (!monthlyScores[monthYear]) {
+        monthlyScores[monthYear] = { sum: 0, count: 0 };
+      }
+      monthlyScores[monthYear].sum += (result.overallScore || 0);
+      monthlyScores[monthYear].count++;
+    }
+
+    const trend = Object.entries(monthlyScores)
+      .sort((a, b) => a[0].localeCompare(b[0]))
+      .map(([month, data]) => ({
+        month,
+        averageScore: Math.round(data.sum / data.count)
+      }));
+
+    let improvementRate = 0;
+    if (trend.length >= 2) {
+      const firstScore = trend[0].averageScore;
+      const latestScore = trend[trend.length - 1].averageScore;
+      if (firstScore > 0) {
+        improvementRate = Math.round(((latestScore - firstScore) / firstScore) * 100);
+      }
+    }
+
+    return { trend, improvementRate };
+  }
 }

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { authenticate } from "../middleware/auth";
-import { getPipelineAnalytics, getTimelineData, getSkillMatchAnalytics, getRejectionAnalytics, getOfferAnalytics, getInterviewAnalytics, getWeeklyActivitySummary, getResumeAnalytics } from "../controllers/analytics.controller";
+import { getPipelineAnalytics, getTimelineData, getSkillMatchAnalytics, getRejectionAnalytics, getOfferAnalytics, getInterviewAnalytics, getWeeklyActivitySummary, getResumeAnalytics, getInterviewTrends } from "../controllers/analytics.controller";
 
 /**
  * Express router for analytics and reporting endpoints.
@@ -18,5 +18,6 @@ router.get("/offers", getOfferAnalytics);
 router.get("/interviews", getInterviewAnalytics);
 router.get("/weekly-summary", getWeeklyActivitySummary);
 router.get("/resume", getResumeAnalytics);
+router.get("/interview-trends", getInterviewTrends);
 
 export default router;

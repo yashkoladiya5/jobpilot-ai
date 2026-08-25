@@ -62,3 +62,15 @@ export const getResumeAnalytics = asyncHandler(async (req: Request, res: Respons
     data: result 
   });
 });
+
+export const getInterviewTrends = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  const result = await analyticsService.getInterviewTrends(userId);
+  
+  res.json({ 
+    success: true, 
+    message: "Interview trends aggregated successfully", 
+    data: result 
+  });
+});
