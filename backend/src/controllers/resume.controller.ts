@@ -127,3 +127,15 @@ export const duplicateResume = asyncHandler(async (req: Request, res: Response) 
     data: duplicatedResume,
   });
 });
+
+export const getResumeStats = asyncHandler(async (req: Request, res: Response) => {
+  const { id: userId } = (req as AuthenticatedRequest).user;
+  
+  const stats = await resumeService.getResumeStats(userId);
+  
+  res.status(200).json({
+    success: true,
+    message: "Resume statistics fetched successfully",
+    data: stats,
+  });
+});

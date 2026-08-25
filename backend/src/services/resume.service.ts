@@ -124,4 +124,35 @@ export class ResumeService {
       },
     });
   }
+
+  async getResumeStats(userId: string) {
+    const resumes = await prisma.resume.findMany({
+      where: { userId },
+      select: {
+        id: true,
+        fileSize: true,
+        createdAt: true,
+      }
+    });
+
+    const totalCount = resumes.length;
+    let totalStorageBytes = 0;
+    
+    resumes.forEach(r => {
+      totalStorageBytes += r.fileSize;
+    });
+
+    // Calculate how many resumes were uploaded in the last 30 days
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const recentUploads = resumes.filter(r => r.createdAt >= thirtyDaysAgo).length;
+
+    return {
+      totalCount,
+      totalStorageBytes,
+      recentUploads,
+      storageUsedMb: Number((totalStorageBytes / (1024 * 1024)).toFixed(2)),
+      storageLimitMb: 50, // Mock limit
+    };
+  }
 }
