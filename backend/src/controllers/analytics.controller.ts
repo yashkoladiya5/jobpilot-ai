@@ -50,3 +50,15 @@ export const getWeeklyActivitySummary = asyncHandler(async (req: Request, res: R
   const result = await analyticsService.getWeeklyActivitySummary(userId);
   res.json({ success: true, message: "Weekly activity summary fetched successfully", data: result });
 });
+
+export const getResumeAnalytics = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  const result = await analyticsService.getResumeAnalytics(userId);
+  
+  res.json({ 
+    success: true, 
+    message: "Resume analytics aggregated successfully", 
+    data: result 
+  });
+});

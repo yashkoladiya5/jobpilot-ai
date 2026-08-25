@@ -248,4 +248,42 @@ export class AnalyticsService {
       activeCompanies: [...new Set(applicationsThisWeek.map(app => app.companyName))],
     };
   }
+
+  async getResumeAnalytics(userId: string) {
+    const resumes = await prisma.resume.findMany({
+      where: { userId },
+      include: {
+        analyses: true,
+      },
+    });
+
+    const totalResumes = resumes.length;
+    let totalScore = 0;
+    let analyzedResumes = 0;
+
+    resumes.forEach(resume => {
+      if (resume.analyses && resume.analyses.length > 0) {
+        // Find the latest analysis score
+        const latestAnalysis = resume.analyses.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())[0];
+        if (latestAnalysis.overallScore) {
+          totalScore += latestAnalysis.overallScore;
+          analyzedResumes++;
+        }
+      }
+    });
+
+    const averageResumeScore = analyzedResumes > 0 ? Math.round(totalScore / analyzedResumes) : 0;
+
+    return {
+      totalResumes,
+      analyzedResumes,
+      averageResumeScore,
+      needsImprovement: averageResumeScore < 70 && analyzedResumes > 0,
+      recentlyUpdated: resumes.slice(0, 3).map(r => ({
+        id: r.id,
+        name: r.fileName,
+        updatedAt: r.updatedAt
+      }))
+    };
+  }
 }
