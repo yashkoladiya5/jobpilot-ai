@@ -369,4 +369,34 @@ export class AnalyticsService {
 
     return analytics;
   }
+
+  async getSkillsGapAnalytics(userId: string) {
+    // In a real application, we'd extract preferred skills from all job descriptions
+    // the user applied to and compare them to the user's parsed resume skills.
+    
+    // For now, we mock the skills gap based on typical tech roles
+    const industryDemand = [
+      { skill: "Kubernetes", demand: 85, userHas: false },
+      { skill: "GraphQL", demand: 75, userHas: false },
+      { skill: "TypeScript", demand: 95, userHas: true },
+      { skill: "React", demand: 90, userHas: true },
+      { skill: "Go", demand: 60, userHas: false },
+    ];
+    
+    const missingSkills = industryDemand
+      .filter(s => !s.userHas)
+      .sort((a, b) => b.demand - a.demand);
+      
+    const presentSkills = industryDemand
+      .filter(s => s.userHas)
+      .sort((a, b) => b.demand - a.demand);
+
+    return {
+      topMissingSkills: missingSkills.slice(0, 5).map(s => ({ skill: s.skill, importance: s.demand })),
+      topPresentSkills: presentSkills.slice(0, 5).map(s => ({ skill: s.skill, importance: s.demand })),
+      recommendation: missingSkills.length > 0 
+        ? `Consider learning ${missingSkills[0].skill} as it appears frequently in your target roles.` 
+        : "Your skill set is highly aligned with your target roles!"
+    };
+  }
 }

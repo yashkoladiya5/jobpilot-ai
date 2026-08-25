@@ -86,3 +86,15 @@ export const getJobSourceAnalytics = asyncHandler(async (req: Request, res: Resp
     data: result 
   });
 });
+
+export const getSkillsGapAnalytics = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  const result = await analyticsService.getSkillsGapAnalytics(userId);
+  
+  res.json({ 
+    success: true, 
+    message: "Skills gap analytics generated successfully", 
+    data: result 
+  });
+});
