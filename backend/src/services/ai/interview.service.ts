@@ -280,6 +280,44 @@ export class InterviewService {
 
     return { deletedId: sessionId };
   }
+
+  async getInterviewTips(userId: string) {
+    const recentSessions = await prisma.interviewSession.findMany({
+      where: { userId, status: "COMPLETED" },
+      orderBy: { completedAt: "desc" },
+      take: 3,
+    });
+
+    if (recentSessions.length === 0) {
+      return {
+        generalTips: [
+          "Use the STAR method (Situation, Task, Action, Result) for behavioral questions.",
+          "Research the company's culture and recent news before the interview.",
+          "Prepare 2-3 thoughtful questions to ask the interviewer at the end."
+        ],
+        personalizedAdvice: "Complete a mock interview session to get personalized feedback and tips based on your performance."
+      };
+    }
+
+    const avgScore = recentSessions.reduce((acc, curr) => acc + (curr.score || 0), 0) / recentSessions.length;
+    
+    let personalizedAdvice = "You're doing great! Keep practicing to maintain your confidence.";
+    if (avgScore < 50) {
+      personalizedAdvice = "Focus on structuring your answers more clearly. Try writing down key points before speaking.";
+    } else if (avgScore < 75) {
+      personalizedAdvice = "Your technical knowledge is solid, but make sure to emphasize the impact of your actions in behavioral questions.";
+    }
+
+    return {
+      generalTips: [
+        "Use the STAR method (Situation, Task, Action, Result) for behavioral questions.",
+        "Research the company's culture and recent news before the interview.",
+        "Prepare 2-3 thoughtful questions to ask the interviewer at the end."
+      ],
+      personalizedAdvice,
+      averageRecentScore: Math.round(avgScore)
+    };
+  }
 }
 
 export const interviewService = new InterviewService();

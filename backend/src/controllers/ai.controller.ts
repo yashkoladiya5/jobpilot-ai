@@ -243,6 +243,19 @@ export const deleteInterviewSession = asyncHandler(async (req: Request, res: Res
   });
 });
 
+export const getInterviewTips = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  console.log(`[AI Controller] Fetching interview tips for user ${userId}`);
+  const tips = await interviewService.getInterviewTips(userId);
+  
+  res.status(200).json({
+    success: true,
+    message: "Interview tips generated successfully",
+    data: tips,
+  });
+});
+
 // Career Insights
 
 export const getCareerInsights = asyncHandler(async (req: Request, res: Response) => {
