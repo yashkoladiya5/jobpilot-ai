@@ -342,4 +342,46 @@ export class DashboardService {
       topCompanyThisWeek: thisWeekApps.length > 0 ? thisWeekApps[0].companyName : "None yet"
     };
   }
+
+  async getTopSkillsTrending(userId: string) {
+    const recentJobs = await prisma.jobApplication.findMany({
+      where: { userId },
+      orderBy: { createdAt: "desc" },
+      take: 15,
+      select: { role: true, companyName: true }
+    });
+
+    if (recentJobs.length === 0) {
+      return {
+        message: "Apply to jobs to see trending skills in your target roles.",
+        trending: []
+      };
+    }
+
+    const primaryRoleUpper = recentJobs[0].role.toUpperCase();
+    let mockSkills = [
+      { skill: "Communication", trend: "+5%", priority: "High" },
+      { skill: "Project Management", trend: "+2%", priority: "Medium" }
+    ];
+
+    if (primaryRoleUpper.includes("ENGINEER") || primaryRoleUpper.includes("DEVELOPER")) {
+      mockSkills = [
+        { skill: "TypeScript", trend: "+12%", priority: "High" },
+        { skill: "React", trend: "+8%", priority: "High" },
+        { skill: "GraphQL", trend: "+4%", priority: "Medium" },
+        { skill: "Docker", trend: "+6%", priority: "High" }
+      ];
+    } else if (primaryRoleUpper.includes("DATA")) {
+      mockSkills = [
+        { skill: "Python", trend: "+15%", priority: "High" },
+        { skill: "SQL", trend: "+10%", priority: "High" },
+        { skill: "Airflow", trend: "+7%", priority: "Medium" }
+      ];
+    }
+
+    return {
+      basedOnRole: recentJobs[0].role,
+      trending: mockSkills
+    };
+  }
 }

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { authenticate } from "../middleware/auth";
-import { getStats, getRecentActivityLogs, getActionItems, getDashboardSummary, getDashboardAlerts, getUpcomingEvents, getDailyGoals, getRecommendedJobs, getWeeklySnapshot } from "../controllers/dashboard.controller";
+import { getStats, getRecentActivityLogs, getActionItems, getDashboardSummary, getDashboardAlerts, getUpcomingEvents, getDailyGoals, getRecommendedJobs, getWeeklySnapshot, getTopSkillsTrending } from "../controllers/dashboard.controller";
 
 /**
  * Express router for dashboard endpoints.
@@ -17,5 +17,6 @@ router.get("/upcoming-events", authenticate, getUpcomingEvents);
 router.get("/daily-goals", authenticate, getDailyGoals);
 router.get("/recommended-jobs", authenticate, getRecommendedJobs);
 router.get("/weekly-snapshot", authenticate, getWeeklySnapshot);
+router.get("/trending-skills", authenticate, getTopSkillsTrending);
 
 export default router;
