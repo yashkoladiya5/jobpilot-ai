@@ -122,3 +122,15 @@ export const getCareerGrowthPotential = asyncHandler(async (req: Request, res: R
     data: result 
   });
 });
+
+export const getPeerComparisonAnalytics = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  const result = await analyticsService.getPeerComparisonAnalytics(userId);
+  
+  res.json({ 
+    success: true, 
+    message: "Peer comparison analytics generated successfully", 
+    data: result 
+  });
+});

@@ -487,4 +487,59 @@ export class AnalyticsService {
       ]
     };
   }
+
+  async getPeerComparisonAnalytics(userId: string) {
+    // Mock comparing user against anonymized peer data for their role
+    const applications = await prisma.jobApplication.findMany({
+      where: { userId },
+      select: { role: true, status: true, salaryRange: true }
+    });
+
+    if (applications.length === 0) {
+      return {
+        hasData: false,
+        message: "Apply to more jobs to see how you stack up against peers.",
+        metrics: null
+      };
+    }
+
+    const primaryRole = applications[0].role;
+    
+    // Calculate user's interview rate
+    const totalApps = applications.length;
+    const interviewCount = applications.filter(a => a.status === "INTERVIEW" || a.status === "OFFER").length;
+    const userInterviewRate = totalApps > 0 ? Math.round((interviewCount / totalApps) * 100) : 0;
+    
+    // Mock peer averages
+    const peerInterviewRate = 18; // 18%
+    const peerOfferRate = 4; // 4%
+    const peerAvgSalary = "$120,000";
+
+    const userOfferCount = applications.filter(a => a.status === "OFFER").length;
+    const userOfferRate = totalApps > 0 ? Math.round((userOfferCount / totalApps) * 100) : 0;
+
+    return {
+      hasData: true,
+      roleAnalyzed: primaryRole,
+      metrics: {
+        interviewRate: {
+          user: userInterviewRate,
+          peerAverage: peerInterviewRate,
+          percentile: userInterviewRate > peerInterviewRate ? "Top 25%" : "Bottom 50%"
+        },
+        offerRate: {
+          user: userOfferRate,
+          peerAverage: peerOfferRate,
+          percentile: userOfferRate > peerOfferRate ? "Top 10%" : "Bottom 50%"
+        },
+        marketSalary: {
+          peerAverage: peerAvgSalary,
+          insight: "Your offers are generally aligned with the market average."
+        }
+      },
+      summary: userInterviewRate > peerInterviewRate 
+        ? "Your resume is performing better than average in securing interviews!"
+        : "Your interview rate is below average. Consider optimizing your resume keywords."
+    };
+  }
 }
