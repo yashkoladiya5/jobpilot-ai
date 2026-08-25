@@ -110,6 +110,33 @@ export class MatchingService {
       analyzedAt: analysis.analyzedAt,
     };
   }
+
+  async getRecentMatches(userId: string, limit: number = 5) {
+    const recentMatches = await prisma.jobAnalysis.findMany({
+      where: { 
+        userId, 
+        resumeMatchScore: { not: null },
+        status: "COMPLETED"
+      },
+      orderBy: { analyzedAt: "desc" },
+      take: limit,
+      include: {
+        job: { select: { companyName: true, role: true, location: true } },
+        resume: { select: { fileName: true } }
+      }
+    });
+
+    return recentMatches.map(match => ({
+      id: match.id,
+      score: match.resumeMatchScore,
+      jobRole: match.job?.role || "Unknown",
+      company: match.job?.companyName || "Unknown",
+      location: match.job?.location || "Unknown",
+      resumeUsed: match.resume?.fileName || "Unknown",
+      analyzedAt: match.analyzedAt,
+      priorityImprovementsCount: (match.recommendedChanges as any[])?.length || 0
+    }));
+  }
 }
 
 export const matchingService = new MatchingService();
