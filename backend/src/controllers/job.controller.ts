@@ -71,6 +71,20 @@ export const updateJobNote = asyncHandler(async (req: Request, res: Response) =>
   });
 });
 
+export const archiveJob = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { id } = req.params;
+  
+  console.log(`[Job Controller] Archiving job ${id} for user ${userId}`);
+  const job = await jobService.archiveJob(userId, id);
+
+  res.status(200).json({
+    success: true,
+    message: "Job application archived successfully",
+    data: job,
+  });
+});
+
 export const bulkUpdateStatus = asyncHandler(async (req: Request, res: Response) => {
   const userId = (req as AuthenticatedRequest).user.id;
   const { jobIds, status } = req.body;

@@ -138,6 +138,21 @@ export class JobService {
     });
   }
 
+  async archiveJob(userId: string, id: string) {
+    const job = await this.getJobById(userId, id);
+    
+    // We mock archiving by prefixing the note and setting a terminal status
+    const archivedNote = `[ARCHIVED on ${new Date().toISOString()}]\n${job.notes || ''}`;
+
+    return prisma.jobApplication.update({
+      where: { id },
+      data: { 
+        status: "WITHDRAWN", // Using a valid status from the schema as archive state
+        notes: archivedNote 
+      },
+    });
+  }
+
   async getJobsAnalytics(userId: string) {
     const jobs = await prisma.jobApplication.findMany({
       where: { userId },
