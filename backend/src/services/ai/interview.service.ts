@@ -318,6 +318,49 @@ export class InterviewService {
       averageRecentScore: Math.round(avgScore)
     };
   }
+
+  async getInterviewCategoryStats(userId: string) {
+    const results = await prisma.interviewResult.findMany({
+      where: { session: { userId } },
+      orderBy: { createdAt: "desc" },
+      take: 5
+    });
+
+    if (results.length === 0) {
+      return {
+        hr: 0, technical: 0, behavioral: 0, situational: 0, follow_up: 0,
+        message: "No completed interviews found to calculate stats."
+      };
+    }
+
+    const aggregated: Record<string, { sum: number, count: number }> = {
+      hr: { sum: 0, count: 0 },
+      technical: { sum: 0, count: 0 },
+      behavioral: { sum: 0, count: 0 },
+      situational: { sum: 0, count: 0 },
+      follow_up: { sum: 0, count: 0 },
+    };
+
+    results.forEach(result => {
+      const scores = result.categoryScores as any;
+      if (scores) {
+        Object.keys(aggregated).forEach(key => {
+          if (typeof scores[key] === 'number') {
+            aggregated[key].sum += scores[key];
+            aggregated[key].count += 1;
+          }
+        });
+      }
+    });
+
+    return {
+      hr: aggregated.hr.count > 0 ? Math.round(aggregated.hr.sum / aggregated.hr.count) : 0,
+      technical: aggregated.technical.count > 0 ? Math.round(aggregated.technical.sum / aggregated.technical.count) : 0,
+      behavioral: aggregated.behavioral.count > 0 ? Math.round(aggregated.behavioral.sum / aggregated.behavioral.count) : 0,
+      situational: aggregated.situational.count > 0 ? Math.round(aggregated.situational.sum / aggregated.situational.count) : 0,
+      follow_up: aggregated.follow_up.count > 0 ? Math.round(aggregated.follow_up.sum / aggregated.follow_up.count) : 0,
+    };
+  }
 }
 
 export const interviewService = new InterviewService();

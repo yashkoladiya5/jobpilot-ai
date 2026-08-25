@@ -256,6 +256,18 @@ export const getInterviewTips = asyncHandler(async (req: Request, res: Response)
   });
 });
 
+export const getInterviewCategoryStats = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  const stats = await interviewService.getInterviewCategoryStats(userId);
+  
+  res.status(200).json({
+    success: true,
+    message: "Interview category stats generated successfully",
+    data: stats,
+  });
+});
+
 // Career Insights
 
 export const getCareerInsights = asyncHandler(async (req: Request, res: Response) => {
