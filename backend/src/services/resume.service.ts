@@ -155,4 +155,34 @@ export class ResumeService {
       storageLimitMb: 50, // Mock limit
     };
   }
+
+  async getRecentResumeActivity(userId: string) {
+    const resumes = await prisma.resume.findMany({
+      where: { userId },
+      select: {
+        id: true,
+        fileName: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+      orderBy: { updatedAt: "desc" },
+      take: 10
+    });
+
+    return resumes.map(r => {
+      let activityType = "Updated";
+      if (r.createdAt.getTime() === r.updatedAt.getTime()) {
+        activityType = "Uploaded";
+      } else if (r.fileName.startsWith("Copy of")) {
+        activityType = "Duplicated";
+      }
+      
+      return {
+        id: r.id,
+        fileName: r.fileName,
+        activityType,
+        timestamp: r.updatedAt
+      };
+    });
+  }
 }

@@ -9,6 +9,7 @@ import {
   getPrimaryResume,
   duplicateResume,
   getResumeStats,
+  getRecentResumeActivity,
 } from "../controllers/resume.controller";
 import { authenticate } from "../middleware/auth";
 import { upload } from "../middleware/upload";
@@ -32,6 +33,7 @@ router.post("/upload", authenticate, upload.single("resume"), uploadResume);
 router.get("/", authenticate, getResumes);
 router.get("/primary", authenticate, getPrimaryResume);
 router.get("/stats", authenticate, getResumeStats);
+router.get("/activity/recent", authenticate, getRecentResumeActivity);
 router.get("/:id", authenticate, getResume);
 
 // -----------------------------------------------------------------------

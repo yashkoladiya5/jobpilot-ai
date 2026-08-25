@@ -139,3 +139,15 @@ export const getResumeStats = asyncHandler(async (req: Request, res: Response) =
     data: stats,
   });
 });
+
+export const getRecentResumeActivity = asyncHandler(async (req: Request, res: Response) => {
+  const { id: userId } = (req as AuthenticatedRequest).user;
+  
+  const activity = await resumeService.getRecentResumeActivity(userId);
+  
+  res.status(200).json({
+    success: true,
+    message: "Recent resume activity fetched successfully",
+    data: activity,
+  });
+});
