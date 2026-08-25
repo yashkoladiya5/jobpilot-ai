@@ -198,3 +198,15 @@ export const registerDevice = asyncHandler(async (req: Request, res: Response) =
     data: result,
   });
 });
+
+export const initiateMfaSetup = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  const mfaData = await authService.initiateMfaSetup(userId);
+  
+  res.status(200).json({
+    success: true,
+    message: "MFA setup initiated successfully",
+    data: mfaData,
+  });
+});

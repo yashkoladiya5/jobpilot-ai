@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { register, login, getMe, deleteAccount, updatePassword, updateEmail, updateName, getActiveSessions, getLoginHistory, registerDevice } from "../controllers/auth.controller";
+import { register, login, getMe, deleteAccount, updatePassword, updateEmail, updateName, getActiveSessions, getLoginHistory, registerDevice, initiateMfaSetup } from "../controllers/auth.controller";
 import { authenticate } from "../middleware/auth";
 import { validate } from "../middleware/validate";
 import { registerSchema, loginSchema } from "../validators/auth.validator";
@@ -18,5 +18,6 @@ router.patch("/name", authenticate, updateName);
 router.get("/sessions", authenticate, getActiveSessions);
 router.get("/login-history", authenticate, getLoginHistory);
 router.post("/device", authenticate, registerDevice);
+router.post("/mfa/initiate", authenticate, initiateMfaSetup);
 
 export default router;

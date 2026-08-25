@@ -249,4 +249,28 @@ export class AuthService {
       message: isNewDevice ? "New device registered successfully. Security alert triggered if enabled." : "Device recognized."
     };
   }
+
+  async initiateMfaSetup(userId: string) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      throw ApiError.notFound("User not found");
+    }
+
+    // Mock generating a TOTP secret and provisioning URI
+    const mockSecret = "JBSWY3DPEHPK3PXP";
+    const appName = "JobPilotAI";
+    const mockUri = `otpauth://totp/${appName}:${user.email}?secret=${mockSecret}&issuer=${appName}`;
+    
+    // In a real implementation, we would save this secret to the DB temporarily
+    // until the user verifies it with a code.
+    
+    return {
+      userId: user.id,
+      email: user.email,
+      mfaSecret: mockSecret,
+      provisioningUri: mockUri,
+      status: "PENDING_VERIFICATION",
+      message: "Scan the QR code with your authenticator app and verify to complete setup."
+    };
+  }
 }
