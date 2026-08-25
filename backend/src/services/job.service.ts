@@ -259,4 +259,49 @@ export class JobService {
       recentNotes: jobsWithNotes.slice(0, 5)
     };
   }
+
+  async getJobActionItems(userId: string) {
+    const jobs = await prisma.jobApplication.findMany({
+      where: { userId, status: { notIn: ["REJECTED", "WITHDRAWN", "SAVED"] } },
+      orderBy: { updatedAt: "desc" },
+    });
+
+    const actionItems = [];
+    const now = new Date().getTime();
+
+    for (const job of jobs) {
+      const daysSinceUpdate = Math.floor((now - job.updatedAt.getTime()) / (1000 * 60 * 60 * 24));
+      
+      if (job.status === "APPLIED" && daysSinceUpdate >= 7) {
+        actionItems.push({
+          jobId: job.id,
+          company: job.companyName,
+          role: job.role,
+          type: "FOLLOW_UP",
+          priority: daysSinceUpdate >= 14 ? "HIGH" : "MEDIUM",
+          message: `It's been ${daysSinceUpdate} days since you applied. Consider sending a follow-up email.`
+        });
+      } else if (job.status === "INTERVIEW") {
+        actionItems.push({
+          jobId: job.id,
+          company: job.companyName,
+          role: job.role,
+          type: "PREPARE",
+          priority: "HIGH",
+          message: "You have an active interview phase. Have you practiced your mock interviews recently?"
+        });
+      } else if (job.status === "OFFER" && daysSinceUpdate >= 3) {
+        actionItems.push({
+          jobId: job.id,
+          company: job.companyName,
+          role: job.role,
+          type: "DECISION",
+          priority: "HIGH",
+          message: "You received an offer recently. Don't forget to negotiate or respond by the deadline."
+        });
+      }
+    }
+
+    return actionItems.slice(0, 5); // Return top 5 most relevant action items
+  }
 }

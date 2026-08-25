@@ -203,3 +203,15 @@ export const getJobNotesSummary = asyncHandler(async (req: Request, res: Respons
     data: summary,
   });
 });
+
+export const getJobActionItems = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  const actionItems = await jobService.getJobActionItems(userId);
+
+  res.status(200).json({
+    success: true,
+    message: "Job action items generated successfully",
+    data: actionItems,
+  });
+});
