@@ -225,4 +225,28 @@ export class AuthService {
 
     return history;
   }
+
+  async registerDeviceFingerprint(userId: string, fingerprint: string, deviceName: string) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      throw ApiError.notFound("User not found");
+    }
+
+    if (!fingerprint || !deviceName) {
+      throw ApiError.badRequest("Fingerprint and deviceName are required.");
+    }
+
+    // Mocking device registration. In a real app we'd save this to a Device table.
+    // If the device is new, we might also trigger a "New Login Detected" email.
+    const isNewDevice = true; // Simulating that it's always a new device for the mock.
+    
+    return {
+      userId,
+      deviceId: `dev_${fingerprint.substring(0, 8)}`,
+      deviceName,
+      registeredAt: new Date(),
+      isNewDevice,
+      message: isNewDevice ? "New device registered successfully. Security alert triggered if enabled." : "Device recognized."
+    };
+  }
 }

@@ -185,3 +185,16 @@ export const getLoginHistory = asyncHandler(async (req: Request, res: Response) 
     data: history,
   });
 });
+
+export const registerDevice = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { fingerprint, deviceName } = req.body;
+  
+  const result = await authService.registerDeviceFingerprint(userId, fingerprint, deviceName);
+  
+  res.status(200).json({
+    success: true,
+    message: "Device fingerprint registered successfully",
+    data: result,
+  });
+});
