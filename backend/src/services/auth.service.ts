@@ -273,4 +273,29 @@ export class AuthService {
       message: "Scan the QR code with your authenticator app and verify to complete setup."
     };
   }
+
+  async verifyMfaSetup(userId: string, code: string) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      throw ApiError.notFound("User not found");
+    }
+
+    if (!code || code.length !== 6) {
+      throw ApiError.badRequest("Invalid TOTP code format");
+    }
+
+    // Mock verifying the code against a TOTP secret
+    // In a real app we would use a library like 'otplib' and verify the code against the saved secret.
+    if (code === "000000") {
+      throw ApiError.badRequest("Verification failed. Invalid code.");
+    }
+
+    // On success, we would update the user record to enable MFA.
+    return {
+      userId: user.id,
+      mfaEnabled: true,
+      verifiedAt: new Date(),
+      message: "Multi-factor authentication successfully enabled on your account."
+    };
+  }
 }

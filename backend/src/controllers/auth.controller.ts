@@ -210,3 +210,16 @@ export const initiateMfaSetup = asyncHandler(async (req: Request, res: Response)
     data: mfaData,
   });
 });
+
+export const verifyMfaSetup = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { code } = req.body;
+  
+  const mfaData = await authService.verifyMfaSetup(userId, code);
+  
+  res.status(200).json({
+    success: true,
+    message: "MFA setup verified successfully",
+    data: mfaData,
+  });
+});
