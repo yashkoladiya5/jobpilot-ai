@@ -330,4 +330,43 @@ export class AnalyticsService {
 
     return { trend, improvementRate };
   }
+
+  async getJobSourceAnalytics(userId: string) {
+    const applications = await prisma.jobApplication.findMany({
+      where: { userId, jobUrl: { not: null } },
+      select: { jobUrl: true, status: true },
+    });
+
+    const sourceStats: Record<string, { total: number; interviews: number; offers: number }> = {};
+
+    for (const app of applications) {
+      if (!app.jobUrl) continue;
+      
+      let source = "Other";
+      const url = app.jobUrl.toLowerCase();
+      
+      if (url.includes("linkedin.com")) source = "LinkedIn";
+      else if (url.includes("indeed.com")) source = "Indeed";
+      else if (url.includes("glassdoor.com")) source = "Glassdoor";
+      else if (url.includes("greenhouse.io")) source = "Greenhouse";
+      else if (url.includes("lever.co")) source = "Lever";
+
+      if (!sourceStats[source]) {
+        sourceStats[source] = { total: 0, interviews: 0, offers: 0 };
+      }
+
+      sourceStats[source].total++;
+      if (app.status === "INTERVIEW") sourceStats[source].interviews++;
+      if (app.status === "OFFER") sourceStats[source].offers++;
+    }
+
+    const analytics = Object.entries(sourceStats).map(([source, stats]) => ({
+      source,
+      totalApplications: stats.total,
+      interviewRate: stats.total > 0 ? Math.round((stats.interviews / stats.total) * 100) : 0,
+      offerRate: stats.total > 0 ? Math.round((stats.offers / stats.total) * 100) : 0,
+    })).sort((a, b) => b.totalApplications - a.totalApplications);
+
+    return analytics;
+  }
 }

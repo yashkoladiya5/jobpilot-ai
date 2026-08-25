@@ -74,3 +74,15 @@ export const getInterviewTrends = asyncHandler(async (req: Request, res: Respons
     data: result 
   });
 });
+
+export const getJobSourceAnalytics = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  const result = await analyticsService.getJobSourceAnalytics(userId);
+  
+  res.json({ 
+    success: true, 
+    message: "Job source analytics aggregated successfully", 
+    data: result 
+  });
+});
