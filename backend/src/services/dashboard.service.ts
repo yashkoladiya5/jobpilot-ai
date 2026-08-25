@@ -179,4 +179,41 @@ export class DashboardService {
 
     return alerts;
   }
+
+  async getUpcomingEvents(userId: string) {
+    const now = new Date();
+    const nextWeek = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+    
+    // In a real application, we'd query an Interview or Event table.
+    // For now, we find jobs in INTERVIEW status that were recently updated
+    // and mock upcoming event dates for them.
+    const upcomingInterviews = await prisma.jobApplication.findMany({
+      where: {
+        userId,
+        status: 'INTERVIEW',
+      },
+      select: { id: true, companyName: true, role: true, updatedAt: true },
+      orderBy: { updatedAt: "desc" },
+      take: 3
+    });
+
+    const events = upcomingInterviews.map((interview, index) => {
+      // Mock event dates based on the index to stagger them in the next few days
+      const eventDate = new Date(now.getTime() + (index + 1) * 2 * 24 * 60 * 60 * 1000);
+      
+      return {
+        id: `evt_${interview.id}`,
+        jobId: interview.id,
+        title: `Interview with ${interview.companyName}`,
+        description: `${interview.role} - Technical Round`,
+        date: eventDate,
+        type: 'INTERVIEW'
+      };
+    });
+
+    return {
+      totalEvents: events.length,
+      events
+    };
+  }
 }

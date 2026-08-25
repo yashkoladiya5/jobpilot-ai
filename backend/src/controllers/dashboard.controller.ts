@@ -103,3 +103,20 @@ export const getDashboardAlerts = asyncHandler(async (req: Request, res: Respons
     data: alerts,
   });
 });
+
+export const getUpcomingEvents = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  if (!userId) {
+     res.status(401).json({ success: false, message: "Unauthorized access: user ID is missing" });
+     return;
+  }
+
+  const events = await dashboardService.getUpcomingEvents(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Upcoming events fetched successfully", 
+    data: events,
+  });
+});
