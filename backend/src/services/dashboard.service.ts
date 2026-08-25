@@ -216,4 +216,45 @@ export class DashboardService {
       events
     };
   }
+
+  async getDailyGoals(userId: string) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const applicationsToday = await prisma.jobApplication.count({
+      where: {
+        userId,
+        appliedDate: { gte: today },
+      },
+    });
+
+    const mockInterviewsCompletedToday = 0; // In reality, calculate from interview results
+
+    const goals = [
+      {
+        id: "goal_1",
+        title: "Apply to 3 jobs",
+        current: applicationsToday,
+        target: 3,
+        isCompleted: applicationsToday >= 3,
+        type: "APPLICATION"
+      },
+      {
+        id: "goal_2",
+        title: "Complete 1 mock interview",
+        current: mockInterviewsCompletedToday,
+        target: 1,
+        isCompleted: mockInterviewsCompletedToday >= 1,
+        type: "PRACTICE"
+      }
+    ];
+
+    const progress = Math.min(100, Math.round(((applicationsToday / 3) * 50) + ((mockInterviewsCompletedToday / 1) * 50)));
+
+    return {
+      date: new Date().toISOString(),
+      overallProgress: progress,
+      goals
+    };
+  }
 }

@@ -120,3 +120,20 @@ export const getUpcomingEvents = asyncHandler(async (req: Request, res: Response
     data: events,
   });
 });
+
+export const getDailyGoals = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  if (!userId) {
+     res.status(401).json({ success: false, message: "Unauthorized access: user ID is missing" });
+     return;
+  }
+
+  const goals = await dashboardService.getDailyGoals(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Daily goals fetched successfully", 
+    data: goals,
+  });
+});

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { authenticate } from "../middleware/auth";
-import { getStats, getRecentActivityLogs, getActionItems, getDashboardSummary, getDashboardAlerts, getUpcomingEvents } from "../controllers/dashboard.controller";
+import { getStats, getRecentActivityLogs, getActionItems, getDashboardSummary, getDashboardAlerts, getUpcomingEvents, getDailyGoals } from "../controllers/dashboard.controller";
 
 /**
  * Express router for dashboard endpoints.
@@ -14,5 +14,6 @@ router.get("/action-items", authenticate, getActionItems);
 router.get("/summary", authenticate, getDashboardSummary);
 router.get("/alerts", authenticate, getDashboardAlerts);
 router.get("/upcoming-events", authenticate, getUpcomingEvents);
+router.get("/daily-goals", authenticate, getDailyGoals);
 
 export default router;
