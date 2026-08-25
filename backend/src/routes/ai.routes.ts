@@ -27,6 +27,7 @@ import {
   archiveInterviewSession,
   getInterviewTips,
   getInterviewCategoryStats,
+  getInterviewReadinessScore,
   getCareerInsights,
   computeCareerInsights,
   getCareerInsightsHistory,
@@ -87,6 +88,7 @@ router.delete("/interview/session/:sessionId", deleteInterviewSession);
 router.patch("/interview/session/:sessionId/archive", archiveInterviewSession);
 router.get("/interview/tips", getInterviewTips);
 router.get("/interview/stats/category", getInterviewCategoryStats);
+router.get("/interview/readiness-score", getInterviewReadinessScore);
 
 // Career insights
 router.get("/career/insights", getCareerInsights);

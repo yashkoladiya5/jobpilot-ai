@@ -336,6 +336,18 @@ export const getInterviewCategoryStats = asyncHandler(async (req: Request, res: 
   });
 });
 
+export const getInterviewReadinessScore = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  const score = await interviewService.getInterviewReadinessScore(userId);
+  
+  res.status(200).json({
+    success: true,
+    message: "Interview readiness score generated successfully",
+    data: score,
+  });
+});
+
 // Career Insights
 
 export const getCareerInsights = asyncHandler(async (req: Request, res: Response) => {

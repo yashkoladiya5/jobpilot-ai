@@ -385,6 +385,41 @@ export class InterviewService {
       follow_up: aggregated.follow_up.count > 0 ? Math.round(aggregated.follow_up.sum / aggregated.follow_up.count) : 0,
     };
   }
+
+  async getInterviewReadinessScore(userId: string) {
+    const recentResults = await prisma.interviewResult.findMany({
+      where: { session: { userId } },
+      orderBy: { createdAt: "desc" },
+      take: 3
+    });
+    
+    if (recentResults.length === 0) {
+      return { readinessScore: 0, level: "Needs Practice", message: "Take your first mock interview to get a readiness score." };
+    }
+    
+    const averageScore = Math.round(recentResults.reduce((acc, curr) => acc + (curr.overallScore || 0), 0) / recentResults.length);
+    
+    let level = "Needs Practice";
+    let message = "Keep practicing mock interviews to improve your confidence.";
+    
+    if (averageScore >= 85) {
+      level = "Highly Ready";
+      message = "You are acing your mock interviews! You are ready for the real thing.";
+    } else if (averageScore >= 70) {
+      level = "Ready";
+      message = "You are well prepared, but reviewing technical details could push you to the top.";
+    } else if (averageScore >= 50) {
+      level = "Almost There";
+      message = "You have a solid foundation. Focus on structuring your behavioral answers better.";
+    }
+    
+    return {
+      readinessScore: averageScore,
+      level,
+      message,
+      recentTrend: recentResults.map(r => r.overallScore).reverse()
+    };
+  }
 }
 
 export const interviewService = new InterviewService();
