@@ -173,3 +173,15 @@ export const getActiveSessions = asyncHandler(async (req: Request, res: Response
     data: sessions,
   });
 });
+
+export const getLoginHistory = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  const history = await authService.getLoginHistory(userId);
+  
+  res.status(200).json({
+    success: true,
+    message: "Login history fetched successfully",
+    data: history,
+  });
+});

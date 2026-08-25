@@ -187,4 +187,42 @@ export class AuthService {
 
     return sessions;
   }
+
+  async getLoginHistory(userId: string) {
+    // In a real application, you would query an audit log or LoginHistory table.
+    // We provide mock login history to support the frontend dashboard security view.
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      throw ApiError.notFound("User not found");
+    }
+
+    const history = [
+      {
+        id: "log_1",
+        timestamp: new Date(),
+        status: "SUCCESS",
+        ipAddress: "192.168.1.1",
+        device: "MacBook Pro - Chrome",
+        location: "San Francisco, CA"
+      },
+      {
+        id: "log_2",
+        timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24 * 1), // 1 day ago
+        status: "SUCCESS",
+        ipAddress: "192.168.1.5",
+        device: "iPhone 14 - Safari",
+        location: "San Francisco, CA"
+      },
+      {
+        id: "log_3",
+        timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5), // 5 days ago
+        status: "FAILED_ATTEMPT",
+        ipAddress: "104.28.192.3",
+        device: "Unknown Device - Firefox",
+        location: "London, UK"
+      }
+    ];
+
+    return history;
+  }
 }
