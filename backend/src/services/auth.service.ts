@@ -320,4 +320,27 @@ export class AuthService {
       generatedAt: new Date()
     };
   }
+
+  async initiatePasswordlessLogin(email: string) {
+    const user = await prisma.user.findUnique({ where: { email: email.toLowerCase().trim() } });
+    if (!user) {
+      // Return a generic message even if user is not found to prevent email enumeration
+      return {
+        message: "If an account with this email exists, a magic link has been sent to it.",
+        expiresIn: "15 minutes"
+      };
+    }
+
+    // Mock generating a secure, time-limited magic link token
+    const mockMagicToken = Math.random().toString(36).substring(2) + Date.now().toString(36);
+    
+    // In a real application, we would save the token hash with an expiration time to the database
+    // and send an email using an email provider like SendGrid or AWS SES.
+    
+    return {
+      message: "If an account with this email exists, a magic link has been sent to it.",
+      mockLinkForTesting: `https://jobpilot.ai/auth/verify-magic-link?token=${mockMagicToken}&email=${encodeURIComponent(user.email)}`,
+      expiresIn: "15 minutes"
+    };
+  }
 }

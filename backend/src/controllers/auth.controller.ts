@@ -235,3 +235,19 @@ export const generateBackupCodes = asyncHandler(async (req: Request, res: Respon
     data: backupData,
   });
 });
+
+export const initiatePasswordlessLogin = asyncHandler(async (req: Request, res: Response) => {
+  const { email } = req.body;
+  
+  if (!email || typeof email !== 'string' || !email.includes('@')) {
+    throw ApiError.badRequest("A valid email address is required");
+  }
+
+  const result = await authService.initiatePasswordlessLogin(email);
+  
+  res.status(200).json({
+    success: true,
+    message: "Passwordless login initiated",
+    data: result,
+  });
+});
