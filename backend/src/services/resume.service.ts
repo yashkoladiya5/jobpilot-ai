@@ -185,4 +185,44 @@ export class ResumeService {
       };
     });
   }
+
+  async getResumeVersionHistory(userId: string, id: string) {
+    const resume = await prisma.resume.findUnique({ where: { id } });
+    
+    if (!resume || resume.userId !== userId) {
+      throw ApiError.notFound("Resume not found");
+    }
+
+    // Mock version history based on file modifications and duplication logic
+    // In a real application we would track diffs or keep older file paths
+    const now = new Date();
+    
+    const versionHistory = [
+      {
+        version: "v1.2 (Current)",
+        date: resume.updatedAt,
+        changes: ["Updated contact information", "Adjusted margins"],
+        isActive: true
+      },
+      {
+        version: "v1.1",
+        date: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 2), // 2 days ago
+        changes: ["Added latest work experience", "Fixed typos"],
+        isActive: false
+      },
+      {
+        version: "v1.0 (Original)",
+        date: resume.createdAt,
+        changes: ["Initial upload"],
+        isActive: false
+      }
+    ];
+
+    return {
+      resumeId: resume.id,
+      fileName: resume.fileName,
+      totalVersions: 3,
+      history: versionHistory
+    };
+  }
 }

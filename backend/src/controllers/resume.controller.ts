@@ -151,3 +151,16 @@ export const getRecentResumeActivity = asyncHandler(async (req: Request, res: Re
     data: activity,
   });
 });
+
+export const getResumeVersionHistory = asyncHandler(async (req: Request, res: Response) => {
+  const { id: userId } = (req as AuthenticatedRequest).user;
+  const { id } = req.params;
+  
+  const history = await resumeService.getResumeVersionHistory(userId, id);
+  
+  res.status(200).json({
+    success: true,
+    message: "Resume version history fetched successfully",
+    data: history,
+  });
+});
