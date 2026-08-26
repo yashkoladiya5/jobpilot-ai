@@ -121,4 +121,40 @@ export class CoverLetterService {
 
     return { deletedId: id };
   }
+
+  async adjustCoverLetterTone(userId: string, id: string, newTone: string) {
+    const coverLetter = await this.getCoverLetter(id, userId);
+
+    if (coverLetter.status !== "COMPLETED") {
+      throw ApiError.badRequest("Cannot adjust tone of an incomplete cover letter");
+    }
+    
+    // Check if tone is one of the supported ones
+    const supportedTones = ["professional", "enthusiastic", "confident", "humorous", "formal"];
+    if (!supportedTones.includes(newTone.toLowerCase())) {
+      throw ApiError.badRequest(`Unsupported tone. Supported tones: ${supportedTones.join(', ')}`);
+    }
+
+    // Since we are mocking AI here without making an actual LLM call for simplicity:
+    // In a real application, we'd call Gemini again with the new tone.
+    let adjustedText = coverLetter.coverLetterText;
+    
+    // Mock adjustments
+    if (newTone.toLowerCase() === "enthusiastic") {
+      adjustedText = adjustedText.replace("I am writing to express my interest", "I am absolutely thrilled to apply");
+      adjustedText = adjustedText.replace("Sincerely,", "With immense excitement,\n");
+    } else if (newTone.toLowerCase() === "confident") {
+      adjustedText = adjustedText.replace("I am writing to express my interest", "I am writing to demonstrate how my skills make me the ideal candidate");
+      adjustedText = adjustedText.replace("I believe my skills", "I am confident my skills");
+    }
+
+    return prisma.coverLetter.update({
+      where: { id },
+      data: {
+        coverLetterText: adjustedText,
+        tone: newTone,
+        updatedAt: new Date()
+      },
+    });
+  }
 }

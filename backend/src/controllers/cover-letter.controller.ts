@@ -76,3 +76,22 @@ export const deleteCoverLetter = asyncHandler(async (req: Request, res: Response
     data: null,
   });
 });
+
+export const adjustTone = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { id } = req.params;
+  const { tone } = req.body;
+  
+  if (!tone) {
+    res.status(400).json({ success: false, message: "Tone is required for adjustment", data: null });
+    return;
+  }
+
+  const result = await coverLetterService.adjustCoverLetterTone(userId, id, tone);
+  
+  res.status(200).json({
+    success: true,
+    message: `Cover letter tone adjusted to ${tone} successfully`,
+    data: result,
+  });
+});
