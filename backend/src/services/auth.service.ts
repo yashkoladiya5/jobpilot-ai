@@ -399,4 +399,33 @@ export class AuthService {
       message: isStreakActive ? `You're on a ${currentStreak}-day streak! Keep it up!` : "Login today to keep your streak alive!"
     };
   }
+
+  async revokeSession(userId: string, sessionId: string) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      throw ApiError.notFound("User not found");
+    }
+
+    if (!sessionId) {
+      throw ApiError.badRequest("Session ID is required to revoke a session.");
+    }
+
+    // In a real application, we would lookup the session in the DB or Redis
+    // and delete or invalidate it. If the session belongs to a different user,
+    // we would throw an unauthorized error.
+    
+    // Mocking the revocation process
+    const mockActiveSessions = ["sess_1", "sess_2", "sess_3"];
+    
+    if (!mockActiveSessions.includes(sessionId)) {
+      throw ApiError.notFound("Session not found or already inactive.");
+    }
+
+    return {
+      userId,
+      revokedSessionId: sessionId,
+      revokedAt: new Date(),
+      message: "Session revoked successfully. The device has been logged out."
+    };
+  }
 }

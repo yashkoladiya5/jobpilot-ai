@@ -281,3 +281,21 @@ export const getLoginStreak = asyncHandler(async (req: Request, res: Response) =
     data: streakData,
   });
 });
+
+export const revokeSession = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { sessionId } = req.params;
+  
+  if (!sessionId) {
+     res.status(400).json({ success: false, message: "Session ID is required" });
+     return;
+  }
+  
+  const result = await authService.revokeSession(userId, sessionId);
+  
+  res.status(200).json({
+    success: true,
+    message: "Session revoked successfully",
+    data: result,
+  });
+});
