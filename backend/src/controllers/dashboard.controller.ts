@@ -222,3 +222,20 @@ export const getSkillGapAnalysis = asyncHandler(async (req: Request, res: Respon
     data: analysis,
   });
 });
+
+export const getBurnoutPredictor = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  if (!userId) {
+     res.status(401).json({ success: false, message: "Unauthorized access: user ID is missing" });
+     return;
+  }
+
+  const predictor = await dashboardService.getBurnoutPredictor(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Burnout predictor fetched successfully", 
+    data: predictor,
+  });
+});

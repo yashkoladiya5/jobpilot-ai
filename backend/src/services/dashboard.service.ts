@@ -471,4 +471,84 @@ export class DashboardService {
       gaps
     };
   }
+
+  async getBurnoutPredictor(userId: string) {
+    // Determine burnout risk by analyzing application velocity over the past 4 weeks
+    const fourWeeksAgo = new Date();
+    fourWeeksAgo.setDate(fourWeeksAgo.getDate() - 28);
+    
+    const applications = await prisma.jobApplication.findMany({
+      where: {
+        userId,
+        createdAt: { gte: fourWeeksAgo },
+      },
+      select: { createdAt: true },
+      orderBy: { createdAt: "asc" }
+    });
+
+    if (applications.length < 5) {
+      return {
+        riskLevel: "Low",
+        score: 10,
+        message: "You have a light application load. No signs of burnout.",
+        recommendation: "If you have the capacity, try setting a goal to apply to 2-3 jobs a week."
+      };
+    }
+
+    // Check for clustering (doing too much in too few days) vs sustained pace
+    const appsPerDay: Record<string, number> = {};
+    for (const app of applications) {
+      const dateKey = app.createdAt.toISOString().slice(0, 10);
+      appsPerDay[dateKey] = (appsPerDay[dateKey] || 0) + 1;
+    }
+
+    const daysActive = Object.keys(appsPerDay).length;
+    let maxAppsInOneDay = 0;
+    Object.values(appsPerDay).forEach(count => {
+      if (count > maxAppsInOneDay) maxAppsInOneDay = count;
+    });
+
+    let score = 0;
+    
+    // High volume + few days active = high risk (binge applying)
+    if (applications.length > 40 && daysActive < 10) {
+      score += 50;
+    }
+    
+    // Huge spikes in single days
+    if (maxAppsInOneDay > 15) {
+      score += 30;
+    }
+    
+    // Overall volume
+    if (applications.length > 60) {
+      score += 20;
+    }
+
+    let riskLevel = "Low";
+    let message = "Your application pace looks sustainable.";
+    let recommendation = "Keep up the consistent effort without overworking yourself.";
+
+    if (score >= 70) {
+      riskLevel = "High";
+      message = "You are applying at a very intense pace with large spikes in activity.";
+      recommendation = "Take a break! Set a hard limit of 3 high-quality applications per day.";
+    } else if (score >= 40) {
+      riskLevel = "Medium";
+      message = "You're showing signs of \"binge applying.\"";
+      recommendation = "Try to spread your applications out over the week rather than doing them all in one day.";
+    }
+
+    return {
+      riskLevel,
+      score,
+      metrics: {
+        totalLast4Weeks: applications.length,
+        activeDaysLast4Weeks: daysActive,
+        maxAppsInOneDay
+      },
+      message,
+      recommendation
+    };
+  }
 }
