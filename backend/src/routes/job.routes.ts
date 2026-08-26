@@ -19,6 +19,7 @@ import {
   getSalaryNegotiationPrep,
   getInterviewPrepChecklist,
   estimateCommuteTime,
+  runAutoArchiving,
 } from "../controllers/job.controller";
 import { authenticate } from "../middleware/auth";
 import { validate } from "../middleware/validate";
@@ -45,6 +46,7 @@ router.patch("/:id/archive", authenticate, archiveJob);
 router.get("/:id/negotiation-prep", authenticate, getSalaryNegotiationPrep);
 router.get("/:id/interview-checklist", authenticate, getInterviewPrepChecklist);
 router.get("/:id/commute-estimate", authenticate, estimateCommuteTime);
+router.post("/auto-archive", authenticate, runAutoArchiving);
 
 // CRUD operations for jobs, all requiring user authentication
 router.get("/", authenticate, getJobs);

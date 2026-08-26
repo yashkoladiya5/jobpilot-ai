@@ -529,4 +529,47 @@ export class JobService {
       message: `Estimated commute is ${estimatedMinutes} minutes each way via ${mode}.`
     };
   }
+
+  async runAutoArchiving(userId: string) {
+    const fortyFiveDaysAgo = new Date();
+    fortyFiveDaysAgo.setDate(fortyFiveDaysAgo.getDate() - 45);
+
+    const staleJobs = await prisma.jobApplication.findMany({
+      where: {
+        userId,
+        status: "APPLIED",
+        updatedAt: { lte: fortyFiveDaysAgo }
+      },
+      select: { id: true, notes: true }
+    });
+
+    if (staleJobs.length === 0) {
+      return {
+        archivedCount: 0,
+        message: "No stale job applications found to auto-archive."
+      };
+    }
+
+    const archivedNotePrefix = `[AUTO-ARCHIVED on ${new Date().toISOString()}] No update for 45+ days.\n`;
+
+    // Bulk update requires individual notes to be preserved but we can't easily append per row in Prisma updateMany
+    // We'll iterate to preserve existing notes securely
+    let archivedCount = 0;
+    for (const job of staleJobs) {
+      const newNote = archivedNotePrefix + (job.notes || '');
+      await prisma.jobApplication.update({
+        where: { id: job.id },
+        data: { 
+          status: "WITHDRAWN",
+          notes: newNote
+        }
+      });
+      archivedCount++;
+    }
+
+    return {
+      archivedCount,
+      message: `Successfully auto-archived ${archivedCount} stale applications.`
+    };
+  }
 }

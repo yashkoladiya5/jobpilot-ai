@@ -278,3 +278,15 @@ export const estimateCommuteTime = asyncHandler(async (req: Request, res: Respon
     data: estimate,
   });
 });
+
+export const runAutoArchiving = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  const result = await jobService.runAutoArchiving(userId);
+  
+  res.status(200).json({
+    success: true,
+    message: "Auto-archiving job completed successfully",
+    data: result,
+  });
+});
