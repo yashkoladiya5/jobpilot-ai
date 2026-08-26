@@ -7,6 +7,7 @@ import {
   deleteResumeAnalysis,
   getResumeRedFlags,
   getResumeKeywordOptimization,
+  getSmartResumeSummary,
   analyzeJob,
   getJobAnalysis,
   getJobAnalyses,
@@ -57,6 +58,7 @@ router.get("/resume/:resumeId/keyword-optimization", getResumeKeywordOptimizatio
 router.get("/resume/analyses/latest", getLatestResumeAnalysis);
 router.get("/resume/:resumeId/analysis", getResumeAnalysis);
 router.get("/resume/analyses", getResumeAnalyses);
+router.get("/resume/:resumeId/smart-summary", getSmartResumeSummary);
 
 // Job analysis
 router.post("/job/analyze", analyzeJob);

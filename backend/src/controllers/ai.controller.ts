@@ -106,6 +106,24 @@ export const getResumeKeywordOptimization = asyncHandler(async (req: Request, re
   });
 });
 
+export const getSmartResumeSummary = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { resumeId } = req.params;
+  
+  if (!resumeId) {
+     res.status(400).json({ success: false, message: "Resume ID is required." });
+     return;
+  }
+  
+  const summary = await resumeAnalysisService.generateSmartResumeSummary(userId, resumeId);
+  
+  res.status(200).json({
+    success: true,
+    message: "Smart resume summary generated successfully",
+    data: summary,
+  });
+});
+
 // Job Analysis
 
 export const analyzeJob = asyncHandler(async (req: Request, res: Response) => {

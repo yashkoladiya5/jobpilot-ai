@@ -191,4 +191,22 @@ export class ResumeAnalysisService {
       recommendations: keywordImpacts
     };
   }
+
+  async generateSmartResumeSummary(userId: string, resumeId: string) {
+    const analysis = await this.getAnalysisByResume(resumeId, userId);
+    
+    // Simulate generating a quick 3-sentence summary for a recruiter
+    const strengthsStr = Array.isArray(analysis.strengths) ? analysis.strengths.slice(0, 2).join(" and ") : "their solid background";
+    const yearsExp = (analysis.experienceSummary as any)?.totalYears || "several";
+    const topSkill = Array.isArray(analysis.skillsSummary) && analysis.skillsSummary.length > 0 ? analysis.skillsSummary[0] : "their core technical skills";
+    
+    const summary = `A strong candidate with ${yearsExp} years of experience, demonstrating notable proficiency in ${topSkill}. They stand out for ${strengthsStr}, showcasing a track record of delivering results. This profile aligns well with standard requirements for mid-to-senior technical roles.`;
+    
+    return {
+      resumeId,
+      summaryText: summary,
+      wordCount: summary.split(" ").length,
+      suggestedUse: "Include this at the top of your LinkedIn profile or as your resume objective."
+    };
+  }
 }
