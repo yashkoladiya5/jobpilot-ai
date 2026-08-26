@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { register, login, getMe, deleteAccount, updatePassword, updateEmail, updateName, getActiveSessions, getLoginHistory, registerDevice, initiateMfaSetup, verifyMfaSetup, generateBackupCodes, initiatePasswordlessLogin, initiateSmsTwoFactor, getLoginStreak, revokeSession } from "../controllers/auth.controller";
+import { register, login, getMe, deleteAccount, updatePassword, updateEmail, updateName, getActiveSessions, getLoginHistory, registerDevice, initiateMfaSetup, verifyMfaSetup, generateBackupCodes, initiatePasswordlessLogin, initiateSmsTwoFactor, getLoginStreak, revokeSession, exportUserData } from "../controllers/auth.controller";
 import { authenticate } from "../middleware/auth";
 import { validate } from "../middleware/validate";
 import { registerSchema, loginSchema } from "../validators/auth.validator";
@@ -25,5 +25,6 @@ router.post("/mfa/backup-codes", authenticate, generateBackupCodes);
 router.post("/passwordless/initiate", initiatePasswordlessLogin);
 router.get("/streak", authenticate, getLoginStreak);
 router.delete("/sessions/:sessionId", authenticate, revokeSession);
+router.get("/export", authenticate, exportUserData);
 
 export default router;

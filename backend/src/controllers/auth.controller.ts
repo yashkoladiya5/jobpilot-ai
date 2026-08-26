@@ -299,3 +299,15 @@ export const revokeSession = asyncHandler(async (req: Request, res: Response) =>
     data: result,
   });
 });
+
+export const exportUserData = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  const exportedData = await authService.exportUserData(userId);
+  
+  res.status(200).json({
+    success: true,
+    message: "User data exported successfully",
+    data: exportedData,
+  });
+});

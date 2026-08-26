@@ -428,4 +428,37 @@ export class AuthService {
       message: "Session revoked successfully. The device has been logged out."
     };
   }
+
+  async exportUserData(userId: string) {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        createdAt: true,
+      }
+    });
+
+    if (!user) {
+      throw ApiError.notFound("User not found");
+    }
+
+    const resumes = await prisma.resume.findMany({
+      where: { userId },
+      select: { id: true, fileName: true, isPrimary: true, createdAt: true }
+    });
+
+    const applications = await prisma.jobApplication.findMany({
+      where: { userId },
+      select: { id: true, companyName: true, role: true, status: true, appliedDate: true }
+    });
+
+    return {
+      userInfo: user,
+      resumes,
+      applications,
+      exportedAt: new Date().toISOString()
+    };
+  }
 }
