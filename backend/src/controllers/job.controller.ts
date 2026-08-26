@@ -227,3 +227,15 @@ export const getJobApplicationVelocity = asyncHandler(async (req: Request, res: 
     data: velocity,
   });
 });
+
+export const getDeadlineReminders = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  const reminders = await jobService.getDeadlineReminders(userId);
+  
+  res.status(200).json({
+    success: true,
+    message: "Deadline reminders fetched successfully",
+    data: reminders,
+  });
+});

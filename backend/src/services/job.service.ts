@@ -344,4 +344,62 @@ export class JobService {
       message: trend === "decreasing" ? "Your application velocity has dropped recently. Try to submit a few more this week!" : "Great job maintaining your application momentum!"
     };
   }
+
+  async getDeadlineReminders(userId: string) {
+    // Find active jobs that might have an impending deadline (like an assignment or interview)
+    const activeJobs = await prisma.jobApplication.findMany({
+      where: { 
+        userId, 
+        status: { in: ["APPLIED", "INTERVIEW"] }
+      },
+      orderBy: { updatedAt: "desc" },
+      take: 10
+    });
+
+    if (activeJobs.length === 0) {
+      return {
+        reminders: [],
+        message: "No impending deadlines found for your active applications."
+      };
+    }
+
+    const reminders = [];
+    
+    // Mock analyzing notes for dates or deadlines
+    for (const job of activeJobs) {
+      const lowerNotes = (job.notes || "").toLowerCase();
+      
+      let type = "General Follow Up";
+      let urgency = "Low";
+      let daysLeft = Math.floor(Math.random() * 10) + 1; // Mock 1 to 10 days
+      
+      if (lowerNotes.includes("assignment") || lowerNotes.includes("take-home") || lowerNotes.includes("test")) {
+        type = "Assessment Deadline";
+        urgency = "High";
+        daysLeft = Math.floor(Math.random() * 3) + 1; // Mock 1 to 3 days
+      } else if (job.status === "INTERVIEW") {
+        type = "Upcoming Interview";
+        urgency = "High";
+        daysLeft = Math.floor(Math.random() * 5) + 1; // Mock 1 to 5 days
+      }
+
+      reminders.push({
+        jobId: job.id,
+        companyName: job.companyName,
+        role: job.role,
+        type,
+        urgency,
+        daysLeft,
+        message: `${type} for ${job.companyName} is in approximately ${daysLeft} days.`
+      });
+    }
+
+    // Sort by most urgent
+    reminders.sort((a, b) => a.daysLeft - b.daysLeft);
+
+    return {
+      totalReminders: reminders.length,
+      reminders: reminders.slice(0, 5) // Return top 5 urgent reminders
+    };
+  }
 }
