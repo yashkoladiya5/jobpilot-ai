@@ -494,4 +494,39 @@ export class JobService {
       ]
     };
   }
+
+  async estimateCommuteTime(userId: string, id: string) {
+    const job = await this.getJobById(userId, id);
+    
+    if (!job.location || job.location.toLowerCase().includes('remote')) {
+      return {
+        jobId: id,
+        company: job.companyName,
+        location: job.location || "Unknown",
+        isRemote: true,
+        estimatedCommuteMinutes: 0,
+        message: "This appears to be a remote role. No commute necessary!"
+      };
+    }
+
+    // Mock commute calculation
+    const distanceMiles = Math.floor(Math.random() * 20) + 5; // 5 to 25 miles
+    const estimatedMinutes = Math.floor(distanceMiles * 1.5) + Math.floor(Math.random() * 15); // Rough calc + traffic variance
+    
+    let mode = "Driving";
+    if (job.location.toLowerCase().includes('new york') || job.location.toLowerCase().includes('london')) {
+      mode = "Public Transit";
+    }
+
+    return {
+      jobId: id,
+      company: job.companyName,
+      location: job.location,
+      isRemote: false,
+      estimatedDistanceMiles: distanceMiles,
+      estimatedCommuteMinutes: estimatedMinutes,
+      primaryMode: mode,
+      message: `Estimated commute is ${estimatedMinutes} minutes each way via ${mode}.`
+    };
+  }
 }

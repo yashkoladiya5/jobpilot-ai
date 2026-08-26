@@ -265,3 +265,16 @@ export const getInterviewPrepChecklist = asyncHandler(async (req: Request, res: 
     data: checklist,
   });
 });
+
+export const estimateCommuteTime = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { id } = req.params;
+  
+  const estimate = await jobService.estimateCommuteTime(userId, id);
+  
+  res.status(200).json({
+    success: true,
+    message: "Commute time estimated successfully",
+    data: estimate,
+  });
+});
