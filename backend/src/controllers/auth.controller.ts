@@ -269,3 +269,15 @@ export const initiateSmsTwoFactor = asyncHandler(async (req: Request, res: Respo
     data: smsData,
   });
 });
+
+export const getLoginStreak = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  const streakData = await authService.getLoginStreak(userId);
+  
+  res.status(200).json({
+    success: true,
+    message: "Login streak fetched successfully",
+    data: streakData,
+  });
+});

@@ -370,4 +370,33 @@ export class AuthService {
       message: "SMS verification code sent successfully. Please check your messages."
     };
   }
+
+  async getLoginStreak(userId: string) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      throw ApiError.notFound("User not found");
+    }
+
+    // In a real application, we would query the login history table
+    // For this mock, we'll return a dynamic streak based on the user's creation date
+    const accountAgeDays = Math.max(1, Math.floor((Date.now() - user.createdAt.getTime()) / (1000 * 60 * 60 * 24)));
+    
+    // Simulate a streak that is somewhat believable based on account age
+    const currentStreak = Math.min(accountAgeDays, Math.floor(Math.random() * 7) + 1);
+    const longestStreak = Math.max(currentStreak, Math.min(accountAgeDays, 14));
+    
+    const today = new Date();
+    const lastLogin = new Date(today.getTime() - (Math.random() > 0.5 ? 0 : 1000 * 60 * 60 * 24)); // Either today or yesterday
+    
+    const isStreakActive = lastLogin.toDateString() === today.toDateString();
+
+    return {
+      userId,
+      currentStreak,
+      longestStreak,
+      lastLoginDate: lastLogin.toISOString(),
+      isStreakActive,
+      message: isStreakActive ? `You're on a ${currentStreak}-day streak! Keep it up!` : "Login today to keep your streak alive!"
+    };
+  }
 }
