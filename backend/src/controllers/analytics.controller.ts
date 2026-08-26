@@ -170,3 +170,15 @@ export const getJobSearchEffectiveness = asyncHandler(async (req: Request, res: 
     data: result 
   });
 });
+
+export const getApplicationGhostingPredictor = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  const result = await analyticsService.getApplicationGhostingPredictor(userId);
+  
+  res.json({ 
+    success: true, 
+    message: "Application ghosting prediction calculated successfully", 
+    data: result 
+  });
+});

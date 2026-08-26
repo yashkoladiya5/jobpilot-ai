@@ -659,4 +659,61 @@ export class AnalyticsService {
       message: score >= 50 ? "Your job search strategy is working well!" : "Consider optimizing your resume to improve your interview rate."
     };
   }
+
+  async getApplicationGhostingPredictor(userId: string) {
+    const applications = await prisma.jobApplication.findMany({
+      where: { userId, status: { in: ["APPLIED", "INTERVIEW"] } },
+      select: { id: true, companyName: true, role: true, status: true, updatedAt: true }
+    });
+
+    if (applications.length === 0) {
+      return {
+        ghostedCount: 0,
+        ghostedApplications: [],
+        insight: "You don't have any active applications to analyze for ghosting."
+      };
+    }
+
+    const now = new Date().getTime();
+    const ghostedApplications = [];
+
+    for (const app of applications) {
+      const daysSinceUpdate = Math.floor((now - app.updatedAt.getTime()) / (1000 * 60 * 60 * 24));
+      
+      // Assume ghosting if it's been more than 21 days since APPLIED or 14 days since INTERVIEW
+      let ghostingProbability = 0;
+      let reason = "";
+
+      if (app.status === "APPLIED") {
+        if (daysSinceUpdate >= 21) {
+          ghostingProbability = Math.min(95, 50 + (daysSinceUpdate - 21) * 2);
+          reason = `It's been ${daysSinceUpdate} days since you applied.`;
+        }
+      } else if (app.status === "INTERVIEW") {
+        if (daysSinceUpdate >= 14) {
+          ghostingProbability = Math.min(95, 60 + (daysSinceUpdate - 14) * 3);
+          reason = `It's been ${daysSinceUpdate} days since your last interview update.`;
+        }
+      }
+
+      if (ghostingProbability >= 75) {
+        ghostedApplications.push({
+          id: app.id,
+          company: app.companyName,
+          role: app.role,
+          status: app.status,
+          probability: `${ghostingProbability}%`,
+          reason
+        });
+      }
+    }
+
+    return {
+      ghostedCount: ghostedApplications.length,
+      ghostedApplications: ghostedApplications.sort((a, b) => parseInt(b.probability) - parseInt(a.probability)),
+      insight: ghostedApplications.length > 0 
+        ? `We predict you've been ghosted on ${ghostedApplications.length} applications. Consider archiving them to keep your pipeline clean.`
+        : "Great! None of your active applications appear to be ghosted."
+    };
+  }
 }
