@@ -188,3 +188,20 @@ export const getTopSkillsTrending = asyncHandler(async (req: Request, res: Respo
     data: trendingSkills,
   });
 });
+
+export const getGamificationScore = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  if (!userId) {
+     res.status(401).json({ success: false, message: "Unauthorized access: user ID is missing" });
+     return;
+  }
+
+  const score = await dashboardService.getGamificationScore(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Gamification score fetched successfully", 
+    data: score,
+  });
+});

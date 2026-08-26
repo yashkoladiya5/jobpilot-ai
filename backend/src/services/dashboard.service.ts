@@ -384,4 +384,44 @@ export class DashboardService {
       trending: mockSkills
     };
   }
+
+  async getGamificationScore(userId: string) {
+    // Calculate a simple engagement score based on their data
+    const [totalApplications, resumeCount, activeInterviews] = await Promise.all([
+      prisma.jobApplication.count({ where: { userId } }),
+      prisma.resume.count({ where: { userId } }),
+      prisma.jobApplication.count({ where: { userId, status: 'INTERVIEW' } }),
+    ]);
+
+    let score = 0;
+    
+    // Base score for having a resume
+    if (resumeCount > 0) score += 20;
+    if (resumeCount > 1) score += 10;
+    
+    // Score for applications
+    score += Math.min(50, totalApplications * 2); // max 50 points
+    
+    // Score for interviews
+    score += Math.min(20, activeInterviews * 5); // max 20 points
+    
+    let level = "Beginner";
+    if (score >= 80) level = "Expert";
+    else if (score >= 50) level = "Intermediate";
+    
+    let nextMilestone = "Add a resume to earn points!";
+    if (resumeCount > 0 && totalApplications < 10) nextMilestone = "Apply to 10 jobs to reach the next level.";
+    else if (totalApplications >= 10 && activeInterviews === 0) nextMilestone = "Secure an interview to boost your score.";
+    else nextMilestone = "Keep up the great momentum!";
+
+    return {
+      score,
+      maxScore: 100,
+      level,
+      totalApplications,
+      resumeCount,
+      activeInterviews,
+      nextMilestone
+    };
+  }
 }
