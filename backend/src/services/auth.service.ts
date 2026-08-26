@@ -343,4 +343,31 @@ export class AuthService {
       expiresIn: "15 minutes"
     };
   }
+
+  async initiateSmsTwoFactor(userId: string, phoneNumber: string) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      throw ApiError.notFound("User not found");
+    }
+
+    // Basic validation of phone number
+    if (!phoneNumber || phoneNumber.length < 10) {
+      throw ApiError.badRequest("A valid phone number is required for SMS 2FA");
+    }
+
+    // Mock generating a 6-digit numeric code
+    const smsCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // In a real application, we would use an SMS provider like Twilio, AWS SNS, or Plivo
+    // to send `smsCode` to `phoneNumber`. We would also store the code in a cache (like Redis)
+    // with a short expiration time (e.g. 5 minutes) against the user's ID.
+    
+    return {
+      userId: user.id,
+      phoneNumberPreview: `+** *******${phoneNumber.slice(-4)}`,
+      mockSmsCodeSent: smsCode, // Returning for testing purposes
+      expiresIn: "5 minutes",
+      message: "SMS verification code sent successfully. Please check your messages."
+    };
+  }
 }

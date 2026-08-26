@@ -251,3 +251,21 @@ export const initiatePasswordlessLogin = asyncHandler(async (req: Request, res: 
     data: result,
   });
 });
+
+export const initiateSmsTwoFactor = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { phoneNumber } = req.body;
+  
+  if (!phoneNumber) {
+     res.status(400).json({ success: false, message: "Phone number is required." });
+     return;
+  }
+  
+  const smsData = await authService.initiateSmsTwoFactor(userId, phoneNumber);
+  
+  res.status(200).json({
+    success: true,
+    message: "SMS 2FA initiated successfully",
+    data: smsData,
+  });
+});
