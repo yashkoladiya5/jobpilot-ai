@@ -138,4 +138,39 @@ export class JobAnalysisService {
 
     return result.data;
   }
+
+  async detectJobRedFlags(userId: string, jobDescription: string) {
+    if (!jobDescription) {
+      throw ApiError.badRequest("Job description is required for red flag detection.");
+    }
+
+    const prompt = `Analyze the following job description for common "red flags" or toxic traits. Look for phrases like "wear many hats", "fast-paced environment", "work hard play hard", "family", "rockstar", etc.
+    
+    Job Description:
+    ${jobDescription}
+    
+    Return a structured JSON with:
+    - hasRedFlags: boolean
+    - redFlags: array of strings containing the exact phrases found and what they typically mean (e.g., "Fast-paced environment: Often means understaffed and high stress.")
+    - toxicityScore: number from 0-100 (100 being highly toxic)
+    - overallVerdict: string summarizing the assessment
+    `;
+
+    const result = await generateStructuredResponse(prompt, z.object({
+      hasRedFlags: z.boolean(),
+      redFlags: z.array(z.string()),
+      toxicityScore: z.number().min(0).max(100),
+      overallVerdict: z.string(),
+    }));
+
+    if (!result.success || !result.data) {
+      throw ApiError.internal("Failed to analyze job description for red flags: " + (result.error || "Unknown error"));
+    }
+
+    return {
+      userId,
+      ...result.data,
+      analyzedAt: new Date()
+    };
+  }
 }

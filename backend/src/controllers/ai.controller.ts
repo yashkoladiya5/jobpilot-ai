@@ -497,3 +497,21 @@ export const extractJobKeywords = asyncHandler(async (req: Request, res: Respons
     data: keywords,
   });
 });
+
+export const detectJobRedFlags = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { jobDescription } = req.body;
+  
+  if (!jobDescription) {
+     res.status(400).json({ success: false, message: "Job description is required." });
+     return;
+  }
+  
+  const result = await jobAnalysisService.detectJobRedFlags(userId, jobDescription);
+  
+  res.status(200).json({
+    success: true,
+    message: "Job red flags detected successfully",
+    data: result,
+  });
+});

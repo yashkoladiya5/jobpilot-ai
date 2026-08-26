@@ -38,6 +38,7 @@ import {
   getCareerInsightsHistory,
   deleteCareerInsightsHistory,
   extractJobKeywords,
+  detectJobRedFlags,
 } from "../controllers/ai.controller";
 import { authenticate } from "../middleware/auth";
 
@@ -63,6 +64,7 @@ router.get("/resume/:resumeId/smart-summary", getSmartResumeSummary);
 // Job analysis
 router.post("/job/analyze", analyzeJob);
 router.post("/job/extract-keywords", extractJobKeywords);
+router.post("/job/red-flags", detectJobRedFlags);
 router.get("/job/analysis/:analysisId", getJobAnalysis);
 router.get("/job/analyses", getJobAnalyses);
 router.delete("/job/analysis/:analysisId", deleteJobAnalysis);
