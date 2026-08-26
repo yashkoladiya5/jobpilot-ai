@@ -190,3 +190,17 @@ export const getAtsOptimizedText = asyncHandler(async (req: Request, res: Respon
     data: atsData,
   });
 });
+
+export const analyzeMissingKeywords = asyncHandler(async (req: Request, res: Response) => {
+  const { id: userId } = (req as AuthenticatedRequest).user;
+  const { id } = req.params;
+  const { jobDescription } = req.body;
+  
+  const analysis = await resumeService.analyzeMissingKeywords(userId, id, jobDescription);
+  
+  res.status(200).json({
+    success: true,
+    message: "Missing keywords analyzed successfully",
+    data: analysis,
+  });
+});
