@@ -402,4 +402,47 @@ export class JobService {
       reminders: reminders.slice(0, 5) // Return top 5 urgent reminders
     };
   }
+
+  async getSalaryNegotiationPrep(userId: string, jobId: string) {
+    const job = await this.getJobById(userId, jobId);
+    
+    // Fallbacks if salary range isn't provided
+    const hasSalaryInfo = !!job.salaryRange;
+    const baseRole = job.role || "Software Engineer";
+    
+    let lowEnd = 90000;
+    let highEnd = 130000;
+    
+    // Attempt basic parsing of salary range if it exists
+    if (hasSalaryInfo && job.salaryRange) {
+      const numbers = job.salaryRange.match(/\d+/g);
+      if (numbers && numbers.length >= 2) {
+        // e.g. "$110k - $140k" -> [110, 140]
+        let num1 = parseInt(numbers[0]);
+        let num2 = parseInt(numbers[1]);
+        if (num1 < 1000) num1 *= 1000;
+        if (num2 < 1000) num2 *= 1000;
+        lowEnd = num1;
+        highEnd = num2;
+      }
+    }
+    
+    const marketAverage = Math.round((lowEnd + highEnd) / 2);
+    const targetAsk = Math.round(highEnd * 1.05); // Aim 5% above the top of the range
+    
+    return {
+      jobId,
+      company: job.companyName,
+      role: job.role,
+      hasSalaryInfo,
+      marketAverage: `$${marketAverage.toLocaleString()}`,
+      recommendedTargetAsk: `$${targetAsk.toLocaleString()}`,
+      negotiationTips: [
+        "Express excitement about the role before mentioning compensation.",
+        `Anchor high but within reason. We recommend starting your ask around $${targetAsk.toLocaleString()}.`,
+        "If base salary is rigid, pivot to asking for a sign-on bonus or extra equity.",
+        "Highlight your specific past achievements that justify being at the top of their band."
+      ]
+    };
+  }
 }

@@ -16,6 +16,7 @@ import {
   getJobActionItems,
   getJobApplicationVelocity,
   getDeadlineReminders,
+  getSalaryNegotiationPrep,
 } from "../controllers/job.controller";
 import { authenticate } from "../middleware/auth";
 import { validate } from "../middleware/validate";
@@ -39,6 +40,7 @@ router.post("/bulk/delete", authenticate, bulkDeleteJobs);
 router.patch("/:id/status", authenticate, updateJobStatus);
 router.patch("/:id/note", authenticate, updateJobNote);
 router.patch("/:id/archive", authenticate, archiveJob);
+router.get("/:id/negotiation-prep", authenticate, getSalaryNegotiationPrep);
 
 // CRUD operations for jobs, all requiring user authentication
 router.get("/", authenticate, getJobs);

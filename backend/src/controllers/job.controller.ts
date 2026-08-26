@@ -239,3 +239,16 @@ export const getDeadlineReminders = asyncHandler(async (req: Request, res: Respo
     data: reminders,
   });
 });
+
+export const getSalaryNegotiationPrep = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { id } = req.params;
+  
+  const strategy = await jobService.getSalaryNegotiationPrep(userId, id);
+  
+  res.status(200).json({
+    success: true,
+    message: "Salary negotiation prep generated successfully",
+    data: strategy,
+  });
+});
