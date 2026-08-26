@@ -461,3 +461,21 @@ export const deleteCareerInsightsHistory = asyncHandler(async (req: Request, res
     data: result,
   });
 });
+
+export const extractJobKeywords = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { jobDescription } = req.body;
+  
+  if (!jobDescription) {
+     res.status(400).json({ success: false, message: "Job description is required." });
+     return;
+  }
+  
+  const keywords = await interviewService.extractJobKeywords(userId, jobDescription);
+  
+  res.status(200).json({
+    success: true,
+    message: "Job keywords extracted successfully",
+    data: keywords,
+  });
+});

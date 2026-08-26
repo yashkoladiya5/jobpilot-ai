@@ -535,6 +535,41 @@ export class InterviewService {
       generatedAt: new Date()
     };
   }
+
+  async extractJobKeywords(userId: string, jobDescription: string) {
+    if (!jobDescription || jobDescription.trim().length < 50) {
+      throw ApiError.badRequest("Job description is too short to extract keywords.");
+    }
+
+    // Mock extracting hard and soft skills using AI
+    const lowerDesc = jobDescription.toLowerCase();
+    
+    const hardSkills = [];
+    const softSkills = [];
+    
+    // Mock basic hard skill extraction
+    if (lowerDesc.includes("react")) hardSkills.push("React");
+    if (lowerDesc.includes("node") || lowerDesc.includes("node.js")) hardSkills.push("Node.js");
+    if (lowerDesc.includes("python")) hardSkills.push("Python");
+    if (lowerDesc.includes("sql") || lowerDesc.includes("postgres") || lowerDesc.includes("mysql")) hardSkills.push("SQL");
+    if (lowerDesc.includes("aws") || lowerDesc.includes("cloud")) hardSkills.push("AWS/Cloud");
+    if (lowerDesc.includes("docker") || lowerDesc.includes("kubernetes")) hardSkills.push("Containerization");
+    
+    if (hardSkills.length === 0) hardSkills.push("System Architecture", "API Design", "Data Structures");
+
+    // Mock soft skill extraction
+    if (lowerDesc.includes("lead") || lowerDesc.includes("manage")) softSkills.push("Leadership", "Mentorship");
+    if (lowerDesc.includes("team") || lowerDesc.includes("collaborat")) softSkills.push("Teamwork", "Cross-functional Collaboration");
+    if (lowerDesc.includes("agile") || lowerDesc.includes("scrum")) softSkills.push("Agile Methodologies");
+    
+    if (softSkills.length === 0) softSkills.push("Communication", "Problem Solving", "Adaptability");
+
+    return {
+      hardSkills,
+      softSkills,
+      recommendedAction: "Ensure your resume explicitly mentions these exact keywords to pass ATS filters."
+    };
+  }
 }
 
 export const interviewService = new InterviewService();

@@ -36,6 +36,7 @@ import {
   computeCareerInsights,
   getCareerInsightsHistory,
   deleteCareerInsightsHistory,
+  extractJobKeywords,
 } from "../controllers/ai.controller";
 import { authenticate } from "../middleware/auth";
 
@@ -59,6 +60,7 @@ router.get("/resume/analyses", getResumeAnalyses);
 
 // Job analysis
 router.post("/job/analyze", analyzeJob);
+router.post("/job/extract-keywords", extractJobKeywords);
 router.get("/job/analysis/:analysisId", getJobAnalysis);
 router.get("/job/analyses", getJobAnalyses);
 router.delete("/job/analysis/:analysisId", deleteJobAnalysis);
