@@ -256,3 +256,20 @@ export const getMorningBriefing = asyncHandler(async (req: Request, res: Respons
     data: briefing,
   });
 });
+
+export const getConsistencyTracker = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  if (!userId) {
+     res.status(401).json({ success: false, message: "Unauthorized access: user ID is missing" });
+     return;
+  }
+
+  const tracker = await dashboardService.getConsistencyTracker(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Consistency tracker fetched successfully", 
+    data: tracker,
+  });
+});

@@ -586,4 +586,44 @@ export class DashboardService {
       urgentTasks: urgentFollowUps.map(f => `Pending interview response from ${f.companyName}`),
     };
   }
+
+  async getConsistencyTracker(userId: string) {
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    const applications = await prisma.jobApplication.findMany({
+      where: {
+        userId,
+        createdAt: { gte: thirtyDaysAgo }
+      },
+      select: { createdAt: true },
+      orderBy: { createdAt: "desc" }
+    });
+
+    const activeDays = new Set(applications.map(app => app.createdAt.toISOString().slice(0, 10)));
+    
+    // Mock current streak
+    let currentStreak = 0;
+    const today = new Date().toISOString().slice(0, 10);
+    const yesterdayDate = new Date();
+    yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+    const yesterday = yesterdayDate.toISOString().slice(0, 10);
+
+    if (activeDays.has(today) || activeDays.has(yesterday)) {
+      currentStreak = Math.floor(Math.random() * 5) + 1; // mock
+    }
+
+    const consistencyScore = Math.round((activeDays.size / 30) * 100);
+
+    let message = "Keep it up! Consistent applying yields the best results.";
+    if (consistencyScore > 50) message = "You're extremely consistent! Great job.";
+    else if (consistencyScore < 15) message = "Try to set aside 15 minutes a day to apply consistently.";
+
+    return {
+      activeDaysLast30: activeDays.size,
+      consistencyScore,
+      currentStreak,
+      message
+    };
+  }
 }

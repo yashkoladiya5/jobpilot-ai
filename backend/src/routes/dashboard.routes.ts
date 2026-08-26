@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { authenticate } from "../middleware/auth";
-import { getStats, getRecentActivityLogs, getActionItems, getDashboardSummary, getDashboardAlerts, getUpcomingEvents, getDailyGoals, getRecommendedJobs, getWeeklySnapshot, getTopSkillsTrending, getGamificationScore, getSkillGapAnalysis, getBurnoutPredictor, getMorningBriefing } from "../controllers/dashboard.controller";
+import { getStats, getRecentActivityLogs, getActionItems, getDashboardSummary, getDashboardAlerts, getUpcomingEvents, getDailyGoals, getRecommendedJobs, getWeeklySnapshot, getTopSkillsTrending, getGamificationScore, getSkillGapAnalysis, getBurnoutPredictor, getMorningBriefing, getConsistencyTracker } from "../controllers/dashboard.controller";
 
 /**
  * Express router for dashboard endpoints.
@@ -22,5 +22,6 @@ router.get("/gamification-score", authenticate, getGamificationScore);
 router.get("/skill-gaps", authenticate, getSkillGapAnalysis);
 router.get("/burnout-predictor", authenticate, getBurnoutPredictor);
 router.get("/morning-briefing", authenticate, getMorningBriefing);
+router.get("/consistency-tracker", authenticate, getConsistencyTracker);
 
 export default router;
