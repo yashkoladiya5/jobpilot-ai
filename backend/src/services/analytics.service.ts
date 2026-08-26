@@ -617,4 +617,46 @@ export class AnalyticsService {
       insight: `Applications where you had a referral or network connection were ${roiMultiplier}x more likely to result in an interview.`
     };
   }
+
+  async getJobSearchEffectiveness(userId: string) {
+    const applications = await prisma.jobApplication.findMany({
+      where: { userId },
+      select: { status: true }
+    });
+
+    if (applications.length === 0) {
+      return { score: 0, rating: "Needs Data", message: "Apply to more jobs to calculate your effectiveness score." };
+    }
+
+    const total = applications.length;
+    const interviews = applications.filter(a => a.status === "INTERVIEW" || a.status === "OFFER").length;
+    const offers = applications.filter(a => a.status === "OFFER").length;
+
+    // Calculate a composite score out of 100
+    // Interview rate weight: 70%, Offer rate weight: 30%
+    const interviewRate = (interviews / total) * 100;
+    const offerRate = interviews > 0 ? (offers / interviews) * 100 : 0;
+
+    let score = (interviewRate * 0.7) + (offerRate * 0.3);
+    
+    // Cap at 100, add small bonus for volume
+    if (total > 20) score += 5;
+    score = Math.min(100, Math.round(score));
+
+    let rating = "Needs Improvement";
+    if (score >= 80) rating = "Excellent";
+    else if (score >= 50) rating = "Good";
+    else if (score >= 30) rating = "Average";
+
+    return {
+      score,
+      rating,
+      metrics: {
+        totalApplications: total,
+        interviewConversionRate: `${Math.round(interviewRate)}%`,
+        offerConversionRate: `${Math.round(offerRate)}%`
+      },
+      message: score >= 50 ? "Your job search strategy is working well!" : "Consider optimizing your resume to improve your interview rate."
+    };
+  }
 }
