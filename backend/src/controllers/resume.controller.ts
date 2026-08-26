@@ -164,3 +164,16 @@ export const getResumeVersionHistory = asyncHandler(async (req: Request, res: Re
     data: history,
   });
 });
+
+export const getResumeQualityScore = asyncHandler(async (req: Request, res: Response) => {
+  const { id: userId } = (req as AuthenticatedRequest).user;
+  const { id } = req.params;
+  
+  const scoreData = await resumeService.getResumeQualityScore(userId, id);
+  
+  res.status(200).json({
+    success: true,
+    message: "Resume quality score generated successfully",
+    data: scoreData,
+  });
+});

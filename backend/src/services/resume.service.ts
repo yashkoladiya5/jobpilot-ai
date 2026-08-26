@@ -225,4 +225,43 @@ export class ResumeService {
       history: versionHistory
     };
   }
+
+  async getResumeQualityScore(userId: string, id: string) {
+    const resume = await prisma.resume.findUnique({ where: { id } });
+    if (!resume || resume.userId !== userId) {
+      throw ApiError.notFound("Resume not found");
+    }
+
+    // Mock an ATS quality score calculation
+    // A larger file might imply more content (up to a point)
+    let baseScore = 40;
+    
+    // Size check
+    if (resume.fileSize > 50000 && resume.fileSize < 200000) baseScore += 25; // "Sweet spot" size
+    else if (resume.fileSize >= 200000) baseScore += 15;
+    else baseScore += 10;
+    
+    // Type check
+    if (resume.mimeType === "application/pdf") baseScore += 20; // PDFs parse well usually
+    else if (resume.mimeType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") baseScore += 15;
+    
+    // Name check
+    if (!resume.fileName.toLowerCase().includes("untitled") && resume.fileName.length > 5) {
+      baseScore += 15;
+    }
+    
+    // Cap it
+    let totalScore = Math.min(100, baseScore);
+    
+    return {
+      resumeId: resume.id,
+      fileName: resume.fileName,
+      qualityScore: totalScore,
+      rating: totalScore >= 80 ? "Excellent" : totalScore >= 60 ? "Good" : "Needs Work",
+      suggestions: [
+        totalScore < 100 ? "Ensure you use action verbs for bullet points." : "Your resume format looks ATS-friendly.",
+        resume.mimeType !== "application/pdf" ? "Consider saving your resume as a PDF to preserve formatting." : "PDF format is optimal for ATS systems.",
+      ]
+    };
+  }
 }
