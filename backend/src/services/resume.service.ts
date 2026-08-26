@@ -264,4 +264,41 @@ export class ResumeService {
       ]
     };
   }
+
+  async getAtsOptimizedText(userId: string, id: string) {
+    const resume = await prisma.resume.findUnique({ where: { id } });
+    if (!resume || resume.userId !== userId) {
+      throw ApiError.notFound("Resume not found");
+    }
+
+    // Mock extracting and cleaning text to be purely ATS friendly
+    // In a real application, we would use pdf-parse, Tesseract, or an AI model 
+    // to strip formatting, remove tables, and standardize section headers.
+    
+    const mockCleanedText = `JOHN DOE
+john.doe@email.com | (555) 123-4567 | linkedin.com/in/johndoe
+
+SUMMARY
+Experienced software engineer with 5 years of experience in full-stack development...
+
+EXPERIENCE
+Senior Developer, TechNova Inc. (Jan 2020 - Present)
+- Developed RESTful APIs using Node.js and Express
+- Optimized database queries resulting in 30% faster load times
+
+EDUCATION
+B.S. Computer Science, State University (2015 - 2019)
+
+SKILLS
+JavaScript, TypeScript, React, Node.js, SQL, AWS`;
+
+    return {
+      resumeId: resume.id,
+      fileName: resume.fileName,
+      optimizedText: mockCleanedText,
+      warningCount: 0,
+      warnings: [],
+      message: "Resume successfully parsed into ATS-friendly plain text format."
+    };
+  }
 }

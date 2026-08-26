@@ -12,6 +12,7 @@ import {
   getRecentResumeActivity,
   getResumeVersionHistory,
   getResumeQualityScore,
+  getAtsOptimizedText,
 } from "../controllers/resume.controller";
 import { authenticate } from "../middleware/auth";
 import { upload } from "../middleware/upload";
@@ -39,6 +40,7 @@ router.get("/activity/recent", authenticate, getRecentResumeActivity);
 router.get("/:id", authenticate, getResume);
 router.get("/:id/versions", authenticate, getResumeVersionHistory);
 router.get("/:id/quality-score", authenticate, getResumeQualityScore);
+router.get("/:id/ats-text", authenticate, getAtsOptimizedText);
 
 // -----------------------------------------------------------------------
 // Mutation operations

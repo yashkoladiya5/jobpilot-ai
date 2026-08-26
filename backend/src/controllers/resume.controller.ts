@@ -177,3 +177,16 @@ export const getResumeQualityScore = asyncHandler(async (req: Request, res: Resp
     data: scoreData,
   });
 });
+
+export const getAtsOptimizedText = asyncHandler(async (req: Request, res: Response) => {
+  const { id: userId } = (req as AuthenticatedRequest).user;
+  const { id } = req.params;
+  
+  const atsData = await resumeService.getAtsOptimizedText(userId, id);
+  
+  res.status(200).json({
+    success: true,
+    message: "ATS optimized text generated successfully",
+    data: atsData,
+  });
+});
