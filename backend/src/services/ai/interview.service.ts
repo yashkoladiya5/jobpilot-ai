@@ -570,6 +570,46 @@ export class InterviewService {
       recommendedAction: "Ensure your resume explicitly mentions these exact keywords to pass ATS filters."
     };
   }
+
+  async generateElevatorPitch(userId: string, jobId: string) {
+    const job = await prisma.jobApplication.findFirst({
+      where: { id: jobId, userId },
+      include: { resume: true }
+    });
+
+    if (!job) throw ApiError.notFound("Job not found");
+
+    let resumeText = "";
+    if (job.resume) {
+      resumeText = await fs.readFile(job.resume.filePath, "utf-8").catch(() => "");
+    }
+
+    // Mock AI generation of a pitch
+    const company = job.companyName || "the company";
+    const role = job.role || "this role";
+    
+    let pitch = `I am a passionate professional with a strong background that aligns perfectly with the ${role} position at ${company}. `;
+    pitch += `Throughout my career, I've developed a proven track record of delivering high-quality results. `;
+    pitch += `I am drawn to ${company} because of your innovative approach and industry reputation, and I am eager to bring my skills to your team.`;
+    
+    if (resumeText.length > 50) {
+       pitch = `Based on my background, I have extensive experience relevant to the ${role} at ${company}. ` +
+               `My previous work has prepared me to tackle the specific challenges your team faces. ` +
+               `I am excited about the opportunity to leverage my expertise to drive success at ${company}.`;
+    }
+
+    return {
+      jobId,
+      company: job.companyName,
+      role: job.role,
+      pitch,
+      tips: [
+        "Keep it under 90 seconds.",
+        "Practice delivering it with enthusiasm.",
+        "Tailor the final sentence to the specific interviewer if possible."
+      ]
+    };
+  }
 }
 
 export const interviewService = new InterviewService();

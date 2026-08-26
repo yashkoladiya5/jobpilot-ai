@@ -515,3 +515,21 @@ export const detectJobRedFlags = asyncHandler(async (req: Request, res: Response
     data: result,
   });
 });
+
+export const generateElevatorPitch = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { jobId } = req.params;
+  
+  if (!jobId) {
+     res.status(400).json({ success: false, message: "Job ID is required." });
+     return;
+  }
+  
+  const result = await interviewService.generateElevatorPitch(userId, jobId);
+  
+  res.status(200).json({
+    success: true,
+    message: "Elevator pitch generated successfully",
+    data: result,
+  });
+});

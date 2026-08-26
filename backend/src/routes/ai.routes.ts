@@ -39,6 +39,7 @@ import {
   deleteCareerInsightsHistory,
   extractJobKeywords,
   detectJobRedFlags,
+  generateElevatorPitch,
 } from "../controllers/ai.controller";
 import { authenticate } from "../middleware/auth";
 
@@ -103,6 +104,7 @@ router.get("/interview/readiness-score", getInterviewReadinessScore);
 router.post("/interview/job/:jobId/technical-assessment", generateMockTechnicalAssessment);
 router.post("/interview/job/:jobId/behavioral-assessment", generateMockBehavioralAssessment);
 router.post("/interview/job/:jobId/system-design-assessment", generateMockSystemDesignAssessment);
+router.post("/interview/job/:jobId/elevator-pitch", generateElevatorPitch);
 
 // Career insights
 router.get("/career/insights", getCareerInsights);
