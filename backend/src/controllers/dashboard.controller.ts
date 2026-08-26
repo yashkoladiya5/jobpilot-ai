@@ -239,3 +239,20 @@ export const getBurnoutPredictor = asyncHandler(async (req: Request, res: Respon
     data: predictor,
   });
 });
+
+export const getMorningBriefing = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  if (!userId) {
+     res.status(401).json({ success: false, message: "Unauthorized access: user ID is missing" });
+     return;
+  }
+
+  const briefing = await dashboardService.getMorningBriefing(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Morning briefing fetched successfully", 
+    data: briefing,
+  });
+});

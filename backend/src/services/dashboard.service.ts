@@ -551,4 +551,39 @@ export class DashboardService {
       recommendation
     };
   }
+
+  async getMorningBriefing(userId: string) {
+    const today = new Date().toISOString().slice(0, 10);
+    
+    // Urgent follow-ups (e.g., jobs in INTERVIEW state for more than a few days)
+    const urgentFollowUps = await prisma.jobApplication.findMany({
+      where: {
+        userId,
+        status: 'INTERVIEW',
+        updatedAt: { lte: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000) }
+      },
+      select: { companyName: true, role: true },
+      take: 3
+    });
+
+    const quotes = [
+      "The expert in anything was once a beginner. — Helen Hayes",
+      "Opportunities don't happen, you create them. — Chris Grosser",
+      "It does not matter how slowly you go as long as you do not stop. — Confucius",
+      "Success is not final, failure is not fatal: it is the courage to continue that counts. — Winston Churchill",
+      "Believe you can and you're halfway there. — Theodore Roosevelt"
+    ];
+
+    const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+
+    return {
+      date: today,
+      greeting: "Good morning! Here's your daily briefing.",
+      quoteOfTheDay: randomQuote,
+      topPriority: urgentFollowUps.length > 0 
+        ? `Follow up with ${urgentFollowUps[0].companyName} regarding the ${urgentFollowUps[0].role} role.`
+        : "Apply to at least one new role that excites you.",
+      urgentTasks: urgentFollowUps.map(f => `Pending interview response from ${f.companyName}`),
+    };
+  }
 }
