@@ -205,3 +205,20 @@ export const getGamificationScore = asyncHandler(async (req: Request, res: Respo
     data: score,
   });
 });
+
+export const getSkillGapAnalysis = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  if (!userId) {
+     res.status(401).json({ success: false, message: "Unauthorized access: user ID is missing" });
+     return;
+  }
+
+  const analysis = await dashboardService.getSkillGapAnalysis(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Skill gap analysis fetched successfully", 
+    data: analysis,
+  });
+});

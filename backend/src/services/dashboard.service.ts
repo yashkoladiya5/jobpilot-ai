@@ -424,4 +424,51 @@ export class DashboardService {
       nextMilestone
     };
   }
+
+  async getSkillGapAnalysis(userId: string) {
+    // Find the most recently applied job to use as a baseline role
+    const recentJob = await prisma.jobApplication.findFirst({
+      where: { userId },
+      orderBy: { createdAt: "desc" },
+    });
+
+    if (!recentJob) {
+      return {
+        hasData: false,
+        message: "Apply for a job first to get a personalized skill gap analysis.",
+        gaps: []
+      };
+    }
+
+    const roleName = recentJob.role.toLowerCase();
+    
+    // Mock the gap analysis logic
+    let gaps = [];
+    
+    if (roleName.includes("frontend") || roleName.includes("react")) {
+      gaps = [
+        { skill: "Next.js", importance: "High", resources: ["Next.js Documentation", "Vercel Learn"] },
+        { skill: "Tailwind CSS", importance: "Medium", resources: ["Tailwind Play", "CSS Tricks"] },
+        { skill: "GraphQL", importance: "Medium", resources: ["Apollo Odyssey"] }
+      ];
+    } else if (roleName.includes("backend") || roleName.includes("node")) {
+      gaps = [
+        { skill: "Kubernetes", importance: "High", resources: ["K8s Docs", "Minikube Tutorial"] },
+        { skill: "Redis", importance: "High", resources: ["Redis University"] },
+        { skill: "gRPC", importance: "Low", resources: ["gRPC Quickstart"] }
+      ];
+    } else {
+      gaps = [
+        { skill: "Cloud Architecture (AWS/GCP)", importance: "High", resources: ["Cloud Guru", "AWS Training"] },
+        { skill: "CI/CD Pipelines", importance: "Medium", resources: ["GitHub Actions Docs"] }
+      ];
+    }
+
+    return {
+      hasData: true,
+      targetRole: recentJob.role,
+      message: "Here are some skills frequently requested in your target role that you might be missing.",
+      gaps
+    };
+  }
 }
