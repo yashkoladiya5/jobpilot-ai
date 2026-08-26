@@ -252,3 +252,16 @@ export const getSalaryNegotiationPrep = asyncHandler(async (req: Request, res: R
     data: strategy,
   });
 });
+
+export const getInterviewPrepChecklist = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { id } = req.params;
+  
+  const checklist = await jobService.getInterviewPrepChecklist(userId, id);
+  
+  res.status(200).json({
+    success: true,
+    message: "Interview prep checklist generated successfully",
+    data: checklist,
+  });
+});

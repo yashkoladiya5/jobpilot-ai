@@ -445,4 +445,53 @@ export class JobService {
       ]
     };
   }
+
+  async getInterviewPrepChecklist(userId: string, jobId: string) {
+    const job = await this.getJobById(userId, jobId);
+    
+    // We base the checklist on the role
+    const roleLower = (job.role || "").toLowerCase();
+    
+    let technicalTasks = [
+      "Review the core technologies listed in the job description",
+      "Prepare a 2-minute 'Tell me about yourself' pitch",
+      "Research the company's recent news or product launches"
+    ];
+
+    if (roleLower.includes("engineer") || roleLower.includes("developer")) {
+      technicalTasks = [
+        ...technicalTasks,
+        "Practice 2-3 LeetCode medium questions",
+        "Review system design basics (Load balancers, Caching, Databases)",
+        "Prepare questions about their tech stack and deployment process"
+      ];
+    } else if (roleLower.includes("manager") || roleLower.includes("lead")) {
+      technicalTasks = [
+        ...technicalTasks,
+        "Prepare examples of how you resolve team conflicts",
+        "Review project management methodologies you've used",
+        "Formulate questions about team structure and current challenges"
+      ];
+    }
+
+    return {
+      jobId,
+      company: job.companyName,
+      role: job.role,
+      checklist: [
+        { category: "Research", tasks: [
+          "Read the company's 'About Us' and 'Mission' pages",
+          "Check the interviewer's LinkedIn profile (if known)",
+          "Understand the company's main product/service and target audience"
+        ]},
+        { category: "Role-Specific Prep", tasks: technicalTasks },
+        { category: "Logistics", tasks: [
+          "Ensure your background is clean and well-lit (if virtual)",
+          "Test your microphone and camera (if virtual)",
+          "Have a notebook and pen ready",
+          "Have your resume open for reference"
+        ]}
+      ]
+    };
+  }
 }
