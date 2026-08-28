@@ -203,4 +203,45 @@ export class JobAnalysisService {
       message: `Cover letter successfully rewritten in a ${tone} tone.`
     };
   }
+
+  async highlightCoverLetterKeywords(userId: string, coverLetter: string, jobDescription: string) {
+    if (!coverLetter || !jobDescription) {
+      throw ApiError.badRequest("Cover letter and job description are both required.");
+    }
+
+    const prompt = `Analyze this cover letter against the provided job description.
+Identify keywords or hard skills from the job description that are missing in the cover letter.
+Suggest exactly where and how to integrate 2-3 of these missing keywords to make the cover letter stronger.
+
+Cover Letter:
+${coverLetter}
+
+Job Description:
+${jobDescription}`;
+
+    try {
+      const response = await generateStructuredResponse(prompt, z.object({
+        missingKeywords: z.array(z.string()).describe("Keywords from the JD missing in the cover letter"),
+        matchedKeywords: z.array(z.string()).describe("Keywords from the JD present in the cover letter"),
+        suggestions: z.array(z.object({
+          keyword: z.string(),
+          suggestedSentence: z.string().describe("A suggested sentence incorporating the keyword"),
+          placementAdvice: z.string().describe("Where in the cover letter to place this sentence")
+        }))
+      }));
+
+      if (!response.success || !response.data) {
+        throw new Error(response.error || "Failed to generate structured response");
+      }
+
+      return {
+        userId,
+        analyzedAt: new Date(),
+        ...response.data
+      };
+    } catch (error) {
+      console.error("[JobAnalysisService] Error highlighting keywords:", error);
+      throw ApiError.internal("Failed to analyze cover letter keywords. Please try again later.");
+    }
+  }
 }

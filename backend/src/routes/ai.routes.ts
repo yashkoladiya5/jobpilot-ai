@@ -41,6 +41,7 @@ import {
   detectJobRedFlags,
   generateElevatorPitch,
   rewriteCoverLetterTone,
+  highlightCoverLetterKeywords,
 } from "../controllers/ai.controller";
 import { authenticate } from "../middleware/auth";
 
@@ -73,6 +74,7 @@ router.delete("/job/analysis/:analysisId", deleteJobAnalysis);
 router.delete("/resume/analysis/:analysisId", deleteResumeAnalysis);
 router.post("/cover-letter/generate", generateCoverLetter);
 router.post("/cover-letter/rewrite-tone", rewriteCoverLetterTone);
+router.post("/cover-letter/highlight-keywords", highlightCoverLetterKeywords);
 
 // Resume-Job matching
 router.post("/match", matchResumeJob);

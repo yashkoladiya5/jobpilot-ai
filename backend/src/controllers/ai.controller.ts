@@ -551,3 +551,21 @@ export const rewriteCoverLetterTone = asyncHandler(async (req: Request, res: Res
     data: result,
   });
 });
+
+export const highlightCoverLetterKeywords = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { coverLetter, jobDescription } = req.body;
+  
+  if (!coverLetter || !jobDescription) {
+     res.status(400).json({ success: false, message: "Cover letter and job description are required." });
+     return;
+  }
+  
+  const result = await jobAnalysisService.highlightCoverLetterKeywords(userId, coverLetter, jobDescription);
+  
+  res.status(200).json({
+    success: true,
+    message: "Cover letter keywords highlighted successfully",
+    data: result,
+  });
+});
