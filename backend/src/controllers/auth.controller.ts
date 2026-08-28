@@ -311,3 +311,15 @@ export const exportUserData = asyncHandler(async (req: Request, res: Response) =
     data: exportedData,
   });
 });
+
+export const getUserSecurityScore = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  const scoreData = await authService.getUserSecurityScore(userId);
+  
+  res.status(200).json({
+    success: true,
+    message: "User security score calculated successfully",
+    data: scoreData,
+  });
+});
