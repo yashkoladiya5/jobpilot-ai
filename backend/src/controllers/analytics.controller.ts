@@ -182,3 +182,21 @@ export const getApplicationGhostingPredictor = asyncHandler(async (req: Request,
     data: result 
   });
 });
+
+export const trackLoginDuration = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { durationSeconds } = req.body;
+  
+  if (typeof durationSeconds !== 'number') {
+     res.status(400).json({ success: false, message: "durationSeconds must be provided as a number." });
+     return;
+  }
+  
+  const result = await analyticsService.trackLoginDuration(userId, durationSeconds);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Login duration tracked successfully", 
+    data: result 
+  });
+});

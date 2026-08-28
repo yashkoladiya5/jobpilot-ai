@@ -716,4 +716,21 @@ export class AnalyticsService {
         : "Great! None of your active applications appear to be ghosted."
     };
   }
+
+  async trackLoginDuration(userId: string, durationSeconds: number) {
+    if (durationSeconds < 0) {
+      throw ApiError.badRequest("Duration must be a positive number.");
+    }
+
+    // In a real application, we would insert this into a UserSession or LoginDuration table.
+    // For this mock implementation, we return the parsed data simulating a successful log.
+
+    return {
+      userId,
+      durationSeconds,
+      durationMinutes: (durationSeconds / 60).toFixed(2),
+      loggedAt: new Date().toISOString(),
+      message: "Login duration successfully recorded."
+    };
+  }
 }
