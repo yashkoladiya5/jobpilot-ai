@@ -569,3 +569,15 @@ export const highlightCoverLetterKeywords = asyncHandler(async (req: Request, re
     data: result,
   });
 });
+
+export const generateResignationLetter = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  const result = await jobAnalysisService.generateResignationLetter(userId, req.body);
+  
+  res.status(200).json({
+    success: true,
+    message: "Resignation letter generated successfully",
+    data: result,
+  });
+});

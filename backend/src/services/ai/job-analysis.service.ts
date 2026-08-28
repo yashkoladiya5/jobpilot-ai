@@ -244,4 +244,30 @@ ${jobDescription}`;
       throw ApiError.internal("Failed to analyze cover letter keywords. Please try again later.");
     }
   }
+
+  async generateResignationLetter(userId: string, data: { companyName: string, lastDay: string, reason?: string, tone?: string }) {
+    const { companyName, lastDay, reason, tone = "professional" } = data;
+    
+    if (!companyName || !lastDay) {
+      throw ApiError.badRequest("companyName and lastDay are required.");
+    }
+
+    const prompt = `Write a ${tone} resignation letter for an employee leaving ${companyName}.
+Their last day will be ${lastDay}.
+${reason ? `Reason for leaving: ${reason}` : 'No specific reason provided, keep it standard.'}
+Format the output as a clean, ready-to-use email template.`;
+
+    const model = getGenerativeModel();
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    let generatedText = response.text();
+
+    return {
+      companyName,
+      lastDay,
+      tone,
+      resignationLetter: generatedText,
+      message: "Resignation letter generated successfully"
+    };
+  }
 }
