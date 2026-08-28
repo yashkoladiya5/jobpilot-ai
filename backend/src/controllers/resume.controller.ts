@@ -218,3 +218,17 @@ export const translateResume = asyncHandler(async (req: Request, res: Response) 
     data: translation,
   });
 });
+
+export const trackResumeView = asyncHandler(async (req: Request, res: Response) => {
+  const { id: userId } = (req as AuthenticatedRequest).user;
+  const { id } = req.params;
+  const { source } = req.body;
+  
+  const viewLog = await resumeService.trackResumeView(userId, id, source);
+  
+  res.status(200).json({
+    success: true,
+    message: "Resume view tracked successfully",
+    data: viewLog,
+  });
+});

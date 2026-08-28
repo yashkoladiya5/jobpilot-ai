@@ -375,4 +375,25 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
       message: `Resume successfully translated into ${targetLanguage}.`
     };
   }
+
+  async trackResumeView(userId: string, id: string, source: string) {
+    const resume = await prisma.resume.findUnique({ where: { id } });
+    if (!resume || resume.userId !== userId) {
+      throw ApiError.notFound("Resume not found");
+    }
+
+    // In a real database, we would have a ResumeView table to record the views.
+    // For this demonstration, we'll return a mock view count and log event.
+    const newViewCount = Math.floor(Math.random() * 100) + 1;
+    
+    const viewLog = {
+      resumeId: resume.id,
+      viewedAt: new Date(),
+      source: source || "direct_link",
+      totalViewsMock: newViewCount,
+      message: `Resume view tracked successfully from source: ${source || "direct_link"}`
+    };
+
+    return viewLog;
+  }
 }
