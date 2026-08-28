@@ -316,3 +316,16 @@ export const submitInterviewFeedback = asyncHandler(async (req: Request, res: Re
     data: result,
   });
 });
+
+export const addJobContact = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { id } = req.params;
+  
+  const result = await jobService.addJobContact(userId, id, req.body);
+  
+  res.status(200).json({
+    success: true,
+    message: "Contact added to job application successfully",
+    data: result,
+  });
+});

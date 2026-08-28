@@ -630,4 +630,23 @@ export class JobService {
       }
     });
   }
+
+  async addJobContact(userId: string, id: string, contactData: { name: string, email: string, role: string, linkedin?: string }) {
+    const job = await this.getJobById(userId, id);
+
+    if (!contactData.name || !contactData.role) {
+      throw ApiError.badRequest("Contact name and role are required");
+    }
+
+    // Since we don't have a separate Contacts table, we will append it to notes securely
+    const contactInfo = `\n[CONTACT ADDED]\nName: ${contactData.name}\nRole: ${contactData.role}\nEmail: ${contactData.email || 'N/A'}\nLinkedIn: ${contactData.linkedin || 'N/A'}`;
+    const updatedNotes = (job.notes || "") + "\n" + contactInfo;
+
+    return prisma.jobApplication.update({
+      where: { id },
+      data: {
+        notes: updatedNotes.trim()
+      }
+    });
+  }
 }

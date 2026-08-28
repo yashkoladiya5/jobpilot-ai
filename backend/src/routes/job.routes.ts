@@ -22,6 +22,7 @@ import {
   runAutoArchiving,
   scheduleInterview,
   submitInterviewFeedback,
+  addJobContact,
 } from "../controllers/job.controller";
 import { authenticate } from "../middleware/auth";
 import { validate } from "../middleware/validate";
@@ -51,6 +52,7 @@ router.get("/:id/commute-estimate", authenticate, estimateCommuteTime);
 router.post("/auto-archive", authenticate, runAutoArchiving);
 router.post("/:id/schedule-interview", authenticate, scheduleInterview);
 router.post("/:id/interview-feedback", authenticate, submitInterviewFeedback);
+router.post("/:id/contact", authenticate, addJobContact);
 
 // CRUD operations for jobs, all requiring user authentication
 router.get("/", authenticate, getJobs);
