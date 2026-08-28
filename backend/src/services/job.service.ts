@@ -572,4 +572,36 @@ export class JobService {
       message: `Successfully auto-archived ${archivedCount} stale applications.`
     };
   }
+
+  async scheduleInterview(
+    userId: string,
+    id: string,
+    data: { date: string; type: string; interviewer?: string; link?: string }
+  ) {
+    const job = await this.getJobById(userId, id);
+
+    if (!data.date || !data.type) {
+      throw ApiError.badRequest("Interview date and type are required.");
+    }
+
+    const interviewDate = new Date(data.date);
+    if (isNaN(interviewDate.getTime())) {
+      throw ApiError.badRequest("Invalid date format.");
+    }
+
+    const formattedDate = interviewDate.toLocaleString();
+    let interviewNote = `\n[INTERVIEW SCHEDULED]\nDate: ${formattedDate}\nType: ${data.type}`;
+    if (data.interviewer) interviewNote += `\nInterviewer: ${data.interviewer}`;
+    if (data.link) interviewNote += `\nLink: ${data.link}`;
+
+    const updatedNotes = (job.notes || "") + "\n" + interviewNote;
+
+    return prisma.jobApplication.update({
+      where: { id },
+      data: {
+        status: "INTERVIEW",
+        notes: updatedNotes.trim()
+      }
+    });
+  }
 }

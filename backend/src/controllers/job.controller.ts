@@ -290,3 +290,16 @@ export const runAutoArchiving = asyncHandler(async (req: Request, res: Response)
     data: result,
   });
 });
+
+export const scheduleInterview = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { id } = req.params;
+  
+  const result = await jobService.scheduleInterview(userId, id, req.body);
+  
+  res.status(200).json({
+    success: true,
+    message: "Interview scheduled successfully and status updated",
+    data: result,
+  });
+});
