@@ -290,3 +290,21 @@ export const generateWeeklyReport = asyncHandler(async (req: Request, res: Respo
     data: report,
   });
 });
+
+export const updateNotificationPreferences = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const preferences = req.body;
+  
+  if (!userId) {
+     res.status(401).json({ success: false, message: "Unauthorized access: user ID is missing" });
+     return;
+  }
+  
+  const result = await dashboardService.updateNotificationPreferences(userId, preferences);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Notification preferences updated", 
+    data: result,
+  });
+});

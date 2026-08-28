@@ -681,4 +681,23 @@ export class DashboardService {
       generatedAt: new Date().toISOString()
     };
   }
+
+  async updateNotificationPreferences(userId: string, preferences: { emailWeeklyReport?: boolean, pushDailyGoals?: boolean }) {
+    // In a real database, we would have a NotificationPreferences table or JSON column on User.
+    // For this mock, we validate the input and return a success response simulating an update.
+    
+    if (typeof preferences.emailWeeklyReport !== "boolean" && typeof preferences.pushDailyGoals !== "boolean") {
+      throw ApiError.badRequest("At least one valid preference flag must be provided.");
+    }
+
+    return {
+      userId,
+      preferencesUpdated: {
+        emailWeeklyReport: preferences.emailWeeklyReport ?? true,
+        pushDailyGoals: preferences.pushDailyGoals ?? true
+      },
+      updatedAt: new Date().toISOString(),
+      message: "Notification preferences updated successfully."
+    };
+  }
 }
