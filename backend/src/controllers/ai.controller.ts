@@ -533,3 +533,21 @@ export const generateElevatorPitch = asyncHandler(async (req: Request, res: Resp
     data: result,
   });
 });
+
+export const rewriteCoverLetterTone = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { currentCoverLetter, targetTone } = req.body;
+  
+  if (!currentCoverLetter || !targetTone) {
+     res.status(400).json({ success: false, message: "Cover letter and target tone are required." });
+     return;
+  }
+  
+  const result = await jobAnalysisService.rewriteCoverLetterTone(userId, currentCoverLetter, targetTone);
+  
+  res.status(200).json({
+    success: true,
+    message: "Cover letter tone adjusted successfully",
+    data: result,
+  });
+});

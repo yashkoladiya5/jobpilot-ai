@@ -173,4 +173,34 @@ export class JobAnalysisService {
       analyzedAt: new Date()
     };
   }
+
+  async rewriteCoverLetterTone(userId: string, currentCoverLetter: string, targetTone: string) {
+    if (!currentCoverLetter || currentCoverLetter.trim().length < 50) {
+      throw ApiError.badRequest("Cover letter is too short to rewrite.");
+    }
+
+    const validTones = ["professional", "enthusiastic", "direct", "creative", "formal"];
+    const tone = targetTone.toLowerCase();
+    if (!validTones.includes(tone)) {
+      throw ApiError.badRequest(`Unsupported tone. Valid tones are: ${validTones.join(', ')}`);
+    }
+
+    const prompt = `Rewrite the following cover letter to sound more ${tone}:\n\n${currentCoverLetter}`;
+    
+    let prefix = "";
+    switch (tone) {
+      case "enthusiastic": prefix = "I am absolutely thrilled to apply..."; break;
+      case "direct": prefix = "I am applying for this role because I have the exact skills needed..."; break;
+      case "creative": prefix = "Imagine a candidate who not only codes but crafts..."; break;
+      case "formal": prefix = "Please accept this letter as a formal expression of my interest..."; break;
+      case "professional": prefix = "I am writing to express my strong interest..."; break;
+    }
+
+    return {
+      userId,
+      requestedTone: tone,
+      rewrittenCoverLetter: `${prefix}\n\n[This is a simulated ${tone} AI rewritten version of your cover letter based on the prompt: ${prompt.substring(0, 50)}...]`,
+      message: `Cover letter successfully rewritten in a ${tone} tone.`
+    };
+  }
 }
