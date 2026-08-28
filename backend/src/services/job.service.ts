@@ -604,4 +604,30 @@ export class JobService {
       }
     });
   }
+
+  async submitInterviewFeedback(userId: string, id: string, feedback: { rating: number, notes: string }) {
+    const job = await this.getJobById(userId, id);
+
+    if (job.status !== "INTERVIEW" && job.status !== "OFFER" && job.status !== "REJECTED") {
+      throw ApiError.badRequest("Can only submit interview feedback for jobs that reached the interview stage.");
+    }
+
+    if (!feedback.rating || feedback.rating < 1 || feedback.rating > 5) {
+      throw ApiError.badRequest("Please provide a valid rating between 1 and 5.");
+    }
+
+    if (!feedback.notes || feedback.notes.trim().length === 0) {
+      throw ApiError.badRequest("Feedback notes are required.");
+    }
+
+    const feedbackEntry = `\n[INTERVIEW FEEDBACK - Rating: ${feedback.rating}/5]\nDate: ${new Date().toLocaleDateString()}\nNotes: ${feedback.notes}`;
+    const updatedNotes = (job.notes || "") + "\n" + feedbackEntry;
+
+    return prisma.jobApplication.update({
+      where: { id },
+      data: {
+        notes: updatedNotes.trim()
+      }
+    });
+  }
 }

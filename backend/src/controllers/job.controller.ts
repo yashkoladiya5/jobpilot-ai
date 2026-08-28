@@ -303,3 +303,16 @@ export const scheduleInterview = asyncHandler(async (req: Request, res: Response
     data: result,
   });
 });
+
+export const submitInterviewFeedback = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { id } = req.params;
+  
+  const result = await jobService.submitInterviewFeedback(userId, id, req.body);
+  
+  res.status(200).json({
+    success: true,
+    message: "Interview feedback submitted successfully",
+    data: result,
+  });
+});
