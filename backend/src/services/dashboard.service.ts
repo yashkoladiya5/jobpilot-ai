@@ -626,4 +626,59 @@ export class DashboardService {
       message
     };
   }
+
+  async generateWeeklyReport(userId: string) {
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+    // Get jobs applied to this week
+    const applicationsThisWeek = await prisma.jobApplication.findMany({
+      where: {
+        userId,
+        createdAt: { gte: oneWeekAgo }
+      }
+    });
+
+    // Get interviews scheduled this week
+    const interviewsThisWeek = await prisma.jobApplication.findMany({
+      where: {
+        userId,
+        status: "INTERVIEW",
+        updatedAt: { gte: oneWeekAgo }
+      }
+    });
+
+    // Get rejections this week
+    const rejectionsThisWeek = await prisma.jobApplication.count({
+      where: {
+        userId,
+        status: "REJECTED",
+        updatedAt: { gte: oneWeekAgo }
+      }
+    });
+
+    // Mocking an AI encouraging message
+    let encouragement = "";
+    if (applicationsThisWeek.length > 5) {
+      encouragement = "Incredible momentum! You're putting yourself out there and the numbers prove it.";
+    } else if (interviewsThisWeek.length > 0) {
+      encouragement = "You scored an interview this week! Time to start prepping.";
+    } else {
+      encouragement = "Every week is a new opportunity. Keep refining your resume and keep pushing!";
+    }
+
+    return {
+      userId,
+      reportPeriod: "Last 7 Days",
+      metrics: {
+        applicationsSent: applicationsThisWeek.length,
+        interviewsSecured: interviewsThisWeek.length,
+        rejections: rejectionsThisWeek,
+        activeJobsInPipeline: await prisma.jobApplication.count({ where: { userId, status: { notIn: ["SAVED", "REJECTED", "WITHDRAWN"] } } })
+      },
+      topCompaniesApplied: applicationsThisWeek.map(app => app.companyName).slice(0, 3),
+      encouragementMessage: encouragement,
+      generatedAt: new Date().toISOString()
+    };
+  }
 }

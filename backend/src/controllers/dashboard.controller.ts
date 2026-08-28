@@ -273,3 +273,20 @@ export const getConsistencyTracker = asyncHandler(async (req: Request, res: Resp
     data: tracker,
   });
 });
+
+export const generateWeeklyReport = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  if (!userId) {
+     res.status(401).json({ success: false, message: "Unauthorized access: user ID is missing" });
+     return;
+  }
+
+  const report = await dashboardService.generateWeeklyReport(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Weekly activity report generated successfully", 
+    data: report,
+  });
+});
