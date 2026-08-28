@@ -14,6 +14,7 @@ import {
   getResumeQualityScore,
   getAtsOptimizedText,
   analyzeMissingKeywords,
+  translateResume,
 } from "../controllers/resume.controller";
 import { authenticate } from "../middleware/auth";
 import { upload } from "../middleware/upload";
@@ -43,6 +44,7 @@ router.get("/:id/versions", authenticate, getResumeVersionHistory);
 router.get("/:id/quality-score", authenticate, getResumeQualityScore);
 router.get("/:id/ats-text", authenticate, getAtsOptimizedText);
 router.post("/:id/missing-keywords", authenticate, analyzeMissingKeywords);
+router.post("/:id/translate", authenticate, translateResume);
 
 // -----------------------------------------------------------------------
 // Mutation operations

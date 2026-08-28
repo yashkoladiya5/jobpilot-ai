@@ -343,4 +343,36 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
         : "Your resume contains all the core keywords we detected in the job description."
     };
   }
+
+  async translateResume(userId: string, id: string, targetLanguage: string) {
+    const resume = await prisma.resume.findUnique({ where: { id } });
+    if (!resume || resume.userId !== userId) {
+      throw ApiError.notFound("Resume not found");
+    }
+
+    if (!targetLanguage || targetLanguage.trim() === "") {
+      throw ApiError.badRequest("Target language is required");
+    }
+
+    const validLanguages = ["spanish", "french", "german", "mandarin", "japanese"];
+    const lang = targetLanguage.toLowerCase();
+    
+    if (!validLanguages.includes(lang)) {
+      throw ApiError.badRequest(`Unsupported language. Supported languages: ${validLanguages.join(', ')}`);
+    }
+
+    // Mock AI translation of the resume
+    let translatedSnippet = "";
+    if (lang === "spanish") translatedSnippet = "RESUMEN: Ingeniero de software experimentado con 5 años...";
+    else if (lang === "french") translatedSnippet = "RÉSUMÉ: Ingénieur logiciel expérimenté avec 5 ans...";
+    else translatedSnippet = `[Translated to ${targetLanguage}]: Experienced software engineer...`;
+
+    return {
+      resumeId: resume.id,
+      originalFileName: resume.fileName,
+      targetLanguage,
+      translatedContent: translatedSnippet,
+      message: `Resume successfully translated into ${targetLanguage}.`
+    };
+  }
 }

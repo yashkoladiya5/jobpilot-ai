@@ -204,3 +204,17 @@ export const analyzeMissingKeywords = asyncHandler(async (req: Request, res: Res
     data: analysis,
   });
 });
+
+export const translateResume = asyncHandler(async (req: Request, res: Response) => {
+  const { id: userId } = (req as AuthenticatedRequest).user;
+  const { id } = req.params;
+  const { targetLanguage } = req.body;
+  
+  const translation = await resumeService.translateResume(userId, id, targetLanguage);
+  
+  res.status(200).json({
+    success: true,
+    message: `Resume translated to ${targetLanguage} successfully`,
+    data: translation,
+  });
+});
