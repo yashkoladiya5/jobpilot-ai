@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { authenticate } from "../middleware/auth";
-import { getStats, getRecentActivityLogs, getActionItems, getDashboardSummary, getDashboardAlerts, getUpcomingEvents, getDailyGoals, getRecommendedJobs, getWeeklySnapshot, getTopSkillsTrending, getGamificationScore, getSkillGapAnalysis, getBurnoutPredictor, getMorningBriefing, getConsistencyTracker, generateWeeklyReport, updateNotificationPreferences } from "../controllers/dashboard.controller";
+import { getStats, getRecentActivityLogs, getActionItems, getDashboardSummary, getDashboardAlerts, getUpcomingEvents, getDailyGoals, getRecommendedJobs, getWeeklySnapshot, getTopSkillsTrending, getGamificationScore, getSkillGapAnalysis, getBurnoutPredictor, getMorningBriefing, getConsistencyTracker, generateWeeklyReport, updateNotificationPreferences, snoozeNotifications } from "../controllers/dashboard.controller";
 
 /**
  * Express router for dashboard endpoints.
@@ -25,5 +25,6 @@ router.get("/morning-briefing", authenticate, getMorningBriefing);
 router.get("/consistency-tracker", authenticate, getConsistencyTracker);
 router.get("/weekly-report", authenticate, generateWeeklyReport);
 router.patch("/notifications/preferences", authenticate, updateNotificationPreferences);
+router.post("/notifications/snooze", authenticate, snoozeNotifications);
 
 export default router;

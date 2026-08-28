@@ -700,4 +700,24 @@ export class DashboardService {
       message: "Notification preferences updated successfully."
     };
   }
+
+  async snoozeNotifications(userId: string, snoozeDays: number) {
+    if (!snoozeDays || snoozeDays < 1) {
+      throw ApiError.badRequest("Must provide a valid number of days to snooze (minimum 1)");
+    }
+    
+    // In a real application we would update a user settings record.
+    // We will mock this logic and return the simulated update.
+    
+    const resumeDate = new Date();
+    resumeDate.setDate(resumeDate.getDate() + snoozeDays);
+
+    return {
+      userId,
+      snoozed: true,
+      snoozeDays,
+      resumeNotificationsAt: resumeDate.toISOString(),
+      message: `All dashboard notifications are paused until ${resumeDate.toLocaleDateString()}`
+    };
+  }
 }

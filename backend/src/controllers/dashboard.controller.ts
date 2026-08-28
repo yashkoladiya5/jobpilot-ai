@@ -308,3 +308,16 @@ export const updateNotificationPreferences = asyncHandler(async (req: Request, r
     data: result,
   });
 });
+
+export const snoozeNotifications = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { snoozeDays } = req.body;
+  
+  const result = await dashboardService.snoozeNotifications(userId, snoozeDays);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Notifications snoozed successfully", 
+    data: result,
+  });
+});
