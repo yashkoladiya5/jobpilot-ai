@@ -396,4 +396,27 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
 
     return viewLog;
   }
+
+  async generateShareableLink(userId: string, id: string, expiresInDays: number = 7) {
+    const resume = await prisma.resume.findUnique({ where: { id } });
+    if (!resume || resume.userId !== userId) {
+      throw ApiError.notFound("Resume not found");
+    }
+
+    // In a real application, we would generate a secure token and store it in the database
+    // along with the expiration date and resume ID.
+    // For this mock, we generate a random string and return a simulated URL.
+    
+    const randomToken = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    const expirationDate = new Date();
+    expirationDate.setDate(expirationDate.getDate() + expiresInDays);
+
+    return {
+      resumeId: resume.id,
+      fileName: resume.fileName,
+      shareableLink: `https://jobpilot.ai/shared/resume/${randomToken}`,
+      expiresAt: expirationDate.toISOString(),
+      message: `Shareable link generated successfully, valid for ${expiresInDays} days.`
+    };
+  }
 }

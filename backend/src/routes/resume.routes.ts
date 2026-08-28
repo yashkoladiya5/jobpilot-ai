@@ -16,6 +16,7 @@ import {
   analyzeMissingKeywords,
   translateResume,
   trackResumeView,
+  generateShareableLink,
 } from "../controllers/resume.controller";
 import { authenticate } from "../middleware/auth";
 import { upload } from "../middleware/upload";
@@ -47,6 +48,7 @@ router.get("/:id/ats-text", authenticate, getAtsOptimizedText);
 router.post("/:id/missing-keywords", authenticate, analyzeMissingKeywords);
 router.post("/:id/translate", authenticate, translateResume);
 router.post("/:id/track-view", authenticate, trackResumeView);
+router.post("/:id/share", authenticate, generateShareableLink);
 
 // -----------------------------------------------------------------------
 // Mutation operations

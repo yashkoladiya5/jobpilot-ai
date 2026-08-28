@@ -232,3 +232,17 @@ export const trackResumeView = asyncHandler(async (req: Request, res: Response) 
     data: viewLog,
   });
 });
+
+export const generateShareableLink = asyncHandler(async (req: Request, res: Response) => {
+  const { id: userId } = (req as AuthenticatedRequest).user;
+  const { id } = req.params;
+  const { expiresInDays } = req.body;
+  
+  const result = await resumeService.generateShareableLink(userId, id, expiresInDays);
+  
+  res.status(200).json({
+    success: true,
+    message: "Shareable link generated successfully",
+    data: result,
+  });
+});
