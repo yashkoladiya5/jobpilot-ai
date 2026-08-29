@@ -200,3 +200,24 @@ export const trackLoginDuration = asyncHandler(async (req: Request, res: Respons
     data: result 
   });
 });
+
+export const getCustomDateRangeStats = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { startDate, endDate } = req.query;
+  
+  if (!startDate || !endDate) {
+    res.status(400).json({ success: false, message: "startDate and endDate queries are required." });
+    return;
+  }
+  
+  const start = new Date(startDate as string);
+  const end = new Date(endDate as string);
+  
+  const result = await analyticsService.getCustomDateRangeStats(userId, start, end);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Custom date range stats fetched successfully", 
+    data: result 
+  });
+});

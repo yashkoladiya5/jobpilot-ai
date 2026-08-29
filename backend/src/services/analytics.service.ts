@@ -733,4 +733,55 @@ export class AnalyticsService {
       message: "Login duration successfully recorded."
     };
   }
+
+  async getCustomDateRangeStats(userId: string, startDate: Date, endDate: Date) {
+    if (startDate > endDate) {
+      throw ApiError.badRequest("Start date cannot be after end date");
+    }
+
+    const [totalApplications, grouped, interviewsScheduled, offersReceived] = await Promise.all([
+      prisma.jobApplication.count({
+        where: {
+          userId,
+          appliedDate: { gte: startDate, lte: endDate }
+        }
+      }),
+      prisma.jobApplication.groupBy({
+        by: ["status"],
+        where: {
+          userId,
+          appliedDate: { gte: startDate, lte: endDate }
+        },
+        _count: { status: true },
+      }),
+      prisma.jobApplication.count({
+        where: {
+          userId,
+          status: "INTERVIEW",
+          appliedDate: { gte: startDate, lte: endDate }
+        }
+      }),
+      prisma.jobApplication.count({
+        where: {
+          userId,
+          status: "OFFER",
+          appliedDate: { gte: startDate, lte: endDate }
+        }
+      })
+    ]);
+
+    const byStatus = grouped.map((g) => ({
+      status: g.status,
+      count: g._count.status,
+    }));
+
+    return {
+      userId,
+      dateRange: { start: startDate, end: endDate },
+      totalApplications,
+      interviewsScheduled,
+      offersReceived,
+      byStatus
+    };
+  }
 }
