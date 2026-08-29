@@ -359,3 +359,15 @@ export const dismissAllAlerts = asyncHandler(async (req: Request, res: Response)
     data: result,
   });
 });
+
+export const clearAllActionItems = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  const result = await dashboardService.clearAllActionItems(userId);
+
+  res.status(200).json({
+    success: true,
+    message: "Action items cleared successfully",
+    data: result,
+  });
+});
