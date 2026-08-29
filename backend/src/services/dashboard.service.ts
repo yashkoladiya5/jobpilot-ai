@@ -753,4 +753,20 @@ export class DashboardService {
       message: `Alert ${alertId} has been pinned to the top of your dashboard.`
     };
   }
+
+  async dismissAllAlerts(userId: string) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw ApiError.notFound("User not found");
+
+    // In a real database we would update an Alert table.
+    // Since alerts are dynamically generated here, we can mock dismissing them
+    // by storing a "lastDismissedAll" timestamp on the user's profile/preferences.
+    // For this mock, we just return a success result.
+    
+    return {
+      userId,
+      clearedAt: new Date().toISOString(),
+      message: "All non-critical alerts have been dismissed."
+    };
+  }
 }

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { authenticate } from "../middleware/auth";
-import { getStats, getRecentActivityLogs, getActionItems, getDashboardSummary, getDashboardAlerts, getUpcomingEvents, getDailyGoals, getRecommendedJobs, getWeeklySnapshot, getTopSkillsTrending, getGamificationScore, getSkillGapAnalysis, getBurnoutPredictor, getMorningBriefing, getConsistencyTracker, generateWeeklyReport, updateNotificationPreferences, snoozeNotifications, dismissAlert, pinAlert } from "../controllers/dashboard.controller";
+import { getStats, getRecentActivityLogs, getActionItems, getDashboardSummary, getDashboardAlerts, getUpcomingEvents, getDailyGoals, getRecommendedJobs, getWeeklySnapshot, getTopSkillsTrending, getGamificationScore, getSkillGapAnalysis, getBurnoutPredictor, getMorningBriefing, getConsistencyTracker, generateWeeklyReport, updateNotificationPreferences, snoozeNotifications, dismissAlert, pinAlert, dismissAllAlerts } from "../controllers/dashboard.controller";
 
 /**
  * Express router for dashboard endpoints.
@@ -27,6 +27,7 @@ router.get("/weekly-report", authenticate, generateWeeklyReport);
 router.patch("/notifications/preferences", authenticate, updateNotificationPreferences);
 router.post("/notifications/snooze", authenticate, snoozeNotifications);
 router.post("/alerts/:alertId/dismiss", authenticate, dismissAlert);
+router.patch("/alerts/dismiss-all", authenticate, dismissAllAlerts);
 router.patch("/alerts/:alertId/pin", authenticate, pinAlert);
 
 export default router;
