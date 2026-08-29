@@ -436,4 +436,40 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
       generatedAt: new Date().toISOString()
     };
   }
+
+  async exportResumeAsJson(userId: string, id: string) {
+    const resume = await prisma.resume.findFirst({
+      where: { id, userId },
+      include: {
+        analyses: true
+      }
+    });
+
+    if (!resume) {
+      throw ApiError.notFound("Resume not found");
+    }
+
+    // Format the resume data into a standardized JSON structure
+    // This allows users to export their parsed resume data to use on other platforms
+    const parsedContent: any = resume.parsedContent && typeof resume.parsedContent === 'string' 
+      ? JSON.parse(resume.parsedContent) 
+      : resume.parsedContent || {};
+      
+    const exportData = {
+      basics: {
+        name: parsedContent.name || "Unknown",
+        email: parsedContent.email || "",
+        phone: parsedContent.phone || ""
+      },
+      work: parsedContent.experience || [],
+      education: parsedContent.education || [],
+      skills: parsedContent.skills || [],
+      metadata: {
+        lastUpdated: resume.updatedAt,
+        latestScore: resume.analyses?.[0]?.overallScore || null
+      }
+    };
+
+    return exportData;
+  }
 }

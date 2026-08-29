@@ -259,3 +259,16 @@ export const generateResumeSummary = asyncHandler(async (req: Request, res: Resp
     data: summaryData,
   });
 });
+
+export const exportResumeAsJson = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { id } = req.params;
+  
+  const jsonData = await resumeService.exportResumeAsJson(userId, id);
+  
+  res.status(200).json({
+    success: true,
+    message: "Resume exported as JSON successfully",
+    data: jsonData,
+  });
+});

@@ -18,6 +18,7 @@ import {
   trackResumeView,
   generateShareableLink,
   generateResumeSummary,
+  exportResumeAsJson,
 } from "../controllers/resume.controller";
 import { authenticate } from "../middleware/auth";
 import { upload } from "../middleware/upload";
@@ -51,6 +52,7 @@ router.post("/:id/translate", authenticate, translateResume);
 router.post("/:id/track-view", authenticate, trackResumeView);
 router.post("/:id/share", authenticate, generateShareableLink);
 router.get("/:id/summary", authenticate, generateResumeSummary);
+router.get("/:id/export/json", authenticate, exportResumeAsJson);
 
 // -----------------------------------------------------------------------
 // Mutation operations
