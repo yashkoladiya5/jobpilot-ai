@@ -511,4 +511,49 @@ export class AuthService {
       message: `Device ${deviceName || deviceId} has been trusted for 30 days. You will not be prompted for 2FA on this device.`
     };
   }
+
+  async getProfileCompleteness(userId: string) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      throw ApiError.notFound("User not found");
+    }
+
+    let score = 0;
+    const missingFields = [];
+
+    if (user.name && user.name.trim().length > 0) {
+      score += 25;
+    } else {
+      missingFields.push("Name");
+    }
+
+    if (user.email && user.email.trim().length > 0) {
+      score += 25;
+    } else {
+      missingFields.push("Email");
+    }
+
+    // Since our prisma schema only has basic fields, we will mock the checks for Bio and Location
+    // to simulate a real profile completeness check.
+    const hasBio = false; // Mock
+    if (hasBio) {
+      score += 25;
+    } else {
+      missingFields.push("Bio");
+    }
+
+    const hasLocation = false; // Mock
+    if (hasLocation) {
+      score += 25;
+    } else {
+      missingFields.push("Location");
+    }
+
+    return {
+      userId,
+      completenessScore: score,
+      missingFields,
+      message: score === 100 ? "Your profile is fully complete!" : "Complete your profile to stand out more to recruiters."
+    };
+  }
 }

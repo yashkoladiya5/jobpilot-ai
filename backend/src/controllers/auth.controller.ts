@@ -336,3 +336,15 @@ export const trustDevice = asyncHandler(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
+export const getProfileCompleteness = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  const scoreData = await authService.getProfileCompleteness(userId);
+  
+  res.status(200).json({
+    success: true,
+    message: "Profile completeness calculated successfully",
+    data: scoreData,
+  });
+});
