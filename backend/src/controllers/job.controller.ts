@@ -329,3 +329,16 @@ export const addJobContact = asyncHandler(async (req: Request, res: Response) =>
     data: result,
   });
 });
+
+export const duplicateJob = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { id } = req.params;
+  
+  const duplicatedJob = await jobService.duplicateJobApplication(userId, id);
+  
+  res.status(201).json({
+    success: true,
+    message: "Job application duplicated successfully",
+    data: duplicatedJob,
+  });
+});

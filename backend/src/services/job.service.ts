@@ -649,4 +649,26 @@ export class JobService {
       }
     });
   }
+
+  async duplicateJobApplication(userId: string, id: string) {
+    const job = await this.getJobById(userId, id);
+    
+    // Duplicate the job application with " (Copy)" appended to the role
+    // and status reset to SAVED.
+    const newJob = await prisma.jobApplication.create({
+      data: {
+        userId,
+        companyName: job.companyName,
+        role: `${job.role} (Copy)`,
+        jobUrl: job.jobUrl,
+        salaryRange: job.salaryRange,
+        location: job.location,
+        status: "SAVED",
+        notes: job.notes ? `[Copied from original]\n${job.notes}` : undefined,
+        resumeId: job.resumeId,
+      }
+    });
+
+    return newJob;
+  }
 }
