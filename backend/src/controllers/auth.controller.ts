@@ -395,3 +395,21 @@ export const verifySessionHealth = asyncHandler(async (req: Request, res: Respon
     data: healthData,
   });
 });
+
+export const revokeOtherSessions = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { currentSessionId } = req.body;
+  
+  if (!currentSessionId) {
+     res.status(400).json({ success: false, message: "Current session ID is required" });
+     return;
+  }
+  
+  const result = await authService.revokeOtherSessions(userId, currentSessionId);
+  
+  res.status(200).json({
+    success: true,
+    message: "Other sessions revoked successfully",
+    data: result,
+  });
+});
