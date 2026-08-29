@@ -334,3 +334,16 @@ export const dismissAlert = asyncHandler(async (req: Request, res: Response) => 
     data: result,
   });
 });
+
+export const pinAlert = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { alertId } = req.params;
+  
+  const result = await dashboardService.pinAlert(userId, alertId);
+  
+  res.status(200).json({
+    success: true,
+    message: "Alert pinned successfully",
+    data: result,
+  });
+});

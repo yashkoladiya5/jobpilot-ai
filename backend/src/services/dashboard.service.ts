@@ -736,4 +736,21 @@ export class DashboardService {
       message: `Alert ${alertId} successfully dismissed.`
     };
   }
+
+  async pinAlert(userId: string, alertId: string) {
+    if (!alertId) {
+      throw ApiError.badRequest("Alert ID is required to pin.");
+    }
+    
+    // In a real database we would update an `isPinned` column in an Alerts table.
+    // We mock this action since we don't have a dedicated Alerts table right now.
+    
+    return {
+      userId,
+      alertId,
+      isPinned: true,
+      pinnedAt: new Date().toISOString(),
+      message: `Alert ${alertId} has been pinned to the top of your dashboard.`
+    };
+  }
 }
