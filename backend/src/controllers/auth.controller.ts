@@ -383,3 +383,15 @@ export const toggleTwoFactorAuth = asyncHandler(async (req: Request, res: Respon
     data: result,
   });
 });
+
+export const verifySessionHealth = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  const healthData = await authService.verifySessionHealth(userId);
+  
+  res.status(200).json({
+    success: true,
+    message: "Session health verified successfully",
+    data: healthData,
+  });
+});

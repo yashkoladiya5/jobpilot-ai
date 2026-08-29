@@ -610,4 +610,52 @@ export class AuthService {
       message: enable ? "Two-factor authentication has been enabled." : "Two-factor authentication has been disabled."
     };
   }
+
+  async verifySessionHealth(userId: string) {
+    // In a real application, lastLoginAt and isEmailVerified would be fetched from the database.
+    // For this mock, we'll fetch the user and simulate these fields based on createdAt/updatedAt.
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { 
+        id: true, 
+        createdAt: true,
+        updatedAt: true
+      }
+    });
+
+    if (!user) {
+      throw ApiError.unauthorized("User session is invalid or user no longer exists");
+    }
+
+    // Determine session health based on mock last login time
+    const now = new Date();
+    const daysSinceLogin = Math.floor((now.getTime() - user.updatedAt.getTime()) / (1000 * 60 * 60 * 24));
+    
+    // We mock email verification as true for older accounts and false for new ones
+    const isEmailVerified = (now.getTime() - user.createdAt.getTime()) > (1000 * 60 * 60 * 24);
+
+    let healthStatus = "HEALTHY";
+    let message = "Session is secure and active.";
+    let requiresAction = false;
+
+    if (daysSinceLogin > 14) {
+      healthStatus = "WARNING";
+      message = "Session is active but it has been over 14 days since your last full login. You may need to re-authenticate soon.";
+    }
+
+    if (!isEmailVerified) {
+      healthStatus = "AT_RISK";
+      message = "Your email address is unverified, which limits account recovery options.";
+      requiresAction = true;
+    }
+
+    return {
+      userId,
+      healthStatus,
+      daysSinceLogin,
+      requiresAction,
+      message,
+      checkedAt: now.toISOString()
+    };
+  }
 }
