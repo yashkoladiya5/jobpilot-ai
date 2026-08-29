@@ -373,3 +373,22 @@ export const restoreJob = asyncHandler(async (req: Request, res: Response) => {
     data: restoredJob,
   });
 });
+
+export const archiveOldApplications = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { olderThanDays } = req.body;
+  
+  const parsedDays = olderThanDays ? parseInt(olderThanDays as string, 10) : 30;
+  
+  if (isNaN(parsedDays) || parsedDays < 1) {
+    throw ApiError.badRequest("olderThanDays must be a positive integer.");
+  }
+
+  const result = await jobService.archiveOldApplications(userId, parsedDays);
+
+  res.status(200).json({
+    success: true,
+    message: result.message,
+    data: result,
+  });
+});

@@ -26,6 +26,7 @@ import {
   duplicateJob,
   restoreJob,
   bulkArchiveJobs,
+  archiveOldApplications,
 } from "../controllers/job.controller";
 import { authenticate } from "../middleware/auth";
 import { validate } from "../middleware/validate";
@@ -46,6 +47,7 @@ router.get("/notes/summary", authenticate, getJobNotesSummary);
 router.get("/action-items", authenticate, getJobActionItems);
 router.patch("/bulk/status", authenticate, bulkUpdateStatus);
 router.patch("/bulk/archive", authenticate, bulkArchiveJobs);
+router.patch("/archive/old", authenticate, archiveOldApplications);
 router.post("/bulk/delete", authenticate, bulkDeleteJobs);
 router.patch("/:id/status", authenticate, updateJobStatus);
 router.patch("/:id/note", authenticate, updateJobNote);

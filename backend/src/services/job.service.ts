@@ -704,4 +704,35 @@ export class JobService {
 
     return restoredJob;
   }
+
+  async archiveOldApplications(userId: string, olderThanDays: number = 30) {
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - olderThanDays);
+
+    const oldJobs = await prisma.jobApplication.findMany({
+      where: {
+        userId,
+        updatedAt: { lte: cutoffDate },
+        status: { notIn: ["REJECTED", "WITHDRAWN", "OFFER"] }
+      },
+      select: { id: true }
+    });
+
+    if (oldJobs.length === 0) {
+      return { count: 0, message: "No old applications found to archive." };
+    }
+
+    const jobIds = oldJobs.map(job => job.id);
+    
+    await prisma.jobApplication.updateMany({
+      where: { id: { in: jobIds } },
+      data: { status: "WITHDRAWN" } // Using withdrawn as archive status
+    });
+
+    return { 
+      count: jobIds.length, 
+      jobIds,
+      message: `Successfully archived ${jobIds.length} applications older than ${olderThanDays} days.`
+    };
+  }
 }
