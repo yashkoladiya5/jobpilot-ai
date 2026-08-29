@@ -830,4 +830,49 @@ export class AnalyticsService {
       generatedAt: new Date().toISOString()
     };
   }
+
+  async getApplicationConversionFunnel(userId: string) {
+    const jobs = await prisma.jobApplication.findMany({
+      where: { userId },
+      select: { status: true },
+    });
+
+    const total = jobs.length;
+    if (total === 0) {
+      return {
+        stages: [
+          { stage: "Applied", count: 0, percentage: 0 },
+          { stage: "Interview", count: 0, percentage: 0 },
+          { stage: "Offer", count: 0, percentage: 0 }
+        ],
+        message: "Apply to jobs to start generating your conversion funnel."
+      };
+    }
+
+    // A job might be in OFFER but it passed through APPLIED and INTERVIEW.
+    // For a funnel, we count cumulative achievements.
+    const offerCount = jobs.filter(j => j.status === 'OFFER').length;
+    const interviewCount = jobs.filter(j => j.status === 'INTERVIEW').length + offerCount; // If you got an offer, you interviewed
+    const appliedCount = total; // All saved/rejected/etc started as applied mostly
+
+    const funnel = [
+      { stage: "Applied", count: appliedCount, percentage: 100 },
+      { 
+        stage: "Interview", 
+        count: interviewCount, 
+        percentage: appliedCount > 0 ? Math.round((interviewCount / appliedCount) * 100) : 0 
+      },
+      { 
+        stage: "Offer", 
+        count: offerCount, 
+        percentage: interviewCount > 0 ? Math.round((offerCount / interviewCount) * 100) : 0 
+      }
+    ];
+
+    return {
+      stages: funnel,
+      overallConversionRate: appliedCount > 0 ? Math.round((offerCount / appliedCount) * 100) : 0,
+      message: "Here is your application conversion funnel from application to offer."
+    };
+  }
 }

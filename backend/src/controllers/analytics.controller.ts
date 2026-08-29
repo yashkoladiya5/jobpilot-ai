@@ -245,3 +245,15 @@ export const getSkillDemandForecast = asyncHandler(async (req: Request, res: Res
     data: forecast,
   });
 });
+
+export const getApplicationConversionFunnel = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  const funnelData = await analyticsService.getApplicationConversionFunnel(userId);
+
+  res.status(200).json({
+    success: true,
+    message: "Application conversion funnel generated successfully",
+    data: funnelData,
+  });
+});
