@@ -365,3 +365,21 @@ export const verifyEmailDomain = asyncHandler(async (req: Request, res: Response
     data: result,
   });
 });
+
+export const toggleTwoFactorAuth = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { enable } = req.body;
+  
+  if (typeof enable !== 'boolean') {
+    res.status(400).json({ success: false, message: "A boolean 'enable' value is required" });
+    return;
+  }
+  
+  const result = await authService.toggleTwoFactorAuth(userId, enable);
+  
+  res.status(200).json({
+    success: true,
+    message: result.message,
+    data: result,
+  });
+});
