@@ -246,3 +246,16 @@ export const generateShareableLink = asyncHandler(async (req: Request, res: Resp
     data: result,
   });
 });
+
+export const generateResumeSummary = asyncHandler(async (req: Request, res: Response) => {
+  const { id: userId } = (req as AuthenticatedRequest).user;
+  const { id } = req.params;
+  
+  const summaryData = await resumeService.generateResumeSummary(userId, id);
+  
+  res.status(200).json({
+    success: true,
+    message: "Resume summary generated successfully",
+    data: summaryData,
+  });
+});

@@ -17,6 +17,7 @@ import {
   translateResume,
   trackResumeView,
   generateShareableLink,
+  generateResumeSummary,
 } from "../controllers/resume.controller";
 import { authenticate } from "../middleware/auth";
 import { upload } from "../middleware/upload";
@@ -49,6 +50,7 @@ router.post("/:id/missing-keywords", authenticate, analyzeMissingKeywords);
 router.post("/:id/translate", authenticate, translateResume);
 router.post("/:id/track-view", authenticate, trackResumeView);
 router.post("/:id/share", authenticate, generateShareableLink);
+router.get("/:id/summary", authenticate, generateResumeSummary);
 
 // -----------------------------------------------------------------------
 // Mutation operations

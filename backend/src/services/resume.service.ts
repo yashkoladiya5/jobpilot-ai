@@ -419,4 +419,21 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
       message: `Shareable link generated successfully, valid for ${expiresInDays} days.`
     };
   }
+
+  async generateResumeSummary(userId: string, id: string) {
+    const resume = await prisma.resume.findUnique({ where: { id } });
+    if (!resume || resume.userId !== userId) {
+      throw ApiError.notFound("Resume not found");
+    }
+
+    // Mock an AI generated summary of the resume
+    const summary = "This resume highlights a strong background in software engineering, specifically in frontend development with React and TypeScript. It showcases 5+ years of experience leading teams and delivering high-quality web applications.";
+
+    return {
+      resumeId: resume.id,
+      fileName: resume.fileName,
+      summary,
+      generatedAt: new Date().toISOString()
+    };
+  }
 }
