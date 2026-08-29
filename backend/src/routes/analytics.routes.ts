@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { authenticate } from "../middleware/auth";
-import { getPipelineAnalytics, getTimelineData, getSkillMatchAnalytics, getRejectionAnalytics, getOfferAnalytics, getInterviewAnalytics, getWeeklyActivitySummary, getResumeAnalytics, getInterviewTrends, getJobSourceAnalytics, getSkillsGapAnalytics, getOfferNegotiationInsights, getCareerGrowthPotential, getPeerComparisonAnalytics, getOfferPredictor, getNetworkingROI, getJobSearchEffectiveness, getApplicationGhostingPredictor, trackLoginDuration, getCustomDateRangeStats, exportAnalyticsReport as getExportAnalyticsReport } from "../controllers/analytics.controller";
+import { getPipelineAnalytics, getTimelineData, getSkillMatchAnalytics, getRejectionAnalytics, getOfferAnalytics, getInterviewAnalytics, getWeeklyActivitySummary, getResumeAnalytics, getInterviewTrends, getJobSourceAnalytics, getSkillsGapAnalytics, getOfferNegotiationInsights, getCareerGrowthPotential, getPeerComparisonAnalytics, getOfferPredictor, getNetworkingROI, getJobSearchEffectiveness, getApplicationGhostingPredictor, trackLoginDuration, getCustomDateRangeStats, exportAnalyticsReport as getExportAnalyticsReport, getSkillDemandForecast } from "../controllers/analytics.controller";
 
 /**
  * Express router for analytics and reporting endpoints.
@@ -21,6 +21,7 @@ router.get("/resume", getResumeAnalytics);
 router.get("/interview-trends", getInterviewTrends);
 router.get("/job-sources", getJobSourceAnalytics);
 router.get("/skills-gap", getSkillsGapAnalytics);
+router.get("/skills-forecast", getSkillDemandForecast);
 router.get("/offers/negotiation-insights", getOfferNegotiationInsights);
 router.get("/offers/predictor", getOfferPredictor);
 router.get("/career-growth", getCareerGrowthPotential);

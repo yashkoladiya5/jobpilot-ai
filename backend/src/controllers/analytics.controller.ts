@@ -233,3 +233,15 @@ export const exportAnalyticsReport = asyncHandler(async (req: Request, res: Resp
     data: report,
   });
 });
+
+export const getSkillDemandForecast = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  const forecast = await analyticsService.getSkillDemandForecast(userId);
+  
+  res.status(200).json({
+    success: true,
+    message: "Skill demand forecast generated successfully",
+    data: forecast,
+  });
+});

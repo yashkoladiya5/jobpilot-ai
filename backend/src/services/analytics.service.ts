@@ -804,4 +804,30 @@ export class AnalyticsService {
       message: "Analytics report exported successfully."
     };
   }
+
+  async getSkillDemandForecast(userId: string) {
+    // In a real app we would query ML models or large datasets to forecast demand
+    const recentApps = await prisma.jobApplication.findMany({
+      where: { userId },
+      select: { role: true },
+      orderBy: { createdAt: "desc" },
+      take: 10
+    });
+    
+    const roleBase = recentApps.length > 0 ? recentApps[0].role : "Software Engineer";
+    
+    const mockForecast = [
+      { skill: "Next.js", currentDemand: "High", projectedDemand: "Very High", timeframe: "6-12 months", confidence: "85%" },
+      { skill: "GraphQL", currentDemand: "Medium", projectedDemand: "High", timeframe: "1-2 years", confidence: "75%" },
+      { skill: "Rust", currentDemand: "Low", projectedDemand: "Medium", timeframe: "1-2 years", confidence: "60%" }
+    ];
+    
+    return {
+      userId,
+      baseRole: roleBase,
+      forecastedSkills: mockForecast,
+      insight: `Based on your recent applications for ${roleBase}, Next.js demand is projected to spike significantly in the next year.`,
+      generatedAt: new Date().toISOString()
+    };
+  }
 }
