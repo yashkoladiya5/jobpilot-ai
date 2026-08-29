@@ -121,6 +121,24 @@ export const bulkDeleteJobs = asyncHandler(async (req: Request, res: Response) =
   });
 });
 
+export const bulkArchiveJobs = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { jobIds } = req.body;
+  
+  if (!jobIds || !Array.isArray(jobIds)) {
+     res.status(400).json({ success: false, message: "A valid array of job IDs is required." });
+     return;
+  }
+  
+  const result = await jobService.bulkArchiveJobs(userId, jobIds);
+
+  res.status(200).json({
+    success: true,
+    message: `${result.count} job(s) archived successfully`,
+    data: result,
+  });
+});
+
 export const createJob = asyncHandler(async (req: Request, res: Response) => {
   const userId = (req as AuthenticatedRequest).user.id;
   const { companyName, role } = req.body;

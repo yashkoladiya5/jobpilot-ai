@@ -208,6 +208,23 @@ export class JobService {
     return { count: deleted.count };
   }
 
+  async bulkArchiveJobs(userId: string, jobIds: string[]) {
+    if (!jobIds || jobIds.length === 0) {
+      throw ApiError.badRequest("No job IDs provided for bulk archive");
+    }
+
+    // Bulk update the status to WITHDRAWN (which acts as our archive state)
+    const archived = await prisma.jobApplication.updateMany({
+      where: { 
+        id: { in: jobIds },
+        userId 
+      },
+      data: { status: "WITHDRAWN" },
+    });
+
+    return { count: archived.count };
+  }
+
   async getJobsNeedingFollowUp(userId: string) {
     const fourteenDaysAgo = new Date();
     fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
