@@ -784,4 +784,24 @@ export class AnalyticsService {
       byStatus
     };
   }
+
+  async exportAnalyticsReport(userId: string) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw ApiError.notFound("User not found");
+
+    // We'd generate a CSV or PDF in a real app, here we return a structured JSON representing the export
+    const basicStats = await this.getPipelineAnalytics(userId);
+    const funnel = await this.getWeeklyActivitySummary(userId);
+    
+    return {
+      userId,
+      exportedAt: new Date().toISOString(),
+      reportType: "FULL_ANALYTICS_EXPORT",
+      data: {
+        basicStats,
+        funnel
+      },
+      message: "Analytics report exported successfully."
+    };
+  }
 }

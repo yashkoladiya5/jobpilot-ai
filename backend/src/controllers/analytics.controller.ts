@@ -221,3 +221,15 @@ export const getCustomDateRangeStats = asyncHandler(async (req: Request, res: Re
     data: result 
   });
 });
+
+export const exportAnalyticsReport = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  const report = await analyticsService.exportAnalyticsReport(userId);
+  
+  res.status(200).json({
+    success: true,
+    message: "Analytics report exported successfully",
+    data: report,
+  });
+});
