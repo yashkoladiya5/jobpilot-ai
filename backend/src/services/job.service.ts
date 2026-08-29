@@ -671,4 +671,20 @@ export class JobService {
 
     return newJob;
   }
+
+  async restoreJobApplication(userId: string, id: string) {
+    const job = await this.getJobById(userId, id);
+    
+    if (job.status !== "WITHDRAWN" && job.status !== "REJECTED") {
+      throw ApiError.badRequest("Only withdrawn or rejected jobs can be restored.");
+    }
+    
+    // We restore it to SAVED status so they can resume application process
+    const restoredJob = await prisma.jobApplication.update({
+      where: { id },
+      data: { status: "SAVED" }
+    });
+
+    return restoredJob;
+  }
 }

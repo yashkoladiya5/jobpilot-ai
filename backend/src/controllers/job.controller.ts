@@ -342,3 +342,16 @@ export const duplicateJob = asyncHandler(async (req: Request, res: Response) => 
     data: duplicatedJob,
   });
 });
+
+export const restoreJob = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { id } = req.params;
+  
+  const restoredJob = await jobService.restoreJobApplication(userId, id);
+  
+  res.status(200).json({
+    success: true,
+    message: "Job application restored successfully",
+    data: restoredJob,
+  });
+});

@@ -24,6 +24,7 @@ import {
   submitInterviewFeedback,
   addJobContact,
   duplicateJob,
+  restoreJob,
 } from "../controllers/job.controller";
 import { authenticate } from "../middleware/auth";
 import { validate } from "../middleware/validate";
@@ -47,6 +48,7 @@ router.post("/bulk/delete", authenticate, bulkDeleteJobs);
 router.patch("/:id/status", authenticate, updateJobStatus);
 router.patch("/:id/note", authenticate, updateJobNote);
 router.patch("/:id/archive", authenticate, archiveJob);
+router.patch("/:id/restore", authenticate, restoreJob);
 router.get("/:id/negotiation-prep", authenticate, getSalaryNegotiationPrep);
 router.get("/:id/interview-checklist", authenticate, getInterviewPrepChecklist);
 router.get("/:id/commute-estimate", authenticate, estimateCommuteTime);
