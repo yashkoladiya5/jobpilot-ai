@@ -321,3 +321,16 @@ export const snoozeNotifications = asyncHandler(async (req: Request, res: Respon
     data: result,
   });
 });
+
+export const dismissAlert = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { alertId } = req.params;
+  
+  const result = await dashboardService.dismissAlert(userId, alertId);
+  
+  res.status(200).json({
+    success: true,
+    message: "Alert dismissed successfully",
+    data: result,
+  });
+});

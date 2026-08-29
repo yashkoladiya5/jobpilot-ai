@@ -720,4 +720,20 @@ export class DashboardService {
       message: `All dashboard notifications are paused until ${resumeDate.toLocaleDateString()}`
     };
   }
+
+  async dismissAlert(userId: string, alertId: string) {
+    if (!alertId) {
+      throw ApiError.badRequest("Alert ID is required to dismiss.");
+    }
+    
+    // In a real application, we would update a user_alerts or dashboard_state table
+    // For this mock implementation, we just return a success state to signify it was dismissed
+    
+    return {
+      userId,
+      alertId,
+      dismissedAt: new Date().toISOString(),
+      message: `Alert ${alertId} successfully dismissed.`
+    };
+  }
 }
