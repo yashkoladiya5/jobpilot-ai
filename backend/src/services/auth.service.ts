@@ -556,4 +556,43 @@ export class AuthService {
       message: score === 100 ? "Your profile is fully complete!" : "Complete your profile to stand out more to recruiters."
     };
   }
+
+  async verifyEmailDomain(email: string) {
+    if (!email || !email.includes('@')) {
+      throw ApiError.badRequest("Invalid email format");
+    }
+
+    const domain = email.split('@')[1].toLowerCase();
+    
+    // Mock list of known disposable email domains
+    const disposableDomains = [
+      "tempmail.com",
+      "guerrillamail.com",
+      "10minutemail.com",
+      "mailinator.com",
+      "yopmail.com",
+      "dispostable.com"
+    ];
+
+    if (disposableDomains.includes(domain)) {
+      return {
+        email,
+        domain,
+        isDisposable: true,
+        isValid: false,
+        message: "Disposable email addresses are not allowed for registration."
+      };
+    }
+
+    // In a real application, you might do a DNS MX record lookup here
+    // e.g. using `dns.resolveMx(domain, ...)`
+    
+    return {
+      email,
+      domain,
+      isDisposable: false,
+      isValid: true,
+      message: "Email domain verified successfully."
+    };
+  }
 }

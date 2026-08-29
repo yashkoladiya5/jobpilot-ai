@@ -348,3 +348,20 @@ export const getProfileCompleteness = asyncHandler(async (req: Request, res: Res
     data: scoreData,
   });
 });
+
+export const verifyEmailDomain = asyncHandler(async (req: Request, res: Response) => {
+  const { email } = req.body;
+  
+  if (!email || typeof email !== 'string') {
+    res.status(400).json({ success: false, message: "A valid email string is required" });
+    return;
+  }
+  
+  const result = await authService.verifyEmailDomain(email);
+  
+  res.status(200).json({
+    success: true,
+    message: result.message,
+    data: result,
+  });
+});

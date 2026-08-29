@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { register, login, getMe, deleteAccount, updatePassword, updateEmail, updateName, getActiveSessions, getLoginHistory, registerDevice, initiateMfaSetup, verifyMfaSetup, generateBackupCodes, initiatePasswordlessLogin, initiateSmsTwoFactor, getLoginStreak, revokeSession, exportUserData, getUserSecurityScore, trustDevice, getProfileCompleteness } from "../controllers/auth.controller";
+import { register, login, getMe, deleteAccount, updatePassword, updateEmail, updateName, getActiveSessions, getLoginHistory, registerDevice, initiateMfaSetup, verifyMfaSetup, generateBackupCodes, initiatePasswordlessLogin, initiateSmsTwoFactor, getLoginStreak, revokeSession, exportUserData, getUserSecurityScore, trustDevice, getProfileCompleteness, verifyEmailDomain } from "../controllers/auth.controller";
 import { authenticate } from "../middleware/auth";
 import { validate } from "../middleware/validate";
 import { registerSchema, loginSchema } from "../validators/auth.validator";
@@ -8,6 +8,7 @@ import { authLimiter } from "../middleware/rateLimiter";
 // Router instance specifically for authentication endpoints
 const router = Router();
 
+router.post("/verify-domain", verifyEmailDomain);
 router.post("/register", validate(registerSchema), register);
 router.post("/login", authLimiter, validate(loginSchema), login);
 router.get("/me", authenticate, getMe);
