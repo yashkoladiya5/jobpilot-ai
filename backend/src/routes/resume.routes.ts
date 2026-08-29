@@ -19,6 +19,7 @@ import {
   generateShareableLink,
   generateResumeSummary,
   exportResumeAsJson,
+  cloneResume,
 } from "../controllers/resume.controller";
 import { authenticate } from "../middleware/auth";
 import { upload } from "../middleware/upload";
@@ -61,5 +62,6 @@ router.delete("/:id", authenticate, deleteResume);
 router.patch("/:id/primary", authenticate, setPrimaryResume);
 router.patch("/:id/rename", authenticate, renameResume);
 router.post("/:id/duplicate", authenticate, duplicateResume);
+router.post("/:id/clone", authenticate, cloneResume);
 
 export default router;

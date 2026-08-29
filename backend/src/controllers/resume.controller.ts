@@ -272,3 +272,16 @@ export const exportResumeAsJson = asyncHandler(async (req: Request, res: Respons
     data: jsonData,
   });
 });
+
+export const cloneResume = asyncHandler(async (req: Request, res: Response) => {
+  const { id: userId } = (req as AuthenticatedRequest).user;
+  const { id } = req.params;
+  
+  const clonedResume = await resumeService.cloneResume(userId, id);
+  
+  res.status(201).json({
+    success: true,
+    message: "Resume cloned successfully",
+    data: clonedResume,
+  });
+});
