@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { authenticate } from "../middleware/auth";
-import { getStats, getRecentActivityLogs, getActionItems, getDashboardSummary, getDashboardAlerts, getUpcomingEvents, getDailyGoals, getRecommendedJobs, getWeeklySnapshot, getTopSkillsTrending, getGamificationScore, getSkillGapAnalysis, getBurnoutPredictor, getMorningBriefing, getConsistencyTracker, generateWeeklyReport, updateNotificationPreferences, snoozeNotifications, dismissAlert, pinAlert, dismissAllAlerts, clearAllActionItems, updateWidgetPreferences } from "../controllers/dashboard.controller";
+import { getStats, getRecentActivityLogs, getActionItems, getDashboardSummary, getDashboardAlerts, getUpcomingEvents, getDailyGoals, getRecommendedJobs, getWeeklySnapshot, getTopSkillsTrending, getGamificationScore, getSkillGapAnalysis, getBurnoutPredictor, getMorningBriefing, getConsistencyTracker, generateWeeklyReport, updateNotificationPreferences, snoozeNotifications, dismissAlert, pinAlert, dismissAllAlerts, clearAllActionItems, updateWidgetPreferences, getGoalStreaks } from "../controllers/dashboard.controller";
 
 /**
  * Express router for dashboard endpoints.
@@ -31,5 +31,6 @@ router.post("/alerts/:alertId/dismiss", authenticate, dismissAlert);
 router.patch("/alerts/dismiss-all", authenticate, dismissAllAlerts);
 router.patch("/alerts/:alertId/pin", authenticate, pinAlert);
 router.patch("/widget/preferences", authenticate, updateWidgetPreferences);
+router.get("/goal-streaks", authenticate, getGoalStreaks);
 
 export default router;
