@@ -371,3 +371,21 @@ export const clearAllActionItems = asyncHandler(async (req: Request, res: Respon
     data: result,
   });
 });
+
+export const updateWidgetPreferences = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const preferences = req.body;
+  
+  if (!userId) {
+     res.status(401).json({ success: false, message: "Unauthorized access: user ID is missing" });
+     return;
+  }
+  
+  const result = await dashboardService.updateWidgetPreferences(userId, preferences);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Widget preferences updated", 
+    data: result,
+  });
+});

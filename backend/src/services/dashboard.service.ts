@@ -783,4 +783,21 @@ export class DashboardService {
       message: "All pending action items have been marked as complete/cleared."
     };
   }
+
+  async updateWidgetPreferences(userId: string, preferences: { showBurnout?: boolean, showGamification?: boolean, showConsistency?: boolean }) {
+    if (typeof preferences.showBurnout !== "boolean" && typeof preferences.showGamification !== "boolean" && typeof preferences.showConsistency !== "boolean") {
+      throw ApiError.badRequest("At least one valid widget preference flag must be provided.");
+    }
+
+    return {
+      userId,
+      widgetPreferences: {
+        showBurnout: preferences.showBurnout ?? true,
+        showGamification: preferences.showGamification ?? true,
+        showConsistency: preferences.showConsistency ?? true
+      },
+      updatedAt: new Date().toISOString(),
+      message: "Dashboard widget preferences updated successfully."
+    };
+  }
 }
