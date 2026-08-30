@@ -943,4 +943,39 @@ ${userName}`;
         : "No salary data provided to evaluate."
     };
   }
+
+  async getJobMarketTrends(userId: string, id: string) {
+    const job = await this.getJobById(userId, id);
+    
+    // Mock generating market trend data based on the role
+    const role = job.role || "Software Engineer";
+    const demandTrend = ["High", "Medium", "Very High"][Math.floor(Math.random() * 3)];
+    
+    // Generate some mock history data (e.g. past 6 months of postings)
+    const monthlyPostings = [
+      { month: "Jan", count: 1200 },
+      { month: "Feb", count: 1350 },
+      { month: "Mar", count: 1500 },
+      { month: "Apr", count: 1400 },
+      { month: "May", count: 1600 },
+      { month: "Jun", count: 1750 },
+    ];
+
+    const topLocations = [
+      "San Francisco, CA",
+      "New York, NY",
+      "Austin, TX",
+      "Remote"
+    ];
+
+    return {
+      jobId: id,
+      role,
+      company: job.companyName,
+      demandTrend,
+      monthlyPostings,
+      topLocations,
+      message: `Market demand for ${role} is currently ${demandTrend}.`
+    };
+  }
 }
