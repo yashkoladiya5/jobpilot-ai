@@ -269,3 +269,9 @@ export const getJobSearchDuration = asyncHandler(async (req: Request, res: Respo
   const result = await analyticsService.getJobSearchDuration(userId);
   res.status(200).json({ success: true, message: "Job search duration calculated", data: result });
 });
+
+export const getOfferNegotiationLeverage = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const result = await analyticsService.getOfferNegotiationLeverage(userId);
+  res.status(200).json({ success: true, message: "Negotiation leverage calculated", data: result });
+});
