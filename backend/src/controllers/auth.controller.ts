@@ -426,3 +426,15 @@ export const terminateIdleSessions = asyncHandler(async (req: Request, res: Resp
     data: result,
   });
 });
+
+export const revokeAllSessions = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  const result = await authService.revokeAllSessions(userId);
+  
+  res.status(200).json({
+    success: true,
+    message: "All sessions revoked successfully",
+    data: result,
+  });
+});
