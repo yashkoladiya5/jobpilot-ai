@@ -665,4 +665,49 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
       message: "Resume readability score generated successfully."
     };
   }
+
+  async matchResumeKeywords(userId: string, id: string, jobDescription: string) {
+    const resume = await prisma.resume.findUnique({ where: { id } });
+    if (!resume || resume.userId !== userId) {
+      throw ApiError.notFound("Resume not found");
+    }
+
+    if (!jobDescription || jobDescription.trim().length < 50) {
+      throw ApiError.badRequest("Job description is too short to analyze.");
+    }
+
+    // Mock extracting keywords from JD and comparing with Resume
+    const lowerJd = jobDescription.toLowerCase();
+    
+    // Some common keywords we look for
+    const possibleKeywords = [
+      "react", "node.js", "python", "sql", "aws", "docker", "kubernetes",
+      "leadership", "agile", "scrum", "communication", "typescript", "graphql",
+      "ci/cd", "rest api", "nosql", "mongodb", "postgres"
+    ];
+    
+    const requiredByJd = possibleKeywords.filter(kw => lowerJd.includes(kw));
+    
+    // Mock resume content (in a real scenario we parse the PDF)
+    const mockResumeContent = "I know React, TypeScript, and SQL. I have leadership experience and use REST API.";
+    const lowerResume = mockResumeContent.toLowerCase();
+
+    const missingKeywords = requiredByJd.filter(kw => !lowerResume.includes(kw));
+    const matchedKeywords = requiredByJd.filter(kw => lowerResume.includes(kw));
+    const bonusKeywords = ["graphql"]; // simulated bonus
+
+    return {
+      resumeId: resume.id,
+      fileName: resume.fileName,
+      missingKeywords,
+      matchedKeywords,
+      bonusKeywords,
+      matchPercentage: requiredByJd.length > 0 
+        ? Math.round((matchedKeywords.length / requiredByJd.length) * 100) 
+        : 100,
+      recommendation: missingKeywords.length > 0
+        ? `Consider adding these keywords to your resume to pass ATS: ${missingKeywords.join(', ')}.`
+        : "Your resume contains all the core keywords we detected in the job description."
+    };
+  }
 }

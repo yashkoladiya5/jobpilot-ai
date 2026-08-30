@@ -356,3 +356,17 @@ export const generateResumeReadabilityScore = asyncHandler(async (req: Request, 
     data: scoreData,
   });
 });
+
+export const matchResumeKeywords = asyncHandler(async (req: Request, res: Response) => {
+  const { id: userId } = (req as AuthenticatedRequest).user;
+  const { id } = req.params;
+  const { jobDescription } = req.body;
+  
+  const matchData = await resumeService.matchResumeKeywords(userId, id, jobDescription);
+  
+  res.status(200).json({
+    success: true,
+    message: "Resume keywords matched successfully",
+    data: matchData,
+  });
+});
