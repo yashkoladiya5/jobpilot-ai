@@ -406,3 +406,20 @@ export const getGoalStreaks = asyncHandler(async (req: Request, res: Response) =
     data: streaks,
   });
 });
+
+export const getCareerMilestones = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  if (!userId) {
+     res.status(401).json({ success: false, message: "Unauthorized access: user ID is missing" });
+     return;
+  }
+  
+  const milestones = await dashboardService.getCareerMilestones(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Career milestones fetched successfully", 
+    data: milestones,
+  });
+});

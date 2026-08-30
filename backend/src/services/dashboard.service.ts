@@ -835,4 +835,60 @@ export class DashboardService {
       message: currentStreak > 0 ? `You are on a ${currentStreak}-day streak!` : "Start applying today to build your streak!"
     };
   }
+
+  async getCareerMilestones(userId: string) {
+    const [totalApplications, totalInterviews, totalOffers] = await Promise.all([
+      prisma.jobApplication.count({ where: { userId } }),
+      prisma.jobApplication.count({ where: { userId, status: 'INTERVIEW' } }),
+      prisma.jobApplication.count({ where: { userId, status: 'OFFER' } })
+    ]);
+
+    const milestones = [
+      {
+        id: "m_apps_10",
+        title: "Getting Started",
+        description: "Sent your first 10 applications",
+        achieved: totalApplications >= 10,
+        icon: "🚀"
+      },
+      {
+        id: "m_apps_50",
+        title: "Job Hunter",
+        description: "Sent 50 applications",
+        achieved: totalApplications >= 50,
+        icon: "🎯"
+      },
+      {
+        id: "m_int_1",
+        title: "Foot in the Door",
+        description: "Landed your first interview",
+        achieved: totalInterviews >= 1,
+        icon: "🤝"
+      },
+      {
+        id: "m_int_5",
+        title: "In Demand",
+        description: "Landed 5 interviews",
+        achieved: totalInterviews >= 5,
+        icon: "🌟"
+      },
+      {
+        id: "m_off_1",
+        title: "The Big Win",
+        description: "Received your first job offer",
+        achieved: totalOffers >= 1,
+        icon: "🎉"
+      }
+    ];
+
+    const achievedCount = milestones.filter(m => m.achieved).length;
+
+    return {
+      userId,
+      totalMilestones: milestones.length,
+      achievedCount,
+      progress: Math.round((achievedCount / milestones.length) * 100),
+      milestones
+    };
+  }
 }
