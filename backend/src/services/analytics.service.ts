@@ -805,6 +805,45 @@ export class AnalyticsService {
     };
   }
 
+  async getInterviewSuccessRate(userId: string) {
+    const applications = await prisma.jobApplication.findMany({
+      where: { 
+        userId,
+        status: { in: ["INTERVIEW", "OFFER", "REJECTED", "WITHDRAWN"] }
+      },
+      select: { status: true, updatedAt: true, companyName: true }
+    });
+
+    const totalInterviewed = applications.length;
+    if (totalInterviewed === 0) {
+      return {
+        totalInterviews: 0,
+        successRate: 0,
+        message: "No interview data available yet."
+      };
+    }
+
+    const offers = applications.filter(a => a.status === "OFFER").length;
+    const rejections = applications.filter(a => a.status === "REJECTED").length;
+    const active = applications.filter(a => a.status === "INTERVIEW").length;
+
+    // Calculate success rate based on resolved interviews (Offers / (Offers + Rejections))
+    const resolvedInterviews = offers + rejections;
+    const successRate = resolvedInterviews > 0 ? Math.round((offers / resolvedInterviews) * 100) : 0;
+
+    return {
+      totalInterviews: totalInterviewed,
+      activeInterviews: active,
+      resolvedInterviews,
+      offers,
+      rejections,
+      successRate: `${successRate}%`,
+      message: successRate >= 50 
+        ? "Excellent! You convert a high number of interviews to offers."
+        : "Keep practicing! Consider reviewing common interview questions to boost your success rate."
+    };
+  }
+
   async getSkillDemandForecast(userId: string) {
     // In a real app we would query ML models or large datasets to forecast demand
     const recentApps = await prisma.jobApplication.findMany({

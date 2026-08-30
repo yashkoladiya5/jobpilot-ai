@@ -257,3 +257,9 @@ export const getApplicationConversionFunnel = asyncHandler(async (req: Request, 
     data: funnelData,
   });
 });
+
+export const getInterviewSuccessRate = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const result = await analyticsService.getInterviewSuccessRate(userId);
+  res.status(200).json({ success: true, message: "Interview success rate calculated", data: result });
+});

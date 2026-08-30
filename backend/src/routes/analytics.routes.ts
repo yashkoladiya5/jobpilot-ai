@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { authenticate } from "../middleware/auth";
-import { getPipelineAnalytics, getTimelineData, getSkillMatchAnalytics, getRejectionAnalytics, getOfferAnalytics, getInterviewAnalytics, getWeeklyActivitySummary, getResumeAnalytics, getInterviewTrends, getJobSourceAnalytics, getSkillsGapAnalytics, getOfferNegotiationInsights, getCareerGrowthPotential, getPeerComparisonAnalytics, getOfferPredictor, getNetworkingROI, getJobSearchEffectiveness, getApplicationGhostingPredictor, trackLoginDuration, getCustomDateRangeStats, exportAnalyticsReport as getExportAnalyticsReport, getSkillDemandForecast, getApplicationConversionFunnel } from "../controllers/analytics.controller";
+import { getPipelineAnalytics, getTimelineData, getSkillMatchAnalytics, getRejectionAnalytics, getOfferAnalytics, getInterviewAnalytics, getWeeklyActivitySummary, getResumeAnalytics, getInterviewTrends, getJobSourceAnalytics, getSkillsGapAnalytics, getOfferNegotiationInsights, getCareerGrowthPotential, getPeerComparisonAnalytics, getOfferPredictor, getNetworkingROI, getJobSearchEffectiveness, getApplicationGhostingPredictor, trackLoginDuration, getCustomDateRangeStats, exportAnalyticsReport as getExportAnalyticsReport, getSkillDemandForecast, getApplicationConversionFunnel, getInterviewSuccessRate } from "../controllers/analytics.controller";
 
 /**
  * Express router for analytics and reporting endpoints.
@@ -33,5 +33,6 @@ router.post("/login-duration", trackLoginDuration);
 router.get("/custom-range", getCustomDateRangeStats);
 router.get("/export", getExportAnalyticsReport);
 router.get("/conversion-funnel", getApplicationConversionFunnel);
+router.get("/interview-success-rate", getInterviewSuccessRate);
 
 export default router;
