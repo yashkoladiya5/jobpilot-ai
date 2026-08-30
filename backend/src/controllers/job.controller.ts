@@ -405,3 +405,16 @@ export const calculateJobMatchScore = asyncHandler(async (req: Request, res: Res
     data: scoreData,
   });
 });
+
+export const generateCoverLetterDraft = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { id } = req.params;
+  
+  const draftData = await jobService.generateCoverLetterDraft(userId, id);
+  
+  res.status(200).json({
+    success: true,
+    message: "Cover letter draft generated successfully",
+    data: draftData,
+  });
+});

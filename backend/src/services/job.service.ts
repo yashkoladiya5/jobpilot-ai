@@ -763,4 +763,44 @@ export class JobService {
         : "Good match, but consider tailoring your resume to address the missing skills."
     };
   }
+
+  async generateCoverLetterDraft(userId: string, id: string) {
+    const job = await this.getJobById(userId, id);
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw ApiError.notFound("User not found");
+
+    // Fetch primary resume for context
+    const resume = await prisma.resume.findFirst({
+      where: { userId, isPrimary: true }
+    });
+
+    const company = job.companyName || "the hiring team";
+    const role = job.role || "the open role";
+    const userName = user.name || "A Passionate Professional";
+
+    let skillsText = "my relevant experience and technical skills";
+    if (resume) {
+      skillsText = "the background detailed in my attached resume";
+    }
+
+    const draft = `Dear Hiring Manager,
+
+I am writing to express my strong interest in the ${role} position at ${company}. With ${skillsText}, I am confident in my ability to make an immediate impact on your team.
+
+Throughout my career, I have consistently demonstrated a commitment to delivering high-quality results. The opportunity to contribute to ${company}'s mission aligns perfectly with my professional goals and expertise.
+
+Thank you for your time and consideration. I have attached my resume for your review and would welcome the chance to discuss how my background, skills, and certifications will be a great fit for this role.
+
+Sincerely,
+${userName}`;
+
+    return {
+      jobId: id,
+      company: job.companyName,
+      role: job.role,
+      draft,
+      generatedAt: new Date().toISOString(),
+      message: "Cover letter draft generated successfully. Please review and customize before sending."
+    };
+  }
 }

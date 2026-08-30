@@ -28,6 +28,7 @@ import {
   bulkArchiveJobs,
   archiveOldApplications,
   calculateJobMatchScore,
+  generateCoverLetterDraft,
 } from "../controllers/job.controller";
 import { authenticate } from "../middleware/auth";
 import { validate } from "../middleware/validate";
@@ -63,6 +64,7 @@ router.post("/:id/schedule-interview", authenticate, scheduleInterview);
 router.post("/:id/interview-feedback", authenticate, submitInterviewFeedback);
 router.post("/:id/contact", authenticate, addJobContact);
 router.post("/:id/duplicate", authenticate, duplicateJob);
+router.post("/:id/cover-letter", authenticate, generateCoverLetterDraft);
 
 // CRUD operations for jobs, all requiring user authentication
 router.get("/", authenticate, getJobs);
