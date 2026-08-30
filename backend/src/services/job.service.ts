@@ -735,4 +735,32 @@ export class JobService {
       message: `Successfully archived ${jobIds.length} applications older than ${olderThanDays} days.`
     };
   }
+
+  async calculateJobMatchScore(userId: string, id: string) {
+    const job = await this.getJobById(userId, id);
+    
+    // We would fetch the primary resume in a real application
+    // and use AI to compare the resume text with the job role/description.
+    
+    // Mocked implementation:
+    const baseScore = Math.floor(Math.random() * 40) + 50; // 50 to 90
+    
+    return {
+      jobId: id,
+      company: job.companyName,
+      role: job.role,
+      matchScore: baseScore,
+      strengths: [
+        "Your years of experience match the requirement",
+        "You have the core technical skills requested"
+      ],
+      weaknesses: [
+        "Missing some domain-specific knowledge",
+        "Could highlight leadership experience more"
+      ],
+      recommendation: baseScore > 80 
+        ? "Strong match! Submit your application as soon as possible." 
+        : "Good match, but consider tailoring your resume to address the missing skills."
+    };
+  }
 }

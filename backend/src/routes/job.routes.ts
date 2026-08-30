@@ -27,6 +27,7 @@ import {
   restoreJob,
   bulkArchiveJobs,
   archiveOldApplications,
+  calculateJobMatchScore,
 } from "../controllers/job.controller";
 import { authenticate } from "../middleware/auth";
 import { validate } from "../middleware/validate";
@@ -56,6 +57,7 @@ router.patch("/:id/restore", authenticate, restoreJob);
 router.get("/:id/negotiation-prep", authenticate, getSalaryNegotiationPrep);
 router.get("/:id/interview-checklist", authenticate, getInterviewPrepChecklist);
 router.get("/:id/commute-estimate", authenticate, estimateCommuteTime);
+router.get("/:id/match-score", authenticate, calculateJobMatchScore);
 router.post("/auto-archive", authenticate, runAutoArchiving);
 router.post("/:id/schedule-interview", authenticate, scheduleInterview);
 router.post("/:id/interview-feedback", authenticate, submitInterviewFeedback);

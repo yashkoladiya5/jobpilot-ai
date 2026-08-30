@@ -392,3 +392,16 @@ export const archiveOldApplications = asyncHandler(async (req: Request, res: Res
     data: result,
   });
 });
+
+export const calculateJobMatchScore = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { id } = req.params;
+  
+  const scoreData = await jobService.calculateJobMatchScore(userId, id);
+  
+  res.status(200).json({
+    success: true,
+    message: "Job match score calculated successfully",
+    data: scoreData,
+  });
+});
