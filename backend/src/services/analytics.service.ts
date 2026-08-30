@@ -914,4 +914,47 @@ export class AnalyticsService {
       message: "Here is your application conversion funnel from application to offer."
     };
   }
+
+  async getJobSearchDuration(userId: string) {
+    const applications = await prisma.jobApplication.findMany({
+      where: { userId },
+      select: { appliedDate: true, updatedAt: true, status: true },
+      orderBy: { appliedDate: "asc" }
+    });
+
+    if (applications.length === 0) {
+      return {
+        hasData: false,
+        message: "No applications found to calculate search duration.",
+        searchDurationDays: 0,
+        averageTimeToOffer: 0
+      };
+    }
+
+    const firstApplicationDate = applications[0].appliedDate;
+    const now = new Date();
+    const searchDurationDays = Math.max(1, Math.floor((now.getTime() - firstApplicationDate.getTime()) / (1000 * 60 * 60 * 24)));
+
+    const offerApplications = applications.filter(app => app.status === "OFFER");
+    let averageTimeToOffer = 0;
+
+    if (offerApplications.length > 0) {
+      let totalDaysToOffer = 0;
+      for (const app of offerApplications) {
+        totalDaysToOffer += Math.floor((app.updatedAt.getTime() - app.appliedDate.getTime()) / (1000 * 60 * 60 * 24));
+      }
+      averageTimeToOffer = Math.round(totalDaysToOffer / offerApplications.length);
+    }
+
+    return {
+      hasData: true,
+      firstApplicationDate: firstApplicationDate.toISOString().split('T')[0],
+      searchDurationDays,
+      offersReceived: offerApplications.length,
+      averageTimeToOffer,
+      message: offerApplications.length > 0 
+        ? `You received an offer in an average of ${averageTimeToOffer} days from applying.` 
+        : `You have been searching for ${searchDurationDays} days. Keep pushing!`
+    };
+  }
 }

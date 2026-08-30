@@ -263,3 +263,9 @@ export const getInterviewSuccessRate = asyncHandler(async (req: Request, res: Re
   const result = await analyticsService.getInterviewSuccessRate(userId);
   res.status(200).json({ success: true, message: "Interview success rate calculated", data: result });
 });
+
+export const getJobSearchDuration = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const result = await analyticsService.getJobSearchDuration(userId);
+  res.status(200).json({ success: true, message: "Job search duration calculated", data: result });
+});
