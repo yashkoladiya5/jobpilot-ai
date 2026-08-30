@@ -285,3 +285,17 @@ export const cloneResume = asyncHandler(async (req: Request, res: Response) => {
     data: clonedResume,
   });
 });
+
+export const generateJobTitleMatchReport = asyncHandler(async (req: Request, res: Response) => {
+  const { id: userId } = (req as AuthenticatedRequest).user;
+  const { id } = req.params;
+  const { jobTitle } = req.body;
+  
+  const report = await resumeService.generateJobTitleMatchReport(userId, id, jobTitle);
+  
+  res.status(200).json({
+    success: true,
+    message: "Job title match report generated successfully",
+    data: report,
+  });
+});

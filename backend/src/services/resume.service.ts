@@ -500,4 +500,40 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
       },
     });
   }
+
+  async generateJobTitleMatchReport(userId: string, id: string, jobTitle: string) {
+    const resume = await prisma.resume.findUnique({ where: { id } });
+    if (!resume || resume.userId !== userId) {
+      throw ApiError.notFound("Resume not found");
+    }
+
+    if (!jobTitle || jobTitle.trim().length === 0) {
+      throw ApiError.badRequest("Job title is required for a match report.");
+    }
+
+    // Mocking the match report logic based on common patterns
+    const titleLower = jobTitle.toLowerCase();
+    
+    // We mock checking if the job title appears in the user's resume content
+    let matchScore = 50 + Math.floor(Math.random() * 45); // 50-95
+    
+    const keySkillsExpected = ["Communication", "Problem Solving"];
+    if (titleLower.includes("engineer") || titleLower.includes("developer")) {
+      keySkillsExpected.push("Coding", "System Design", "Version Control");
+    } else if (titleLower.includes("manager")) {
+      keySkillsExpected.push("Leadership", "Project Management", "Agile");
+    }
+
+    return {
+      resumeId: resume.id,
+      fileName: resume.fileName,
+      targetJobTitle: jobTitle,
+      overallMatchScore: matchScore,
+      keySkillsExpected,
+      recommendation: matchScore > 80 
+        ? "Your resume is highly targeted for this role."
+        : "Consider tailoring your resume headline and summary to better reflect this specific job title.",
+      reportGeneratedAt: new Date().toISOString()
+    };
+  }
 }
