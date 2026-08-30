@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { register, login, getMe, deleteAccount, updatePassword, updateEmail, updateName, getActiveSessions, getLoginHistory, registerDevice, initiateMfaSetup, verifyMfaSetup, generateBackupCodes, initiatePasswordlessLogin, initiateSmsTwoFactor, getLoginStreak, revokeSession, exportUserData, getUserSecurityScore, trustDevice, getProfileCompleteness, verifyEmailDomain, toggleTwoFactorAuth, verifySessionHealth, revokeOtherSessions, terminateIdleSessions, revokeAllSessions } from "../controllers/auth.controller";
+import { register, login, getMe, deleteAccount, updatePassword, updateEmail, updateName, getActiveSessions, getLoginHistory, registerDevice, initiateMfaSetup, verifyMfaSetup, generateBackupCodes, initiatePasswordlessLogin, initiateSmsTwoFactor, getLoginStreak, revokeSession, exportUserData, getUserSecurityScore, trustDevice, getProfileCompleteness, verifyEmailDomain, toggleTwoFactorAuth, verifySessionHealth, revokeOtherSessions, terminateIdleSessions, revokeAllSessions, getAccountSecurityAudit } from "../controllers/auth.controller";
 import { authenticate } from "../middleware/auth";
 import { validate } from "../middleware/validate";
 import { registerSchema, loginSchema } from "../validators/auth.validator";
@@ -35,5 +35,6 @@ router.get("/export", authenticate, exportUserData);
 router.get("/security-score", authenticate, getUserSecurityScore);
 router.get("/session/health", authenticate, verifySessionHealth);
 router.get("/profile-completeness", authenticate, getProfileCompleteness);
+router.get("/security-audit", authenticate, getAccountSecurityAudit);
 
 export default router;

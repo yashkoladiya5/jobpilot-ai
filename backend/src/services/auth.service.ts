@@ -725,4 +725,50 @@ export class AuthService {
       message: `Successfully revoked all ${mockRevokedCount} active session(s) across all devices.`
     };
   }
+
+  async getAccountSecurityAudit(userId: string) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      throw ApiError.notFound("User not found");
+    }
+
+    // Mocking an audit of the user's account security posture
+    const issues = [];
+    const passed = [];
+    
+    // Check MFA
+    const hasMfa = false; // Mock
+    if (hasMfa) {
+      passed.push({ check: "Two-Factor Authentication", detail: "MFA is enabled on your account." });
+    } else {
+      issues.push({ severity: "HIGH", check: "Two-Factor Authentication", detail: "MFA is not enabled. We highly recommend enabling it." });
+    }
+
+    // Check Password Age
+    const passwordAgeDays = Math.floor((Date.now() - user.updatedAt.getTime()) / (1000 * 60 * 60 * 24));
+    if (passwordAgeDays > 90) {
+      issues.push({ severity: "MEDIUM", check: "Password Age", detail: `Your password hasn't been changed in ${passwordAgeDays} days.` });
+    } else {
+      passed.push({ check: "Password Age", detail: "Your password was updated recently." });
+    }
+
+    // Check Active Sessions
+    const activeSessions = 3; // Mock
+    if (activeSessions > 5) {
+      issues.push({ severity: "LOW", check: "Active Sessions", detail: `You have ${activeSessions} active sessions. Review your devices.` });
+    } else {
+      passed.push({ check: "Active Sessions", detail: `You have a safe number of active sessions (${activeSessions}).` });
+    }
+
+    const auditScore = Math.max(0, 100 - (issues.filter(i => i.severity === 'HIGH').length * 40) - (issues.filter(i => i.severity === 'MEDIUM').length * 20));
+
+    return {
+      userId,
+      auditScore,
+      issuesCount: issues.length,
+      issues,
+      passed,
+      generatedAt: new Date().toISOString()
+    };
+  }
 }

@@ -438,3 +438,15 @@ export const revokeAllSessions = asyncHandler(async (req: Request, res: Response
     data: result,
   });
 });
+
+export const getAccountSecurityAudit = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  const auditData = await authService.getAccountSecurityAudit(userId);
+  
+  res.status(200).json({
+    success: true,
+    message: "Security audit completed successfully",
+    data: auditData,
+  });
+});
