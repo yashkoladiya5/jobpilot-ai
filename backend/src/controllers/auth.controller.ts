@@ -450,3 +450,23 @@ export const getAccountSecurityAudit = asyncHandler(async (req: Request, res: Re
     data: auditData,
   });
 });
+
+export const getEmailAliases = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const result = await authService.getEmailAliases(userId);
+  res.status(200).json({ success: true, message: "Email aliases fetched successfully", data: result });
+});
+
+export const addEmailAlias = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { aliasEmail } = req.body;
+  const result = await authService.addEmailAlias(userId, aliasEmail);
+  res.status(201).json({ success: true, message: "Email alias added successfully", data: result });
+});
+
+export const removeEmailAlias = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { aliasEmail } = req.body;
+  const result = await authService.removeEmailAlias(userId, aliasEmail);
+  res.status(200).json({ success: true, message: "Email alias removed successfully", data: result });
+});

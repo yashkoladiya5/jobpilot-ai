@@ -771,4 +771,63 @@ export class AuthService {
       generatedAt: new Date().toISOString()
     };
   }
+
+  async getEmailAliases(userId: string) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      throw ApiError.notFound("User not found");
+    }
+
+    // In a real application, we would query a UserEmailAlias table.
+    // For this mock, we will return a mock set of aliases.
+    return {
+      userId,
+      primaryEmail: user.email,
+      aliases: [
+        { email: `alt1_${user.email}`, isVerified: true, addedAt: new Date(Date.now() - 1000000000) },
+        { email: `alt2_${user.email}`, isVerified: false, addedAt: new Date() }
+      ],
+      message: "Email aliases retrieved successfully."
+    };
+  }
+
+  async addEmailAlias(userId: string, aliasEmail: string) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      throw ApiError.notFound("User not found");
+    }
+
+    if (!aliasEmail || !aliasEmail.includes('@')) {
+      throw ApiError.badRequest("A valid alias email is required");
+    }
+
+    // In a real application we would check if this alias is already in use
+    // globally, and then insert it unverified into a UserEmailAlias table.
+    
+    return {
+      userId,
+      addedAlias: aliasEmail,
+      isVerified: false,
+      message: `Verification email sent to ${aliasEmail}. Please verify to start using this alias.`
+    };
+  }
+
+  async removeEmailAlias(userId: string, aliasEmail: string) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      throw ApiError.notFound("User not found");
+    }
+
+    if (!aliasEmail) {
+      throw ApiError.badRequest("Alias email is required to remove it");
+    }
+
+    // In a real application we would delete the alias from the UserEmailAlias table.
+    
+    return {
+      userId,
+      removedAlias: aliasEmail,
+      message: `Alias ${aliasEmail} has been successfully removed.`
+    };
+  }
 }
