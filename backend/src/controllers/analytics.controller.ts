@@ -287,3 +287,15 @@ export const getProfileVisibilityScore = asyncHandler(async (req: Request, res: 
   const result = await analyticsService.getProfileVisibilityScore(userId);
   res.status(200).json({ success: true, message: "Profile visibility score calculated", data: result });
 });
+
+export const getProfileViewsHistory = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  const result = await analyticsService.getProfileViewsHistory(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Profile views history fetched successfully", 
+    data: result 
+  });
+});

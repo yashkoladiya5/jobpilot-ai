@@ -1089,4 +1089,30 @@ export class AnalyticsService {
         : "Boost your visibility by applying to more roles and keeping your primary resume updated."
     };
   }
+
+  async getProfileViewsHistory(userId: string) {
+    // Generate a mock time-series data for profile views over the last 30 days
+    const data = [];
+    const now = new Date();
+    
+    for (let i = 29; i >= 0; i--) {
+      const date = new Date(now);
+      date.setDate(date.getDate() - i);
+      
+      data.push({
+        date: date.toISOString().slice(0, 10),
+        views: Math.floor(Math.random() * 50) + 10 // Mock 10-60 views per day
+      });
+    }
+
+    const totalViews = data.reduce((acc, curr) => acc + curr.views, 0);
+
+    return {
+      timeframe: "Last 30 Days",
+      totalViews,
+      dailyAverage: Math.round(totalViews / 30),
+      trendData: data,
+      message: "Profile views history generated successfully."
+    };
+  }
 }
