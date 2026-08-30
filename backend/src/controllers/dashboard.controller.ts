@@ -429,3 +429,9 @@ export const getApplicationFlowFunnel = asyncHandler(async (req: Request, res: R
   const result = await dashboardService.getApplicationFlowFunnel(userId);
   res.status(200).json({ success: true, message: "Application flow funnel generated", data: result });
 });
+
+export const getUpcomingDeadlines = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const result = await dashboardService.getUpcomingDeadlines(userId);
+  res.status(200).json({ success: true, message: "Upcoming deadlines fetched", data: result });
+});

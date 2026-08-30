@@ -925,4 +925,42 @@ export class DashboardService {
       message: "Application flow funnel generated successfully."
     };
   }
+
+  async getUpcomingDeadlines(userId: string) {
+    const now = new Date();
+    
+    // In a real app we'd have a specific Deadline table or date fields on JobApplication
+    // For now we'll mock by finding recently updated jobs in APPLIED/INTERVIEW status
+    const recentJobs = await prisma.jobApplication.findMany({
+      where: {
+        userId,
+        status: { in: ['APPLIED', 'INTERVIEW'] },
+      },
+      select: { id: true, companyName: true, role: true, status: true },
+      take: 5
+    });
+
+    const deadlines = recentJobs.map((job, index) => {
+      const deadlineDate = new Date(now.getTime() + (index + 1) * 24 * 60 * 60 * 1000);
+      let task = "Submit take-home assignment";
+      if (job.status === "APPLIED") task = "Follow up on application";
+      
+      return {
+        jobId: job.id,
+        company: job.companyName,
+        role: job.role,
+        task,
+        deadlineDate,
+        urgency: index === 0 ? "High" : "Medium"
+      };
+    });
+
+    return {
+      totalDeadlines: deadlines.length,
+      deadlines,
+      message: deadlines.length > 0 
+        ? "You have some upcoming deadlines to keep track of." 
+        : "No immediate deadlines! Great job staying on top of things."
+    };
+  }
 }
