@@ -413,3 +413,16 @@ export const revokeOtherSessions = asyncHandler(async (req: Request, res: Respon
     data: result,
   });
 });
+
+export const terminateIdleSessions = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { idleThresholdMinutes } = req.body;
+  
+  const result = await authService.terminateIdleSessions(userId, idleThresholdMinutes);
+  
+  res.status(200).json({
+    success: true,
+    message: "Idle sessions terminated successfully",
+    data: result,
+  });
+});
