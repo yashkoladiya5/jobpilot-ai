@@ -1005,4 +1005,48 @@ export class AnalyticsService {
         : "You have a solid foundation. You can negotiate, but be reasonable with your demands as your BATNA (Best Alternative to a Negotiated Agreement) isn't rock solid yet."
     };
   }
+
+  async getApplicationChannelEffectiveness(userId: string) {
+    const applications = await prisma.jobApplication.findMany({
+      where: { userId },
+      select: { id: true, status: true, notes: true }
+    });
+
+    if (applications.length === 0) {
+      return { hasData: false, message: "No data available." };
+    }
+
+    const channels: Record<string, { total: number, interviews: number, offers: number }> = {
+      "Cold Application": { total: 0, interviews: 0, offers: 0 },
+      "Referral": { total: 0, interviews: 0, offers: 0 },
+      "Recruiter Reached Out": { total: 0, interviews: 0, offers: 0 }
+    };
+
+    for (const app of applications) {
+      const lowerNotes = (app.notes || "").toLowerCase();
+      let channel = "Cold Application";
+      if (lowerNotes.includes("referral") || lowerNotes.includes("referred by")) {
+        channel = "Referral";
+      } else if (lowerNotes.includes("recruiter") || lowerNotes.includes("sourced")) {
+        channel = "Recruiter Reached Out";
+      }
+      
+      channels[channel].total++;
+      if (app.status === "INTERVIEW") channels[channel].interviews++;
+      if (app.status === "OFFER") channels[channel].offers++;
+    }
+
+    const formatted = Object.entries(channels).map(([channel, data]) => ({
+      channel,
+      total: data.total,
+      interviewRate: data.total > 0 ? Math.round((data.interviews / data.total) * 100) : 0,
+      offerRate: data.total > 0 ? Math.round((data.offers / data.total) * 100) : 0
+    }));
+
+    return {
+      hasData: true,
+      data: formatted,
+      message: "Channel effectiveness calculated based on your application notes."
+    };
+  }
 }

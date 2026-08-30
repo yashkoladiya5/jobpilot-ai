@@ -275,3 +275,9 @@ export const getOfferNegotiationLeverage = asyncHandler(async (req: Request, res
   const result = await analyticsService.getOfferNegotiationLeverage(userId);
   res.status(200).json({ success: true, message: "Negotiation leverage calculated", data: result });
 });
+
+export const getApplicationChannelEffectiveness = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const result = await analyticsService.getApplicationChannelEffectiveness(userId);
+  res.status(200).json({ success: true, message: "Application channel effectiveness calculated", data: result });
+});
