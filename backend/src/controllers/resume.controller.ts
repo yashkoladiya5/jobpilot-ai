@@ -343,3 +343,16 @@ export const bulkDeleteResumes = asyncHandler(async (req: Request, res: Response
     data: result,
   });
 });
+
+export const generateResumeReadabilityScore = asyncHandler(async (req: Request, res: Response) => {
+  const { id: userId } = (req as AuthenticatedRequest).user;
+  const { id } = req.params;
+  
+  const scoreData = await resumeService.generateResumeReadabilityScore(userId, id);
+  
+  res.status(200).json({
+    success: true,
+    message: "Resume readability score generated successfully",
+    data: scoreData,
+  });
+});

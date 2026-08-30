@@ -24,6 +24,7 @@ import {
   exportResumeAsPdf,
   generateResumeVariations,
   bulkDeleteResumes,
+  generateResumeReadabilityScore,
 } from "../controllers/resume.controller";
 import { authenticate } from "../middleware/auth";
 import { upload } from "../middleware/upload";
@@ -71,5 +72,6 @@ router.patch("/:id/rename", authenticate, renameResume);
 router.post("/:id/duplicate", authenticate, duplicateResume);
 router.post("/:id/clone", authenticate, cloneResume);
 router.post("/:id/variations", authenticate, generateResumeVariations);
+router.get("/:id/readability", authenticate, generateResumeReadabilityScore);
 
 export default router;

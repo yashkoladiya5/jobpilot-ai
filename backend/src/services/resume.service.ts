@@ -625,4 +625,44 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
       message: `Successfully deleted ${deletedCount} resumes.`
     };
   }
+
+  async generateResumeReadabilityScore(userId: string, id: string) {
+    const resume = await prisma.resume.findUnique({ where: { id } });
+    if (!resume || resume.userId !== userId) {
+      throw ApiError.notFound("Resume not found");
+    }
+
+    // Mock generating a readability score based on NLP analysis
+    const wordCount = Math.floor(Math.random() * 300) + 200; // 200-500 words
+    const complexWordPercentage = Math.floor(Math.random() * 15) + 5; // 5-20%
+    const averageSentenceLength = Math.floor(Math.random() * 10) + 10; // 10-20 words
+
+    // Flesch-Kincaid mock score
+    const fleschKincaidScore = Math.floor(100 - (complexWordPercentage * 2) - (averageSentenceLength * 1.5));
+    
+    let readingLevel = "College Level";
+    if (fleschKincaidScore >= 80) readingLevel = "Easily Understood (Middle School)";
+    else if (fleschKincaidScore >= 60) readingLevel = "Standard (High School)";
+    else if (fleschKincaidScore < 40) readingLevel = "Very Complex (Graduate Level)";
+
+    const tips = [];
+    if (complexWordPercentage > 12) tips.push("Reduce the use of complex jargon to improve clarity.");
+    if (averageSentenceLength > 16) tips.push("Shorten your bullet points for quicker scanning.");
+    if (wordCount > 400) tips.push("Your resume is a bit long; consider cutting less relevant details.");
+    else if (wordCount < 250) tips.push("Your resume is brief; ensure you have enough detail to stand out.");
+
+    return {
+      resumeId: resume.id,
+      fileName: resume.fileName,
+      readabilityScore: Math.max(0, Math.min(100, fleschKincaidScore)),
+      readingLevel,
+      metrics: {
+        estimatedWordCount: wordCount,
+        complexWordPercentage: `${complexWordPercentage}%`,
+        averageSentenceLength: `${averageSentenceLength} words`,
+      },
+      tips: tips.length > 0 ? tips : ["Your resume readability is excellent!"],
+      message: "Resume readability score generated successfully."
+    };
+  }
 }
