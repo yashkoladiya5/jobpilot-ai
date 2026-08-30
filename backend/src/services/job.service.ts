@@ -886,4 +886,61 @@ ${userName}`;
       advice: "Your foundational skills are a great match, but you may want to explicitly mention any experience you have with the missing keywords in your resume or cover letter."
     };
   }
+
+  async getJobSalaryInsights(userId: string, id: string) {
+    const job = await this.getJobById(userId, id);
+    
+    // Fallbacks if salary range isn't provided
+    const hasSalaryInfo = !!job.salaryRange;
+    
+    let lowEnd = 0;
+    let highEnd = 0;
+    
+    // Attempt basic parsing of salary range if it exists
+    if (hasSalaryInfo && job.salaryRange) {
+      const numbers = job.salaryRange.match(/\d+/g);
+      if (numbers && numbers.length >= 2) {
+        let num1 = parseInt(numbers[0]);
+        let num2 = parseInt(numbers[1]);
+        if (num1 < 1000) num1 *= 1000;
+        if (num2 < 1000) num2 *= 1000;
+        lowEnd = num1;
+        highEnd = num2;
+      } else if (numbers && numbers.length === 1) {
+        let num1 = parseInt(numbers[0]);
+        if (num1 < 1000) num1 *= 1000;
+        lowEnd = num1;
+        highEnd = num1;
+      }
+    }
+    
+    // Market average logic based on role
+    const roleLower = (job.role || "").toLowerCase();
+    let marketAverage = 100000;
+    if (roleLower.includes("senior")) marketAverage = 150000;
+    else if (roleLower.includes("junior")) marketAverage = 80000;
+    else if (roleLower.includes("staff")) marketAverage = 200000;
+    
+    const offerAverage = lowEnd > 0 ? (lowEnd + highEnd) / 2 : 0;
+    
+    let evaluation = "Unknown";
+    if (hasSalaryInfo) {
+       if (offerAverage >= marketAverage * 1.1) evaluation = "Above Market";
+       else if (offerAverage <= marketAverage * 0.9) evaluation = "Below Market";
+       else evaluation = "Market Rate";
+    }
+    
+    return {
+      jobId: id,
+      company: job.companyName,
+      role: job.role,
+      hasSalaryInfo,
+      providedRange: job.salaryRange || "Not provided",
+      marketAverage: `$${marketAverage.toLocaleString()}`,
+      evaluation,
+      message: hasSalaryInfo 
+        ? `This role is paying ${evaluation.toLowerCase()}.` 
+        : "No salary data provided to evaluate."
+    };
+  }
 }

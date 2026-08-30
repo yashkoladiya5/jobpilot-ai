@@ -31,6 +31,7 @@ import {
   generateCoverLetterDraft,
   compareJobOfferWithMarket,
   getMatchScoreExplainability,
+  getJobSalaryInsights,
 } from "../controllers/job.controller";
 import { authenticate } from "../middleware/auth";
 import { validate } from "../middleware/validate";
@@ -69,6 +70,7 @@ router.post("/:id/duplicate", authenticate, duplicateJob);
 router.post("/:id/cover-letter", authenticate, generateCoverLetterDraft);
 router.get("/:id/compare-market", authenticate, compareJobOfferWithMarket);
 router.get("/:id/match-score-explainability", authenticate, getMatchScoreExplainability);
+router.get("/:id/salary-insights", authenticate, getJobSalaryInsights);
 
 // CRUD operations for jobs, all requiring user authentication
 router.get("/", authenticate, getJobs);

@@ -444,3 +444,16 @@ export const getMatchScoreExplainability = asyncHandler(async (req: Request, res
     data: explanation,
   });
 });
+
+export const getJobSalaryInsights = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { id } = req.params;
+  
+  const insights = await jobService.getJobSalaryInsights(userId, id);
+  
+  res.status(200).json({
+    success: true,
+    message: "Salary insights generated successfully",
+    data: insights,
+  });
+});
