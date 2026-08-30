@@ -891,4 +891,38 @@ export class DashboardService {
       milestones
     };
   }
+
+  async getApplicationFlowFunnel(userId: string) {
+    const applications = await prisma.jobApplication.findMany({
+      where: { userId },
+      select: { status: true }
+    });
+
+    const totalApplications = applications.length;
+    
+    if (totalApplications === 0) {
+      return {
+        hasData: false,
+        message: "No applications found to construct a funnel.",
+        funnel: []
+      };
+    }
+
+    const applied = applications.filter(a => a.status !== "SAVED").length;
+    const interviews = applications.filter(a => a.status === "INTERVIEW" || a.status === "OFFER").length;
+    const offers = applications.filter(a => a.status === "OFFER").length;
+
+    const funnel = [
+      { stage: "Applied", count: applied, conversionRate: "100%" },
+      { stage: "Interviewing", count: interviews, conversionRate: applied > 0 ? `${Math.round((interviews / applied) * 100)}%` : "0%" },
+      { stage: "Offers", count: offers, conversionRate: interviews > 0 ? `${Math.round((offers / interviews) * 100)}%` : "0%" }
+    ];
+
+    return {
+      hasData: true,
+      totalApplications,
+      funnel,
+      message: "Application flow funnel generated successfully."
+    };
+  }
 }
