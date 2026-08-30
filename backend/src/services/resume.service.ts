@@ -592,4 +592,37 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
       },
     });
   }
+
+  async bulkDeleteResumes(userId: string, resumeIds: string[]) {
+    if (!resumeIds || resumeIds.length === 0) {
+      throw ApiError.badRequest("No resume IDs provided for bulk deletion");
+    }
+
+    const resumes = await prisma.resume.findMany({
+      where: {
+        id: { in: resumeIds },
+        userId
+      }
+    });
+
+    if (resumes.length === 0) {
+      return { count: 0, message: "No matching resumes found to delete." };
+    }
+
+    let deletedCount = 0;
+    for (const resume of resumes) {
+      try {
+        fs.unlinkSync(resume.filePath);
+      } catch {
+        // file may already be deleted, continue
+      }
+      await prisma.resume.delete({ where: { id: resume.id } });
+      deletedCount++;
+    }
+
+    return { 
+      count: deletedCount,
+      message: `Successfully deleted ${deletedCount} resumes.`
+    };
+  }
 }

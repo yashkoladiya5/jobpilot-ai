@@ -23,6 +23,7 @@ import {
   generateJobTitleMatchReport,
   exportResumeAsPdf,
   generateResumeVariations,
+  bulkDeleteResumes,
 } from "../controllers/resume.controller";
 import { authenticate } from "../middleware/auth";
 import { upload } from "../middleware/upload";
@@ -63,6 +64,7 @@ router.post("/:id/title-match-report", authenticate, generateJobTitleMatchReport
 // -----------------------------------------------------------------------
 // Mutation operations
 // -----------------------------------------------------------------------
+router.post("/bulk/delete", authenticate, bulkDeleteResumes);
 router.delete("/:id", authenticate, deleteResume);
 router.patch("/:id/primary", authenticate, setPrimaryResume);
 router.patch("/:id/rename", authenticate, renameResume);

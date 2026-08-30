@@ -326,3 +326,20 @@ export const generateResumeVariations = asyncHandler(async (req: Request, res: R
     data: variedResume,
   });
 });
+
+export const bulkDeleteResumes = asyncHandler(async (req: Request, res: Response) => {
+  const { id: userId } = (req as AuthenticatedRequest).user;
+  const { resumeIds } = req.body;
+  
+  if (!resumeIds || !Array.isArray(resumeIds)) {
+    throw ApiError.badRequest("A valid array of resume IDs is required.");
+  }
+  
+  const result = await resumeService.bulkDeleteResumes(userId, resumeIds);
+  
+  res.status(200).json({
+    success: true,
+    message: result.message,
+    data: result,
+  });
+});
