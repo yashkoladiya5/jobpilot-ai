@@ -476,3 +476,9 @@ export const getTrustedDevices = asyncHandler(async (req: Request, res: Response
   const result = await authService.getTrustedDevices(userId);
   res.status(200).json({ success: true, message: "Trusted devices fetched successfully", data: result });
 });
+
+export const getSessionMapCoordinates = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const result = await authService.getSessionMapCoordinates(userId);
+  res.status(200).json({ success: true, message: "Session map coordinates fetched successfully", data: result });
+});

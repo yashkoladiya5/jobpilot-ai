@@ -863,4 +863,33 @@ export class AuthService {
       message: "Trusted devices fetched successfully."
     };
   }
+
+  async getSessionMapCoordinates(userId: string) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      throw ApiError.notFound("User not found");
+    }
+
+    // Mock coordinates for active sessions to display on a map
+    return {
+      userId,
+      coordinates: [
+        {
+          sessionId: "sess_1",
+          lat: 37.7749,
+          lng: -122.4194,
+          location: "San Francisco, CA",
+          device: "MacBook Pro - Chrome"
+        },
+        {
+          sessionId: "sess_2",
+          lat: 40.7128,
+          lng: -74.0060,
+          location: "New York, NY",
+          device: "iPhone 14 - Safari"
+        }
+      ],
+      message: "Session coordinates fetched successfully."
+    };
+  }
 }
