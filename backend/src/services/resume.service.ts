@@ -557,4 +557,39 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
       message: "Resume successfully exported as PDF."
     };
   }
+
+  async generateResumeVariations(userId: string, id: string, variationType: string) {
+    const resume = await prisma.resume.findUnique({ where: { id } });
+    
+    if (!resume || resume.userId !== userId) {
+      throw ApiError.notFound("Resume not found");
+    }
+
+    if (!variationType) {
+      throw ApiError.badRequest("Variation type is required (e.g., 'technical', 'leadership', 'creative')");
+    }
+
+    // Mock AI generating a variation of the resume
+    const newFileName = `${resume.fileName} (${variationType} variation)`;
+    const newFilePath = `${resume.filePath}_var_${variationType}_${Date.now()}`;
+    
+    try {
+      // In reality, we'd take the parsed text, rewrite it with an LLM, and generate a new PDF.
+      // Here we just copy the file as a placeholder.
+      fs.copyFileSync(resume.filePath, newFilePath);
+    } catch (e) {
+      throw ApiError.internal("Failed to generate resume variation file");
+    }
+
+    return prisma.resume.create({
+      data: {
+        userId,
+        fileName: newFileName,
+        filePath: newFilePath,
+        fileSize: resume.fileSize,
+        mimeType: resume.mimeType,
+        isPrimary: false,
+      },
+    });
+  }
 }

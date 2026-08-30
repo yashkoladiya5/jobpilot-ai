@@ -957,4 +957,52 @@ export class AnalyticsService {
         : `You have been searching for ${searchDurationDays} days. Keep pushing!`
     };
   }
+
+  async getOfferNegotiationLeverage(userId: string) {
+    const offerApplications = await prisma.jobApplication.findMany({
+      where: { userId, status: "OFFER" },
+      orderBy: { updatedAt: "desc" },
+    });
+
+    const activeInterviews = await prisma.jobApplication.count({
+      where: { userId, status: "INTERVIEW" }
+    });
+
+    if (offerApplications.length === 0) {
+      return {
+        hasOffers: false,
+        leverageScore: 0,
+        leverageLevel: "None",
+        recommendation: "Focus on converting your active applications into offers."
+      };
+    }
+
+    let leverageScore = 30; // Base score for having an offer
+    
+    // Add points for multiple offers
+    if (offerApplications.length > 1) {
+      leverageScore += 40;
+    }
+    
+    // Add points for active pipeline (creates urgency/FOMO for employers)
+    if (activeInterviews > 0) {
+      leverageScore += Math.min(30, activeInterviews * 10);
+    }
+
+    let leverageLevel = "Low";
+    if (leverageScore >= 80) leverageLevel = "Very High";
+    else if (leverageScore >= 60) leverageLevel = "High";
+    else if (leverageScore >= 40) leverageLevel = "Medium";
+
+    return {
+      hasOffers: true,
+      offerCount: offerApplications.length,
+      activeInterviewCount: activeInterviews,
+      leverageScore,
+      leverageLevel,
+      recommendation: leverageScore >= 60 
+        ? "You have strong negotiation power. Consider leveraging competing offers or your active pipeline to negotiate better terms."
+        : "You have a solid foundation. You can negotiate, but be reasonable with your demands as your BATNA (Best Alternative to a Negotiated Agreement) isn't rock solid yet."
+    };
+  }
 }

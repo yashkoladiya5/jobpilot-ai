@@ -312,3 +312,17 @@ export const exportResumeAsPdf = asyncHandler(async (req: Request, res: Response
     data: pdfData,
   });
 });
+
+export const generateResumeVariations = asyncHandler(async (req: Request, res: Response) => {
+  const { id: userId } = (req as AuthenticatedRequest).user;
+  const { id } = req.params;
+  const { variationType } = req.body;
+  
+  const variedResume = await resumeService.generateResumeVariations(userId, id, variationType);
+  
+  res.status(201).json({
+    success: true,
+    message: `Resume variation '${variationType}' generated successfully`,
+    data: variedResume,
+  });
+});
