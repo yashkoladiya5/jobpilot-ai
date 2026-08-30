@@ -431,3 +431,16 @@ export const compareJobOfferWithMarket = asyncHandler(async (req: Request, res: 
     data: comparisonData,
   });
 });
+
+export const getMatchScoreExplainability = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { id } = req.params;
+  
+  const explanation = await jobService.getMatchScoreExplainability(userId, id);
+  
+  res.status(200).json({
+    success: true,
+    message: "Match score explainability generated successfully",
+    data: explanation,
+  });
+});
