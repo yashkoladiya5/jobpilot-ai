@@ -1049,4 +1049,44 @@ export class AnalyticsService {
       message: "Channel effectiveness calculated based on your application notes."
     };
   }
+
+  async getProfileVisibilityScore(userId: string) {
+    // Check how many applications user has made recently (simulating visibility based on activity)
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    
+    const recentApps = await prisma.jobApplication.count({
+      where: { userId, createdAt: { gte: thirtyDaysAgo } }
+    });
+    
+    // Check if user has a primary resume
+    const hasResume = await prisma.resume.findFirst({
+      where: { userId, isPrimary: true }
+    });
+    
+    let score = 50; // base score
+    if (hasResume) score += 20;
+    
+    // up to 30 points for recent applications (2 points per app)
+    score += Math.min(30, recentApps * 2);
+    
+    let visibilityLevel = "Low";
+    if (score >= 80) visibilityLevel = "High";
+    else if (score >= 60) visibilityLevel = "Medium";
+    
+    const factors = [
+      { name: "Primary Resume Uploaded", status: hasResume ? "Complete" : "Incomplete", impact: "High" },
+      { name: "Recent Application Activity", status: `${recentApps} in last 30 days`, impact: "Medium" }
+    ];
+    
+    return {
+      userId,
+      visibilityScore: score,
+      visibilityLevel,
+      factors,
+      message: score >= 80 
+        ? "Your profile visibility is great! Recruiters are likely to notice your active profile."
+        : "Boost your visibility by applying to more roles and keeping your primary resume updated."
+    };
+  }
 }

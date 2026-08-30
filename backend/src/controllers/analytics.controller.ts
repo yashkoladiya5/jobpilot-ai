@@ -281,3 +281,9 @@ export const getApplicationChannelEffectiveness = asyncHandler(async (req: Reque
   const result = await analyticsService.getApplicationChannelEffectiveness(userId);
   res.status(200).json({ success: true, message: "Application channel effectiveness calculated", data: result });
 });
+
+export const getProfileVisibilityScore = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const result = await analyticsService.getProfileVisibilityScore(userId);
+  res.status(200).json({ success: true, message: "Profile visibility score calculated", data: result });
+});
