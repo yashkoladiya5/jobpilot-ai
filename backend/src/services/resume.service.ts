@@ -536,4 +536,25 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
       reportGeneratedAt: new Date().toISOString()
     };
   }
+
+  async exportResumeAsPdf(userId: string, id: string) {
+    const resume = await prisma.resume.findUnique({ where: { id } });
+    if (!resume || resume.userId !== userId) {
+      throw ApiError.notFound("Resume not found");
+    }
+
+    // In a real application, we would use a library like puppeteer or pdfkit
+    // to generate a PDF from the resume data. For this mock, we just return a URL.
+    
+    // Simulate generation time
+    const pdfUrl = `https://jobpilot.ai/downloads/${userId}/${id}/resume_exported.pdf`;
+
+    return {
+      resumeId: resume.id,
+      originalFileName: resume.fileName,
+      pdfUrl,
+      generatedAt: new Date().toISOString(),
+      message: "Resume successfully exported as PDF."
+    };
+  }
 }

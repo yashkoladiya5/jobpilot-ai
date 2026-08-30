@@ -299,3 +299,16 @@ export const generateJobTitleMatchReport = asyncHandler(async (req: Request, res
     data: report,
   });
 });
+
+export const exportResumeAsPdf = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { id } = req.params;
+  
+  const pdfData = await resumeService.exportResumeAsPdf(userId, id);
+  
+  res.status(200).json({
+    success: true,
+    message: "Resume exported as PDF successfully",
+    data: pdfData,
+  });
+});
