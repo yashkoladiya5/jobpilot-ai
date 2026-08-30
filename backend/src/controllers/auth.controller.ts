@@ -470,3 +470,9 @@ export const removeEmailAlias = asyncHandler(async (req: Request, res: Response)
   const result = await authService.removeEmailAlias(userId, aliasEmail);
   res.status(200).json({ success: true, message: "Email alias removed successfully", data: result });
 });
+
+export const getTrustedDevices = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const result = await authService.getTrustedDevices(userId);
+  res.status(200).json({ success: true, message: "Trusted devices fetched successfully", data: result });
+});

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { register, login, getMe, deleteAccount, updatePassword, updateEmail, updateName, getActiveSessions, getLoginHistory, registerDevice, initiateMfaSetup, verifyMfaSetup, generateBackupCodes, initiatePasswordlessLogin, initiateSmsTwoFactor, getLoginStreak, revokeSession, exportUserData, getUserSecurityScore, trustDevice, getProfileCompleteness, verifyEmailDomain, toggleTwoFactorAuth, verifySessionHealth, revokeOtherSessions, terminateIdleSessions, revokeAllSessions, getAccountSecurityAudit, getEmailAliases, addEmailAlias, removeEmailAlias } from "../controllers/auth.controller";
+import { register, login, getMe, deleteAccount, updatePassword, updateEmail, updateName, getActiveSessions, getLoginHistory, registerDevice, initiateMfaSetup, verifyMfaSetup, generateBackupCodes, initiatePasswordlessLogin, initiateSmsTwoFactor, getLoginStreak, revokeSession, exportUserData, getUserSecurityScore, trustDevice, getProfileCompleteness, verifyEmailDomain, toggleTwoFactorAuth, verifySessionHealth, revokeOtherSessions, terminateIdleSessions, revokeAllSessions, getAccountSecurityAudit, getEmailAliases, addEmailAlias, removeEmailAlias, getTrustedDevices } from "../controllers/auth.controller";
 import { authenticate } from "../middleware/auth";
 import { validate } from "../middleware/validate";
 import { registerSchema, loginSchema } from "../validators/auth.validator";
@@ -19,6 +19,7 @@ router.patch("/name", authenticate, updateName);
 router.get("/sessions", authenticate, getActiveSessions);
 router.get("/login-history", authenticate, getLoginHistory);
 router.post("/device", authenticate, registerDevice);
+router.get("/device/trust", authenticate, getTrustedDevices);
 router.post("/device/trust", authenticate, trustDevice);
 router.post("/mfa/initiate", authenticate, initiateMfaSetup);
 router.post("/mfa/sms/initiate", authenticate, initiateSmsTwoFactor);

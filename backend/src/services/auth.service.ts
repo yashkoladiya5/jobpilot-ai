@@ -830,4 +830,37 @@ export class AuthService {
       message: `Alias ${aliasEmail} has been successfully removed.`
     };
   }
+
+  async getTrustedDevices(userId: string) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      throw ApiError.notFound("User not found");
+    }
+
+    // In a real application, we would query the TrustedDevice table
+    // For this mock, we will return some mock data
+    const devices = [
+      {
+        deviceId: "dev_9x8c7b6a",
+        deviceName: "MacBook Pro - Chrome",
+        trustedAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000), // 15 days ago
+        expiresAt: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000), // expires in 15 days
+        isCurrentDevice: true
+      },
+      {
+        deviceId: "dev_1a2b3c4d",
+        deviceName: "iPhone 14 - Safari",
+        trustedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
+        expiresAt: new Date(Date.now() + 25 * 24 * 60 * 60 * 1000), // expires in 25 days
+        isCurrentDevice: false
+      }
+    ];
+
+    return {
+      userId,
+      totalTrustedDevices: devices.length,
+      devices,
+      message: "Trusted devices fetched successfully."
+    };
+  }
 }
