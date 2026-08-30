@@ -803,4 +803,58 @@ ${userName}`;
       message: "Cover letter draft generated successfully. Please review and customize before sending."
     };
   }
+
+  async compareJobOfferWithMarket(userId: string, id: string) {
+    const job = await this.getJobById(userId, id);
+    
+    if (job.status !== "OFFER") {
+      throw ApiError.badRequest("Can only compare market data for jobs in the OFFER stage.");
+    }
+    
+    // Mock the market data logic
+    const roleLower = (job.role || "software engineer").toLowerCase();
+    
+    let marketAverage = 110000;
+    let highEnd = 145000;
+    
+    if (roleLower.includes("senior")) {
+      marketAverage = 150000;
+      highEnd = 190000;
+    } else if (roleLower.includes("manager")) {
+      marketAverage = 160000;
+      highEnd = 210000;
+    }
+    
+    // Attempt basic parsing of salary range if it exists
+    let offerValue = 0;
+    if (job.salaryRange) {
+      const numbers = job.salaryRange.match(/\d+/g);
+      if (numbers && numbers.length >= 1) {
+        offerValue = parseInt(numbers[numbers.length - 1]);
+        if (offerValue < 1000) offerValue *= 1000;
+      }
+    }
+    
+    if (offerValue === 0) {
+       offerValue = marketAverage; // Fallback if no offer parsed
+    }
+    
+    const percentageDifference = Math.round(((offerValue - marketAverage) / marketAverage) * 100);
+    const comparisonMessage = percentageDifference > 0 
+      ? `Your offer is approximately ${percentageDifference}% above the market average for this role.`
+      : percentageDifference < 0 
+        ? `Your offer is approximately ${Math.abs(percentageDifference)}% below the market average. Consider negotiating.`
+        : `Your offer is right at the market average.`;
+
+    return {
+      jobId: id,
+      company: job.companyName,
+      role: job.role,
+      offerValue: `$${offerValue.toLocaleString()}`,
+      marketAverage: `$${marketAverage.toLocaleString()}`,
+      marketHighEnd: `$${highEnd.toLocaleString()}`,
+      percentageDifference,
+      comparisonMessage
+    };
+  }
 }
