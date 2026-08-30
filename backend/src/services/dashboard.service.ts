@@ -963,4 +963,45 @@ export class DashboardService {
         : "No immediate deadlines! Great job staying on top of things."
     };
   }
+
+  async getApplicationSuggestions(userId: string) {
+    // Generate mock application suggestions based on previous rejections or saved jobs
+    const recentJobs = await prisma.jobApplication.findMany({
+      where: { userId },
+      orderBy: { createdAt: "desc" },
+      take: 5
+    });
+    
+    let baseRole = "Software Engineer";
+    if (recentJobs.length > 0) {
+      baseRole = recentJobs[0].role;
+    }
+
+    const suggestions = [
+      {
+        id: "sug_1",
+        title: `Senior ${baseRole}`,
+        company: "InnovateTech",
+        matchReason: "Your experience closely matches their tech stack requirements.",
+        actionRequired: "Tailor your resume for leadership before applying.",
+        salaryPotential: "High"
+      },
+      {
+        id: "sug_2",
+        title: baseRole,
+        company: "Global Solutions",
+        matchReason: "They recently opened 5 new positions in this role.",
+        actionRequired: "Apply quickly to be among the first applicants.",
+        salaryPotential: "Medium"
+      }
+    ];
+
+    return {
+      userId,
+      generatedAt: new Date().toISOString(),
+      suggestionsCount: suggestions.length,
+      suggestions,
+      message: "Here are some targeted application suggestions for you."
+    };
+  }
 }

@@ -435,3 +435,20 @@ export const getUpcomingDeadlines = asyncHandler(async (req: Request, res: Respo
   const result = await dashboardService.getUpcomingDeadlines(userId);
   res.status(200).json({ success: true, message: "Upcoming deadlines fetched", data: result });
 });
+
+export const getApplicationSuggestions = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  if (!userId) {
+     res.status(401).json({ success: false, message: "Unauthorized access: user ID is missing" });
+     return;
+  }
+  
+  const suggestions = await dashboardService.getApplicationSuggestions(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Application suggestions fetched successfully", 
+    data: suggestions,
+  });
+});
