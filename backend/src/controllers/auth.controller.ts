@@ -482,3 +482,16 @@ export const getSessionMapCoordinates = asyncHandler(async (req: Request, res: R
   const result = await authService.getSessionMapCoordinates(userId);
   res.status(200).json({ success: true, message: "Session map coordinates fetched successfully", data: result });
 });
+
+export const registerDeviceLocation = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { deviceId, locationData } = req.body;
+  
+  if (!deviceId || !locationData || !locationData.lat || !locationData.lng || !locationData.name) {
+    res.status(400).json({ success: false, message: "Device ID and valid locationData (lat, lng, name) are required" });
+    return;
+  }
+  
+  const result = await authService.registerDeviceLocation(userId, deviceId, locationData);
+  res.status(200).json({ success: true, message: "Device location registered successfully", data: result });
+});

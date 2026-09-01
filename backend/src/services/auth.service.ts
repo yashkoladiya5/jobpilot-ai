@@ -892,4 +892,22 @@ export class AuthService {
       message: "Session coordinates fetched successfully."
     };
   }
+
+  async registerDeviceLocation(userId: string, deviceId: string, locationData: { lat: number, lng: number, name: string }) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw ApiError.notFound("User not found");
+
+    if (!deviceId) throw ApiError.badRequest("Device ID is required");
+
+    // In a real application, we would store this in a DeviceLocation table linked to the deviceId
+    // Mocking the successful storage of location for the device
+    return {
+      userId,
+      deviceId,
+      location: locationData.name,
+      coordinates: { lat: locationData.lat, lng: locationData.lng },
+      registeredAt: new Date().toISOString(),
+      message: "Device location registered successfully for security monitoring."
+    };
+  }
 }

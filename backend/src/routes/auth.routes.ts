@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { register, login, getMe, deleteAccount, updatePassword, updateEmail, updateName, getActiveSessions, getLoginHistory, registerDevice, initiateMfaSetup, verifyMfaSetup, generateBackupCodes, initiatePasswordlessLogin, initiateSmsTwoFactor, getLoginStreak, revokeSession, exportUserData, getUserSecurityScore, trustDevice, getProfileCompleteness, verifyEmailDomain, toggleTwoFactorAuth, verifySessionHealth, revokeOtherSessions, terminateIdleSessions, revokeAllSessions, getAccountSecurityAudit, getEmailAliases, addEmailAlias, removeEmailAlias, getTrustedDevices, getSessionMapCoordinates } from "../controllers/auth.controller";
+import { register, login, getMe, deleteAccount, updatePassword, updateEmail, updateName, getActiveSessions, getLoginHistory, registerDevice, initiateMfaSetup, verifyMfaSetup, generateBackupCodes, initiatePasswordlessLogin, initiateSmsTwoFactor, getLoginStreak, revokeSession, exportUserData, getUserSecurityScore, trustDevice, getProfileCompleteness, verifyEmailDomain, toggleTwoFactorAuth, verifySessionHealth, revokeOtherSessions, terminateIdleSessions, revokeAllSessions, getAccountSecurityAudit, getEmailAliases, addEmailAlias, removeEmailAlias, getTrustedDevices, getSessionMapCoordinates, registerDeviceLocation } from "../controllers/auth.controller";
 import { authenticate } from "../middleware/auth";
 import { validate } from "../middleware/validate";
 import { registerSchema, loginSchema } from "../validators/auth.validator";
@@ -41,5 +41,8 @@ router.get("/security-audit", authenticate, getAccountSecurityAudit);
 router.get("/email-aliases", authenticate, getEmailAliases);
 router.post("/email-aliases", authenticate, addEmailAlias);
 router.delete("/email-aliases", authenticate, removeEmailAlias);
+
+router.get("/trusted-devices", authenticate, getTrustedDevices);
+router.post("/device/location", authenticate, registerDeviceLocation);
 
 export default router;
