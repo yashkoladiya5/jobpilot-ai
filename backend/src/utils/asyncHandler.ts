@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { logger } from "./logger";
 
 /**
  * Wraps asynchronous Express middleware and route handlers to catch promise rejections.
@@ -13,7 +14,7 @@ export const asyncHandler =
   (req: Request, res: Response, next: NextFunction): void => {
     Promise.resolve(fn(req, res, next)).catch((err) => {
       if (logErrors) {
-        console.error(`[AsyncHandler Error] Path: ${req.path}`, err);
+        logger.error(`[AsyncHandler Error] Path: ${req.path}`, err);
       }
       next(err);
     });
