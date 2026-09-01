@@ -1139,4 +1139,39 @@ export class AnalyticsService {
       message: "Retention statistics calculated successfully."
     };
   }
+
+  async getTimeToHirePredictor(userId: string) {
+    const applications = await prisma.jobApplication.findMany({
+      where: { userId },
+      select: { role: true, status: true, appliedDate: true, updatedAt: true }
+    });
+
+    const activeInterviews = applications.filter(a => a.status === "INTERVIEW");
+    
+    // Determine baseline days based on current pipeline momentum
+    let baselineDays = 45; // average time to hire in days
+    
+    if (activeInterviews.length > 2) {
+      baselineDays = 21; // Faster if you have multiple interviews
+    } else if (activeInterviews.length === 1) {
+      baselineDays = 30;
+    } else if (applications.length > 20) {
+      baselineDays = 35; // Activity helps
+    } else if (applications.length < 5) {
+      baselineDays = 60; // Slow start
+    }
+
+    const estimatedDate = new Date();
+    estimatedDate.setDate(estimatedDate.getDate() + baselineDays);
+
+    return {
+      userId,
+      currentActiveApplications: applications.filter(a => ["APPLIED", "INTERVIEW"].includes(a.status)).length,
+      currentActiveInterviews: activeInterviews.length,
+      estimatedDaysToHire: baselineDays,
+      estimatedHireDate: estimatedDate.toISOString().slice(0, 10),
+      confidence: activeInterviews.length > 0 ? "High" : "Medium",
+      message: `Based on your current pipeline velocity, we estimate your time to hire at ${baselineDays} days.`
+    };
+  }
 }

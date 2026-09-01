@@ -305,3 +305,15 @@ export const getUserRetentionStats = asyncHandler(async (req: Request, res: Resp
   const result = await analyticsService.getUserRetentionStats(userId);
   res.status(200).json({ success: true, message: "User retention stats fetched successfully", data: result });
 });
+
+export const getTimeToHirePredictor = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  const result = await analyticsService.getTimeToHirePredictor(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Time to hire predictor calculated successfully", 
+    data: result 
+  });
+});
