@@ -383,3 +383,16 @@ export const parseResumeSections = asyncHandler(async (req: Request, res: Respon
     data: parsedData,
   });
 });
+
+export const generateResumeATSFormattingTips = asyncHandler(async (req: Request, res: Response) => {
+  const { id: userId } = (req as AuthenticatedRequest).user;
+  const { id } = req.params;
+  
+  const formattingTips = await resumeService.generateResumeATSFormattingTips(userId, id);
+  
+  res.status(200).json({
+    success: true,
+    message: "ATS formatting tips generated successfully",
+    data: formattingTips,
+  });
+});

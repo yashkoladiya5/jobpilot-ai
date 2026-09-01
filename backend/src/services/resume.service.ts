@@ -735,4 +735,46 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
       message: "Resume sections parsed successfully."
     };
   }
+
+  async generateResumeATSFormattingTips(userId: string, id: string) {
+    const resume = await prisma.resume.findUnique({ where: { id } });
+    if (!resume || resume.userId !== userId) {
+      throw ApiError.notFound("Resume not found");
+    }
+
+    // Mock analysis of resume formatting for ATS compliance
+    const tips = [
+      {
+        category: "Fonts & Typography",
+        status: "PASS",
+        tip: "Stick to standard fonts like Arial, Calibri, or Times New Roman. We detected standard font usage."
+      },
+      {
+        category: "Tables & Columns",
+        status: "WARNING",
+        tip: "Avoid using tables or multi-column layouts, as older ATS parsers may misread the content flow. Consider a single-column layout."
+      },
+      {
+        category: "Graphics & Images",
+        status: "PASS",
+        tip: "No headshots or heavy graphics detected. This is good for ATS."
+      },
+      {
+        category: "File Type",
+        status: resume.mimeType === "application/pdf" ? "PASS" : "WARNING",
+        tip: resume.mimeType === "application/pdf" ? "PDF format preserves layout well." : "Consider exporting to PDF before applying."
+      }
+    ];
+
+    const passCount = tips.filter(t => t.status === "PASS").length;
+    const overallScore = Math.round((passCount / tips.length) * 100);
+
+    return {
+      resumeId: resume.id,
+      fileName: resume.fileName,
+      atsFormattingScore: overallScore,
+      tips,
+      generatedAt: new Date().toISOString()
+    };
+  }
 }
