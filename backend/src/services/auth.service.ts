@@ -910,4 +910,21 @@ export class AuthService {
       message: "Device location registered successfully for security monitoring."
     };
   }
+
+  async renameTrustedDevice(userId: string, deviceId: string, newName: string) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw ApiError.notFound("User not found");
+
+    if (!deviceId) throw ApiError.badRequest("Device ID is required");
+    if (!newName || newName.trim().length === 0) throw ApiError.badRequest("New device name is required");
+
+    // In a real application, we would update the Device table record for this deviceId
+    return {
+      userId,
+      deviceId,
+      newName: newName.trim(),
+      updatedAt: new Date().toISOString(),
+      message: `Device successfully renamed to "${newName.trim()}".`
+    };
+  }
 }

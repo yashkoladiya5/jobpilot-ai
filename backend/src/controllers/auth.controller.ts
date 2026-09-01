@@ -495,3 +495,12 @@ export const registerDeviceLocation = asyncHandler(async (req: Request, res: Res
   const result = await authService.registerDeviceLocation(userId, deviceId, locationData);
   res.status(200).json({ success: true, message: "Device location registered successfully", data: result });
 });
+
+export const renameTrustedDevice = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { deviceId } = req.params;
+  const { newName } = req.body;
+  
+  const result = await authService.renameTrustedDevice(userId, deviceId, newName);
+  res.status(200).json({ success: true, message: result.message, data: result });
+});
