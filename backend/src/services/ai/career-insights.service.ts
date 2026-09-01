@@ -19,13 +19,17 @@ export class CareerInsightsService {
       });
       if (existing) {
         return {
-          careerScore: existing.careerScore,
-          interviewReadiness: existing.interviewReadiness,
-          resumeStrength: existing.resumeStrength,
-          jobMatchQuality: existing.jobMatchQuality,
-          applicationSuccessRate: existing.applicationSuccessRate,
-          skillGaps: existing.skillGaps,
-          recommendations: existing.recommendations,
+          careerScore: existing.careerScore ?? 0,
+          interviewReadiness: existing.interviewReadiness ?? 0,
+          resumeStrength: existing.resumeStrength ?? 0,
+          jobMatchQuality: existing.jobMatchQuality ?? 0,
+          applicationSuccessRate: existing.applicationSuccessRate ?? 0,
+          skillGaps: Array.isArray(existing.skillGaps)
+            ? existing.skillGaps.filter((gap): gap is string => typeof gap === "string")
+            : [],
+          recommendations: Array.isArray(existing.recommendations)
+            ? existing.recommendations.filter((rec): rec is string => typeof rec === "string")
+            : [],
         };
       }
     }
