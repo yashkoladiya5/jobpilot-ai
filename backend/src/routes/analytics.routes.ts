@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { authenticate } from "../middleware/auth";
-import { getPipelineAnalytics, getTimelineData, getSkillMatchAnalytics, getRejectionAnalytics, getOfferAnalytics, getInterviewAnalytics, getWeeklyActivitySummary, getResumeAnalytics, getInterviewTrends, getJobSourceAnalytics, getSkillsGapAnalytics, getOfferNegotiationInsights, getCareerGrowthPotential, getPeerComparisonAnalytics, getOfferPredictor, getNetworkingROI, getJobSearchEffectiveness, getApplicationGhostingPredictor, trackLoginDuration, getCustomDateRangeStats, exportAnalyticsReport as getExportAnalyticsReport, getSkillDemandForecast, getApplicationConversionFunnel, getInterviewSuccessRate, getJobSearchDuration, getOfferNegotiationLeverage, getApplicationChannelEffectiveness, getProfileVisibilityScore, getProfileViewsHistory } from "../controllers/analytics.controller";
+import { getPipelineAnalytics, getTimelineData, getSkillMatchAnalytics, getRejectionAnalytics, getOfferAnalytics, getInterviewAnalytics, getWeeklyActivitySummary, getResumeAnalytics, getInterviewTrends, getJobSourceAnalytics, getSkillsGapAnalytics, getOfferNegotiationInsights, getCareerGrowthPotential, getPeerComparisonAnalytics, getOfferPredictor, getNetworkingROI, getJobSearchEffectiveness, getApplicationGhostingPredictor, trackLoginDuration, getCustomDateRangeStats, exportAnalyticsReport as getExportAnalyticsReport, getSkillDemandForecast, getApplicationConversionFunnel, getInterviewSuccessRate, getJobSearchDuration, getOfferNegotiationLeverage, getApplicationChannelEffectiveness, getProfileVisibilityScore, getProfileViewsHistory, getUserRetentionStats } from "../controllers/analytics.controller";
 
 /**
  * Express router for analytics and reporting endpoints.
@@ -39,5 +39,6 @@ router.get("/search-duration", getJobSearchDuration);
 router.get("/channel-effectiveness", getApplicationChannelEffectiveness);
 router.get("/visibility-score", getProfileVisibilityScore);
 router.get("/profile-views", getProfileViewsHistory);
+router.get("/retention", getUserRetentionStats);
 
 export default router;

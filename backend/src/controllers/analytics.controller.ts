@@ -299,3 +299,9 @@ export const getProfileViewsHistory = asyncHandler(async (req: Request, res: Res
     data: result 
   });
 });
+
+export const getUserRetentionStats = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const result = await analyticsService.getUserRetentionStats(userId);
+  res.status(200).json({ success: true, message: "User retention stats fetched successfully", data: result });
+});
