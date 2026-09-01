@@ -137,7 +137,7 @@ export class ResumeAnalysisService {
     // to simulate catching critical CV mistakes.
     const redFlags = [];
     
-    if (analysis.atsScore < 60) {
+    if ((analysis.atsScore ?? 0) < 60) {
       redFlags.push({ type: "CRITICAL", issue: "Severe ATS parse failure. Use a standard single-column layout." });
     }
     
@@ -184,10 +184,12 @@ export class ResumeAnalysisService {
       contextSuggestion: `Add '${kw}' to your skills section or a relevant project description.`
     }));
 
+    const atsScore = analysis.atsScore ?? 0;
+
     return {
       resumeId,
-      score: analysis.atsScore,
-      message: `Adding these keywords could boost your ATS score to ${Math.min(100, analysis.atsScore + 15)}`,
+      score: atsScore,
+      message: `Adding these keywords could boost your ATS score to ${Math.min(100, atsScore + 15)}`,
       recommendations: keywordImpacts
     };
   }
