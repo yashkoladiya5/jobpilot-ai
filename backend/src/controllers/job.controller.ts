@@ -498,3 +498,16 @@ export const getJobApplicationInsights = asyncHandler(async (req: Request, res: 
     data: insights,
   });
 });
+
+export const generateInterviewQuestions = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { id } = req.params;
+  
+  const questions = await jobService.generateInterviewQuestions(userId, id);
+  
+  res.status(200).json({
+    success: true,
+    message: questions.message,
+    data: questions,
+  });
+});

@@ -1042,4 +1042,39 @@ ${userName}`;
       message: "AI-driven insights generated for this specific application."
     };
   }
+
+  async generateInterviewQuestions(userId: string, id: string) {
+    const job = await this.getJobById(userId, id);
+    const role = (job.role || "Professional").toLowerCase();
+    
+    let questions = [
+      "Tell me about a time you faced a difficult challenge at work and how you overcame it.",
+      "Why are you interested in joining our team?",
+      "Where do you see your career progressing in the next 3-5 years?"
+    ];
+
+    if (role.includes("engineer") || role.includes("developer")) {
+      questions = [
+        ...questions,
+        "Can you describe a complex system you designed or helped architect?",
+        "How do you ensure code quality and maintainability in your projects?",
+        "Explain a difficult bug you tracked down and fixed."
+      ];
+    } else if (role.includes("manager") || role.includes("lead")) {
+      questions = [
+        ...questions,
+        "How do you handle underperforming team members?",
+        "Describe your approach to prioritizing multiple critical projects.",
+        "How do you foster a positive and inclusive team culture?"
+      ];
+    }
+
+    return {
+      jobId: id,
+      role: job.role,
+      companyName: job.companyName,
+      questions,
+      message: "Mock interview questions generated successfully based on your role."
+    };
+  }
 }

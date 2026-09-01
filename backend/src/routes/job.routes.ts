@@ -35,6 +35,7 @@ import {
   getJobMarketTrends,
   getJobSalaryEstimates,
   getJobApplicationInsights,
+  generateInterviewQuestions,
 } from "../controllers/job.controller";
 import { authenticate } from "../middleware/auth";
 import { validate } from "../middleware/validate";
@@ -77,6 +78,7 @@ router.get("/:id/salary-insights", authenticate, getJobSalaryInsights);
 router.get("/:id/market-trends", authenticate, getJobMarketTrends);
 router.get("/salary-estimates", authenticate, getJobSalaryEstimates);
 router.get("/:id/insights", authenticate, getJobApplicationInsights);
+router.get("/:id/interview-questions", authenticate, generateInterviewQuestions);
 
 // CRUD operations for jobs, all requiring user authentication
 router.get("/", authenticate, getJobs);
