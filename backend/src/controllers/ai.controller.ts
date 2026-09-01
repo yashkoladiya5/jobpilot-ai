@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
+import { logger } from "../utils/logger";
 import { AuthenticatedRequest } from "../middleware/auth";
 import { ResumeAnalysisService } from "../services/ai/resume-analysis.service";
 import { JobAnalysisService } from "../services/ai/job-analysis.service";
@@ -25,9 +26,9 @@ export const analyzeResume = asyncHandler(async (req: Request, res: Response) =>
      return;
   }
   
-  console.log(`[AI Controller] Starting resume analysis for user ${userId}, resume ${resumeId}`);
+  logger.info(`[AI Controller] Starting resume analysis for user ${userId}, resume ${resumeId}`);
   const analysis = await resumeAnalysisService.analyzeResume(userId, resumeId);
-  console.log(`[AI Controller] Finished resume analysis for resume ${resumeId}`);
+  logger.info(`[AI Controller] Finished resume analysis for resume ${resumeId}`);
   
   res.status(200).json({
     success: true,
@@ -60,7 +61,7 @@ export const getResumeAnalyses = asyncHandler(async (req: Request, res: Response
 export const getLatestResumeAnalysis = asyncHandler(async (req: Request, res: Response) => {
   const userId = (req as AuthenticatedRequest).user.id;
   
-  console.log(`[AI Controller] Fetching latest resume analysis for user ${userId}`);
+  logger.info(`[AI Controller] Fetching latest resume analysis for user ${userId}`);
   const analysis = await resumeAnalysisService.getLatestResumeAnalysis(userId);
   
   res.status(200).json({
@@ -350,7 +351,7 @@ export const archiveInterviewSession = asyncHandler(async (req: Request, res: Re
 export const getInterviewTips = asyncHandler(async (req: Request, res: Response) => {
   const userId = (req as AuthenticatedRequest).user.id;
   
-  console.log(`[AI Controller] Fetching interview tips for user ${userId}`);
+  logger.info(`[AI Controller] Fetching interview tips for user ${userId}`);
   const tips = await interviewService.getInterviewTips(userId);
   
   res.status(200).json({
@@ -455,7 +456,7 @@ export const computeCareerInsights = asyncHandler(async (req: Request, res: Resp
   const userId = (req as AuthenticatedRequest).user.id;
   
   // Force a re-computation of insights rather than using cached
-  console.log(`[AI Controller] Forcing compute career insights for user ${userId}`);
+  logger.info(`[AI Controller] Forcing compute career insights for user ${userId}`);
   const result = await careerInsightsService.computeInsights(userId, { forceRefresh: true });
   
   res.json({ success: true, message: "Career insights forcefully re-computed", data: result });
@@ -470,7 +471,7 @@ export const getCareerInsightsHistory = asyncHandler(async (req: Request, res: R
 export const deleteCareerInsightsHistory = asyncHandler(async (req: Request, res: Response) => {
   const userId = (req as AuthenticatedRequest).user.id;
   
-  console.log(`[AI Controller] Deleting career insights history for user ${userId}`);
+  logger.info(`[AI Controller] Deleting career insights history for user ${userId}`);
   const result = await careerInsightsService.deleteInsightsHistory(userId);
   
   res.status(200).json({

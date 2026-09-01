@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
+import { logger } from "../utils/logger";
 import { AuthenticatedRequest } from "../middleware/auth";
 import { ApiError } from "../utils/ApiError";
 import { JobService } from "../services/job.service";
@@ -76,7 +77,7 @@ export const archiveJob = asyncHandler(async (req: Request, res: Response) => {
   const userId = (req as AuthenticatedRequest).user.id;
   const { id } = req.params;
   
-  console.log(`[Job Controller] Archiving job ${id} for user ${userId}`);
+  logger.info(`[Job Controller] Archiving job ${id} for user ${userId}`);
   const job = await jobService.archiveJob(userId, id);
 
   res.status(200).json({
