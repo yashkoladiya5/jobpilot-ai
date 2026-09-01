@@ -98,19 +98,39 @@ export class ResumeService {
   }
 
   async duplicateResume(userId: string, id: string) {
+    return this.createResumeCopy(
+      userId,
+      id,
+      (fileName) => `Copy of ${fileName}`,
+      "copy",
+      "Failed to duplicate resume file"
+    );
+  }
+
+  /**
+   * Copies an existing resume's file and creates a new resume record from it.
+   * Shared by duplicate and clone operations to avoid duplicating logic.
+   */
+  private async createResumeCopy(
+    userId: string,
+    id: string,
+    newFileNameFor: (fileName: string) => string,
+    pathSuffix: string,
+    failureMessage: string
+  ) {
     const resume = await prisma.resume.findUnique({ where: { id } });
-    
+
     if (!resume || resume.userId !== userId) {
       throw ApiError.notFound("Resume not found");
     }
 
-    const newFileName = `Copy of ${resume.fileName}`;
-    const newFilePath = `${resume.filePath}_copy_${Date.now()}`;
-    
+    const newFileName = newFileNameFor(resume.fileName);
+    const newFilePath = `${resume.filePath}_${pathSuffix}_${Date.now()}`;
+
     try {
       fs.copyFileSync(resume.filePath, newFilePath);
     } catch (e) {
-      throw ApiError.internal("Failed to duplicate resume file");
+      throw ApiError.internal(failureMessage);
     }
 
     return prisma.resume.create({
@@ -474,31 +494,13 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
   }
 
   async cloneResume(userId: string, id: string) {
-    const resume = await prisma.resume.findUnique({ where: { id } });
-    
-    if (!resume || resume.userId !== userId) {
-      throw ApiError.notFound("Resume not found");
-    }
-
-    const newFileName = `${resume.fileName} (Clone)`;
-    const newFilePath = `${resume.filePath}_clone_${Date.now()}`;
-    
-    try {
-      fs.copyFileSync(resume.filePath, newFilePath);
-    } catch (e) {
-      throw ApiError.internal("Failed to clone resume file");
-    }
-
-    return prisma.resume.create({
-      data: {
-        userId,
-        fileName: newFileName,
-        filePath: newFilePath,
-        fileSize: resume.fileSize,
-        mimeType: resume.mimeType,
-        isPrimary: false,
-      },
-    });
+    return this.createResumeCopy(
+      userId,
+      id,
+      (fileName) => `${fileName} (Clone)`,
+      "clone",
+      "Failed to clone resume file"
+    );
   }
 
   async generateJobTitleMatchReport(userId: string, id: string, jobTitle: string) {
