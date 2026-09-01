@@ -1,4 +1,5 @@
 import prisma from "../config/prisma";
+import { ApiError } from "../utils/ApiError";
 
 /**
  * Service for calculating advanced insights and aggregated metrics
@@ -253,7 +254,7 @@ export class AnalyticsService {
     const resumes = await prisma.resume.findMany({
       where: { userId },
       include: {
-        analyses: true,
+        resumeAnalyses: true,
       },
     });
 
@@ -262,11 +263,11 @@ export class AnalyticsService {
     let analyzedResumes = 0;
 
     resumes.forEach(resume => {
-      if (resume.analyses && resume.analyses.length > 0) {
+      if (resume.resumeAnalyses && resume.resumeAnalyses.length > 0) {
         // Find the latest analysis score
-        const latestAnalysis = resume.analyses.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())[0];
-        if (latestAnalysis.overallScore) {
-          totalScore += latestAnalysis.overallScore;
+        const latestAnalysis = resume.resumeAnalyses.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())[0];
+        if (latestAnalysis.atsScore) {
+          totalScore += latestAnalysis.atsScore;
           analyzedResumes++;
         }
       }
