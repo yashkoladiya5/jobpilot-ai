@@ -22,12 +22,7 @@ export async function generateStructuredResponse<T>(
 
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
-      const genAI = new GoogleGenerativeAI(geminiConfig.apiKey);
-      const model = genAI.getGenerativeModel({
-        model: geminiConfig.model,
-        generationConfig: geminiConfig.generationConfig,
-        safetySettings: geminiConfig.safetySettings as any,
-      });
+      const model = getModel();
 
       const startTime = Date.now();
       console.log(`[Gemini] Sending prompt (Attempt ${attempt + 1}/${retries + 1})...`);
@@ -63,6 +58,29 @@ export async function generateStructuredResponse<T>(
   }
 
   return { success: false, error: lastError };
+}
+
+function getModel() {
+  const genAI = new GoogleGenerativeAI(geminiConfig.apiKey);
+  return genAI.getGenerativeModel({
+    model: geminiConfig.model,
+    generationConfig: geminiConfig.generationConfig,
+    safetySettings: geminiConfig.safetySettings as any,
+  });
+}
+
+/**
+ * Generates plain text content for a prompt without structured JSON parsing.
+ * Throws if the GEMINI_API_KEY is not configured.
+ */
+export async function generateText(prompt: string): Promise<string> {
+  if (!geminiConfig.apiKey) {
+    throw ApiError.internal("GEMINI_API_KEY is not configured");
+  }
+
+  const model = getModel();
+  const result = await model.generateContent(prompt);
+  return result.response.text();
 }
 
 function extractJson(text: string): string | null {

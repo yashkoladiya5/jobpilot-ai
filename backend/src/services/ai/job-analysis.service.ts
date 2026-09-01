@@ -1,6 +1,6 @@
 import prisma from "../../config/prisma";
 import { ApiError } from "../../utils/ApiError";
-import { generateStructuredResponse } from "./gemini.client";
+import { generateStructuredResponse, generateText } from "./gemini.client";
 import { jobAnalysisSchema } from "./schemas/job-analysis.schema";
 import { buildJobAnalysisPrompt } from "./prompts/job-analysis.prompt";
 import fs from "fs/promises";
@@ -257,10 +257,7 @@ Their last day will be ${lastDay}.
 ${reason ? `Reason for leaving: ${reason}` : 'No specific reason provided, keep it standard.'}
 Format the output as a clean, ready-to-use email template.`;
 
-    const model = getGenerativeModel();
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    let generatedText = response.text();
+    const generatedText = await generateText(prompt);
 
     return {
       companyName,
