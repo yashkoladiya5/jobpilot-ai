@@ -396,3 +396,17 @@ export const generateResumeATSFormattingTips = asyncHandler(async (req: Request,
     data: formattingTips,
   });
 });
+
+export const checkCoverLetterGrammar = asyncHandler(async (req: Request, res: Response) => {
+  const { id: userId } = (req as AuthenticatedRequest).user;
+  const { id } = req.params;
+  const { coverLetterText } = req.body;
+  
+  const grammarData = await resumeService.checkCoverLetterGrammar(userId, id, coverLetterText);
+  
+  res.status(200).json({
+    success: true,
+    message: "Cover letter grammar checked successfully",
+    data: grammarData,
+  });
+});

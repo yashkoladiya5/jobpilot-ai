@@ -775,4 +775,41 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
       generatedAt: new Date().toISOString()
     };
   }
+
+  async checkCoverLetterGrammar(userId: string, id: string, coverLetterText: string) {
+    const resume = await prisma.resume.findUnique({ where: { id } });
+    if (!resume || resume.userId !== userId) {
+      throw ApiError.notFound("Resume not found");
+    }
+
+    if (!coverLetterText || coverLetterText.trim().length < 50) {
+      throw ApiError.badRequest("Cover letter text is too short to analyze for grammar.");
+    }
+
+    // Mock grammar analysis
+    const wordCount = coverLetterText.split(/\s+/).length;
+    const errors = [];
+    
+    // Simulate finding common grammar mistakes
+    const lowerText = coverLetterText.toLowerCase();
+    if (lowerText.includes("their is")) {
+      errors.push({ type: "Grammar", suggestion: "Change 'their is' to 'there is'." });
+    }
+    if (lowerText.includes("i seen")) {
+      errors.push({ type: "Grammar", suggestion: "Change 'I seen' to 'I saw' or 'I have seen'." });
+    }
+    if (wordCount > 300) {
+      errors.push({ type: "Style", suggestion: "Cover letter is quite long. Consider condensing it to under 300 words for better impact." });
+    }
+
+    return {
+      resumeId: resume.id,
+      fileName: resume.fileName,
+      wordCount,
+      grammarScore: Math.max(100 - (errors.length * 10), 0),
+      issuesDetected: errors,
+      overallFeedback: errors.length === 0 ? "Excellent grammar and tone!" : "Consider reviewing the suggested corrections.",
+      generatedAt: new Date().toISOString()
+    };
+  }
 }
