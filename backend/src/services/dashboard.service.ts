@@ -1004,4 +1004,38 @@ export class DashboardService {
       message: "Here are some targeted application suggestions for you."
     };
   }
+
+  async getWeeklyPerformance(userId: string) {
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+    const applications = await prisma.jobApplication.findMany({
+      where: {
+        userId,
+        createdAt: { gte: oneWeekAgo }
+      }
+    });
+
+    const applicationsSubmitted = applications.length;
+    const interviewsSecured = applications.filter(app => app.status === "INTERVIEW").length;
+    const offersReceived = applications.filter(app => app.status === "OFFER").length;
+
+    const performanceScore = Math.min(100, (applicationsSubmitted * 2) + (interviewsSecured * 10) + (offersReceived * 20));
+
+    let feedback = "Good effort this week!";
+    if (performanceScore > 80) feedback = "Outstanding performance! You are highly active.";
+    else if (performanceScore < 20) feedback = "Consider increasing your application volume next week.";
+
+    return {
+      timeframe: "Last 7 Days",
+      metrics: {
+        applicationsSubmitted,
+        interviewsSecured,
+        offersReceived,
+      },
+      performanceScore,
+      feedback,
+      message: "Weekly performance fetched successfully."
+    };
+  }
 }

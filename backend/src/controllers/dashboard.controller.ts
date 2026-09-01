@@ -452,3 +452,9 @@ export const getApplicationSuggestions = asyncHandler(async (req: Request, res: 
     data: suggestions,
   });
 });
+
+export const getWeeklyPerformance = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const result = await dashboardService.getWeeklyPerformance(userId);
+  res.status(200).json({ success: true, message: "Weekly performance fetched successfully", data: result });
+});
