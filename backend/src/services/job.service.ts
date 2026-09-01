@@ -1010,4 +1010,36 @@ ${userName}`;
       message: `The median estimated salary for ${role} is $${baseSalary.toLocaleString()}`
     };
   }
+
+  async getJobApplicationInsights(userId: string, id: string) {
+    const job = await this.getJobById(userId, id);
+    
+    // Generate some mocked personalized insights based on the job data
+    const isBigTech = ["google", "meta", "apple", "amazon", "netflix", "microsoft"].includes((job.companyName || "").toLowerCase());
+    const isStartup = !isBigTech && (job.companyName || "").length < 8; // Naive mock check
+
+    const insights = [];
+    if (isBigTech) {
+      insights.push("This company often heavily relies on data structures and algorithms in their technical screens. Double down on LeetCode.");
+      insights.push("The hiring process can take 4-8 weeks. Be prepared for a marathon, not a sprint.");
+    } else if (isStartup) {
+      insights.push("Startups value ownership and impact. Be ready to discuss times you wore multiple hats.");
+      insights.push("The interview process might move very quickly. Have your references ready.");
+    } else {
+      insights.push("Review their recent press releases to show you understand their current market position.");
+    }
+
+    if (job.status === "APPLIED") {
+      insights.push("It has been a few days since you applied. It might be time to find a recruiter on LinkedIn and send a direct message.");
+    }
+
+    return {
+      jobId: id,
+      companyName: job.companyName,
+      role: job.role,
+      personalizedInsights: insights,
+      generatedAt: new Date().toISOString(),
+      message: "AI-driven insights generated for this specific application."
+    };
+  }
 }

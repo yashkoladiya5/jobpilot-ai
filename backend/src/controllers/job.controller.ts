@@ -483,3 +483,16 @@ export const getJobSalaryEstimates = asyncHandler(async (req: Request, res: Resp
     data: estimates,
   });
 });
+
+export const getJobApplicationInsights = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const { id } = req.params;
+  
+  const insights = await jobService.getJobApplicationInsights(userId, id);
+  
+  res.status(200).json({
+    success: true,
+    message: "Application insights generated successfully",
+    data: insights,
+  });
+});
