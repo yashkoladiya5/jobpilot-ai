@@ -255,7 +255,7 @@ export class JobService {
     const jobsWithNotes = await prisma.jobApplication.findMany({
       where: {
         userId,
-        notes: { not: null, not: "" }
+        notes: { not: "" }
       },
       select: {
         id: true,

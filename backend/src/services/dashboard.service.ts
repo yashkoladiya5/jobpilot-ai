@@ -1,4 +1,5 @@
 import prisma from "../config/prisma";
+import { ApiError } from "../utils/ApiError";
 
 /**
  * Provides data aggregation and statistical analysis for the user dashboard.
