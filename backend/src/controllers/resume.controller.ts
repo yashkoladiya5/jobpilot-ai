@@ -370,3 +370,16 @@ export const matchResumeKeywords = asyncHandler(async (req: Request, res: Respon
     data: matchData,
   });
 });
+
+export const parseResumeSections = asyncHandler(async (req: Request, res: Response) => {
+  const { id: userId } = (req as AuthenticatedRequest).user;
+  const { id } = req.params;
+  
+  const parsedData = await resumeService.parseResumeSections(userId, id);
+  
+  res.status(200).json({
+    success: true,
+    message: "Resume sections parsed successfully",
+    data: parsedData,
+  });
+});

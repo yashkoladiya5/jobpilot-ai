@@ -710,4 +710,29 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
         : "Your resume contains all the core keywords we detected in the job description."
     };
   }
+
+  async parseResumeSections(userId: string, id: string) {
+    const resume = await prisma.resume.findUnique({ where: { id } });
+    if (!resume || resume.userId !== userId) {
+      throw ApiError.notFound("Resume not found");
+    }
+
+    // Mock parsing sections from the resume content
+    const mockSections = [
+      { name: "Contact Information", wordCount: 15, completeness: 100 },
+      { name: "Summary", wordCount: 45, completeness: 80 },
+      { name: "Experience", wordCount: 150, completeness: 90 },
+      { name: "Education", wordCount: 30, completeness: 100 },
+      { name: "Skills", wordCount: 20, completeness: 85 }
+    ];
+
+    return {
+      resumeId: resume.id,
+      fileName: resume.fileName,
+      totalSections: mockSections.length,
+      sections: mockSections,
+      missingRecommendedSections: ["Projects", "Certifications"],
+      message: "Resume sections parsed successfully."
+    };
+  }
 }

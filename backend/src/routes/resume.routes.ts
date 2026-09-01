@@ -26,6 +26,7 @@ import {
   bulkDeleteResumes,
   generateResumeReadabilityScore,
   matchResumeKeywords,
+  parseResumeSections,
 } from "../controllers/resume.controller";
 import { authenticate } from "../middleware/auth";
 import { upload } from "../middleware/upload";
@@ -75,5 +76,6 @@ router.post("/:id/clone", authenticate, cloneResume);
 router.post("/:id/variations", authenticate, generateResumeVariations);
 router.get("/:id/readability", authenticate, generateResumeReadabilityScore);
 router.post("/:id/match-keywords", authenticate, matchResumeKeywords);
+router.get("/:id/parse-sections", authenticate, parseResumeSections);
 
 export default router;
