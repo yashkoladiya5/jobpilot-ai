@@ -88,7 +88,6 @@ export class MatchingService {
       where: { id: analysisId, userId },
       include: {
         job: true,
-        resume: true,
       }
     });
 
@@ -106,7 +105,6 @@ export class MatchingService {
       recommendedChanges: analysis.recommendedChanges || [],
       jobRole: analysis.job?.role || "Unknown",
       company: analysis.job?.companyName || "Unknown",
-      resumeName: analysis.resume?.fileName || "Unknown",
       analyzedAt: analysis.analyzedAt,
     };
   }
@@ -122,7 +120,6 @@ export class MatchingService {
       take: limit,
       include: {
         job: { select: { companyName: true, role: true, location: true } },
-        resume: { select: { fileName: true } }
       }
     });
 
@@ -132,7 +129,6 @@ export class MatchingService {
       jobRole: match.job?.role || "Unknown",
       company: match.job?.companyName || "Unknown",
       location: match.job?.location || "Unknown",
-      resumeUsed: match.resume?.fileName || "Unknown",
       analyzedAt: match.analyzedAt,
       priorityImprovementsCount: (match.recommendedChanges as any[])?.length || 0
     }));
