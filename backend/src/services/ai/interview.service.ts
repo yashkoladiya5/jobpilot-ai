@@ -65,7 +65,6 @@ export class InterviewService {
         hrQuestions: response.data.hrQuestions as any,
         technicalQuestions: response.data.technicalQuestions as any,
         behavioralQuestions: response.data.behavioralQuestions as any,
-        situationalQuestions: response.data.situationalQuestions as any,
         followUpQuestions: response.data.followUpQuestions as any,
         totalQuestions,
         rawResponse: response.rawResponse ? { text: response.rawResponse } : undefined,
