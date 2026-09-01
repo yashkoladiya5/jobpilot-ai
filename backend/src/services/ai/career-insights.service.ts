@@ -127,8 +127,6 @@ export class CareerInsightsService {
       };
     }
 
-    const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
-
     await prisma.careerInsight.create({
       data: {
         userId,
