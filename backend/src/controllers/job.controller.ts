@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
 import { AuthenticatedRequest } from "../middleware/auth";
+import { ApiError } from "../utils/ApiError";
 import { JobService } from "../services/job.service";
 
 const jobService = new JobService();
