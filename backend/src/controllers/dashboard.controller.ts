@@ -458,3 +458,15 @@ export const getWeeklyPerformance = asyncHandler(async (req: Request, res: Respo
   const result = await dashboardService.getWeeklyPerformance(userId);
   res.status(200).json({ success: true, message: "Weekly performance fetched successfully", data: result });
 });
+
+export const getInterviewPrepGuide = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  
+  const result = await dashboardService.getInterviewPrepGuide(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Interview prep guide generated successfully", 
+    data: result 
+  });
+});

@@ -1038,4 +1038,48 @@ export class DashboardService {
       message: "Weekly performance fetched successfully."
     };
   }
+
+  async getInterviewPrepGuide(userId: string) {
+    const upcomingInterviews = await prisma.jobApplication.findMany({
+      where: {
+        userId,
+        status: 'INTERVIEW'
+      },
+      select: { companyName: true, role: true },
+      take: 1
+    });
+
+    if (upcomingInterviews.length === 0) {
+      return {
+        hasUpcomingInterviews: false,
+        message: "You don't have any upcoming interviews right now. Keep applying!",
+        guide: null
+      };
+    }
+
+    const { companyName, role } = upcomingInterviews[0];
+
+    // Generate a mock prep guide tailored to the role
+    const guide = {
+      company: companyName,
+      role: role,
+      recommendedTopics: ["System Design", "Behavioral (STAR Method)", "Data Structures"],
+      commonQuestions: [
+        `Why do you want to work at ${companyName}?`,
+        `Describe a time you had a conflict with a teammate while working as a ${role}.`,
+        "How do you handle tight deadlines?"
+      ],
+      checklist: [
+        "Research the company's recent news",
+        "Prepare 3 questions to ask the interviewer",
+        "Test your audio and video setup"
+      ]
+    };
+
+    return {
+      hasUpcomingInterviews: true,
+      guide,
+      message: `Prep guide generated for your upcoming interview at ${companyName}.`
+    };
+  }
 }
