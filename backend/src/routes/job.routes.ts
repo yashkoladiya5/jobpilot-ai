@@ -33,6 +33,7 @@ import {
   getMatchScoreExplainability,
   getJobSalaryInsights,
   getJobMarketTrends,
+  getJobSalaryEstimates,
 } from "../controllers/job.controller";
 import { authenticate } from "../middleware/auth";
 import { validate } from "../middleware/validate";
@@ -73,6 +74,7 @@ router.get("/:id/compare-market", authenticate, compareJobOfferWithMarket);
 router.get("/:id/match-score-explainability", authenticate, getMatchScoreExplainability);
 router.get("/:id/salary-insights", authenticate, getJobSalaryInsights);
 router.get("/:id/market-trends", authenticate, getJobMarketTrends);
+router.get("/salary-estimates", authenticate, getJobSalaryEstimates);
 
 // CRUD operations for jobs, all requiring user authentication
 router.get("/", authenticate, getJobs);

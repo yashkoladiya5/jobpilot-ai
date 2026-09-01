@@ -470,3 +470,16 @@ export const getJobMarketTrends = asyncHandler(async (req: Request, res: Respons
     data: trends,
   });
 });
+
+export const getJobSalaryEstimates = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as AuthenticatedRequest).user.id;
+  const role = req.query.role as string;
+  
+  const estimates = await jobService.getJobSalaryEstimates(userId, role);
+  
+  res.status(200).json({
+    success: true,
+    message: "Salary estimates fetched successfully",
+    data: estimates,
+  });
+});
