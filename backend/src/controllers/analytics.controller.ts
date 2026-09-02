@@ -213,6 +213,11 @@ export const getCustomDateRangeStats = asyncHandler(async (req: Request, res: Re
   const start = new Date(startDate as string);
   const end = new Date(endDate as string);
   
+  if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+    res.status(400).json({ success: false, message: "startDate and endDate must be valid dates." });
+    return;
+  }
+  
   const result = await analyticsService.getCustomDateRangeStats(userId, start, end);
   
   res.status(200).json({ 
