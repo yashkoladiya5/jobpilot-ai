@@ -1,5 +1,6 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { geminiConfig } from './gemini.config';
+import { logger } from '../../utils/logger';
 import { ApiError } from '../../utils/ApiError';
 
 interface GeminiResponse<T> {
@@ -25,14 +26,14 @@ export async function generateStructuredResponse<T>(
       const model = getModel();
 
       const startTime = Date.now();
-      console.log(`[Gemini] Sending prompt (Attempt ${attempt + 1}/${retries + 1})...`);
+      logger.info(`[Gemini] Sending prompt (Attempt ${attempt + 1}/${retries + 1})...`);
 
       const result = await model.generateContent(prompt);
       const response = result.response;
       const text = response.text();
 
       const duration = Date.now() - startTime;
-      console.log(`[Gemini] Received response in ${duration}ms. Tokens used: ~${Math.round(text.length / 4)}`);
+      logger.info(`[Gemini] Received response in ${duration}ms. Tokens used: ~${Math.round(text.length / 4)}`);
 
       // Extract JSON from response (handle markdown code blocks)
       const jsonStr = extractJson(text);

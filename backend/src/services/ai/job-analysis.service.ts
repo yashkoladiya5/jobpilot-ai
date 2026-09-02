@@ -1,6 +1,7 @@
 import prisma from "../../config/prisma";
 import { ApiError } from "../../utils/ApiError";
 import { generateStructuredResponse, generateText } from "./gemini.client";
+import { logger } from "../../utils/logger";
 import { jobAnalysisSchema } from "./schemas/job-analysis.schema";
 import { buildJobAnalysisPrompt } from "./prompts/job-analysis.prompt";
 import fs from "fs/promises";
@@ -240,7 +241,7 @@ ${jobDescription}`;
         ...response.data
       };
     } catch (error) {
-      console.error("[JobAnalysisService] Error highlighting keywords:", error);
+      logger.error("[JobAnalysisService] Error highlighting keywords:", error);
       throw ApiError.internal("Failed to analyze cover letter keywords. Please try again later.");
     }
   }

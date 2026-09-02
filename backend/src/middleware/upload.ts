@@ -3,6 +3,7 @@ import path from "path";
 import { v4 as uuidv4 } from "uuid";
 import { config } from "../config";
 import { ApiError } from "../utils/ApiError";
+import { logger } from "../utils/logger";
 
 /**
  * Disk storage configuration for uploaded files.
@@ -31,10 +32,10 @@ const fileFilter = (
   cb: multer.FileFilterCallback
 ) => {
   if (allowedMimeTypes.includes(file.mimetype)) {
-    console.log(`[Upload] Accepting file: ${file.originalname} (${file.mimetype}), Size validation pending`);
+    logger.info(`[Upload] Accepting file: ${file.originalname} (${file.mimetype}), Size validation pending`);
     cb(null, true);
   } else {
-    console.warn(`[Upload] Rejected file: ${file.originalname} (${file.mimetype}) - Unauthorized format`);
+    logger.warn(`[Upload] Rejected file: ${file.originalname} (${file.mimetype}) - Unauthorized format`);
     cb(ApiError.badRequest(`Unsupported file format '${file.mimetype}'. Only PDF, DOC, DOCX, and TXT files are allowed`));
   }
 };
