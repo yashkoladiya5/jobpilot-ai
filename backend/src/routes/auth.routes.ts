@@ -9,7 +9,7 @@ import { authLimiter } from "../middleware/rateLimiter";
 const router = Router();
 
 router.post("/verify-domain", verifyEmailDomain);
-router.post("/register", validate(registerSchema), register);
+router.post("/register", authLimiter, validate(registerSchema), register);
 router.post("/login", authLimiter, validate(loginSchema), login);
 router.get("/me", authenticate, getMe);
 router.delete("/me", authenticate, deleteAccount);
