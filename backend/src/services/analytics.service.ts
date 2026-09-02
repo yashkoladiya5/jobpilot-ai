@@ -703,17 +703,21 @@ export class AnalyticsService {
           company: app.companyName,
           role: app.role,
           status: app.status,
-          probability: `${ghostingProbability}%`,
+          probability: ghostingProbability,
           reason
         });
       }
     }
 
+    const sortedApplications = ghostedApplications
+      .sort((a, b) => b.probability - a.probability)
+      .map(app => ({ ...app, probability: `${app.probability}%` }));
+
     return {
-      ghostedCount: ghostedApplications.length,
-      ghostedApplications: ghostedApplications.sort((a, b) => parseInt(b.probability) - parseInt(a.probability)),
-      insight: ghostedApplications.length > 0 
-        ? `We predict you've been ghosted on ${ghostedApplications.length} applications. Consider archiving them to keep your pipeline clean.`
+      ghostedCount: sortedApplications.length,
+      ghostedApplications: sortedApplications,
+      insight: sortedApplications.length > 0 
+        ? `We predict you've been ghosted on ${sortedApplications.length} applications. Consider archiving them to keep your pipeline clean.`
         : "Great! None of your active applications appear to be ghosted."
     };
   }
