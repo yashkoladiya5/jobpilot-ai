@@ -31,6 +31,10 @@ export const authenticate = (
   try {
     const decoded = jwt.verify(token, config.jwtSecret) as { userId: string, iat: number, exp: number };
     
+    if (!decoded.userId) {
+      return next(ApiError.unauthorized("Authentication required: Token payload is missing the user id"));
+    }
+
     // Check if token is nearing expiration (e.g. less than 1 hour left)
     const currentTimestamp = Math.floor(Date.now() / 1000);
     if (decoded.exp && (decoded.exp - currentTimestamp < 3600)) {
