@@ -31,8 +31,9 @@ export const getResumes = asyncHandler(async (req: Request, res: Response) => {
   const parsedLimit = limit ? parseInt(limit as string, 10) : undefined;
   const parsedOffset = offset ? parseInt(offset as string, 10) : undefined;
   
-  if (parsedLimit && isNaN(parsedLimit)) {
-    throw ApiError.badRequest("Limit must be a valid number");
+  if ((parsedLimit !== undefined && (isNaN(parsedLimit) || parsedLimit < 1)) ||
+      (parsedOffset !== undefined && (isNaN(parsedOffset) || parsedOffset < 0))) {
+    throw ApiError.badRequest("Limit must be a positive integer and offset must be a non-negative integer");
   }
 
   const resumes = await resumeService.getResumes(userId);
