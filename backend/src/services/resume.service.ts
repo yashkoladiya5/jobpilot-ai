@@ -49,7 +49,7 @@ export class ResumeService {
     }
 
     try {
-      fs.unlinkSync(resume.filePath);
+      await fs.promises.unlink(resume.filePath);
     } catch {
       // file may already be deleted, continue
     }
@@ -133,7 +133,7 @@ export class ResumeService {
     const newFilePath = `${resume.filePath}_${pathSuffix}_${Date.now()}`;
 
     try {
-      fs.copyFileSync(resume.filePath, newFilePath);
+      await fs.promises.copyFile(resume.filePath, newFilePath);
     } catch (e) {
       throw ApiError.internal(failureMessage);
     }
@@ -579,7 +579,7 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
     try {
       // In reality, we'd take the parsed text, rewrite it with an LLM, and generate a new PDF.
       // Here we just copy the file as a placeholder.
-      fs.copyFileSync(resume.filePath, newFilePath);
+      await fs.promises.copyFile(resume.filePath, newFilePath);
     } catch (e) {
       throw ApiError.internal("Failed to generate resume variation file");
     }
@@ -615,7 +615,7 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
     let deletedCount = 0;
     for (const resume of resumes) {
       try {
-        fs.unlinkSync(resume.filePath);
+        await fs.promises.unlink(resume.filePath);
       } catch {
         // file may already be deleted, continue
       }
