@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
 import { logger } from "../utils/logger";
 import { AuthenticatedRequest } from "../middleware/auth";
+import { ApiError } from "../utils/ApiError";
 import { ResumeAnalysisService } from "../services/ai/resume-analysis.service";
 import { JobAnalysisService } from "../services/ai/job-analysis.service";
 import { matchingService } from "../services/ai/matching.service";
@@ -217,6 +218,11 @@ export const getTopMatches = asyncHandler(async (req: Request, res: Response) =>
   const { limit } = req.query;
   
   const parsedLimit = limit ? parseInt(limit as string, 10) : 5;
+  
+  if (isNaN(parsedLimit) || parsedLimit < 1) {
+    throw ApiError.badRequest("limit must be a positive integer");
+  }
+  
   const matches = await matchingService.getTopMatchesForResume(resumeId, userId, parsedLimit);
   
   res.status(200).json({
@@ -249,6 +255,11 @@ export const getRecentMatches = asyncHandler(async (req: Request, res: Response)
   const { limit } = req.query;
   
   const parsedLimit = limit ? parseInt(limit as string, 10) : 5;
+  
+  if (isNaN(parsedLimit) || parsedLimit < 1) {
+    throw ApiError.badRequest("limit must be a positive integer");
+  }
+  
   const matches = await matchingService.getRecentMatches(userId, parsedLimit);
   
   res.status(200).json({
