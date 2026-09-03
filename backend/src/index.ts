@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import fs from "fs";
 import morgan from "morgan";
 import { routes } from "./routes";
 import { errorHandler } from "./middleware/errorHandler";
@@ -10,6 +11,9 @@ import { apiLimiter } from "./middleware/rateLimiter";
 
 // Load environment variables from the .env file
 dotenv.config();
+
+// Ensure the file upload directory exists before accepting any uploads
+fs.mkdirSync(config.uploadDir, { recursive: true });
 
 // Initialize the Express application instance
 const app = express();
