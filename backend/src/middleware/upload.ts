@@ -32,7 +32,6 @@ const fileFilter = (
   cb: multer.FileFilterCallback
 ) => {
   if (allowedMimeTypes.includes(file.mimetype)) {
-    logger.info(`[Upload] Accepting file: ${file.originalname} (${file.mimetype}), Size validation pending`);
     cb(null, true);
   } else {
     logger.warn(`[Upload] Rejected file: ${file.originalname} (${file.mimetype}) - Unauthorized format`);
