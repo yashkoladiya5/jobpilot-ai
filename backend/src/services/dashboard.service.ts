@@ -97,19 +97,22 @@ export class DashboardService {
   }
 
   async getActionItems(userId: string) {
-    const jobsNeedingFollowUp = await prisma.jobApplication.findMany({
-      where: { 
-        userId, 
-        status: 'INTERVIEW', 
-        updatedAt: { lte: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000) } // No update in 3 days
-      },
-      select: { id: true, companyName: true, role: true },
-      take: 5
-    });
+    const threeDaysAgo = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000);
 
-    const pendingAIAnalyses = await prisma.jobAnalysis.count({
-      where: { userId, status: 'PROCESSING' }
-    });
+    const [jobsNeedingFollowUp, pendingAIAnalyses] = await Promise.all([
+      prisma.jobApplication.findMany({
+        where: { 
+          userId, 
+          status: 'INTERVIEW', 
+          updatedAt: { lte: threeDaysAgo }
+        },
+        select: { id: true, companyName: true, role: true },
+        take: 5
+      }),
+      prisma.jobAnalysis.count({
+        where: { userId, status: 'PROCESSING' }
+      }),
+    ]);
 
     return {
       jobsNeedingFollowUp,
@@ -119,10 +122,12 @@ export class DashboardService {
   }
 
   async getDashboardSummary(userId: string) {
-    const totalJobs = await prisma.jobApplication.count({ where: { userId } });
-    const interviews = await prisma.jobApplication.count({ where: { userId, status: 'INTERVIEW' } });
-    const offers = await prisma.jobApplication.count({ where: { userId, status: 'OFFER' } });
-    
+    const [totalJobs, interviews, offers] = await Promise.all([
+      prisma.jobApplication.count({ where: { userId } }),
+      prisma.jobApplication.count({ where: { userId, status: 'INTERVIEW' } }),
+      prisma.jobApplication.count({ where: { userId, status: 'OFFER' } }),
+    ]);
+
     let summaryText = "You're off to a great start. Keep applying!";
     if (offers > 0) {
       summaryText = `Congratulations! You have ${offers} offer(s) to review.`;
