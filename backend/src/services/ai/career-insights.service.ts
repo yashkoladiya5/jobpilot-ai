@@ -34,71 +34,87 @@ export class CareerInsightsService {
       }
     }
 
-    const totalApplications = await prisma.jobApplication.count({ where: { userId } });
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
-    const applicationsByStatusRaw = await prisma.jobApplication.groupBy({
-      by: ["status"],
-      where: { userId },
-      _count: true,
-    });
+    const firstOfMonth = new Date();
+    firstOfMonth.setDate(1);
+
+    const [
+      totalApplications,
+      applicationsByStatusRaw,
+      recentApplications,
+      interviewsThisMonth,
+      offersThisMonth,
+      rejected,
+      totalResumes,
+      analyzedResumes,
+      avgAts,
+      completedInterviews,
+      avgInterviewScore,
+      matchedJobs,
+      avgMatch,
+    ] = await Promise.all([
+      prisma.jobApplication.count({ where: { userId } }),
+
+      prisma.jobApplication.groupBy({
+        by: ["status"],
+        where: { userId },
+        _count: true,
+      }),
+
+      prisma.jobApplication.count({
+        where: { userId, appliedDate: { gte: oneWeekAgo } },
+      }),
+
+      prisma.jobApplication.count({
+        where: { userId, status: "INTERVIEW", updatedAt: { gte: firstOfMonth } },
+      }),
+
+      prisma.jobApplication.count({
+        where: { userId, status: "OFFER", updatedAt: { gte: firstOfMonth } },
+      }),
+
+      prisma.jobApplication.count({
+        where: { userId, status: "REJECTED" },
+      }),
+
+      prisma.resume.count({ where: { userId } }),
+
+      prisma.resumeAnalysis.count({
+        where: { userId, status: "COMPLETED" },
+      }),
+
+      prisma.resumeAnalysis.aggregate({
+        where: { userId, status: "COMPLETED", atsScore: { not: null } },
+        _avg: { atsScore: true },
+      }),
+
+      prisma.interviewSession.count({
+        where: { userId, status: "COMPLETED" },
+      }),
+
+      prisma.interviewResult.aggregate({
+        where: { session: { userId } },
+        _avg: { overallScore: true },
+      }),
+
+      prisma.jobAnalysis.count({
+        where: { userId, status: "COMPLETED", resumeMatchScore: { not: null } },
+      }),
+
+      prisma.jobAnalysis.aggregate({
+        where: { userId, status: "COMPLETED", resumeMatchScore: { not: null } },
+        _avg: { resumeMatchScore: true },
+      }),
+    ]);
 
     const applicationsByStatus = applicationsByStatusRaw.map(s => ({
       status: s.status,
       count: s._count,
     }));
 
-    const oneWeekAgo = new Date();
-    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-
-    const recentApplications = await prisma.jobApplication.count({
-      where: { userId, appliedDate: { gte: oneWeekAgo } },
-    });
-
-    const firstOfMonth = new Date();
-    firstOfMonth.setDate(1);
-
-    const interviewsThisMonth = await prisma.jobApplication.count({
-      where: { userId, status: "INTERVIEW", updatedAt: { gte: firstOfMonth } },
-    });
-
-    const offersThisMonth = await prisma.jobApplication.count({
-      where: { userId, status: "OFFER", updatedAt: { gte: firstOfMonth } },
-    });
-
-    const rejected = await prisma.jobApplication.count({
-      where: { userId, status: "REJECTED" },
-    });
-
     const rejectionRate = totalApplications > 0 ? Math.round((rejected / totalApplications) * 100) : 0;
-
-    const totalResumes = await prisma.resume.count({ where: { userId } });
-
-    const analyzedResumes = await prisma.resumeAnalysis.count({
-      where: { userId, status: "COMPLETED" },
-    });
-
-    const avgAts = await prisma.resumeAnalysis.aggregate({
-      where: { userId, status: "COMPLETED", atsScore: { not: null } },
-      _avg: { atsScore: true },
-    });
-
-    const completedInterviews = await prisma.interviewSession.count({
-      where: { userId, status: "COMPLETED" },
-    });
-
-    const avgInterviewScore = await prisma.interviewResult.aggregate({
-      where: { session: { userId } },
-      _avg: { overallScore: true },
-    });
-
-    const matchedJobs = await prisma.jobAnalysis.count({
-      where: { userId, status: "COMPLETED", resumeMatchScore: { not: null } },
-    });
-
-    const avgMatch = await prisma.jobAnalysis.aggregate({
-      where: { userId, status: "COMPLETED", resumeMatchScore: { not: null } },
-      _avg: { resumeMatchScore: true },
-    });
 
     const careerData: CareerDataInput = {
       totalApplications,
