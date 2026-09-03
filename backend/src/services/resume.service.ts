@@ -62,14 +62,19 @@ export class ResumeService {
     if (!resume || resume.userId !== userId) {
       throw ApiError.notFound("Resume not found");
     }
-    await prisma.resume.updateMany({
-      where: { userId, isPrimary: true },
-      data: { isPrimary: false },
-    });
-    return prisma.resume.update({
-      where: { id },
-      data: { isPrimary: true },
-    });
+    // Unset the current primary and set the new one atomically so the
+    // user always has exactly one primary resume.
+    const [, updatedResume] = await prisma.$transaction([
+      prisma.resume.updateMany({
+        where: { userId, isPrimary: true },
+        data: { isPrimary: false },
+      }),
+      prisma.resume.update({
+        where: { id },
+        data: { isPrimary: true },
+      }),
+    ]);
+    return updatedResume;
   }
 
   async renameResume(userId: string, id: string, newName: string) {
