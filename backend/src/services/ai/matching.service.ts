@@ -130,7 +130,9 @@ export class MatchingService {
       company: match.job?.companyName || "Unknown",
       location: match.job?.location || "Unknown",
       analyzedAt: match.analyzedAt,
-      priorityImprovementsCount: (match.recommendedChanges as any[])?.length || 0
+      priorityImprovementsCount: Array.isArray(match.recommendedChanges)
+        ? (match.recommendedChanges as unknown[]).length
+        : 0
     }));
   }
 }
