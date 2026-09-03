@@ -1,4 +1,5 @@
 import prisma from "../config/prisma";
+import { $Enums } from "@prisma/client";
 import { ApiError } from "../utils/ApiError";
 
 /**
@@ -114,9 +115,9 @@ export class JobService {
     });
   }
 
-  async updateJobStatus(userId: string, id: string, status: string) {
-    const validStatuses = ["SAVED", "APPLIED", "INTERVIEW", "OFFER", "REJECTED", "WITHDRAWN"];
-    if (!validStatuses.includes(status)) {
+  async updateJobStatus(userId: string, id: string, status: $Enums.ApplicationStatus) {
+    const validStatuses = Object.values($Enums.ApplicationStatus);
+    if (!(validStatuses as string[]).includes(status)) {
       throw ApiError.badRequest("Invalid job status provided");
     }
 
@@ -124,7 +125,7 @@ export class JobService {
 
     return prisma.jobApplication.update({
       where: { id },
-      data: { status: status as any },
+      data: { status },
     });
   }
 
@@ -172,9 +173,9 @@ export class JobService {
     return analytics;
   }
 
-  async bulkUpdateJobStatus(userId: string, jobIds: string[], status: string) {
-    const validStatuses = ["SAVED", "APPLIED", "INTERVIEW", "OFFER", "REJECTED", "WITHDRAWN"];
-    if (!validStatuses.includes(status)) {
+  async bulkUpdateJobStatus(userId: string, jobIds: string[], status: $Enums.ApplicationStatus) {
+    const validStatuses = Object.values($Enums.ApplicationStatus);
+    if (!(validStatuses as string[]).includes(status)) {
       throw ApiError.badRequest("Invalid job status provided");
     }
 
@@ -187,7 +188,7 @@ export class JobService {
         id: { in: jobIds },
         userId 
       },
-      data: { status: status as any },
+      data: { status },
     });
 
     return { count: updated.count };
