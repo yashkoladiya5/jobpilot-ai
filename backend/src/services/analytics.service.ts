@@ -1,4 +1,5 @@
 import prisma from "../config/prisma";
+import { ApplicationStatus } from "@prisma/client";
 import { ApiError } from "../utils/ApiError";
 
 /**
@@ -183,20 +184,21 @@ export class AnalyticsService {
     };
   }
 
-  async getOfferAnalytics(userId: string) {
-    const offerApplications = await prisma.jobApplication.findMany({
-      where: { userId, status: "OFFER" },
+  /**
+   * Shared helper for analytics on applications grouped by a single status
+   * (e.g. OFFER, INTERVIEW). Returns the total count, the list of companies,
+   * and the five most recently updated applications with a common shape.
+   */
+  private async getApplicationAnalyticsByStatus(userId: string, status: ApplicationStatus) {
+    const applications = await prisma.jobApplication.findMany({
+      where: { userId, status },
       orderBy: { updatedAt: "desc" },
     });
 
-    const totalOffers = offerApplications.length;
-
-    const offerCompanies = offerApplications.map(app => app.companyName);
-
     return {
-      totalOffers,
-      offerCompanies,
-      recentOffers: offerApplications.slice(0, 5).map(app => ({
+      total: applications.length,
+      companies: applications.map(app => app.companyName),
+      recent: applications.slice(0, 5).map(app => ({
         company: app.companyName,
         role: app.role,
         date: app.updatedAt,
@@ -204,23 +206,23 @@ export class AnalyticsService {
     };
   }
 
-  async getInterviewAnalytics(userId: string) {
-    const interviewApplications = await prisma.jobApplication.findMany({
-      where: { userId, status: "INTERVIEW" },
-      orderBy: { updatedAt: "desc" },
-    });
-
-    const totalInterviews = interviewApplications.length;
-    const interviewCompanies = interviewApplications.map(app => app.companyName);
+  async getOfferAnalytics(userId: string) {
+    const { total, companies, recent } = await this.getApplicationAnalyticsByStatus(userId, "OFFER");
 
     return {
-      totalInterviews,
-      interviewCompanies,
-      recentInterviews: interviewApplications.slice(0, 5).map(app => ({
-        company: app.companyName,
-        role: app.role,
-        date: app.updatedAt,
-      })),
+      totalOffers: total,
+      offerCompanies: companies,
+      recentOffers: recent,
+    };
+  }
+
+  async getInterviewAnalytics(userId: string) {
+    const { total, companies, recent } = await this.getApplicationAnalyticsByStatus(userId, "INTERVIEW");
+
+    return {
+      totalInterviews: total,
+      interviewCompanies: companies,
+      recentInterviews: recent,
     };
   }
 
