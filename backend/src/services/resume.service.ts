@@ -161,11 +161,7 @@ export class ResumeService {
     });
 
     const totalCount = resumes.length;
-    let totalStorageBytes = 0;
-    
-    resumes.forEach(r => {
-      totalStorageBytes += r.fileSize;
-    });
+    const totalStorageBytes = resumes.reduce((sum, r) => sum + r.fileSize, 0);
 
     // Calculate how many resumes were uploaded in the last 30 days
     const thirtyDaysAgo = new Date();
