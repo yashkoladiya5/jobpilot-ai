@@ -56,7 +56,7 @@ export class JobService {
       jobUrl?: string;
       salaryRange?: string;
       location?: string;
-      status?: string;
+      status?: $Enums.ApplicationStatus;
       notes?: string;
       resumeId?: string;
     }
@@ -69,7 +69,7 @@ export class JobService {
         jobUrl: data.jobUrl,
         salaryRange: data.salaryRange,
         location: data.location,
-        status: (data.status ?? "SAVED") as "SAVED" | "APPLIED" | "INTERVIEW" | "OFFER" | "REJECTED" | "WITHDRAWN",
+        status: data.status ?? "SAVED",
         notes: data.notes,
         resumeId: data.resumeId,
       },
@@ -85,7 +85,7 @@ export class JobService {
       jobUrl: string;
       salaryRange: string;
       location: string;
-      status: string;
+      status: $Enums.ApplicationStatus;
       notes: string;
       resumeId: string;
     }>
@@ -101,7 +101,7 @@ export class JobService {
         salaryRange: data.salaryRange,
         location: data.location,
         notes: data.notes,
-        ...(data.status ? { status: data.status as "SAVED" | "APPLIED" | "INTERVIEW" | "OFFER" | "REJECTED" | "WITHDRAWN" } : {}),
+        ...(data.status ? { status: data.status } : {}),
         ...(data.resumeId !== undefined ? { resumeId: data.resumeId } : {}),
       },
     });
