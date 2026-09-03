@@ -365,23 +365,26 @@ export class InterviewService {
     };
 
     results.forEach(result => {
-      const scores = result.categoryScores as any;
+      const scores = result.categoryScores as Record<string, unknown> | null;
       if (scores) {
         Object.keys(aggregated).forEach(key => {
           if (typeof scores[key] === 'number') {
-            aggregated[key].sum += scores[key];
+            aggregated[key].sum += scores[key] as number;
             aggregated[key].count += 1;
           }
         });
       }
     });
 
+    const averageFor = (key: string) =>
+      aggregated[key].count > 0 ? Math.round(aggregated[key].sum / aggregated[key].count) : 0;
+
     return {
-      hr: aggregated.hr.count > 0 ? Math.round(aggregated.hr.sum / aggregated.hr.count) : 0,
-      technical: aggregated.technical.count > 0 ? Math.round(aggregated.technical.sum / aggregated.technical.count) : 0,
-      behavioral: aggregated.behavioral.count > 0 ? Math.round(aggregated.behavioral.sum / aggregated.behavioral.count) : 0,
-      situational: aggregated.situational.count > 0 ? Math.round(aggregated.situational.sum / aggregated.situational.count) : 0,
-      follow_up: aggregated.follow_up.count > 0 ? Math.round(aggregated.follow_up.sum / aggregated.follow_up.count) : 0,
+      hr: averageFor("hr"),
+      technical: averageFor("technical"),
+      behavioral: averageFor("behavioral"),
+      situational: averageFor("situational"),
+      follow_up: averageFor("follow_up"),
     };
   }
 
