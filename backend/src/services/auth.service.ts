@@ -518,36 +518,23 @@ export class AuthService {
       throw ApiError.notFound("User not found");
     }
 
-    let score = 0;
-    const missingFields = [];
+    // Since our prisma schema only has basic fields, we mock Bio and Location
+    // as always missing to simulate a real profile completeness check.
+    const fields: { label: string; present: boolean }[] = [
+      { label: "Name", present: !!user.name && user.name.trim().length > 0 },
+      { label: "Email", present: !!user.email && user.email.trim().length > 0 },
+      { label: "Bio", present: false },
+      { label: "Location", present: false },
+    ];
 
-    if (user.name && user.name.trim().length > 0) {
-      score += 25;
-    } else {
-      missingFields.push("Name");
-    }
+    const score = fields.reduce(
+      (total, field) => (field.present ? total + 25 : total),
+      0
+    );
 
-    if (user.email && user.email.trim().length > 0) {
-      score += 25;
-    } else {
-      missingFields.push("Email");
-    }
-
-    // Since our prisma schema only has basic fields, we will mock the checks for Bio and Location
-    // to simulate a real profile completeness check.
-    const hasBio = false; // Mock
-    if (hasBio) {
-      score += 25;
-    } else {
-      missingFields.push("Bio");
-    }
-
-    const hasLocation = false; // Mock
-    if (hasLocation) {
-      score += 25;
-    } else {
-      missingFields.push("Location");
-    }
+    const missingFields = fields
+      .filter(field => !field.present)
+      .map(field => field.label);
 
     return {
       userId,
