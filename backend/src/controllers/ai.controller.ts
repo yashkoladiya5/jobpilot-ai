@@ -29,6 +29,19 @@ function requireJobIdParam(req: Request, res: Response): string | null {
   return jobId;
 }
 
+/**
+ * Reads the resumeId path parameter and responds with a 400 when it is missing.
+ * Returns the resumeId, or null after sending the error response.
+ */
+function requireResumeIdParam(req: Request, res: Response): string | null {
+  const { resumeId } = req.params;
+  if (!resumeId) {
+    res.status(400).json({ success: false, message: "Resume ID is required." });
+    return null;
+  }
+  return resumeId;
+}
+
 // Resume Analysis
 
 export const analyzeResume = asyncHandler(async (req: Request, res: Response) => {
@@ -87,12 +100,8 @@ export const getLatestResumeAnalysis = asyncHandler(async (req: Request, res: Re
 
 export const getResumeRedFlags = asyncHandler(async (req: Request, res: Response) => {
   const userId = (req as AuthenticatedRequest).user.id;
-  const { resumeId } = req.params;
-  
-  if (!resumeId) {
-     res.status(400).json({ success: false, message: "Resume ID is required." });
-     return;
-  }
+  const resumeId = requireResumeIdParam(req, res);
+  if (!resumeId) return;
   
   const result = await resumeAnalysisService.getResumeRedFlags(userId, resumeId);
   
@@ -105,12 +114,8 @@ export const getResumeRedFlags = asyncHandler(async (req: Request, res: Response
 
 export const getResumeKeywordOptimization = asyncHandler(async (req: Request, res: Response) => {
   const userId = (req as AuthenticatedRequest).user.id;
-  const { resumeId } = req.params;
-  
-  if (!resumeId) {
-     res.status(400).json({ success: false, message: "Resume ID is required." });
-     return;
-  }
+  const resumeId = requireResumeIdParam(req, res);
+  if (!resumeId) return;
   
   const optimization = await resumeAnalysisService.getResumeKeywordOptimization(userId, resumeId);
   
@@ -123,12 +128,8 @@ export const getResumeKeywordOptimization = asyncHandler(async (req: Request, re
 
 export const getSmartResumeSummary = asyncHandler(async (req: Request, res: Response) => {
   const userId = (req as AuthenticatedRequest).user.id;
-  const { resumeId } = req.params;
-  
-  if (!resumeId) {
-     res.status(400).json({ success: false, message: "Resume ID is required." });
-     return;
-  }
+  const resumeId = requireResumeIdParam(req, res);
+  if (!resumeId) return;
   
   const summary = await resumeAnalysisService.generateSmartResumeSummary(userId, resumeId);
   
