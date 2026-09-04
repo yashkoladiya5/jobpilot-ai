@@ -248,16 +248,22 @@ export class AnalyticsService {
     });
 
     const totalApplied = applicationsThisWeek.length;
-    const interviewCount = applicationsThisWeek.filter(app => app.status === "INTERVIEW").length;
-    const offerCount = applicationsThisWeek.filter(app => app.status === "OFFER").length;
-    const rejectionCount = applicationsThisWeek.filter(app => app.status === "REJECTED").length;
+
+    // Single-pass status counts instead of repeated filtering
+    const statusCounts = applicationsThisWeek.reduce(
+      (acc, app) => {
+        acc[app.status] = (acc[app.status] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
     return {
       timeframe: "Last 7 days",
       totalApplied,
-      interviewCount,
-      offerCount,
-      rejectionCount,
+      interviewCount: statusCounts["INTERVIEW"] || 0,
+      offerCount: statusCounts["OFFER"] || 0,
+      rejectionCount: statusCounts["REJECTED"] || 0,
       activeCompanies: [...new Set(applicationsThisWeek.map(app => app.companyName))],
     };
   }
