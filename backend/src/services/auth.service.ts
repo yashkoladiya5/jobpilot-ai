@@ -466,23 +466,33 @@ export class AuthService {
     const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw ApiError.notFound("User not found");
 
-    let score = 50; // base score
-    let recommendations = [];
-
     // Check password age (mocking that we check if it was updated recently)
     const passwordAgeDays = Math.floor((Date.now() - user.updatedAt.getTime()) / (1000 * 60 * 60 * 24));
-    if (passwordAgeDays > 90) {
-      recommendations.push("Consider updating your password, it hasn't been changed in over 90 days.");
-    } else {
-      score += 20;
-    }
-
-    // Check if MFA is enabled (mock check)
+    const passwordRecent = passwordAgeDays <= 90;
     const hasMfa = false; // In reality we'd check a field on the user model
-    if (!hasMfa) {
-      recommendations.push("Enable Two-Factor Authentication (2FA) to heavily secure your account.");
-    } else {
-      score += 30;
+
+    const checks = [
+      {
+        passed: passwordRecent,
+        score: 20,
+        recommendation: "Consider updating your password, it hasn't been changed in over 90 days.",
+      },
+      {
+        passed: hasMfa,
+        score: 30,
+        recommendation: "Enable Two-Factor Authentication (2FA) to heavily secure your account.",
+      },
+    ];
+
+    let score = 50; // base score
+    const recommendations: string[] = [];
+
+    for (const check of checks) {
+      if (check.passed) {
+        score += check.score;
+      } else {
+        recommendations.push(check.recommendation);
+      }
     }
 
     return {
