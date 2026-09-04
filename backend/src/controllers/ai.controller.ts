@@ -16,6 +16,19 @@ import { careerInsightsService } from "../services/ai/career-insights.service";
 const resumeAnalysisService = new ResumeAnalysisService();
 const jobAnalysisService = new JobAnalysisService();
 
+/**
+ * Reads the jobId path parameter and responds with a 400 when it is missing.
+ * Returns the jobId, or null after sending the error response.
+ */
+function requireJobIdParam(req: Request, res: Response): string | null {
+  const { jobId } = req.params;
+  if (!jobId) {
+    res.status(400).json({ success: false, message: "Job ID is required." });
+    return null;
+  }
+  return jobId;
+}
+
 // Resume Analysis
 
 export const analyzeResume = asyncHandler(async (req: Request, res: Response) => {
@@ -398,12 +411,8 @@ export const getInterviewReadinessScore = asyncHandler(async (req: Request, res:
 
 export const generateMockTechnicalAssessment = asyncHandler(async (req: Request, res: Response) => {
   const userId = (req as AuthenticatedRequest).user.id;
-  const { jobId } = req.params;
-  
-  if (!jobId) {
-     res.status(400).json({ success: false, message: "Job ID is required." });
-     return;
-  }
+  const jobId = requireJobIdParam(req, res);
+  if (!jobId) return;
   
   const assessment = await interviewService.generateMockTechnicalAssessment(userId, jobId);
   
@@ -416,12 +425,8 @@ export const generateMockTechnicalAssessment = asyncHandler(async (req: Request,
 
 export const generateMockBehavioralAssessment = asyncHandler(async (req: Request, res: Response) => {
   const userId = (req as AuthenticatedRequest).user.id;
-  const { jobId } = req.params;
-  
-  if (!jobId) {
-     res.status(400).json({ success: false, message: "Job ID is required." });
-     return;
-  }
+  const jobId = requireJobIdParam(req, res);
+  if (!jobId) return;
   
   const assessment = await interviewService.generateMockBehavioralAssessment(userId, jobId);
   
@@ -434,12 +439,8 @@ export const generateMockBehavioralAssessment = asyncHandler(async (req: Request
 
 export const generateMockSystemDesignAssessment = asyncHandler(async (req: Request, res: Response) => {
   const userId = (req as AuthenticatedRequest).user.id;
-  const { jobId } = req.params;
-  
-  if (!jobId) {
-     res.status(400).json({ success: false, message: "Job ID is required." });
-     return;
-  }
+  const jobId = requireJobIdParam(req, res);
+  if (!jobId) return;
   
   const assessment = await interviewService.generateMockSystemDesignAssessment(userId, jobId);
   
@@ -530,12 +531,8 @@ export const detectJobRedFlags = asyncHandler(async (req: Request, res: Response
 
 export const generateElevatorPitch = asyncHandler(async (req: Request, res: Response) => {
   const userId = (req as AuthenticatedRequest).user.id;
-  const { jobId } = req.params;
-  
-  if (!jobId) {
-     res.status(400).json({ success: false, message: "Job ID is required." });
-     return;
-  }
+  const jobId = requireJobIdParam(req, res);
+  if (!jobId) return;
   
   const result = await interviewService.generateElevatorPitch(userId, jobId);
   
