@@ -160,17 +160,24 @@ export class JobService {
       select: { status: true },
     });
 
-    const analytics = {
-      total: jobs.length,
-      saved: jobs.filter(j => j.status === 'SAVED').length,
-      applied: jobs.filter(j => j.status === 'APPLIED').length,
-      interviewing: jobs.filter(j => j.status === 'INTERVIEW').length,
-      offers: jobs.filter(j => j.status === 'OFFER').length,
-      rejected: jobs.filter(j => j.status === 'REJECTED').length,
-      withdrawn: jobs.filter(j => j.status === 'WITHDRAWN').length,
-    };
+    // Single-pass status counts instead of repeated filtering
+    const counts = jobs.reduce(
+      (acc, job) => {
+        acc[job.status] = (acc[job.status] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
-    return analytics;
+    return {
+      total: jobs.length,
+      saved: counts['SAVED'] || 0,
+      applied: counts['APPLIED'] || 0,
+      interviewing: counts['INTERVIEW'] || 0,
+      offers: counts['OFFER'] || 0,
+      rejected: counts['REJECTED'] || 0,
+      withdrawn: counts['WITHDRAWN'] || 0,
+    };
   }
 
   async bulkUpdateJobStatus(userId: string, jobIds: string[], status: $Enums.ApplicationStatus) {
