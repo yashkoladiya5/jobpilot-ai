@@ -1,4 +1,5 @@
 import prisma from "../../config/prisma";
+import { Prisma } from "@prisma/client";
 import { generateStructuredResponse } from "./gemini.client";
 import { buildInterviewQuestionsPrompt } from "./prompts/interview.prompt";
 import { interviewQuestionsSchema, InterviewQuestionsOutput } from "./schemas/interview.schema";
@@ -62,10 +63,10 @@ export class InterviewService {
       where: { id: session.id },
       data: {
         status: "COMPLETED",
-        hrQuestions: response.data.hrQuestions as any,
-        technicalQuestions: response.data.technicalQuestions as any,
-        behavioralQuestions: response.data.behavioralQuestions as any,
-        followUpQuestions: response.data.followUpQuestions as any,
+        hrQuestions: response.data.hrQuestions as unknown as Prisma.InputJsonValue,
+        technicalQuestions: response.data.technicalQuestions as unknown as Prisma.InputJsonValue,
+        behavioralQuestions: response.data.behavioralQuestions as unknown as Prisma.InputJsonValue,
+        followUpQuestions: response.data.followUpQuestions as unknown as Prisma.InputJsonValue,
         totalQuestions,
         rawResponse: response.rawResponse ? { text: response.rawResponse } : undefined,
       },
@@ -195,7 +196,7 @@ export class InterviewService {
       data: {
         sessionId,
         overallScore,
-        categoryScores: categoryScores as any,
+        categoryScores: categoryScores as Prisma.InputJsonValue,
         strengths: answered.filter(q => (q.score || 0) >= 7).map(q => q.question.substring(0, 100)),
         improvements: answered.filter(q => (q.score || 0) < 5).map(q => q.question.substring(0, 100)),
         summary: `Completed ${answered.length}/${session.totalQuestions} questions. Overall score: ${overallScore}/100.`,
