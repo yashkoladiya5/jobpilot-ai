@@ -1,4 +1,5 @@
 import prisma from "../../config/prisma";
+import { Prisma } from "@prisma/client";
 import { generateStructuredResponse } from "./gemini.client";
 import { buildCareerInsightsPrompt, CareerDataInput } from "./prompts/career-insights.prompt";
 import { careerInsightsSchema, CareerInsightsOutput } from "./schemas/career-insights.schema";
@@ -157,7 +158,7 @@ export class CareerInsightsService {
         applicationSuccessRate: response.data.applicationSuccessRate,
         skillGaps: response.data.skillGaps,
         recommendations: response.data.recommendations,
-        insightsData: careerData as any,
+        insightsData: careerData as unknown as Prisma.InputJsonValue,
         weekStart,
       },
     });
