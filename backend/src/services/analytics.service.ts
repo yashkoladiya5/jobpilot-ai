@@ -616,7 +616,7 @@ export class AnalyticsService {
     const referredApps = applications.filter((_, i) => i % 4 === 0); // Mock 25% referred
     const coldApps = applications.filter((_, i) => i % 4 !== 0);
 
-    const calcRate = (apps: any[], targetStatus: string) => {
+    const calcRate = (apps: { status: ApplicationStatus }[], targetStatus: ApplicationStatus) => {
       if (apps.length === 0) return 0;
       return Math.round((apps.filter(a => a.status === targetStatus).length / apps.length) * 100);
     };
