@@ -18,54 +18,38 @@ export const errorHandler = (
     logger.error("Error:", err);
   }
 
-  // Intercept explicit API errors and format their payload
-  if (err instanceof ApiError) {
-    res.status(err.statusCode).json({
+  const sendError = (statusCode: number, message: string) => {
+    res.status(statusCode).json({
       success: false,
-      message: err.message,
+      message,
       errors: null,
       data: null,
     });
+  };
+
+  // Intercept explicit API errors and format their payload
+  if (err instanceof ApiError) {
+    sendError(err.statusCode, err.message);
     return;
   }
 
   if (err instanceof SyntaxError) {
-    res.status(400).json({
-      success: false,
-      message: "Invalid JSON format in the request body. Please verify the syntax.",
-      errors: null,
-      data: null,
-    });
+    sendError(400, "Invalid JSON format in the request body. Please verify the syntax.");
     return;
   }
 
   if (err.name === 'JsonWebTokenError') {
-    res.status(401).json({
-      success: false,
-      message: "Invalid or malformed authentication token provided.",
-      errors: null,
-      data: null,
-    });
+    sendError(401, "Invalid or malformed authentication token provided.");
     return;
   }
 
   if (err.name === 'TokenExpiredError') {
-    res.status(401).json({
-      success: false,
-      message: "Authentication token has expired. Please log in again.",
-      errors: null,
-      data: null,
-    });
+    sendError(401, "Authentication token has expired. Please log in again.");
     return;
   }
 
   if (err.name === 'ValidationError') {
-    res.status(400).json({
-      success: false,
-      message: "Validation Error: " + err.message,
-      errors: null,
-      data: null,
-    });
+    sendError(400, "Validation Error: " + err.message);
     return;
   }
 
@@ -77,19 +61,9 @@ export const errorHandler = (
       err.code === "LIMIT_FILE_SIZE"
         ? "File too large. Maximum size is 5MB."
         : err.message;
-    res.status(400).json({
-      success: false,
-      message,
-      errors: null,
-      data: null,
-    });
+    sendError(400, message);
     return;
   }
 
-  res.status(500).json({
-    success: false,
-    message: "Internal Server Error",
-    errors: null,
-    data: null,
-  });
+  sendError(500, "Internal Server Error");
 };
