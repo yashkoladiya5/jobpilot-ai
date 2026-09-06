@@ -95,7 +95,7 @@ export class MatchingService {
       throw ApiError.notFound("Match analysis not found");
     }
 
-    if (!analysis.resumeMatchScore) {
+    if (analysis.resumeMatchScore === null) {
       throw ApiError.badRequest("This analysis does not have a match score computed yet.");
     }
 
