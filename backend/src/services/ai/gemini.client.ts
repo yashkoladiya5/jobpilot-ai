@@ -66,7 +66,7 @@ function getModel() {
   return genAI.getGenerativeModel({
     model: geminiConfig.model,
     generationConfig: geminiConfig.generationConfig,
-    safetySettings: geminiConfig.safetySettings as any,
+    safetySettings: geminiConfig.safetySettings,
   });
 }
 
