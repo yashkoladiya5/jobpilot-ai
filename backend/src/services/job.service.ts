@@ -1,5 +1,5 @@
 import prisma from "../config/prisma";
-import { $Enums } from "@prisma/client";
+import { $Enums, Prisma } from "@prisma/client";
 import { ApiError } from "../utils/ApiError";
 
 /**
@@ -16,9 +16,9 @@ export class JobService {
     }
   ) {
     // Initialize base query filtering by the authenticated user
-    const where: any = { userId };
+    const where: Prisma.JobApplicationWhereInput = { userId };
     if (query?.status) {
-      where.status = query.status;
+      where.status = query.status as $Enums.ApplicationStatus;
     }
     if (query?.search) {
       where.OR = [
@@ -26,11 +26,12 @@ export class JobService {
         { role: { contains: query.search, mode: "insensitive" } },
       ];
     }
-    let orderBy: any = { appliedDate: "desc" };
+    const orderBy: Prisma.JobApplicationOrderByWithRelationInput = { appliedDate: "desc" };
     if (query?.sortBy) {
-      const validSortFields = ["appliedDate", "companyName", "status", "createdAt"];
-      if (validSortFields.includes(query.sortBy)) {
-        orderBy = { [query.sortBy]: query.sortOrder === "asc" ? "asc" : "desc" };
+      const validSortFields = ["appliedDate", "companyName", "status", "createdAt"] as const;
+      if (validSortFields.includes(query.sortBy as (typeof validSortFields)[number])) {
+        orderBy[query.sortBy as keyof typeof orderBy] =
+          query.sortOrder === "asc" ? "asc" : "desc";
       }
     }
     return prisma.jobApplication.findMany({ where, orderBy });
