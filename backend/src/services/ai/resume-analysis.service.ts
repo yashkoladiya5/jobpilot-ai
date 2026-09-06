@@ -199,10 +199,10 @@ export class ResumeAnalysisService {
     
     // Simulate generating a quick 3-sentence summary for a recruiter
     const strengthsStr = Array.isArray(analysis.strengths) ? analysis.strengths.slice(0, 2).join(" and ") : "their solid background";
-    const yearsExp = (analysis.experienceSummary as any)?.totalYears || "several";
-    const topSkill = Array.isArray(analysis.skillsSummary) && analysis.skillsSummary.length > 0 ? analysis.skillsSummary[0] : "their core technical skills";
+    const experienceStr = analysis.experienceSummary?.trim() || "several years of relevant experience";
+    const skillsStr = analysis.skillsSummary?.trim() || "their core technical skills";
     
-    const summary = `A strong candidate with ${yearsExp} years of experience, demonstrating notable proficiency in ${topSkill}. They stand out for ${strengthsStr}, showcasing a track record of delivering results. This profile aligns well with standard requirements for mid-to-senior technical roles.`;
+    const summary = `A strong candidate with ${experienceStr}. They demonstrate notable proficiency in ${skillsStr}. They stand out for ${strengthsStr}, showcasing a track record of delivering results. This profile aligns well with standard requirements for mid-to-senior technical roles.`;
     
     return {
       resumeId,
