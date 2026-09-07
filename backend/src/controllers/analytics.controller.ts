@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
 import { AuthenticatedRequest } from "../middleware/auth";
+import { ApiError } from "../utils/ApiError";
 import { AnalyticsService } from "../services/analytics.service";
 
 /**
@@ -188,8 +189,7 @@ export const trackLoginDuration = asyncHandler(async (req: Request, res: Respons
   const { durationSeconds } = req.body;
   
   if (typeof durationSeconds !== 'number') {
-     res.status(400).json({ success: false, message: "durationSeconds must be provided as a number." });
-     return;
+    throw ApiError.badRequest("durationSeconds must be provided as a number.");
   }
   
   const result = await analyticsService.trackLoginDuration(userId, durationSeconds);
@@ -206,16 +206,14 @@ export const getCustomDateRangeStats = asyncHandler(async (req: Request, res: Re
   const { startDate, endDate } = req.query;
   
   if (!startDate || !endDate) {
-    res.status(400).json({ success: false, message: "startDate and endDate queries are required." });
-    return;
+    throw ApiError.badRequest("startDate and endDate queries are required.");
   }
   
   const start = new Date(startDate as string);
   const end = new Date(endDate as string);
   
   if (isNaN(start.getTime()) || isNaN(end.getTime())) {
-    res.status(400).json({ success: false, message: "startDate and endDate must be valid dates." });
-    return;
+    throw ApiError.badRequest("startDate and endDate must be valid dates.");
   }
   
   const result = await analyticsService.getCustomDateRangeStats(userId, start, end);
