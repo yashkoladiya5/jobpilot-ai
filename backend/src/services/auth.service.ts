@@ -14,6 +14,17 @@ const userSelect = {
  * Handles business logic for user authentication, registration, and profile retrieval.
  */
 export class AuthService {
+  /**
+   * Fetches the user by id, throwing a 404 when the user does not exist.
+   */
+  private async requireUser(userId: string, message = "User not found") {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      throw ApiError.notFound(message);
+    }
+    return user;
+  }
+
   async register(email: string, password: string, name: string) {
     // Check if the provided email already exists in the system
     const existingUser = await prisma.user.findUnique({ where: { email } });
@@ -95,10 +106,7 @@ export class AuthService {
   }
 
   async updatePassword(userId: string, oldPassword: string, newPassword: string) {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) {
-      throw ApiError.notFound("User not found");
-    }
+    const user = await this.requireUser(userId);
 
     const isMatch: boolean = await bcrypt.compare(oldPassword, user.passwordHash);
     if (!isMatch) {
@@ -116,10 +124,7 @@ export class AuthService {
   }
 
   async updateEmail(userId: string, newEmail: string) {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) {
-      throw ApiError.notFound("User not found");
-    }
+    const user = await this.requireUser(userId);
 
     if (user.email === newEmail) {
       throw ApiError.badRequest("New email must be different from current email");
@@ -140,10 +145,7 @@ export class AuthService {
   }
 
   async updateName(userId: string, newName: string) {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) {
-      throw ApiError.notFound("User not found");
-    }
+    const user = await this.requireUser(userId);
 
     if (user.name === newName) {
       throw ApiError.badRequest("New name must be different from current name");
@@ -161,10 +163,7 @@ export class AuthService {
   async getActiveSessions(userId: string, currentIp?: string) {
     // In a real app, you'd fetch from a Session table or Redis
     // We mock active sessions for the user's dashboard view here
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) {
-      throw ApiError.notFound("User not found");
-    }
+    const user = await this.requireUser(userId);
 
     const sessions = [
       {
@@ -191,10 +190,7 @@ export class AuthService {
   async getLoginHistory(userId: string) {
     // In a real application, you would query an audit log or LoginHistory table.
     // We provide mock login history to support the frontend dashboard security view.
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) {
-      throw ApiError.notFound("User not found");
-    }
+    const user = await this.requireUser(userId);
 
     const history = [
       {
@@ -227,10 +223,7 @@ export class AuthService {
   }
 
   async registerDeviceFingerprint(userId: string, fingerprint: string, deviceName: string) {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) {
-      throw ApiError.notFound("User not found");
-    }
+    const user = await this.requireUser(userId);
 
     if (!fingerprint || !deviceName) {
       throw ApiError.badRequest("Fingerprint and deviceName are required.");
@@ -251,10 +244,7 @@ export class AuthService {
   }
 
   async initiateMfaSetup(userId: string) {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) {
-      throw ApiError.notFound("User not found");
-    }
+    const user = await this.requireUser(userId);
 
     // Mock generating a TOTP secret and provisioning URI
     const mockSecret = "JBSWY3DPEHPK3PXP";
@@ -275,10 +265,7 @@ export class AuthService {
   }
 
   async verifyMfaSetup(userId: string, code: string) {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) {
-      throw ApiError.notFound("User not found");
-    }
+    const user = await this.requireUser(userId);
 
     if (!code || code.length !== 6) {
       throw ApiError.badRequest("Invalid TOTP code format");
@@ -300,10 +287,7 @@ export class AuthService {
   }
 
   async generateBackupCodes(userId: string) {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) {
-      throw ApiError.notFound("User not found");
-    }
+    const user = await this.requireUser(userId);
 
     // Generate 10 random 8-character alphanumeric backup codes
     const codes = Array.from({ length: 10 }, () => 
@@ -345,10 +329,7 @@ export class AuthService {
   }
 
   async initiateSmsTwoFactor(userId: string, phoneNumber: string) {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) {
-      throw ApiError.notFound("User not found");
-    }
+    const user = await this.requireUser(userId);
 
     // Basic validation of phone number
     if (!phoneNumber || phoneNumber.length < 10) {
@@ -372,10 +353,7 @@ export class AuthService {
   }
 
   async getLoginStreak(userId: string) {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) {
-      throw ApiError.notFound("User not found");
-    }
+    const user = await this.requireUser(userId);
 
     // In a real application, we would query the login history table
     // For this mock, we'll return a dynamic streak based on the user's creation date
@@ -401,10 +379,7 @@ export class AuthService {
   }
 
   async revokeSession(userId: string, sessionId: string) {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) {
-      throw ApiError.notFound("User not found");
-    }
+    const user = await this.requireUser(userId);
 
     if (!sessionId) {
       throw ApiError.badRequest("Session ID is required to revoke a session.");
@@ -463,8 +438,7 @@ export class AuthService {
   }
 
   async getUserSecurityScore(userId: string) {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) throw ApiError.notFound("User not found");
+    const user = await this.requireUser(userId);
 
     // Check password age (mocking that we check if it was updated recently)
     const passwordAgeDays = Math.floor((Date.now() - user.updatedAt.getTime()) / (1000 * 60 * 60 * 24));
@@ -523,10 +497,7 @@ export class AuthService {
   }
 
   async getProfileCompleteness(userId: string) {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) {
-      throw ApiError.notFound("User not found");
-    }
+    const user = await this.requireUser(userId);
 
     // Since our prisma schema only has basic fields, we mock Bio and Location
     // as always missing to simulate a real profile completeness check.
@@ -594,8 +565,7 @@ export class AuthService {
   }
 
   async toggleTwoFactorAuth(userId: string, enable: boolean) {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) throw ApiError.notFound("User not found");
+    const user = await this.requireUser(userId);
 
     // We don't have is2FAEnabled in Prisma, so we'll mock it like we mock other MFA setup.
     // In a real app we'd update `user.is2FAEnabled`.
@@ -657,10 +627,7 @@ export class AuthService {
   }
 
   async revokeOtherSessions(userId: string, currentSessionId: string) {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) {
-      throw ApiError.notFound("User not found");
-    }
+    const user = await this.requireUser(userId);
 
     if (!currentSessionId) {
       throw ApiError.badRequest("Current session ID is required to revoke other sessions.");
@@ -678,10 +645,7 @@ export class AuthService {
   }
 
   async terminateIdleSessions(userId: string, idleThresholdMinutes: number = 60) {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) {
-      throw ApiError.notFound("User not found");
-    }
+    const user = await this.requireUser(userId);
 
     if (idleThresholdMinutes < 5) {
       throw ApiError.badRequest("Idle threshold must be at least 5 minutes.");
@@ -704,10 +668,7 @@ export class AuthService {
   }
 
   async revokeAllSessions(userId: string) {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) {
-      throw ApiError.notFound("User not found");
-    }
+    const user = await this.requireUser(userId);
 
     // In a real application, we would delete all active sessions from the DB/Redis 
     // for this user.
@@ -724,10 +685,7 @@ export class AuthService {
   }
 
   async getAccountSecurityAudit(userId: string) {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) {
-      throw ApiError.notFound("User not found");
-    }
+    const user = await this.requireUser(userId);
 
     // Mocking an audit of the user's account security posture
     const issues = [];
@@ -770,10 +728,7 @@ export class AuthService {
   }
 
   async getEmailAliases(userId: string) {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) {
-      throw ApiError.notFound("User not found");
-    }
+    const user = await this.requireUser(userId);
 
     // In a real application, we would query a UserEmailAlias table.
     // For this mock, we will return a mock set of aliases.
@@ -789,10 +744,7 @@ export class AuthService {
   }
 
   async addEmailAlias(userId: string, aliasEmail: string) {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) {
-      throw ApiError.notFound("User not found");
-    }
+    const user = await this.requireUser(userId);
 
     if (!aliasEmail || !aliasEmail.includes('@')) {
       throw ApiError.badRequest("A valid alias email is required");
@@ -810,10 +762,7 @@ export class AuthService {
   }
 
   async removeEmailAlias(userId: string, aliasEmail: string) {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) {
-      throw ApiError.notFound("User not found");
-    }
+    const user = await this.requireUser(userId);
 
     if (!aliasEmail) {
       throw ApiError.badRequest("Alias email is required to remove it");
@@ -829,10 +778,7 @@ export class AuthService {
   }
 
   async getTrustedDevices(userId: string) {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) {
-      throw ApiError.notFound("User not found");
-    }
+    const user = await this.requireUser(userId);
 
     // In a real application, we would query the TrustedDevice table
     // For this mock, we will return some mock data
@@ -862,10 +808,7 @@ export class AuthService {
   }
 
   async getSessionMapCoordinates(userId: string) {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) {
-      throw ApiError.notFound("User not found");
-    }
+    const user = await this.requireUser(userId);
 
     // Mock coordinates for active sessions to display on a map
     return {
@@ -891,8 +834,7 @@ export class AuthService {
   }
 
   async registerDeviceLocation(userId: string, deviceId: string, locationData: { lat: number, lng: number, name: string }) {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) throw ApiError.notFound("User not found");
+    const user = await this.requireUser(userId);
 
     if (!deviceId) throw ApiError.badRequest("Device ID is required");
 
@@ -909,8 +851,7 @@ export class AuthService {
   }
 
   async renameTrustedDevice(userId: string, deviceId: string, newName: string) {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) throw ApiError.notFound("User not found");
+    const user = await this.requireUser(userId);
 
     if (!deviceId) throw ApiError.badRequest("Device ID is required");
     if (!newName || newName.trim().length === 0) throw ApiError.badRequest("New device name is required");
