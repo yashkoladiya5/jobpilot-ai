@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import prisma from "../config/prisma";
 import { ApiError } from "../utils/ApiError";
+import { clampNumber } from "../utils/math";
 
 const userSelect = {
   id: true,
@@ -709,7 +710,16 @@ export class AuthService {
       passed.push({ check: "Active Sessions", detail: `You have a safe number of active sessions (${activeSessions}).` });
     }
 
-    const auditScore = Math.max(0, 100 - (issues.filter(i => i.severity === 'HIGH').length * 40) - (issues.filter(i => i.severity === 'MEDIUM').length * 20));
+    const { high, medium } = issues.reduce(
+      (acc, issue) => {
+        if (issue.severity === "HIGH") acc.high += 1;
+        else if (issue.severity === "MEDIUM") acc.medium += 1;
+        return acc;
+      },
+      { high: 0, medium: 0 }
+    );
+
+    const auditScore = clampNumber(100 - high * 40 - medium * 20, 0, 100);
 
     return {
       userId,
