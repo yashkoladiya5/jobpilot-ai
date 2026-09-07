@@ -99,13 +99,7 @@ export class JobAnalysisService {
   }
 
   async deleteJobAnalysis(analysisId: string, userId: string) {
-    const analysis = await prisma.jobAnalysis.findFirst({
-      where: { id: analysisId, userId },
-    });
-
-    if (!analysis) {
-      throw ApiError.notFound("Job analysis not found");
-    }
+    await this.getAnalysisById(analysisId, userId);
 
     await prisma.jobAnalysis.delete({
       where: { id: analysisId },
