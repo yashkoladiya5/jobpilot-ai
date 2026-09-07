@@ -9,11 +9,7 @@ import fs from "fs/promises";
  * Service that uses AI to score and match user resumes against specific job descriptions.
  */
 export class MatchingService {
-  async matchResumeAndJob(
-    userId: string,
-    resumeId: string,
-    jobDescription: string
-  ): Promise<{ matchResult: ResumeMatchingOutput; analysisId: string }> {
+  private async requireOwnedResume(resumeId: string, userId: string) {
     const resume = await prisma.resume.findFirst({
       where: { id: resumeId, userId },
     });
@@ -21,6 +17,16 @@ export class MatchingService {
     if (!resume) {
       throw ApiError.notFound("Resume not found");
     }
+
+    return resume;
+  }
+
+  async matchResumeAndJob(
+    userId: string,
+    resumeId: string,
+    jobDescription: string
+  ): Promise<{ matchResult: ResumeMatchingOutput; analysisId: string }> {
+    const resume = await this.requireOwnedResume(resumeId, userId);
 
     const resumeText = await fs.readFile(resume.filePath, "utf-8").catch(() => {
       throw ApiError.badRequest("Could not read resume file. Only text-based resumes are supported.");
@@ -45,7 +51,7 @@ export class MatchingService {
       throw ApiError.internal(response.error || "Failed to analyze match");
     }
 
-    const updated = await prisma.jobAnalysis.update({
+    await prisma.jobAnalysis.update({
       where: { id: analysis.id },
       data: {
         status: "COMPLETED",
@@ -69,11 +75,7 @@ export class MatchingService {
   }
 
   async getTopMatchesForResume(resumeId: string, userId: string, limit: number = 5) {
-    const resume = await prisma.resume.findFirst({
-      where: { id: resumeId, userId },
-    });
-
-    if (!resume) throw ApiError.notFound("Resume not found");
+    await this.requireOwnedResume(resumeId, userId);
 
     return prisma.jobAnalysis.findMany({
       where: { userId, resumeMatchScore: { not: null } },
