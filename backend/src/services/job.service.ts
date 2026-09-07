@@ -1,6 +1,7 @@
 import prisma from "../config/prisma";
 import { $Enums, Prisma } from "@prisma/client";
 import { ApiError } from "../utils/ApiError";
+import { daysAgo } from "../utils/dates";
 
 /**
  * Service handling all business logic and database interactions for Job Applications.
@@ -235,8 +236,7 @@ export class JobService {
   }
 
   async getJobsNeedingFollowUp(userId: string) {
-    const fourteenDaysAgo = new Date();
-    fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
+    const fourteenDaysAgo = daysAgo(14);
 
     const jobs = await prisma.jobApplication.findMany({
       where: {
@@ -332,8 +332,7 @@ export class JobService {
   }
 
   async getJobApplicationVelocity(userId: string) {
-    const fourWeeksAgo = new Date();
-    fourWeeksAgo.setDate(fourWeeksAgo.getDate() - 28);
+    const fourWeeksAgo = daysAgo(28);
     
     const applications = await prisma.jobApplication.findMany({
       where: {
@@ -557,8 +556,7 @@ export class JobService {
   }
 
   async runAutoArchiving(userId: string) {
-    const fortyFiveDaysAgo = new Date();
-    fortyFiveDaysAgo.setDate(fortyFiveDaysAgo.getDate() - 45);
+    const fortyFiveDaysAgo = daysAgo(45);
 
     const staleJobs = await prisma.jobApplication.findMany({
       where: {
@@ -715,8 +713,7 @@ export class JobService {
   }
 
   async archiveOldApplications(userId: string, olderThanDays: number = 30) {
-    const cutoffDate = new Date();
-    cutoffDate.setDate(cutoffDate.getDate() - olderThanDays);
+    const cutoffDate = daysAgo(olderThanDays);
 
     const oldJobs = await prisma.jobApplication.findMany({
       where: {
