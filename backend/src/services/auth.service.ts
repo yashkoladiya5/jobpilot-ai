@@ -76,10 +76,7 @@ export class AuthService {
   }
 
   async updateProfile(userId: string, data: { name?: string; bio?: string }) {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) {
-      throw ApiError.notFound("User not found in the system");
-    }
+    const user = await this.requireUser(userId, "User not found in the system");
 
     const updatedUser = await prisma.user.update({
       where: { id: userId },
@@ -91,10 +88,7 @@ export class AuthService {
   }
 
   async deleteAccount(userId: string) {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) {
-      throw ApiError.notFound("User not found in the system");
-    }
+    const user = await this.requireUser(userId, "User not found in the system");
 
     // Instead of hard deleting, we might want to deactivate or hard delete
     // based on business logic. Let's hard delete for compliance (e.g. GDPR).
