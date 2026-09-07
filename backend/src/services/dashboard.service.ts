@@ -336,12 +336,21 @@ export class DashboardService {
       ? Math.round(((thisWeekCount - lastWeekCount) / lastWeekCount) * 100) 
       : 100;
 
+    const { interviewsScheduled, offersReceived } = thisWeekApps.reduce(
+      (counts, app) => {
+        if (app.status === "INTERVIEW") counts.interviewsScheduled += 1;
+        else if (app.status === "OFFER") counts.offersReceived += 1;
+        return counts;
+      },
+      { interviewsScheduled: 0, offersReceived: 0 }
+    );
+
     return {
       timeframe: "Last 7 days",
       applicationsSubmitted: thisWeekCount,
       comparisonToLastWeek: `${changePercentage > 0 ? '+' : ''}${changePercentage}%`,
-      interviewsScheduled: thisWeekApps.filter(app => app.status === "INTERVIEW").length,
-      offersReceived: thisWeekApps.filter(app => app.status === "OFFER").length,
+      interviewsScheduled,
+      offersReceived,
       topCompanyThisWeek: thisWeekApps.length > 0 ? thisWeekApps[0].companyName : "None yet"
     };
   }
