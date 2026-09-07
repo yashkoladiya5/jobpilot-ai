@@ -8,6 +8,12 @@ export interface AuthenticatedRequest extends Request {
 }
 
 /**
+ * Returns the authenticated user's id from an Express request.
+ * Callers should only use this within routes protected by `authenticate`.
+ */
+export const getUserId = (req: Request): string => (req as AuthenticatedRequest).user.id;
+
+/**
  * Middleware to protect routes by verifying JWT tokens.
  * Extracts the user ID from the token and attaches it to the request object.
  */

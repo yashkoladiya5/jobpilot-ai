@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
-import { AuthenticatedRequest } from "../middleware/auth";
+import { getUserId } from "../middleware/auth";
 import { ApiError } from "../utils/ApiError";
 import { CoverLetterService } from "../services/ai/cover-letter.service";
 
@@ -11,7 +11,7 @@ import { CoverLetterService } from "../services/ai/cover-letter.service";
 const coverLetterService = new CoverLetterService();
 
 export const generateCoverLetter = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { resumeId, jobDescription, jobId, tone } = req.body;
   if (!resumeId || !jobDescription) {
     throw ApiError.badRequest("resumeId and jobDescription are required");
@@ -25,7 +25,7 @@ export const generateCoverLetter = asyncHandler(async (req: Request, res: Respon
 });
 
 export const getCoverLetter = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { id } = req.params;
   const result = await coverLetterService.getCoverLetter(id, userId);
   res.status(200).json({
@@ -36,7 +36,7 @@ export const getCoverLetter = asyncHandler(async (req: Request, res: Response) =
 });
 
 export const getCoverLetters = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const result = await coverLetterService.getUserCoverLetters(userId);
   res.status(200).json({
     success: true,
@@ -46,7 +46,7 @@ export const getCoverLetters = asyncHandler(async (req: Request, res: Response) 
 });
 
 export const updateCoverLetter = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { id } = req.params;
   const { coverLetterText, tone } = req.body;
   
@@ -64,7 +64,7 @@ export const updateCoverLetter = asyncHandler(async (req: Request, res: Response
 });
 
 export const deleteCoverLetter = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { id } = req.params;
   
   await coverLetterService.deleteCoverLetter(id, userId);
@@ -77,7 +77,7 @@ export const deleteCoverLetter = asyncHandler(async (req: Request, res: Response
 });
 
 export const adjustTone = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { id } = req.params;
   const { tone } = req.body;
   
