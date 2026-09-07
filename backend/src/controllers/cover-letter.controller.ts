@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
 import { AuthenticatedRequest } from "../middleware/auth";
+import { ApiError } from "../utils/ApiError";
 import { CoverLetterService } from "../services/ai/cover-letter.service";
 
 /**
@@ -13,8 +14,7 @@ export const generateCoverLetter = asyncHandler(async (req: Request, res: Respon
   const userId = (req as AuthenticatedRequest).user.id;
   const { resumeId, jobDescription, jobId, tone } = req.body;
   if (!resumeId || !jobDescription) {
-    res.status(400).json({ success: false, message: "resumeId and jobDescription are required", data: null });
-    return;
+    throw ApiError.badRequest("resumeId and jobDescription are required");
   }
   const result = await coverLetterService.generateCoverLetter(userId, resumeId, jobDescription, jobId, tone);
   res.status(200).json({
@@ -51,8 +51,7 @@ export const updateCoverLetter = asyncHandler(async (req: Request, res: Response
   const { coverLetterText, tone } = req.body;
   
   if (!coverLetterText) {
-    res.status(400).json({ success: false, message: "Cover letter text is required for update", data: null });
-    return;
+    throw ApiError.badRequest("Cover letter text is required for update");
   }
 
   const result = await coverLetterService.updateCoverLetter(userId, id, coverLetterText, tone);
@@ -83,8 +82,7 @@ export const adjustTone = asyncHandler(async (req: Request, res: Response) => {
   const { tone } = req.body;
   
   if (!tone) {
-    res.status(400).json({ success: false, message: "Tone is required for adjustment", data: null });
-    return;
+    throw ApiError.badRequest("Tone is required for adjustment");
   }
 
   const result = await coverLetterService.adjustCoverLetterTone(userId, id, tone);
