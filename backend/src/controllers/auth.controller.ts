@@ -257,8 +257,7 @@ export const initiateSmsTwoFactor = asyncHandler(async (req: Request, res: Respo
   const { phoneNumber } = req.body;
   
   if (!phoneNumber) {
-     res.status(400).json({ success: false, message: "Phone number is required." });
-     return;
+    throw ApiError.badRequest("Phone number is required.");
   }
   
   const smsData = await authService.initiateSmsTwoFactor(userId, phoneNumber);
@@ -287,8 +286,7 @@ export const revokeSession = asyncHandler(async (req: Request, res: Response) =>
   const { sessionId } = req.params;
   
   if (!sessionId) {
-     res.status(400).json({ success: false, message: "Session ID is required" });
-     return;
+    throw ApiError.badRequest("Session ID is required");
   }
   
   const result = await authService.revokeSession(userId, sessionId);
@@ -353,8 +351,7 @@ export const verifyEmailDomain = asyncHandler(async (req: Request, res: Response
   const { email } = req.body;
   
   if (!email || typeof email !== 'string') {
-    res.status(400).json({ success: false, message: "A valid email string is required" });
-    return;
+    throw ApiError.badRequest("A valid email string is required");
   }
   
   const result = await authService.verifyEmailDomain(email);
@@ -371,8 +368,7 @@ export const toggleTwoFactorAuth = asyncHandler(async (req: Request, res: Respon
   const { enable } = req.body;
   
   if (typeof enable !== 'boolean') {
-    res.status(400).json({ success: false, message: "A boolean 'enable' value is required" });
-    return;
+    throw ApiError.badRequest("A boolean 'enable' value is required");
   }
   
   const result = await authService.toggleTwoFactorAuth(userId, enable);
@@ -401,8 +397,7 @@ export const revokeOtherSessions = asyncHandler(async (req: Request, res: Respon
   const { currentSessionId } = req.body;
   
   if (!currentSessionId) {
-     res.status(400).json({ success: false, message: "Current session ID is required" });
-     return;
+    throw ApiError.badRequest("Current session ID is required");
   }
   
   const result = await authService.revokeOtherSessions(userId, currentSessionId);
@@ -488,8 +483,7 @@ export const registerDeviceLocation = asyncHandler(async (req: Request, res: Res
   const { deviceId, locationData } = req.body;
   
   if (!deviceId || !locationData || !locationData.lat || !locationData.lng || !locationData.name) {
-    res.status(400).json({ success: false, message: "Device ID and valid locationData (lat, lng, name) are required" });
-    return;
+    throw ApiError.badRequest("Device ID and valid locationData (lat, lng, name) are required");
   }
   
   const result = await authService.registerDeviceLocation(userId, deviceId, locationData);
