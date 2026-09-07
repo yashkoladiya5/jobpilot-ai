@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
 import { AuthService } from "../services/auth.service";
-import { generateToken, AuthenticatedRequest } from "../middleware/auth";
+import { generateToken, getUserId } from "../middleware/auth";
 import { ApiError } from "../utils/ApiError";
 
 const authService = new AuthService();
@@ -64,7 +64,7 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
  * Retrieves the currently authenticated user's profile information.
  */
 export const getMe = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
 
   const user = await authService.getMe(userId);
 
@@ -80,7 +80,7 @@ export const getMe = asyncHandler(async (req: Request, res: Response) => {
  * Invalidates the current session token if possible, or lets the client clear it.
  */
 export const logout = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   // Potential server-side logout logic here (e.g. invalidating refresh token or redis session)
   // await authService.logout(userId);
@@ -93,7 +93,7 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const deleteAccount = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   await authService.deleteAccount(userId);
   
@@ -105,7 +105,7 @@ export const deleteAccount = asyncHandler(async (req: Request, res: Response) =>
 });
 
 export const updatePassword = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { oldPassword, newPassword } = req.body;
   
   if (!oldPassword || !newPassword) {
@@ -126,7 +126,7 @@ export const updatePassword = asyncHandler(async (req: Request, res: Response) =
 });
 
 export const updateEmail = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { newEmail } = req.body;
   
   if (!newEmail || typeof newEmail !== 'string' || !newEmail.includes('@')) {
@@ -143,7 +143,7 @@ export const updateEmail = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const updateName = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { newName } = req.body;
   
   if (!newName || typeof newName !== 'string' || newName.trim().length === 0) {
@@ -160,7 +160,7 @@ export const updateName = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const getActiveSessions = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   // Extract client IP (e.g. from x-forwarded-for or connection)
   const clientIp = req.headers['x-forwarded-for']?.toString() || req.socket.remoteAddress;
@@ -175,7 +175,7 @@ export const getActiveSessions = asyncHandler(async (req: Request, res: Response
 });
 
 export const getLoginHistory = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   const history = await authService.getLoginHistory(userId);
   
@@ -187,7 +187,7 @@ export const getLoginHistory = asyncHandler(async (req: Request, res: Response) 
 });
 
 export const registerDevice = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { fingerprint, deviceName } = req.body;
   
   const result = await authService.registerDeviceFingerprint(userId, fingerprint, deviceName);
@@ -200,7 +200,7 @@ export const registerDevice = asyncHandler(async (req: Request, res: Response) =
 });
 
 export const initiateMfaSetup = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   const mfaData = await authService.initiateMfaSetup(userId);
   
@@ -212,7 +212,7 @@ export const initiateMfaSetup = asyncHandler(async (req: Request, res: Response)
 });
 
 export const verifyMfaSetup = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { code } = req.body;
   
   const mfaData = await authService.verifyMfaSetup(userId, code);
@@ -225,7 +225,7 @@ export const verifyMfaSetup = asyncHandler(async (req: Request, res: Response) =
 });
 
 export const generateBackupCodes = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   const backupData = await authService.generateBackupCodes(userId);
   
@@ -253,7 +253,7 @@ export const initiatePasswordlessLogin = asyncHandler(async (req: Request, res: 
 });
 
 export const initiateSmsTwoFactor = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { phoneNumber } = req.body;
   
   if (!phoneNumber) {
@@ -270,7 +270,7 @@ export const initiateSmsTwoFactor = asyncHandler(async (req: Request, res: Respo
 });
 
 export const getLoginStreak = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   const streakData = await authService.getLoginStreak(userId);
   
@@ -282,7 +282,7 @@ export const getLoginStreak = asyncHandler(async (req: Request, res: Response) =
 });
 
 export const revokeSession = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { sessionId } = req.params;
   
   if (!sessionId) {
@@ -299,7 +299,7 @@ export const revokeSession = asyncHandler(async (req: Request, res: Response) =>
 });
 
 export const exportUserData = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   const exportedData = await authService.exportUserData(userId);
   
@@ -311,7 +311,7 @@ export const exportUserData = asyncHandler(async (req: Request, res: Response) =
 });
 
 export const getUserSecurityScore = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   const scoreData = await authService.getUserSecurityScore(userId);
   
@@ -323,7 +323,7 @@ export const getUserSecurityScore = asyncHandler(async (req: Request, res: Respo
 });
 
 export const trustDevice = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { deviceId, deviceName } = req.body;
   
   const result = await authService.trustDevice(userId, deviceId, deviceName);
@@ -336,7 +336,7 @@ export const trustDevice = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const getProfileCompleteness = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   const scoreData = await authService.getProfileCompleteness(userId);
   
@@ -364,7 +364,7 @@ export const verifyEmailDomain = asyncHandler(async (req: Request, res: Response
 });
 
 export const toggleTwoFactorAuth = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { enable } = req.body;
   
   if (typeof enable !== 'boolean') {
@@ -381,7 +381,7 @@ export const toggleTwoFactorAuth = asyncHandler(async (req: Request, res: Respon
 });
 
 export const verifySessionHealth = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   const healthData = await authService.verifySessionHealth(userId);
   
@@ -393,7 +393,7 @@ export const verifySessionHealth = asyncHandler(async (req: Request, res: Respon
 });
 
 export const revokeOtherSessions = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { currentSessionId } = req.body;
   
   if (!currentSessionId) {
@@ -410,7 +410,7 @@ export const revokeOtherSessions = asyncHandler(async (req: Request, res: Respon
 });
 
 export const terminateIdleSessions = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { idleThresholdMinutes } = req.body;
   
   const result = await authService.terminateIdleSessions(userId, idleThresholdMinutes);
@@ -423,7 +423,7 @@ export const terminateIdleSessions = asyncHandler(async (req: Request, res: Resp
 });
 
 export const revokeAllSessions = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   const result = await authService.revokeAllSessions(userId);
   
@@ -435,7 +435,7 @@ export const revokeAllSessions = asyncHandler(async (req: Request, res: Response
 });
 
 export const getAccountSecurityAudit = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   const auditData = await authService.getAccountSecurityAudit(userId);
   
@@ -447,39 +447,39 @@ export const getAccountSecurityAudit = asyncHandler(async (req: Request, res: Re
 });
 
 export const getEmailAliases = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const result = await authService.getEmailAliases(userId);
   res.status(200).json({ success: true, message: "Email aliases fetched successfully", data: result });
 });
 
 export const addEmailAlias = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { aliasEmail } = req.body;
   const result = await authService.addEmailAlias(userId, aliasEmail);
   res.status(201).json({ success: true, message: "Email alias added successfully", data: result });
 });
 
 export const removeEmailAlias = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { aliasEmail } = req.body;
   const result = await authService.removeEmailAlias(userId, aliasEmail);
   res.status(200).json({ success: true, message: "Email alias removed successfully", data: result });
 });
 
 export const getTrustedDevices = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const result = await authService.getTrustedDevices(userId);
   res.status(200).json({ success: true, message: "Trusted devices fetched successfully", data: result });
 });
 
 export const getSessionMapCoordinates = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const result = await authService.getSessionMapCoordinates(userId);
   res.status(200).json({ success: true, message: "Session map coordinates fetched successfully", data: result });
 });
 
 export const registerDeviceLocation = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { deviceId, locationData } = req.body;
   
   if (!deviceId || !locationData || !locationData.lat || !locationData.lng || !locationData.name) {
@@ -491,7 +491,7 @@ export const registerDeviceLocation = asyncHandler(async (req: Request, res: Res
 });
 
 export const renameTrustedDevice = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { deviceId } = req.params;
   const { newName } = req.body;
   
