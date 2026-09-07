@@ -8,6 +8,18 @@ import { daysAgo } from "../utils/dates";
  * Service managing user resumes, including file storage operations and database records.
  */
 export class ResumeService {
+  /**
+   * Fetches a resume by id after verifying it belongs to the user.
+   * Throws a 404 when the resume does not exist or is owned by someone else.
+   */
+  private async requireOwnedResume(userId: string, id: string) {
+    const resume = await prisma.resume.findUnique({ where: { id } });
+    if (!resume || resume.userId !== userId) {
+      throw ApiError.notFound("Resume not found");
+    }
+    return resume;
+  }
+
   async uploadResume(userId: string, file: Express.Multer.File) {
     // Make the first uploaded resume primary by default
     const count = await prisma.resume.count({ where: { userId } });
@@ -34,21 +46,13 @@ export class ResumeService {
   }
 
   async getResumeById(userId: string, id: string) {
-    const resume = await prisma.resume.findUnique({ where: { id } });
-
-    if (!resume || resume.userId !== userId) {
-      throw ApiError.notFound("Resume not found");
-    }
+    const resume = await this.requireOwnedResume(userId, id);
 
     return resume;
   }
 
   async deleteResume(userId: string, id: string) {
-    const resume = await prisma.resume.findUnique({ where: { id } });
-
-    if (!resume || resume.userId !== userId) {
-      throw ApiError.notFound("Resume not found");
-    }
+    const resume = await this.requireOwnedResume(userId, id);
 
     try {
       await fs.promises.unlink(resume.filePath);
@@ -60,10 +64,7 @@ export class ResumeService {
   }
 
   async setPrimaryResume(userId: string, id: string) {
-    const resume = await prisma.resume.findUnique({ where: { id } });
-    if (!resume || resume.userId !== userId) {
-      throw ApiError.notFound("Resume not found");
-    }
+    const resume = await this.requireOwnedResume(userId, id);
     // Unset the current primary and set the new one atomically so the
     // user always has exactly one primary resume.
     const [, updatedResume] = await prisma.$transaction([
@@ -80,11 +81,7 @@ export class ResumeService {
   }
 
   async renameResume(userId: string, id: string, newName: string) {
-    const resume = await prisma.resume.findUnique({ where: { id } });
-    
-    if (!resume || resume.userId !== userId) {
-      throw ApiError.notFound("Resume not found");
-    }
+    const resume = await this.requireOwnedResume(userId, id);
 
     return prisma.resume.update({
       where: { id },
@@ -125,11 +122,7 @@ export class ResumeService {
     pathSuffix: string,
     failureMessage: string
   ) {
-    const resume = await prisma.resume.findUnique({ where: { id } });
-
-    if (!resume || resume.userId !== userId) {
-      throw ApiError.notFound("Resume not found");
-    }
+    const resume = await this.requireOwnedResume(userId, id);
 
     const newFileName = newFileNameFor(resume.fileName);
     const newFilePath = `${resume.filePath}_${pathSuffix}_${Date.now()}`;
@@ -209,11 +202,7 @@ export class ResumeService {
   }
 
   async getResumeVersionHistory(userId: string, id: string) {
-    const resume = await prisma.resume.findUnique({ where: { id } });
-    
-    if (!resume || resume.userId !== userId) {
-      throw ApiError.notFound("Resume not found");
-    }
+    const resume = await this.requireOwnedResume(userId, id);
 
     // Mock version history based on file modifications and duplication logic
     // In a real application we would track diffs or keep older file paths
@@ -249,10 +238,7 @@ export class ResumeService {
   }
 
   async getResumeQualityScore(userId: string, id: string) {
-    const resume = await prisma.resume.findUnique({ where: { id } });
-    if (!resume || resume.userId !== userId) {
-      throw ApiError.notFound("Resume not found");
-    }
+    const resume = await this.requireOwnedResume(userId, id);
 
     // Mock an ATS quality score calculation
     // A larger file might imply more content (up to a point)
@@ -288,10 +274,7 @@ export class ResumeService {
   }
 
   async getAtsOptimizedText(userId: string, id: string) {
-    const resume = await prisma.resume.findUnique({ where: { id } });
-    if (!resume || resume.userId !== userId) {
-      throw ApiError.notFound("Resume not found");
-    }
+    const resume = await this.requireOwnedResume(userId, id);
 
     // Mock extracting and cleaning text to be purely ATS friendly
     // In a real application, we would use pdf-parse, Tesseract, or an AI model 
@@ -325,10 +308,7 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
   }
 
   async analyzeMissingKeywords(userId: string, id: string, targetJobDescription: string) {
-    const resume = await prisma.resume.findUnique({ where: { id } });
-    if (!resume || resume.userId !== userId) {
-      throw ApiError.notFound("Resume not found");
-    }
+    const resume = await this.requireOwnedResume(userId, id);
 
     if (!targetJobDescription || targetJobDescription.trim().length < 50) {
       throw ApiError.badRequest("Target job description is too short to analyze.");
@@ -367,10 +347,7 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
   }
 
   async translateResume(userId: string, id: string, targetLanguage: string) {
-    const resume = await prisma.resume.findUnique({ where: { id } });
-    if (!resume || resume.userId !== userId) {
-      throw ApiError.notFound("Resume not found");
-    }
+    const resume = await this.requireOwnedResume(userId, id);
 
     if (!targetLanguage || targetLanguage.trim() === "") {
       throw ApiError.badRequest("Target language is required");
@@ -399,10 +376,7 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
   }
 
   async trackResumeView(userId: string, id: string, source: string) {
-    const resume = await prisma.resume.findUnique({ where: { id } });
-    if (!resume || resume.userId !== userId) {
-      throw ApiError.notFound("Resume not found");
-    }
+    const resume = await this.requireOwnedResume(userId, id);
 
     // In a real database, we would have a ResumeView table to record the views.
     // For this demonstration, we'll return a mock view count and log event.
@@ -420,10 +394,7 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
   }
 
   async generateShareableLink(userId: string, id: string, expiresInDays: number = 7) {
-    const resume = await prisma.resume.findUnique({ where: { id } });
-    if (!resume || resume.userId !== userId) {
-      throw ApiError.notFound("Resume not found");
-    }
+    const resume = await this.requireOwnedResume(userId, id);
 
     // In a real application, we would generate a secure token and store it in the database
     // along with the expiration date and resume ID.
@@ -443,10 +414,7 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
   }
 
   async generateResumeSummary(userId: string, id: string) {
-    const resume = await prisma.resume.findUnique({ where: { id } });
-    if (!resume || resume.userId !== userId) {
-      throw ApiError.notFound("Resume not found");
-    }
+    const resume = await this.requireOwnedResume(userId, id);
 
     // Mock an AI generated summary of the resume
     const summary = "This resume highlights a strong background in software engineering, specifically in frontend development with React and TypeScript. It showcases 5+ years of experience leading teams and delivering high-quality web applications.";
@@ -502,10 +470,7 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
   }
 
   async generateJobTitleMatchReport(userId: string, id: string, jobTitle: string) {
-    const resume = await prisma.resume.findUnique({ where: { id } });
-    if (!resume || resume.userId !== userId) {
-      throw ApiError.notFound("Resume not found");
-    }
+    const resume = await this.requireOwnedResume(userId, id);
 
     if (!jobTitle || jobTitle.trim().length === 0) {
       throw ApiError.badRequest("Job title is required for a match report.");
@@ -538,10 +503,7 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
   }
 
   async exportResumeAsPdf(userId: string, id: string) {
-    const resume = await prisma.resume.findUnique({ where: { id } });
-    if (!resume || resume.userId !== userId) {
-      throw ApiError.notFound("Resume not found");
-    }
+    const resume = await this.requireOwnedResume(userId, id);
 
     // In a real application, we would use a library like puppeteer or pdfkit
     // to generate a PDF from the resume data. For this mock, we just return a URL.
@@ -559,11 +521,7 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
   }
 
   async generateResumeVariations(userId: string, id: string, variationType: string) {
-    const resume = await prisma.resume.findUnique({ where: { id } });
-    
-    if (!resume || resume.userId !== userId) {
-      throw ApiError.notFound("Resume not found");
-    }
+    const resume = await this.requireOwnedResume(userId, id);
 
     if (!variationType) {
       throw ApiError.badRequest("Variation type is required (e.g., 'technical', 'leadership', 'creative')");
@@ -627,10 +585,7 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
   }
 
   async generateResumeReadabilityScore(userId: string, id: string) {
-    const resume = await prisma.resume.findUnique({ where: { id } });
-    if (!resume || resume.userId !== userId) {
-      throw ApiError.notFound("Resume not found");
-    }
+    const resume = await this.requireOwnedResume(userId, id);
 
     // Mock generating a readability score based on NLP analysis
     const wordCount = Math.floor(Math.random() * 300) + 200; // 200-500 words
@@ -667,10 +622,7 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
   }
 
   async matchResumeKeywords(userId: string, id: string, jobDescription: string) {
-    const resume = await prisma.resume.findUnique({ where: { id } });
-    if (!resume || resume.userId !== userId) {
-      throw ApiError.notFound("Resume not found");
-    }
+    const resume = await this.requireOwnedResume(userId, id);
 
     if (!jobDescription || jobDescription.trim().length < 50) {
       throw ApiError.badRequest("Job description is too short to analyze.");
@@ -712,10 +664,7 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
   }
 
   async parseResumeSections(userId: string, id: string) {
-    const resume = await prisma.resume.findUnique({ where: { id } });
-    if (!resume || resume.userId !== userId) {
-      throw ApiError.notFound("Resume not found");
-    }
+    const resume = await this.requireOwnedResume(userId, id);
 
     // Mock parsing sections from the resume content
     const mockSections = [
@@ -737,10 +686,7 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
   }
 
   async generateResumeATSFormattingTips(userId: string, id: string) {
-    const resume = await prisma.resume.findUnique({ where: { id } });
-    if (!resume || resume.userId !== userId) {
-      throw ApiError.notFound("Resume not found");
-    }
+    const resume = await this.requireOwnedResume(userId, id);
 
     // Mock analysis of resume formatting for ATS compliance
     const tips = [
@@ -779,10 +725,7 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
   }
 
   async checkCoverLetterGrammar(userId: string, id: string, coverLetterText: string) {
-    const resume = await prisma.resume.findUnique({ where: { id } });
-    if (!resume || resume.userId !== userId) {
-      throw ApiError.notFound("Resume not found");
-    }
+    const resume = await this.requireOwnedResume(userId, id);
 
     if (!coverLetterText || coverLetterText.trim().length < 50) {
       throw ApiError.badRequest("Cover letter text is too short to analyze for grammar.");
