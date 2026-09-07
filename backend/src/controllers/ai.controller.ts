@@ -189,8 +189,7 @@ export const generateCoverLetter = asyncHandler(async (req: Request, res: Respon
   const { jobDescription, resumeId } = req.body;
   
   if (!jobDescription) {
-     res.status(400).json({ success: false, message: "Job description is required to generate a cover letter." });
-     return;
+    throw ApiError.badRequest("Job description is required to generate a cover letter.");
   }
 
   const coverLetter = await jobAnalysisService.generateCoverLetter(userId, jobDescription, resumeId);
@@ -208,8 +207,7 @@ export const matchResumeJob = asyncHandler(async (req: Request, res: Response) =
   const userId = (req as AuthenticatedRequest).user.id;
   const { resumeId, jobDescription } = req.body;
   if (!resumeId || !jobDescription) {
-    res.status(400).json({ success: false, message: "resumeId and jobDescription are required", data: null });
-    return;
+    throw ApiError.badRequest("resumeId and jobDescription are required");
   }
   const result = await matchingService.matchResumeAndJob(userId, resumeId, jobDescription);
   res.json({ success: true, message: "Match analysis completed", data: result });
@@ -247,8 +245,7 @@ export const getMatchDetails = asyncHandler(async (req: Request, res: Response) 
   const { matchId } = req.params;
   
   if (!matchId) {
-     res.status(400).json({ success: false, message: "Match ID is required to fetch details." });
-     return;
+    throw ApiError.badRequest("Match ID is required to fetch details.");
   }
 
   const result = await matchingService.getMatchDetails(matchId, userId);
@@ -305,8 +302,7 @@ export const submitAnswer = asyncHandler(async (req: Request, res: Response) => 
   const userId = (req as AuthenticatedRequest).user.id;
   const { questionId, answer } = req.body;
   if (!questionId || !answer) {
-    res.status(400).json({ success: false, message: "questionId and answer are required", data: null });
-    return;
+    throw ApiError.badRequest("questionId and answer are required");
   }
   const result = await interviewService.submitAnswer(questionId, answer, userId);
   res.json({ success: true, message: "Answer submitted", data: result });
@@ -338,8 +334,7 @@ export const deleteInterviewSession = asyncHandler(async (req: Request, res: Res
   const { sessionId } = req.params;
   
   if (!sessionId) {
-     res.status(400).json({ success: false, message: "Session ID is required for deletion." });
-     return;
+    throw ApiError.badRequest("Session ID is required for deletion.");
   }
 
   const result = await interviewService.deleteSession(sessionId, userId);
@@ -356,8 +351,7 @@ export const archiveInterviewSession = asyncHandler(async (req: Request, res: Re
   const { sessionId } = req.params;
   
   if (!sessionId) {
-     res.status(400).json({ success: false, message: "Session ID is required for archiving." });
-     return;
+    throw ApiError.badRequest("Session ID is required for archiving.");
   }
 
   const result = await interviewService.archiveInterviewSession(sessionId, userId);
@@ -495,8 +489,7 @@ export const extractJobKeywords = asyncHandler(async (req: Request, res: Respons
   const { jobDescription } = req.body;
   
   if (!jobDescription) {
-     res.status(400).json({ success: false, message: "Job description is required." });
-     return;
+    throw ApiError.badRequest("Job description is required.");
   }
   
   const keywords = await interviewService.extractJobKeywords(userId, jobDescription);
@@ -513,8 +506,7 @@ export const detectJobRedFlags = asyncHandler(async (req: Request, res: Response
   const { jobDescription } = req.body;
   
   if (!jobDescription) {
-     res.status(400).json({ success: false, message: "Job description is required." });
-     return;
+    throw ApiError.badRequest("Job description is required.");
   }
   
   const result = await jobAnalysisService.detectJobRedFlags(userId, jobDescription);
@@ -545,8 +537,7 @@ export const rewriteCoverLetterTone = asyncHandler(async (req: Request, res: Res
   const { currentCoverLetter, targetTone } = req.body;
   
   if (!currentCoverLetter || !targetTone) {
-     res.status(400).json({ success: false, message: "Cover letter and target tone are required." });
-     return;
+    throw ApiError.badRequest("Cover letter and target tone are required.");
   }
   
   const result = await jobAnalysisService.rewriteCoverLetterTone(userId, currentCoverLetter, targetTone);
@@ -563,8 +554,7 @@ export const highlightCoverLetterKeywords = asyncHandler(async (req: Request, re
   const { coverLetter, jobDescription } = req.body;
   
   if (!coverLetter || !jobDescription) {
-     res.status(400).json({ success: false, message: "Cover letter and job description are required." });
-     return;
+    throw ApiError.badRequest("Cover letter and job description are required.");
   }
   
   const result = await jobAnalysisService.highlightCoverLetterKeywords(userId, coverLetter, jobDescription);
