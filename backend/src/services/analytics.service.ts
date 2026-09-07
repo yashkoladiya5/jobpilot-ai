@@ -845,9 +845,15 @@ export class AnalyticsService {
       };
     }
 
-    const offers = applications.filter(a => a.status === "OFFER").length;
-    const rejections = applications.filter(a => a.status === "REJECTED").length;
-    const active = applications.filter(a => a.status === "INTERVIEW").length;
+    const { offers, rejections, active } = applications.reduce(
+      (counts, a) => {
+        if (a.status === "OFFER") counts.offers += 1;
+        else if (a.status === "REJECTED") counts.rejections += 1;
+        else if (a.status === "INTERVIEW") counts.active += 1;
+        return counts;
+      },
+      { offers: 0, rejections: 0, active: 0 }
+    );
 
     // Calculate success rate based on resolved interviews (Offers / (Offers + Rejections))
     const resolvedInterviews = offers + rejections;
