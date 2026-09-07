@@ -647,8 +647,14 @@ export class AnalyticsService {
     }
 
     const total = applications.length;
-    const interviews = applications.filter(a => a.status === "INTERVIEW" || a.status === "OFFER").length;
-    const offers = applications.filter(a => a.status === "OFFER").length;
+    const { interviews, offers } = applications.reduce(
+      (counts, a) => {
+        if (a.status === "INTERVIEW" || a.status === "OFFER") counts.interviews += 1;
+        if (a.status === "OFFER") counts.offers += 1;
+        return counts;
+      },
+      { interviews: 0, offers: 0 }
+    );
 
     // Calculate a composite score out of 100
     // Interview rate weight: 70%, Offer rate weight: 30%
