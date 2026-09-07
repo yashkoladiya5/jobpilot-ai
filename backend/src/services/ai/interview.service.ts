@@ -182,14 +182,17 @@ export class InterviewService {
     const totalScore = answered.reduce((sum, q) => sum + (q.score || 0), 0);
     const overallScore = answered.length > 0 ? Math.round((totalScore / answered.length) * 10) : 0;
 
+    const categoryTotals = answered.reduce<Record<string, { answered: number; total: number }>>((acc, q) => {
+      const key = q.category.toLowerCase();
+      const entry = (acc[key] ??= { answered: 0, total: 0 });
+      entry.answered += 1;
+      entry.total += q.score || 0;
+      return acc;
+    }, {});
+
     const categoryScores: Record<string, number> = {};
-    for (const category of ["HR", "TECHNICAL", "BEHAVIORAL", "SITUATIONAL", "FOLLOW_UP"]) {
-      const catQuestions = session.questions.filter(q => q.category === category);
-      const catAnswered = catQuestions.filter(q => q.answeredAt);
-      if (catAnswered.length > 0) {
-        const catTotal = catAnswered.reduce((sum, q) => sum + (q.score || 0), 0);
-        categoryScores[category.toLowerCase()] = Math.round((catTotal / catAnswered.length) * 10);
-      }
+    for (const [key, { answered: catAnswered, total: catTotal }] of Object.entries(categoryTotals)) {
+      categoryScores[key] = Math.round((catTotal / catAnswered) * 10);
     }
 
     const result = await prisma.interviewResult.create({
