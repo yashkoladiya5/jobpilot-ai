@@ -1,6 +1,7 @@
 import prisma from "../config/prisma";
 import { ApplicationStatus } from "@prisma/client";
 import { ApiError } from "../utils/ApiError";
+import { daysAgo } from "../utils/dates";
 
 /**
  * Service for calculating advanced insights and aggregated metrics
@@ -101,8 +102,7 @@ export class AnalyticsService {
   }
 
   async getTimelineData(userId: string) {
-    const twelveWeeksAgo = new Date();
-    twelveWeeksAgo.setDate(twelveWeeksAgo.getDate() - 84);
+    const twelveWeeksAgo = daysAgo(84);
 
     const applications = await prisma.jobApplication.findMany({
       where: {
@@ -237,8 +237,7 @@ export class AnalyticsService {
   }
 
   async getWeeklyActivitySummary(userId: string) {
-    const oneWeekAgo = new Date();
-    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    const oneWeekAgo = daysAgo(7);
 
     const applicationsThisWeek = await prisma.jobApplication.findMany({
       where: {
@@ -1075,8 +1074,7 @@ export class AnalyticsService {
 
   async getProfileVisibilityScore(userId: string) {
     // Check how many applications user has made recently (simulating visibility based on activity)
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const thirtyDaysAgo = daysAgo(30);
     
     const recentApps = await prisma.jobApplication.count({
       where: { userId, createdAt: { gte: thirtyDaysAgo } }

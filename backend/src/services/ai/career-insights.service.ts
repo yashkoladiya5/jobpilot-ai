@@ -1,6 +1,7 @@
 import prisma from "../../config/prisma";
 import { Prisma } from "@prisma/client";
 import { clampNumber } from "../../utils/math";
+import { daysAgo } from "../../utils/dates";
 import { generateStructuredResponse } from "./gemini.client";
 import { buildCareerInsightsPrompt, CareerDataInput } from "./prompts/career-insights.prompt";
 import { careerInsightsSchema, CareerInsightsOutput } from "./schemas/career-insights.schema";
@@ -36,8 +37,7 @@ export class CareerInsightsService {
       }
     }
 
-    const oneWeekAgo = new Date();
-    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    const oneWeekAgo = daysAgo(7);
 
     const firstOfMonth = new Date();
     firstOfMonth.setDate(1);

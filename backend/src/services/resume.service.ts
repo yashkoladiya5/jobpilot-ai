@@ -2,6 +2,7 @@ import fs from "fs";
 import prisma from "../config/prisma";
 import { ApiError } from "../utils/ApiError";
 import { clampNumber } from "../utils/math";
+import { daysAgo } from "../utils/dates";
 
 /**
  * Service managing user resumes, including file storage operations and database records.
@@ -165,8 +166,7 @@ export class ResumeService {
     const totalStorageBytes = resumes.reduce((sum, r) => sum + r.fileSize, 0);
 
     // Calculate how many resumes were uploaded in the last 30 days
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const thirtyDaysAgo = daysAgo(30);
     const recentUploads = resumes.filter(r => r.createdAt >= thirtyDaysAgo).length;
 
     return {
