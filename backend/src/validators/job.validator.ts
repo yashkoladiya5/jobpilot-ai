@@ -1,18 +1,12 @@
 import { z } from "zod";
+import { ApplicationStatus } from "@prisma/client";
 
 /**
  * Zod validation schemas for job application endpoints.
  * Ensures data integrity when creating or updating job records.
  */
 /** Standardized enum of all possible job application states. */
-const jobStatusEnum = z.enum([
-  "SAVED",
-  "APPLIED",
-  "INTERVIEW",
-  "OFFER",
-  "REJECTED",
-  "WITHDRAWN",
-]);
+const jobStatusEnum = z.nativeEnum(ApplicationStatus);
 
 export const createJobSchema = z.object({
   body: z.object({
