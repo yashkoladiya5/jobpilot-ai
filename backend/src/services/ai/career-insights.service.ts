@@ -1,5 +1,6 @@
 import prisma from "../../config/prisma";
 import { Prisma } from "@prisma/client";
+import { clampNumber } from "../../utils/math";
 import { generateStructuredResponse } from "./gemini.client";
 import { buildCareerInsightsPrompt, CareerDataInput } from "./prompts/career-insights.prompt";
 import { careerInsightsSchema, CareerInsightsOutput } from "./schemas/career-insights.schema";
@@ -203,7 +204,7 @@ export class CareerInsightsService {
     if (data.analyzedResumes > 0) score += 10;
     if (data.averageAtsScore && data.averageAtsScore > 70) score += 10;
     if (data.averageMatchScore && data.averageMatchScore > 70) score += 10;
-    return Math.min(100, Math.max(0, score));
+    return clampNumber(score, 0, 100);
   }
 }
 

@@ -1,6 +1,7 @@
 import fs from "fs";
 import prisma from "../config/prisma";
 import { ApiError } from "../utils/ApiError";
+import { clampNumber } from "../utils/math";
 
 /**
  * Service managing user resumes, including file storage operations and database records.
@@ -653,7 +654,7 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
     return {
       resumeId: resume.id,
       fileName: resume.fileName,
-      readabilityScore: Math.max(0, Math.min(100, fleschKincaidScore)),
+      readabilityScore: clampNumber(fleschKincaidScore, 0, 100),
       readingLevel,
       metrics: {
         estimatedWordCount: wordCount,
