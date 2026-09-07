@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
-import { AuthenticatedRequest } from "../middleware/auth";
+import { getUserId } from "../middleware/auth";
 import { ApiError } from "../utils/ApiError";
 import { AnalyticsService } from "../services/analytics.service";
 
@@ -11,49 +11,49 @@ import { AnalyticsService } from "../services/analytics.service";
 const analyticsService = new AnalyticsService();
 
 export const getPipelineAnalytics = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const result = await analyticsService.getPipelineAnalytics(userId);
   res.json({ success: true, message: "Pipeline analytics fetched successfully", data: result });
 });
 
 export const getTimelineData = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const result = await analyticsService.getTimelineData(userId);
   res.json({ success: true, message: "Timeline data fetched successfully", data: result });
 });
 
 export const getSkillMatchAnalytics = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const result = await analyticsService.getSkillMatchAnalytics(userId);
   res.json({ success: true, message: "Skill match analytics fetched successfully", data: result });
 });
 
 export const getRejectionAnalytics = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const result = await analyticsService.getRejectionAnalytics(userId);
   res.json({ success: true, message: "Rejection analytics fetched successfully", data: result });
 });
 
 export const getOfferAnalytics = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const result = await analyticsService.getOfferAnalytics(userId);
   res.json({ success: true, message: "Offer analytics fetched successfully", data: result });
 });
 
 export const getInterviewAnalytics = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const result = await analyticsService.getInterviewAnalytics(userId);
   res.json({ success: true, message: "Interview analytics fetched successfully", data: result });
 });
 
 export const getWeeklyActivitySummary = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const result = await analyticsService.getWeeklyActivitySummary(userId);
   res.json({ success: true, message: "Weekly activity summary fetched successfully", data: result });
 });
 
 export const getResumeAnalytics = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   const result = await analyticsService.getResumeAnalytics(userId);
   
@@ -65,7 +65,7 @@ export const getResumeAnalytics = asyncHandler(async (req: Request, res: Respons
 });
 
 export const getInterviewTrends = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   const result = await analyticsService.getInterviewTrends(userId);
   
@@ -77,7 +77,7 @@ export const getInterviewTrends = asyncHandler(async (req: Request, res: Respons
 });
 
 export const getJobSourceAnalytics = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   const result = await analyticsService.getJobSourceAnalytics(userId);
   
@@ -89,7 +89,7 @@ export const getJobSourceAnalytics = asyncHandler(async (req: Request, res: Resp
 });
 
 export const getSkillsGapAnalytics = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   const result = await analyticsService.getSkillsGapAnalytics(userId);
   
@@ -101,7 +101,7 @@ export const getSkillsGapAnalytics = asyncHandler(async (req: Request, res: Resp
 });
 
 export const getOfferNegotiationInsights = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   const result = await analyticsService.getOfferNegotiationInsights(userId);
   
@@ -113,7 +113,7 @@ export const getOfferNegotiationInsights = asyncHandler(async (req: Request, res
 });
 
 export const getCareerGrowthPotential = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   const result = await analyticsService.getCareerGrowthPotential(userId);
   
@@ -125,7 +125,7 @@ export const getCareerGrowthPotential = asyncHandler(async (req: Request, res: R
 });
 
 export const getPeerComparisonAnalytics = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   const result = await analyticsService.getPeerComparisonAnalytics(userId);
   
@@ -137,7 +137,7 @@ export const getPeerComparisonAnalytics = asyncHandler(async (req: Request, res:
 });
 
 export const getOfferPredictor = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   const result = await analyticsService.getOfferPredictor(userId);
   
@@ -149,7 +149,7 @@ export const getOfferPredictor = asyncHandler(async (req: Request, res: Response
 });
 
 export const getNetworkingROI = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   const result = await analyticsService.getNetworkingROI(userId);
   
@@ -161,7 +161,7 @@ export const getNetworkingROI = asyncHandler(async (req: Request, res: Response)
 });
 
 export const getJobSearchEffectiveness = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   const result = await analyticsService.getJobSearchEffectiveness(userId);
   
@@ -173,7 +173,7 @@ export const getJobSearchEffectiveness = asyncHandler(async (req: Request, res: 
 });
 
 export const getApplicationGhostingPredictor = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   const result = await analyticsService.getApplicationGhostingPredictor(userId);
   
@@ -185,7 +185,7 @@ export const getApplicationGhostingPredictor = asyncHandler(async (req: Request,
 });
 
 export const trackLoginDuration = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { durationSeconds } = req.body;
   
   if (typeof durationSeconds !== 'number') {
@@ -202,7 +202,7 @@ export const trackLoginDuration = asyncHandler(async (req: Request, res: Respons
 });
 
 export const getCustomDateRangeStats = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { startDate, endDate } = req.query;
   
   if (!startDate || !endDate) {
@@ -226,7 +226,7 @@ export const getCustomDateRangeStats = asyncHandler(async (req: Request, res: Re
 });
 
 export const exportAnalyticsReport = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   const report = await analyticsService.exportAnalyticsReport(userId);
   
@@ -238,7 +238,7 @@ export const exportAnalyticsReport = asyncHandler(async (req: Request, res: Resp
 });
 
 export const getSkillDemandForecast = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   const forecast = await analyticsService.getSkillDemandForecast(userId);
   
@@ -250,7 +250,7 @@ export const getSkillDemandForecast = asyncHandler(async (req: Request, res: Res
 });
 
 export const getApplicationConversionFunnel = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   const funnelData = await analyticsService.getApplicationConversionFunnel(userId);
 
@@ -262,37 +262,37 @@ export const getApplicationConversionFunnel = asyncHandler(async (req: Request, 
 });
 
 export const getInterviewSuccessRate = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const result = await analyticsService.getInterviewSuccessRate(userId);
   res.status(200).json({ success: true, message: "Interview success rate calculated", data: result });
 });
 
 export const getJobSearchDuration = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const result = await analyticsService.getJobSearchDuration(userId);
   res.status(200).json({ success: true, message: "Job search duration calculated", data: result });
 });
 
 export const getOfferNegotiationLeverage = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const result = await analyticsService.getOfferNegotiationLeverage(userId);
   res.status(200).json({ success: true, message: "Negotiation leverage calculated", data: result });
 });
 
 export const getApplicationChannelEffectiveness = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const result = await analyticsService.getApplicationChannelEffectiveness(userId);
   res.status(200).json({ success: true, message: "Application channel effectiveness calculated", data: result });
 });
 
 export const getProfileVisibilityScore = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const result = await analyticsService.getProfileVisibilityScore(userId);
   res.status(200).json({ success: true, message: "Profile visibility score calculated", data: result });
 });
 
 export const getProfileViewsHistory = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   const result = await analyticsService.getProfileViewsHistory(userId);
   
@@ -304,13 +304,13 @@ export const getProfileViewsHistory = asyncHandler(async (req: Request, res: Res
 });
 
 export const getUserRetentionStats = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const result = await analyticsService.getUserRetentionStats(userId);
   res.status(200).json({ success: true, message: "User retention stats fetched successfully", data: result });
 });
 
 export const getTimeToHirePredictor = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   const result = await analyticsService.getTimeToHirePredictor(userId);
   
