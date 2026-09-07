@@ -2,6 +2,7 @@ import prisma from "../config/prisma";
 import { ApplicationStatus } from "@prisma/client";
 import { ApiError } from "../utils/ApiError";
 import { daysAgo } from "../utils/dates";
+import { clampNumber } from "../utils/math";
 
 /**
  * Service for calculating advanced insights and aggregated metrics
@@ -588,8 +589,11 @@ export class AnalyticsService {
     const baseProbability = 20; // 20% base chance for any interview
     const extraPerInterview = 5; // +5% for each additional interview
     
-    let totalProbability = baseProbability + ((activeInterviews.length - 1) * extraPerInterview);
-    if (totalProbability > 85) totalProbability = 85; // Cap at 85%
+    const totalProbability = clampNumber(
+      baseProbability + ((activeInterviews.length - 1) * extraPerInterview),
+      0,
+      85
+    );
 
     return {
       hasActiveInterviews: true,
