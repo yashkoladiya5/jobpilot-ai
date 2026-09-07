@@ -272,7 +272,7 @@ export class ResumeService {
     }
     
     // Cap it
-    let totalScore = Math.min(100, baseScore);
+    const totalScore = clampNumber(baseScore, 0, 100);
     
     return {
       resumeId: resume.id,
