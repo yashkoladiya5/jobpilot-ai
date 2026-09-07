@@ -1,5 +1,6 @@
 import prisma from "../config/prisma";
 import { ApiError } from "../utils/ApiError";
+import { daysAgo } from "../utils/dates";
 
 /**
  * Provides data aggregation and statistical analysis for the user dashboard.
@@ -7,11 +8,9 @@ import { ApiError } from "../utils/ApiError";
 export class DashboardService {
   async getStats(userId: string) {
     // Calculate the threshold for recent activity (last 7 days and 30 days)
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    const sevenDaysAgo = daysAgo(7);
     
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const thirtyDaysAgo = daysAgo(30);
 
     const [totalApplications, grouped, recentApplications, recentActivity, monthlyActivity, resumeCount, activeInterviews] =
       await Promise.all([
@@ -97,7 +96,7 @@ export class DashboardService {
   }
 
   async getActionItems(userId: string) {
-    const threeDaysAgo = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000);
+    const threeDaysAgo = daysAgo(3);
 
     const [jobsNeedingFollowUp, pendingAIAnalyses] = await Promise.all([
       prisma.jobApplication.findMany({
@@ -313,8 +312,7 @@ export class DashboardService {
   }
 
   async getWeeklySnapshot(userId: string) {
-    const oneWeekAgo = new Date();
-    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    const oneWeekAgo = daysAgo(7);
 
     const thisWeekApps = await prisma.jobApplication.findMany({
       where: {
@@ -323,8 +321,7 @@ export class DashboardService {
       }
     });
 
-    const twoWeeksAgo = new Date();
-    twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+    const twoWeeksAgo = daysAgo(14);
     
     const lastWeekApps = await prisma.jobApplication.findMany({
       where: {
@@ -480,8 +477,7 @@ export class DashboardService {
 
   async getBurnoutPredictor(userId: string) {
     // Determine burnout risk by analyzing application velocity over the past 4 weeks
-    const fourWeeksAgo = new Date();
-    fourWeeksAgo.setDate(fourWeeksAgo.getDate() - 28);
+    const fourWeeksAgo = daysAgo(28);
     
     const applications = await prisma.jobApplication.findMany({
       where: {
@@ -566,7 +562,7 @@ export class DashboardService {
       where: {
         userId,
         status: 'INTERVIEW',
-        updatedAt: { lte: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000) }
+        updatedAt: { lte: daysAgo(3) }
       },
       select: { companyName: true, role: true },
       take: 3
@@ -594,8 +590,7 @@ export class DashboardService {
   }
 
   async getConsistencyTracker(userId: string) {
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const thirtyDaysAgo = daysAgo(30);
 
     const applications = await prisma.jobApplication.findMany({
       where: {
@@ -611,8 +606,7 @@ export class DashboardService {
     // Mock current streak
     let currentStreak = 0;
     const today = new Date().toISOString().slice(0, 10);
-    const yesterdayDate = new Date();
-    yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+    const yesterdayDate = daysAgo(1);
     const yesterday = yesterdayDate.toISOString().slice(0, 10);
 
     if (activeDays.has(today) || activeDays.has(yesterday)) {
@@ -634,8 +628,7 @@ export class DashboardService {
   }
 
   async generateWeeklyReport(userId: string) {
-    const oneWeekAgo = new Date();
-    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    const oneWeekAgo = daysAgo(7);
 
     // Get jobs applied to this week
     const applicationsThisWeek = await prisma.jobApplication.findMany({
@@ -808,8 +801,7 @@ export class DashboardService {
   }
 
   async getGoalStreaks(userId: string) {
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const thirtyDaysAgo = daysAgo(30);
 
     const applications = await prisma.jobApplication.findMany({
       where: {
@@ -823,8 +815,7 @@ export class DashboardService {
     const activeDays = new Set(applications.map(app => app.createdAt.toISOString().slice(0, 10)));
     
     const today = new Date().toISOString().slice(0, 10);
-    const yesterdayDate = new Date();
-    yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+    const yesterdayDate = daysAgo(1);
     const yesterday = yesterdayDate.toISOString().slice(0, 10);
 
     let currentStreak = 0;
@@ -1019,8 +1010,7 @@ export class DashboardService {
   }
 
   async getWeeklyPerformance(userId: string) {
-    const oneWeekAgo = new Date();
-    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    const oneWeekAgo = daysAgo(7);
 
     const applications = await prisma.jobApplication.findMany({
       where: {
