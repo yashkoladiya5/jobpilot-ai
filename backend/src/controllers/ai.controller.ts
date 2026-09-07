@@ -46,13 +46,9 @@ function requireResumeIdParam(req: Request, res: Response): string | null {
 
 export const analyzeResume = asyncHandler(async (req: Request, res: Response) => {
   const userId = (req as AuthenticatedRequest).user.id;
-  const { resumeId } = req.params;
-  
-  if (!resumeId) {
-     res.status(400).json({ success: false, message: "Resume ID is required for analysis." });
-     return;
-  }
-  
+  const resumeId = requireResumeIdParam(req, res);
+  if (!resumeId) return;
+
   logger.info(`[AI Controller] Starting resume analysis for user ${userId}, resume ${resumeId}`);
   const analysis = await resumeAnalysisService.analyzeResume(userId, resumeId);
   logger.info(`[AI Controller] Finished resume analysis for resume ${resumeId}`);
