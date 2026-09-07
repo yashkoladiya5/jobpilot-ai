@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
-import { AuthenticatedRequest } from "../middleware/auth";
+import { getUserId } from "../middleware/auth";
 import { ApiError } from "../utils/ApiError";
 import { DashboardService } from "../services/dashboard.service";
 
@@ -15,7 +15,7 @@ const dashboardService = new DashboardService();
  * Provides high-level aggregations of user activities.
  */
 export const getStats = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   if (!userId) {
      res.status(401).json({ success: false, message: "Unauthorized access: user ID is missing" });
@@ -36,7 +36,7 @@ export const getStats = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const getRecentActivityLogs = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { limit } = req.query;
   
   if (!userId) {
@@ -60,7 +60,7 @@ if (isNaN(parsedLimit) || parsedLimit < 1) {
 });
 
 export const getActionItems = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   if (!userId) {
      res.status(401).json({ success: false, message: "Unauthorized access: user ID is missing" });
@@ -77,7 +77,7 @@ export const getActionItems = asyncHandler(async (req: Request, res: Response) =
 });
 
 export const getDashboardSummary = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   if (!userId) {
      res.status(401).json({ success: false, message: "Unauthorized access: user ID is missing" });
@@ -94,7 +94,7 @@ export const getDashboardSummary = asyncHandler(async (req: Request, res: Respon
 });
 
 export const getDashboardAlerts = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   if (!userId) {
      res.status(401).json({ success: false, message: "Unauthorized access: user ID is missing" });
@@ -111,7 +111,7 @@ export const getDashboardAlerts = asyncHandler(async (req: Request, res: Respons
 });
 
 export const getUpcomingEvents = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   if (!userId) {
      res.status(401).json({ success: false, message: "Unauthorized access: user ID is missing" });
@@ -128,7 +128,7 @@ export const getUpcomingEvents = asyncHandler(async (req: Request, res: Response
 });
 
 export const getDailyGoals = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   if (!userId) {
      res.status(401).json({ success: false, message: "Unauthorized access: user ID is missing" });
@@ -145,7 +145,7 @@ export const getDailyGoals = asyncHandler(async (req: Request, res: Response) =>
 });
 
 export const getRecommendedJobs = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   if (!userId) {
      res.status(401).json({ success: false, message: "Unauthorized access: user ID is missing" });
@@ -162,7 +162,7 @@ export const getRecommendedJobs = asyncHandler(async (req: Request, res: Respons
 });
 
 export const getWeeklySnapshot = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   if (!userId) {
      res.status(401).json({ success: false, message: "Unauthorized access: user ID is missing" });
@@ -179,7 +179,7 @@ export const getWeeklySnapshot = asyncHandler(async (req: Request, res: Response
 });
 
 export const getTopSkillsTrending = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   if (!userId) {
      res.status(401).json({ success: false, message: "Unauthorized access: user ID is missing" });
@@ -196,7 +196,7 @@ export const getTopSkillsTrending = asyncHandler(async (req: Request, res: Respo
 });
 
 export const getGamificationScore = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   if (!userId) {
      res.status(401).json({ success: false, message: "Unauthorized access: user ID is missing" });
@@ -213,7 +213,7 @@ export const getGamificationScore = asyncHandler(async (req: Request, res: Respo
 });
 
 export const getSkillGapAnalysis = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   if (!userId) {
      res.status(401).json({ success: false, message: "Unauthorized access: user ID is missing" });
@@ -230,7 +230,7 @@ export const getSkillGapAnalysis = asyncHandler(async (req: Request, res: Respon
 });
 
 export const getBurnoutPredictor = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   if (!userId) {
      res.status(401).json({ success: false, message: "Unauthorized access: user ID is missing" });
@@ -247,7 +247,7 @@ export const getBurnoutPredictor = asyncHandler(async (req: Request, res: Respon
 });
 
 export const getMorningBriefing = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   if (!userId) {
      res.status(401).json({ success: false, message: "Unauthorized access: user ID is missing" });
@@ -264,7 +264,7 @@ export const getMorningBriefing = asyncHandler(async (req: Request, res: Respons
 });
 
 export const getConsistencyTracker = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   if (!userId) {
      res.status(401).json({ success: false, message: "Unauthorized access: user ID is missing" });
@@ -281,7 +281,7 @@ export const getConsistencyTracker = asyncHandler(async (req: Request, res: Resp
 });
 
 export const generateWeeklyReport = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   if (!userId) {
      res.status(401).json({ success: false, message: "Unauthorized access: user ID is missing" });
@@ -298,7 +298,7 @@ export const generateWeeklyReport = asyncHandler(async (req: Request, res: Respo
 });
 
 export const updateNotificationPreferences = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const preferences = req.body;
   
   if (!userId) {
@@ -316,7 +316,7 @@ export const updateNotificationPreferences = asyncHandler(async (req: Request, r
 });
 
 export const snoozeNotifications = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { snoozeDays } = req.body;
   
   const result = await dashboardService.snoozeNotifications(userId, snoozeDays);
@@ -329,7 +329,7 @@ export const snoozeNotifications = asyncHandler(async (req: Request, res: Respon
 });
 
 export const dismissAlert = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { alertId } = req.params;
   
   const result = await dashboardService.dismissAlert(userId, alertId);
@@ -342,7 +342,7 @@ export const dismissAlert = asyncHandler(async (req: Request, res: Response) => 
 });
 
 export const pinAlert = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { alertId } = req.params;
   
   const result = await dashboardService.pinAlert(userId, alertId);
@@ -355,7 +355,7 @@ export const pinAlert = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const dismissAllAlerts = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   const result = await dashboardService.dismissAllAlerts(userId);
 
@@ -367,7 +367,7 @@ export const dismissAllAlerts = asyncHandler(async (req: Request, res: Response)
 });
 
 export const clearAllActionItems = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   const result = await dashboardService.clearAllActionItems(userId);
 
@@ -379,7 +379,7 @@ export const clearAllActionItems = asyncHandler(async (req: Request, res: Respon
 });
 
 export const updateWidgetPreferences = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const preferences = req.body;
   
   if (!userId) {
@@ -397,7 +397,7 @@ export const updateWidgetPreferences = asyncHandler(async (req: Request, res: Re
 });
 
 export const getGoalStreaks = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   if (!userId) {
      res.status(401).json({ success: false, message: "Unauthorized access: user ID is missing" });
@@ -414,7 +414,7 @@ export const getGoalStreaks = asyncHandler(async (req: Request, res: Response) =
 });
 
 export const getCareerMilestones = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   if (!userId) {
      res.status(401).json({ success: false, message: "Unauthorized access: user ID is missing" });
@@ -431,19 +431,19 @@ export const getCareerMilestones = asyncHandler(async (req: Request, res: Respon
 });
 
 export const getApplicationFlowFunnel = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const result = await dashboardService.getApplicationFlowFunnel(userId);
   res.status(200).json({ success: true, message: "Application flow funnel generated", data: result });
 });
 
 export const getUpcomingDeadlines = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const result = await dashboardService.getUpcomingDeadlines(userId);
   res.status(200).json({ success: true, message: "Upcoming deadlines fetched", data: result });
 });
 
 export const getApplicationSuggestions = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   if (!userId) {
      res.status(401).json({ success: false, message: "Unauthorized access: user ID is missing" });
@@ -460,13 +460,13 @@ export const getApplicationSuggestions = asyncHandler(async (req: Request, res: 
 });
 
 export const getWeeklyPerformance = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const result = await dashboardService.getWeeklyPerformance(userId);
   res.status(200).json({ success: true, message: "Weekly performance fetched successfully", data: result });
 });
 
 export const getInterviewPrepGuide = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   const result = await dashboardService.getInterviewPrepGuide(userId);
   
