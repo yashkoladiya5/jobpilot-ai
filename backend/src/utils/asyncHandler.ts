@@ -10,7 +10,7 @@ import { logger } from "./logger";
  * @param logErrors - Boolean to toggle error logging (default false)
  */
 export const asyncHandler =
-  (fn: (req: Request, res: Response, next: NextFunction) => Promise<any>, logErrors: boolean = false) =>
+  (fn: (req: Request, res: Response, next: NextFunction) => Promise<void>, logErrors: boolean = false) =>
   (req: Request, res: Response, next: NextFunction): void => {
     Promise.resolve(fn(req, res, next)).catch((err) => {
       if (logErrors) {
