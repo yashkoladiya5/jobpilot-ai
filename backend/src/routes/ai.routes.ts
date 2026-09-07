@@ -80,10 +80,10 @@ router.post("/resignation-letter/generate", generateResignationLetter);
 
 // Resume-Job matching
 router.post("/match", matchResumeJob);
-router.get("/match/:matchId", getMatchResult);
-router.get("/match/:matchId/details", getMatchDetails);
 router.get("/match/resume/:resumeId/top", getTopMatches);
 router.get("/match/recent", getRecentMatches);
+router.get("/match/:matchId", getMatchResult);
+router.get("/match/:matchId/details", getMatchDetails);
 
 // Feedback endpoints for AI improvements
 router.post("/resume/analyses/:analysisId/feedback", (req, res) => {
