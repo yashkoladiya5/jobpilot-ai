@@ -673,9 +673,9 @@ export class AnalyticsService {
 
     let score = (interviewRate * 0.7) + (offerRate * 0.3);
     
-    // Cap at 100, add small bonus for volume
+    // Add small bonus for volume, then clamp to a 0-100 score
     if (total > 20) score += 5;
-    score = Math.min(100, Math.round(score));
+    score = clampNumber(Math.round(score), 0, 100);
 
     let rating = "Needs Improvement";
     if (score >= 80) rating = "Excellent";
