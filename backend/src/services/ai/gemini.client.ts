@@ -49,8 +49,8 @@ export async function generateStructuredResponse<T>(
       const parsed = JSON.parse(jsonStr);
       const validated = schema.parse(parsed);
       return { success: true, data: validated, rawResponse: text };
-    } catch (error: any) {
-      lastError = error.message || 'Unknown Gemini error';
+    } catch (error: unknown) {
+      lastError = error instanceof Error ? error.message : 'Unknown Gemini error';
       if (attempt < retries) {
         await delay(geminiConfig.retryDelayMs * (attempt + 1));
         continue;
