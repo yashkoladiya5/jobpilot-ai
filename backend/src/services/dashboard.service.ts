@@ -1029,8 +1029,14 @@ export class DashboardService {
     });
 
     const applicationsSubmitted = applications.length;
-    const interviewsSecured = applications.filter(app => app.status === "INTERVIEW").length;
-    const offersReceived = applications.filter(app => app.status === "OFFER").length;
+    const { interviewsSecured, offersReceived } = applications.reduce(
+      (counts, app) => {
+        if (app.status === "INTERVIEW") counts.interviewsSecured += 1;
+        else if (app.status === "OFFER") counts.offersReceived += 1;
+        return counts;
+      },
+      { interviewsSecured: 0, offersReceived: 0 }
+    );
 
     const performanceScore = Math.min(100, (applicationsSubmitted * 2) + (interviewsSecured * 10) + (offersReceived * 20));
 
