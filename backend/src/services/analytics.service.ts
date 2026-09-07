@@ -525,7 +525,14 @@ export class AnalyticsService {
     
     // Calculate user's interview rate
     const totalApps = applications.length;
-    const interviewCount = applications.filter(a => a.status === "INTERVIEW" || a.status === "OFFER").length;
+    const { interviewCount, userOfferCount } = applications.reduce(
+      (counts, a) => {
+        if (a.status === "INTERVIEW" || a.status === "OFFER") counts.interviewCount += 1;
+        if (a.status === "OFFER") counts.userOfferCount += 1;
+        return counts;
+      },
+      { interviewCount: 0, userOfferCount: 0 }
+    );
     const userInterviewRate = totalApps > 0 ? Math.round((interviewCount / totalApps) * 100) : 0;
     
     // Mock peer averages
@@ -533,7 +540,6 @@ export class AnalyticsService {
     const peerOfferRate = 4; // 4%
     const peerAvgSalary = "$120,000";
 
-    const userOfferCount = applications.filter(a => a.status === "OFFER").length;
     const userOfferRate = totalApps > 0 ? Math.round((userOfferCount / totalApps) * 100) : 0;
 
     return {
