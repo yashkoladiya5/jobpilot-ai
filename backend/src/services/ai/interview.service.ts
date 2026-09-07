@@ -195,13 +195,21 @@ export class InterviewService {
       categoryScores[key] = Math.round((catTotal / catAnswered) * 10);
     }
 
+    const strengths: string[] = [];
+    const improvements: string[] = [];
+    for (const q of answered) {
+      const score = q.score || 0;
+      if (score >= 7) strengths.push(q.question.substring(0, 100));
+      else if (score < 5) improvements.push(q.question.substring(0, 100));
+    }
+
     const result = await prisma.interviewResult.create({
       data: {
         sessionId,
         overallScore,
         categoryScores: categoryScores as Prisma.InputJsonValue,
-        strengths: answered.filter(q => (q.score || 0) >= 7).map(q => q.question.substring(0, 100)),
-        improvements: answered.filter(q => (q.score || 0) < 5).map(q => q.question.substring(0, 100)),
+        strengths,
+        improvements,
         summary: `Completed ${answered.length}/${session.totalQuestions} questions. Overall score: ${overallScore}/100.`,
       },
     });
