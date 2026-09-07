@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
 import { ApiError } from "../utils/ApiError";
-import { AuthenticatedRequest } from "../middleware/auth";
+import { getUserId } from "../middleware/auth";
 import { ResumeService } from "../services/resume.service";
 
 const resumeService = new ResumeService();
 
 export const uploadResume = asyncHandler(async (req: Request, res: Response) => {
-  const { id: userId } = (req as AuthenticatedRequest).user;
+  const userId = getUserId(req);
   const file = req.file;
 
   if (!file) {
@@ -24,7 +24,7 @@ export const uploadResume = asyncHandler(async (req: Request, res: Response) => 
 });
 
 export const getResumes = asyncHandler(async (req: Request, res: Response) => {
-  const { id: userId } = (req as AuthenticatedRequest).user;
+  const userId = getUserId(req);
   const { limit, offset } = req.query;
 
   // Optional pagination parsing
@@ -51,7 +51,7 @@ export const getResumes = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const getResume = asyncHandler(async (req: Request, res: Response) => {
-  const { id: userId } = (req as AuthenticatedRequest).user;
+  const userId = getUserId(req);
   const { id } = req.params;
 
   const resume = await resumeService.getResumeById(userId, id);
@@ -64,7 +64,7 @@ export const getResume = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const deleteResume = asyncHandler(async (req: Request, res: Response) => {
-  const { id: userId } = (req as AuthenticatedRequest).user;
+  const userId = getUserId(req);
   const { id } = req.params;
 
   await resumeService.deleteResume(userId, id);
@@ -77,7 +77,7 @@ export const deleteResume = asyncHandler(async (req: Request, res: Response) => 
 });
 
 export const setPrimaryResume = asyncHandler(async (req: Request, res: Response) => {
-  const { id: userId } = (req as AuthenticatedRequest).user;
+  const userId = getUserId(req);
   const { id } = req.params;
   const resume = await resumeService.setPrimaryResume(userId, id);
   res.status(200).json({
@@ -88,7 +88,7 @@ export const setPrimaryResume = asyncHandler(async (req: Request, res: Response)
 });
 
 export const renameResume = asyncHandler(async (req: Request, res: Response) => {
-  const { id: userId } = (req as AuthenticatedRequest).user;
+  const userId = getUserId(req);
   const { id } = req.params;
   const { newName } = req.body;
   
@@ -105,7 +105,7 @@ export const renameResume = asyncHandler(async (req: Request, res: Response) => 
 });
 
 export const getPrimaryResume = asyncHandler(async (req: Request, res: Response) => {
-  const { id: userId } = (req as AuthenticatedRequest).user;
+  const userId = getUserId(req);
   
   const resume = await resumeService.getPrimaryResume(userId);
   
@@ -117,7 +117,7 @@ export const getPrimaryResume = asyncHandler(async (req: Request, res: Response)
 });
 
 export const duplicateResume = asyncHandler(async (req: Request, res: Response) => {
-  const { id: userId } = (req as AuthenticatedRequest).user;
+  const userId = getUserId(req);
   const { id } = req.params;
   
   const duplicatedResume = await resumeService.duplicateResume(userId, id);
@@ -130,7 +130,7 @@ export const duplicateResume = asyncHandler(async (req: Request, res: Response) 
 });
 
 export const getResumeStats = asyncHandler(async (req: Request, res: Response) => {
-  const { id: userId } = (req as AuthenticatedRequest).user;
+  const userId = getUserId(req);
   
   const stats = await resumeService.getResumeStats(userId);
   
@@ -142,7 +142,7 @@ export const getResumeStats = asyncHandler(async (req: Request, res: Response) =
 });
 
 export const getRecentResumeActivity = asyncHandler(async (req: Request, res: Response) => {
-  const { id: userId } = (req as AuthenticatedRequest).user;
+  const userId = getUserId(req);
   
   const activity = await resumeService.getRecentResumeActivity(userId);
   
@@ -154,7 +154,7 @@ export const getRecentResumeActivity = asyncHandler(async (req: Request, res: Re
 });
 
 export const getResumeVersionHistory = asyncHandler(async (req: Request, res: Response) => {
-  const { id: userId } = (req as AuthenticatedRequest).user;
+  const userId = getUserId(req);
   const { id } = req.params;
   
   const history = await resumeService.getResumeVersionHistory(userId, id);
@@ -167,7 +167,7 @@ export const getResumeVersionHistory = asyncHandler(async (req: Request, res: Re
 });
 
 export const getResumeQualityScore = asyncHandler(async (req: Request, res: Response) => {
-  const { id: userId } = (req as AuthenticatedRequest).user;
+  const userId = getUserId(req);
   const { id } = req.params;
   
   const scoreData = await resumeService.getResumeQualityScore(userId, id);
@@ -180,7 +180,7 @@ export const getResumeQualityScore = asyncHandler(async (req: Request, res: Resp
 });
 
 export const getAtsOptimizedText = asyncHandler(async (req: Request, res: Response) => {
-  const { id: userId } = (req as AuthenticatedRequest).user;
+  const userId = getUserId(req);
   const { id } = req.params;
   
   const atsData = await resumeService.getAtsOptimizedText(userId, id);
@@ -193,7 +193,7 @@ export const getAtsOptimizedText = asyncHandler(async (req: Request, res: Respon
 });
 
 export const analyzeMissingKeywords = asyncHandler(async (req: Request, res: Response) => {
-  const { id: userId } = (req as AuthenticatedRequest).user;
+  const userId = getUserId(req);
   const { id } = req.params;
   const { jobDescription } = req.body;
   
@@ -207,7 +207,7 @@ export const analyzeMissingKeywords = asyncHandler(async (req: Request, res: Res
 });
 
 export const translateResume = asyncHandler(async (req: Request, res: Response) => {
-  const { id: userId } = (req as AuthenticatedRequest).user;
+  const userId = getUserId(req);
   const { id } = req.params;
   const { targetLanguage } = req.body;
   
@@ -221,7 +221,7 @@ export const translateResume = asyncHandler(async (req: Request, res: Response) 
 });
 
 export const trackResumeView = asyncHandler(async (req: Request, res: Response) => {
-  const { id: userId } = (req as AuthenticatedRequest).user;
+  const userId = getUserId(req);
   const { id } = req.params;
   const { source } = req.body;
   
@@ -235,7 +235,7 @@ export const trackResumeView = asyncHandler(async (req: Request, res: Response) 
 });
 
 export const generateShareableLink = asyncHandler(async (req: Request, res: Response) => {
-  const { id: userId } = (req as AuthenticatedRequest).user;
+  const userId = getUserId(req);
   const { id } = req.params;
   const { expiresInDays } = req.body;
   
@@ -249,7 +249,7 @@ export const generateShareableLink = asyncHandler(async (req: Request, res: Resp
 });
 
 export const generateResumeSummary = asyncHandler(async (req: Request, res: Response) => {
-  const { id: userId } = (req as AuthenticatedRequest).user;
+  const userId = getUserId(req);
   const { id } = req.params;
   
   const summaryData = await resumeService.generateResumeSummary(userId, id);
@@ -262,7 +262,7 @@ export const generateResumeSummary = asyncHandler(async (req: Request, res: Resp
 });
 
 export const exportResumeAsJson = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { id } = req.params;
   
   const jsonData = await resumeService.exportResumeAsJson(userId, id);
@@ -275,7 +275,7 @@ export const exportResumeAsJson = asyncHandler(async (req: Request, res: Respons
 });
 
 export const cloneResume = asyncHandler(async (req: Request, res: Response) => {
-  const { id: userId } = (req as AuthenticatedRequest).user;
+  const userId = getUserId(req);
   const { id } = req.params;
   
   const clonedResume = await resumeService.cloneResume(userId, id);
@@ -288,7 +288,7 @@ export const cloneResume = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const generateJobTitleMatchReport = asyncHandler(async (req: Request, res: Response) => {
-  const { id: userId } = (req as AuthenticatedRequest).user;
+  const userId = getUserId(req);
   const { id } = req.params;
   const { jobTitle } = req.body;
   
@@ -302,7 +302,7 @@ export const generateJobTitleMatchReport = asyncHandler(async (req: Request, res
 });
 
 export const exportResumeAsPdf = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { id } = req.params;
   
   const pdfData = await resumeService.exportResumeAsPdf(userId, id);
@@ -315,7 +315,7 @@ export const exportResumeAsPdf = asyncHandler(async (req: Request, res: Response
 });
 
 export const generateResumeVariations = asyncHandler(async (req: Request, res: Response) => {
-  const { id: userId } = (req as AuthenticatedRequest).user;
+  const userId = getUserId(req);
   const { id } = req.params;
   const { variationType } = req.body;
   
@@ -329,7 +329,7 @@ export const generateResumeVariations = asyncHandler(async (req: Request, res: R
 });
 
 export const bulkDeleteResumes = asyncHandler(async (req: Request, res: Response) => {
-  const { id: userId } = (req as AuthenticatedRequest).user;
+  const userId = getUserId(req);
   const { resumeIds } = req.body;
   
   if (!resumeIds || !Array.isArray(resumeIds)) {
@@ -346,7 +346,7 @@ export const bulkDeleteResumes = asyncHandler(async (req: Request, res: Response
 });
 
 export const generateResumeReadabilityScore = asyncHandler(async (req: Request, res: Response) => {
-  const { id: userId } = (req as AuthenticatedRequest).user;
+  const userId = getUserId(req);
   const { id } = req.params;
   
   const scoreData = await resumeService.generateResumeReadabilityScore(userId, id);
@@ -359,7 +359,7 @@ export const generateResumeReadabilityScore = asyncHandler(async (req: Request, 
 });
 
 export const matchResumeKeywords = asyncHandler(async (req: Request, res: Response) => {
-  const { id: userId } = (req as AuthenticatedRequest).user;
+  const userId = getUserId(req);
   const { id } = req.params;
   const { jobDescription } = req.body;
   
@@ -373,7 +373,7 @@ export const matchResumeKeywords = asyncHandler(async (req: Request, res: Respon
 });
 
 export const parseResumeSections = asyncHandler(async (req: Request, res: Response) => {
-  const { id: userId } = (req as AuthenticatedRequest).user;
+  const userId = getUserId(req);
   const { id } = req.params;
   
   const parsedData = await resumeService.parseResumeSections(userId, id);
@@ -386,7 +386,7 @@ export const parseResumeSections = asyncHandler(async (req: Request, res: Respon
 });
 
 export const generateResumeATSFormattingTips = asyncHandler(async (req: Request, res: Response) => {
-  const { id: userId } = (req as AuthenticatedRequest).user;
+  const userId = getUserId(req);
   const { id } = req.params;
   
   const formattingTips = await resumeService.generateResumeATSFormattingTips(userId, id);
@@ -399,7 +399,7 @@ export const generateResumeATSFormattingTips = asyncHandler(async (req: Request,
 });
 
 export const checkCoverLetterGrammar = asyncHandler(async (req: Request, res: Response) => {
-  const { id: userId } = (req as AuthenticatedRequest).user;
+  const userId = getUserId(req);
   const { id } = req.params;
   const { coverLetterText } = req.body;
   
