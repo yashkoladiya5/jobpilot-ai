@@ -1,14 +1,14 @@
 import { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
 import { logger } from "../utils/logger";
-import { AuthenticatedRequest } from "../middleware/auth";
+import { getUserId } from "../middleware/auth";
 import { ApiError } from "../utils/ApiError";
 import { JobService } from "../services/job.service";
 
 const jobService = new JobService();
 
 export const getJobs = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { search, status, sortBy, sortOrder } = req.query;
   const jobs = await jobService.getJobs(userId, {
     search: search as string | undefined,
@@ -24,7 +24,7 @@ export const getJobs = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const getJobById = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { id } = req.params;
   const job = await jobService.getJobById(userId, id);
 
@@ -36,7 +36,7 @@ export const getJobById = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const updateJobStatus = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { id } = req.params;
   const { status } = req.body;
   
@@ -54,7 +54,7 @@ if (!status) {
 });
 
 export const updateJobNote = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { id } = req.params;
   const { notes } = req.body;
   
@@ -72,7 +72,7 @@ if (notes === undefined) {
 });
 
 export const archiveJob = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { id } = req.params;
   
   logger.info(`[Job Controller] Archiving job ${id} for user ${userId}`);
@@ -86,7 +86,7 @@ export const archiveJob = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const bulkUpdateStatus = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { jobIds, status } = req.body;
   
 if (!status) {
@@ -103,7 +103,7 @@ if (!status) {
 });
 
 export const bulkDeleteJobs = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { jobIds } = req.body;
   
 if (!jobIds || !Array.isArray(jobIds)) {
@@ -120,7 +120,7 @@ if (!jobIds || !Array.isArray(jobIds)) {
 });
 
 export const bulkArchiveJobs = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { jobIds } = req.body;
   
 if (!jobIds || !Array.isArray(jobIds)) {
@@ -137,7 +137,7 @@ if (!jobIds || !Array.isArray(jobIds)) {
 });
 
 export const createJob = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { companyName, role } = req.body;
   
 if (!companyName || companyName.trim() === "") {
@@ -158,7 +158,7 @@ if (!role || role.trim() === "") {
 });
 
 export const updateJob = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { id } = req.params;
   const job = await jobService.updateJob(userId, id, req.body);
 
@@ -170,7 +170,7 @@ export const updateJob = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const deleteJob = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { id } = req.params;
   await jobService.deleteJob(userId, id);
 
@@ -182,7 +182,7 @@ export const deleteJob = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const getJobsAnalytics = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   const analytics = await jobService.getJobsAnalytics(userId);
 
@@ -194,7 +194,7 @@ export const getJobsAnalytics = asyncHandler(async (req: Request, res: Response)
 });
 
 export const getJobsNeedingFollowUp = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   const jobs = await jobService.getJobsNeedingFollowUp(userId);
 
@@ -206,7 +206,7 @@ export const getJobsNeedingFollowUp = asyncHandler(async (req: Request, res: Res
 });
 
 export const getJobNotesSummary = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   const summary = await jobService.getJobNotesSummary(userId);
 
@@ -218,7 +218,7 @@ export const getJobNotesSummary = asyncHandler(async (req: Request, res: Respons
 });
 
 export const getJobActionItems = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   const actionItems = await jobService.getJobActionItems(userId);
 
@@ -230,7 +230,7 @@ export const getJobActionItems = asyncHandler(async (req: Request, res: Response
 });
 
 export const getJobApplicationVelocity = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   const velocity = await jobService.getJobApplicationVelocity(userId);
 
@@ -242,7 +242,7 @@ export const getJobApplicationVelocity = asyncHandler(async (req: Request, res: 
 });
 
 export const getDeadlineReminders = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   const reminders = await jobService.getDeadlineReminders(userId);
   
@@ -254,7 +254,7 @@ export const getDeadlineReminders = asyncHandler(async (req: Request, res: Respo
 });
 
 export const getSalaryNegotiationPrep = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { id } = req.params;
   
   const strategy = await jobService.getSalaryNegotiationPrep(userId, id);
@@ -267,7 +267,7 @@ export const getSalaryNegotiationPrep = asyncHandler(async (req: Request, res: R
 });
 
 export const getInterviewPrepChecklist = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { id } = req.params;
   
   const checklist = await jobService.getInterviewPrepChecklist(userId, id);
@@ -280,7 +280,7 @@ export const getInterviewPrepChecklist = asyncHandler(async (req: Request, res: 
 });
 
 export const estimateCommuteTime = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { id } = req.params;
   
   const estimate = await jobService.estimateCommuteTime(userId, id);
@@ -293,7 +293,7 @@ export const estimateCommuteTime = asyncHandler(async (req: Request, res: Respon
 });
 
 export const runAutoArchiving = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   
   const result = await jobService.runAutoArchiving(userId);
   
@@ -305,7 +305,7 @@ export const runAutoArchiving = asyncHandler(async (req: Request, res: Response)
 });
 
 export const scheduleInterview = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { id } = req.params;
   
   const result = await jobService.scheduleInterview(userId, id, req.body);
@@ -318,7 +318,7 @@ export const scheduleInterview = asyncHandler(async (req: Request, res: Response
 });
 
 export const submitInterviewFeedback = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { id } = req.params;
   
   const result = await jobService.submitInterviewFeedback(userId, id, req.body);
@@ -331,7 +331,7 @@ export const submitInterviewFeedback = asyncHandler(async (req: Request, res: Re
 });
 
 export const addJobContact = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { id } = req.params;
   
   const result = await jobService.addJobContact(userId, id, req.body);
@@ -344,7 +344,7 @@ export const addJobContact = asyncHandler(async (req: Request, res: Response) =>
 });
 
 export const duplicateJob = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { id } = req.params;
   
   const duplicatedJob = await jobService.duplicateJobApplication(userId, id);
@@ -357,7 +357,7 @@ export const duplicateJob = asyncHandler(async (req: Request, res: Response) => 
 });
 
 export const restoreJob = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { id } = req.params;
   
   const restoredJob = await jobService.restoreJobApplication(userId, id);
@@ -370,7 +370,7 @@ export const restoreJob = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const archiveOldApplications = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { olderThanDays } = req.body;
   
   const parsedDays = olderThanDays ? parseInt(olderThanDays as string, 10) : 30;
@@ -389,7 +389,7 @@ export const archiveOldApplications = asyncHandler(async (req: Request, res: Res
 });
 
 export const calculateJobMatchScore = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { id } = req.params;
   
   const scoreData = await jobService.calculateJobMatchScore(userId, id);
@@ -402,7 +402,7 @@ export const calculateJobMatchScore = asyncHandler(async (req: Request, res: Res
 });
 
 export const generateCoverLetterDraft = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { id } = req.params;
   
   const draftData = await jobService.generateCoverLetterDraft(userId, id);
@@ -415,7 +415,7 @@ export const generateCoverLetterDraft = asyncHandler(async (req: Request, res: R
 });
 
 export const compareJobOfferWithMarket = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { id } = req.params;
   
   const comparisonData = await jobService.compareJobOfferWithMarket(userId, id);
@@ -428,7 +428,7 @@ export const compareJobOfferWithMarket = asyncHandler(async (req: Request, res: 
 });
 
 export const getMatchScoreExplainability = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { id } = req.params;
   
   const explanation = await jobService.getMatchScoreExplainability(userId, id);
@@ -441,7 +441,7 @@ export const getMatchScoreExplainability = asyncHandler(async (req: Request, res
 });
 
 export const getJobSalaryInsights = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { id } = req.params;
   
   const insights = await jobService.getJobSalaryInsights(userId, id);
@@ -454,7 +454,7 @@ export const getJobSalaryInsights = asyncHandler(async (req: Request, res: Respo
 });
 
 export const getJobMarketTrends = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { id } = req.params;
   
   const trends = await jobService.getJobMarketTrends(userId, id);
@@ -467,7 +467,7 @@ export const getJobMarketTrends = asyncHandler(async (req: Request, res: Respons
 });
 
 export const getJobSalaryEstimates = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const role = req.query.role as string;
   
   const estimates = await jobService.getJobSalaryEstimates(userId, role);
@@ -480,7 +480,7 @@ export const getJobSalaryEstimates = asyncHandler(async (req: Request, res: Resp
 });
 
 export const getJobApplicationInsights = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { id } = req.params;
   
   const insights = await jobService.getJobApplicationInsights(userId, id);
@@ -493,7 +493,7 @@ export const getJobApplicationInsights = asyncHandler(async (req: Request, res: 
 });
 
 export const generateInterviewQuestions = asyncHandler(async (req: Request, res: Response) => {
-  const userId = (req as AuthenticatedRequest).user.id;
+  const userId = getUserId(req);
   const { id } = req.params;
   
   const questions = await jobService.generateInterviewQuestions(userId, id);
