@@ -4,6 +4,11 @@ import { ApiError } from "../utils/ApiError";
 import { daysAgo } from "../utils/dates";
 
 /**
+ * Converts salary shorthand like "110" (meaning 110k) to its full value.
+ */
+const normalizeSalaryFigure = (value: number): number => (value < 1000 ? value * 1000 : value);
+
+/**
  * Service handling all business logic and database interactions for Job Applications.
  */
 export class JobService {
@@ -443,12 +448,8 @@ export class JobService {
       const numbers = job.salaryRange.match(/\d+/g);
       if (numbers && numbers.length >= 2) {
         // e.g. "$110k - $140k" -> [110, 140]
-        let num1 = parseInt(numbers[0]);
-        let num2 = parseInt(numbers[1]);
-        if (num1 < 1000) num1 *= 1000;
-        if (num2 < 1000) num2 *= 1000;
-        lowEnd = num1;
-        highEnd = num2;
+        lowEnd = normalizeSalaryFigure(parseInt(numbers[0]));
+        highEnd = normalizeSalaryFigure(parseInt(numbers[1]));
       }
     }
     
@@ -906,17 +907,11 @@ ${userName}`;
     if (hasSalaryInfo && job.salaryRange) {
       const numbers = job.salaryRange.match(/\d+/g);
       if (numbers && numbers.length >= 2) {
-        let num1 = parseInt(numbers[0]);
-        let num2 = parseInt(numbers[1]);
-        if (num1 < 1000) num1 *= 1000;
-        if (num2 < 1000) num2 *= 1000;
-        lowEnd = num1;
-        highEnd = num2;
+        lowEnd = normalizeSalaryFigure(parseInt(numbers[0]));
+        highEnd = normalizeSalaryFigure(parseInt(numbers[1]));
       } else if (numbers && numbers.length === 1) {
-        let num1 = parseInt(numbers[0]);
-        if (num1 < 1000) num1 *= 1000;
-        lowEnd = num1;
-        highEnd = num1;
+        lowEnd = normalizeSalaryFigure(parseInt(numbers[0]));
+        highEnd = lowEnd;
       }
     }
     
