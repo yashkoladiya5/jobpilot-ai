@@ -914,9 +914,16 @@ export class DashboardService {
       };
     }
 
-    const applied = applications.filter(a => a.status !== "SAVED").length;
-    const interviews = applications.filter(a => a.status === "INTERVIEW" || a.status === "OFFER").length;
-    const offers = applications.filter(a => a.status === "OFFER").length;
+    const { applied, interviews, offers } = applications.reduce(
+      (acc, a) => {
+        return {
+          applied: acc.applied + (a.status !== "SAVED" ? 1 : 0),
+          interviews: acc.interviews + (a.status === "INTERVIEW" || a.status === "OFFER" ? 1 : 0),
+          offers: acc.offers + (a.status === "OFFER" ? 1 : 0),
+        };
+      },
+      { applied: 0, interviews: 0, offers: 0 }
+    );
 
     const funnel = [
       { stage: "Applied", count: applied, conversionRate: "100%" },
