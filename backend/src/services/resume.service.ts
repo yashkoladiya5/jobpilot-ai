@@ -20,6 +20,19 @@ export class ResumeService {
     return resume;
   }
 
+  private partitionKeywords(
+    requiredByJd: string[],
+    lowerResume: string
+  ): { missingKeywords: string[]; matchedKeywords: string[] } {
+    const missingKeywords: string[] = [];
+    const matchedKeywords: string[] = [];
+    for (const kw of requiredByJd) {
+      if (lowerResume.includes(kw)) matchedKeywords.push(kw);
+      else missingKeywords.push(kw);
+    }
+    return { missingKeywords, matchedKeywords };
+  }
+
   async uploadResume(userId: string, file: Express.Multer.File) {
     // Make the first uploaded resume primary by default
     const count = await prisma.resume.count({ where: { userId } });
@@ -329,8 +342,7 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
     const mockResumeContent = "I know React, TypeScript, and SQL. I have leadership experience.";
     const lowerResume = mockResumeContent.toLowerCase();
 
-    const missingKeywords = requiredByJd.filter(kw => !lowerResume.includes(kw));
-    const matchedKeywords = requiredByJd.filter(kw => lowerResume.includes(kw));
+    const { missingKeywords, matchedKeywords } = this.partitionKeywords(requiredByJd, lowerResume);
 
     return {
       resumeId: resume.id,
@@ -644,8 +656,7 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
     const mockResumeContent = "I know React, TypeScript, and SQL. I have leadership experience and use REST API.";
     const lowerResume = mockResumeContent.toLowerCase();
 
-    const missingKeywords = requiredByJd.filter(kw => !lowerResume.includes(kw));
-    const matchedKeywords = requiredByJd.filter(kw => lowerResume.includes(kw));
+    const { missingKeywords, matchedKeywords } = this.partitionKeywords(requiredByJd, lowerResume);
     const bonusKeywords = ["graphql"]; // simulated bonus
 
     return {
