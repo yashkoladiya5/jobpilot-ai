@@ -40,9 +40,8 @@ export const updateJobStatus = asyncHandler(async (req: Request, res: Response) 
   const { id } = req.params;
   const { status } = req.body;
   
-  if (!status) {
-     res.status(400).json({ success: false, message: "Status is required." });
-     return;
+if (!status) {
+    throw ApiError.badRequest("Status is required.");
   }
   
   const job = await jobService.updateJobStatus(userId, id, status);
@@ -59,9 +58,8 @@ export const updateJobNote = asyncHandler(async (req: Request, res: Response) =>
   const { id } = req.params;
   const { notes } = req.body;
   
-  if (notes === undefined) {
-     res.status(400).json({ success: false, message: "Notes content is required." });
-     return;
+if (notes === undefined) {
+    throw ApiError.badRequest("Notes content is required.");
   }
   
   const job = await jobService.updateJobNote(userId, id, notes);
@@ -91,9 +89,8 @@ export const bulkUpdateStatus = asyncHandler(async (req: Request, res: Response)
   const userId = (req as AuthenticatedRequest).user.id;
   const { jobIds, status } = req.body;
   
-  if (!status) {
-     res.status(400).json({ success: false, message: "Status is required for bulk update." });
-     return;
+if (!status) {
+    throw ApiError.badRequest("Status is required for bulk update.");
   }
   
   const result = await jobService.bulkUpdateJobStatus(userId, jobIds, status);
@@ -109,9 +106,8 @@ export const bulkDeleteJobs = asyncHandler(async (req: Request, res: Response) =
   const userId = (req as AuthenticatedRequest).user.id;
   const { jobIds } = req.body;
   
-  if (!jobIds || !Array.isArray(jobIds)) {
-     res.status(400).json({ success: false, message: "A valid array of job IDs is required." });
-     return;
+if (!jobIds || !Array.isArray(jobIds)) {
+    throw ApiError.badRequest("A valid array of job IDs is required.");
   }
   
   const result = await jobService.bulkDeleteJobs(userId, jobIds);
@@ -127,9 +123,8 @@ export const bulkArchiveJobs = asyncHandler(async (req: Request, res: Response) 
   const userId = (req as AuthenticatedRequest).user.id;
   const { jobIds } = req.body;
   
-  if (!jobIds || !Array.isArray(jobIds)) {
-     res.status(400).json({ success: false, message: "A valid array of job IDs is required." });
-     return;
+if (!jobIds || !Array.isArray(jobIds)) {
+    throw ApiError.badRequest("A valid array of job IDs is required.");
   }
   
   const result = await jobService.bulkArchiveJobs(userId, jobIds);
@@ -145,14 +140,12 @@ export const createJob = asyncHandler(async (req: Request, res: Response) => {
   const userId = (req as AuthenticatedRequest).user.id;
   const { companyName, role } = req.body;
   
-  if (!companyName || companyName.trim() === "") {
-     res.status(400).json({ success: false, message: "Company name is required." });
-     return;
+if (!companyName || companyName.trim() === "") {
+    throw ApiError.badRequest("Company name is required.");
   }
   
-  if (!role || role.trim() === "") {
-     res.status(400).json({ success: false, message: "Role is required." });
-     return;
+if (!role || role.trim() === "") {
+    throw ApiError.badRequest("Role is required.");
   }
 
   const job = await jobService.createJob(userId, req.body);
