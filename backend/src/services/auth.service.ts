@@ -18,8 +18,8 @@ export class AuthService {
   /**
    * Fetches the user by id, throwing a 404 when the user does not exist.
    */
-  private async requireUser(userId: string, message = "User not found") {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
+  private async requireUser(userId: string, message = "User not found", select?: typeof userSelect) {
+    const user = await prisma.user.findUnique({ where: { id: userId }, select });
     if (!user) {
       throw ApiError.notFound(message);
     }
@@ -59,14 +59,7 @@ export class AuthService {
   }
 
   async getMe(userId: string) {
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: userSelect,
-    });
-
-    if (!user) {
-      throw ApiError.notFound("User not found in the system");
-    }
+    const user = await this.requireUser(userId, "User not found in the system", userSelect);
 
     // Ensure the user account hasn't been deactivated
     if (user.email.endsWith('@deactivated.local')) {
