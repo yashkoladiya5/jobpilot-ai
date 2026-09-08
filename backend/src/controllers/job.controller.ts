@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
 import { logger } from "../utils/logger";
 import { getUserId } from "../middleware/auth";
+import { parsePositiveInt } from "../utils/numbers";
 import { ApiError } from "../utils/ApiError";
 import { JobService } from "../services/job.service";
 
@@ -373,7 +374,7 @@ export const archiveOldApplications = asyncHandler(async (req: Request, res: Res
   const userId = getUserId(req);
   const { olderThanDays } = req.body;
   
-  const parsedDays = olderThanDays ? parseInt(olderThanDays as string, 10) : 30;
+  const parsedDays = parsePositiveInt(olderThanDays, 30);
   
   if (isNaN(parsedDays) || parsedDays < 1) {
     throw ApiError.badRequest("olderThanDays must be a positive integer.");

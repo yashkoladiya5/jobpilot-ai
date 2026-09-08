@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
 import { logger } from "../utils/logger";
 import { getUserId } from "../middleware/auth";
+import { parsePositiveInt } from "../utils/numbers";
 import { ApiError } from "../utils/ApiError";
 import { ResumeAnalysisService } from "../services/ai/resume-analysis.service";
 import { JobAnalysisService } from "../services/ai/job-analysis.service";
@@ -225,7 +226,7 @@ export const getTopMatches = asyncHandler(async (req: Request, res: Response) =>
   const { resumeId } = req.params;
   const { limit } = req.query;
   
-  const parsedLimit = limit ? parseInt(limit as string, 10) : 5;
+  const parsedLimit = parsePositiveInt(limit, 5);
   
   if (isNaN(parsedLimit) || parsedLimit < 1) {
     throw ApiError.badRequest("limit must be a positive integer");
@@ -261,7 +262,7 @@ export const getRecentMatches = asyncHandler(async (req: Request, res: Response)
   const userId = getUserId(req);
   const { limit } = req.query;
   
-  const parsedLimit = limit ? parseInt(limit as string, 10) : 5;
+  const parsedLimit = parsePositiveInt(limit, 5);
   
   if (isNaN(parsedLimit) || parsedLimit < 1) {
     throw ApiError.badRequest("limit must be a positive integer");
