@@ -720,12 +720,12 @@ export class AnalyticsService {
 
       if (app.status === "APPLIED") {
         if (daysSinceUpdate >= 21) {
-          ghostingProbability = Math.min(95, 50 + (daysSinceUpdate - 21) * 2);
+          ghostingProbability = clampNumber(50 + (daysSinceUpdate - 21) * 2, 0, 95);
           reason = `It's been ${daysSinceUpdate} days since you applied.`;
         }
       } else if (app.status === "INTERVIEW") {
         if (daysSinceUpdate >= 14) {
-          ghostingProbability = Math.min(95, 60 + (daysSinceUpdate - 14) * 3);
+          ghostingProbability = clampNumber(60 + (daysSinceUpdate - 14) * 3, 0, 95);
           reason = `It's been ${daysSinceUpdate} days since your last interview update.`;
         }
       }
