@@ -133,7 +133,7 @@ export class MatchingService {
       location: match.job?.location || "Unknown",
       analyzedAt: match.analyzedAt,
       priorityImprovementsCount: Array.isArray(match.recommendedChanges)
-        ? (match.recommendedChanges as unknown[]).length
+        ? match.recommendedChanges.length
         : 0
     }));
   }
