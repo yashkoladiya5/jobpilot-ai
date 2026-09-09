@@ -2,6 +2,7 @@ import prisma from "../config/prisma";
 import { ApiError } from "../utils/ApiError";
 import { countBy } from "../utils/collections";
 import { daysAgo } from "../utils/dates";
+import { randInt } from "../utils/math";
 
 /**
  * Provides data aggregation and statistical analysis for the user dashboard.
@@ -582,7 +583,7 @@ export class DashboardService {
       "Believe you can and you're halfway there. — Theodore Roosevelt"
     ];
 
-    const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+    const randomQuote = quotes[randInt(0, quotes.length - 1)];
 
     return {
       date: today,
@@ -616,7 +617,7 @@ export class DashboardService {
     const yesterday = yesterdayDate.toISOString().slice(0, 10);
 
     if (activeDays.has(today) || activeDays.has(yesterday)) {
-      currentStreak = Math.floor(Math.random() * 5) + 1; // mock
+      currentStreak = randInt(1, 5); // mock
     }
 
     const consistencyScore = Math.round((activeDays.size / 30) * 100);
@@ -827,13 +828,13 @@ export class DashboardService {
     let currentStreak = 0;
     
     if (activeDays.has(today) || activeDays.has(yesterday)) {
-       currentStreak = Math.floor(Math.random() * 5) + 2; 
+       currentStreak = randInt(2, 6); 
     }
 
     return {
       userId,
       currentStreakDays: currentStreak,
-      longestStreakDays: Math.max(currentStreak, Math.floor(Math.random() * 10) + 3),
+      longestStreakDays: Math.max(currentStreak, randInt(3, 12)),
       totalGoalDaysMet: activeDays.size,
       message: currentStreak > 0 ? `You are on a ${currentStreak}-day streak!` : "Start applying today to build your streak!"
     };

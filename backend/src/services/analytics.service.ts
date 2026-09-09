@@ -3,7 +3,7 @@ import { ApplicationStatus } from "@prisma/client";
 import { ApiError } from "../utils/ApiError";
 import { countBy } from "../utils/collections";
 import { daysAgo } from "../utils/dates";
-import { clampNumber } from "../utils/math";
+import { clampNumber, randInt } from "../utils/math";
 
 /**
  * Service for calculating advanced insights and aggregated metrics
@@ -1134,7 +1134,7 @@ export class AnalyticsService {
       
       data.push({
         date: this.formatDateKey(date),
-        views: Math.floor(Math.random() * 50) + 10 // Mock 10-60 views per day
+        views: randInt(10, 59) // Mock 10-60 views per day
       });
     }
 

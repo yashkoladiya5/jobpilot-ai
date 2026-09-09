@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import prisma from "../config/prisma";
 import { ApiError } from "../utils/ApiError";
-import { clampNumber } from "../utils/math";
+import { clampNumber, randInt } from "../utils/math";
 
 const userSelect = {
   id: true,
@@ -348,7 +348,7 @@ export class AuthService {
     const accountAgeDays = Math.max(1, Math.floor((Date.now() - user.createdAt.getTime()) / (1000 * 60 * 60 * 24)));
     
     // Simulate a streak that is somewhat believable based on account age
-    const currentStreak = Math.min(accountAgeDays, Math.floor(Math.random() * 7) + 1);
+    const currentStreak = Math.min(accountAgeDays, randInt(1, 7));
     const longestStreak = Math.max(currentStreak, Math.min(accountAgeDays, 14));
     
     const today = new Date();
@@ -644,7 +644,7 @@ export class AuthService {
     const thresholdTime = new Date(Date.now() - idleThresholdMinutes * 60 * 1000);
     
     // Mocking the termination process
-    const terminatedCount = Math.floor(Math.random() * 3); // 0-2 sessions terminated
+    const terminatedCount = randInt(0, 2); // 0-2 sessions terminated
 
     return {
       userId,
@@ -662,7 +662,7 @@ export class AuthService {
     // for this user.
     
     // Mock the revocation process
-    const mockRevokedCount = Math.floor(Math.random() * 5) + 1; // 1-5 sessions
+    const mockRevokedCount = randInt(1, 5); // 1-5 sessions
 
     return {
       userId,

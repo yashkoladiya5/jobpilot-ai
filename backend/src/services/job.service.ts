@@ -3,6 +3,7 @@ import { $Enums, Prisma } from "@prisma/client";
 import { ApiError } from "../utils/ApiError";
 import { countBy } from "../utils/collections";
 import { daysAgo } from "../utils/dates";
+import { randInt } from "../utils/math";
 
 /**
  * Converts salary shorthand like "110" (meaning 110k) to its full value.
@@ -396,16 +397,16 @@ export class JobService {
       
       let type = "General Follow Up";
       let urgency = "Low";
-      let daysLeft = Math.floor(Math.random() * 10) + 1; // Mock 1 to 10 days
+      let daysLeft = randInt(1, 10); // Mock 1 to 10 days
       
       if (lowerNotes.includes("assignment") || lowerNotes.includes("take-home") || lowerNotes.includes("test")) {
         type = "Assessment Deadline";
         urgency = "High";
-        daysLeft = Math.floor(Math.random() * 3) + 1; // Mock 1 to 3 days
+        daysLeft = randInt(1, 3); // Mock 1 to 3 days
       } else if (job.status === "INTERVIEW") {
         type = "Upcoming Interview";
         urgency = "High";
-        daysLeft = Math.floor(Math.random() * 5) + 1; // Mock 1 to 5 days
+        daysLeft = randInt(1, 5); // Mock 1 to 5 days
       }
 
       reminders.push({
@@ -531,8 +532,8 @@ export class JobService {
     }
 
     // Mock commute calculation
-    const distanceMiles = Math.floor(Math.random() * 20) + 5; // 5 to 25 miles
-    const estimatedMinutes = Math.floor(distanceMiles * 1.5) + Math.floor(Math.random() * 15); // Rough calc + traffic variance
+    const distanceMiles = randInt(5, 24); // 5 to 25 miles
+    const estimatedMinutes = Math.floor(distanceMiles * 1.5) + randInt(0, 14); // Rough calc + traffic variance
     
     let mode = "Driving";
     if (job.location.toLowerCase().includes('new york') || job.location.toLowerCase().includes('london')) {
@@ -745,7 +746,7 @@ export class JobService {
     // and use AI to compare the resume text with the job role/description.
     
     // Mocked implementation:
-    const baseScore = Math.floor(Math.random() * 40) + 50; // 50 to 90
+    const baseScore = randInt(50, 89); // 50 to 90
     
     return {
       jobId: id,
@@ -865,7 +866,7 @@ ${userName}`;
     // We already have calculateJobMatchScore but this goes deeper into exactly WHY the score is what it is
     
     // Mocking the detailed explanation
-    const score = Math.floor(Math.random() * 40) + 50; // 50 to 90
+    const score = randInt(50, 89); // 50 to 90
     
     return {
       jobId: id,
@@ -873,17 +874,17 @@ ${userName}`;
       role: job.role,
       overallScore: score,
       breakdown: {
-        skillsMatch: score + Math.floor(Math.random() * 10) - 5,
-        experienceMatch: score + Math.floor(Math.random() * 15) - 5,
+        skillsMatch: score + randInt(0, 9) - 5,
+        experienceMatch: score + randInt(0, 14) - 5,
         educationMatch: 100, // Usually high
-        keywordDensity: Math.floor(Math.random() * 60) + 30
+        keywordDensity: randInt(30, 89)
       },
       missingKeywords: [
         "GraphQL", "Kubernetes", "Microservices"
-      ].slice(0, Math.floor(Math.random() * 3) + 1),
+      ].slice(0, randInt(1, 3)),
       matchedKeywords: [
         "React", "Node.js", "TypeScript", "REST APIs", "Agile"
-      ].slice(0, Math.floor(Math.random() * 5) + 2),
+      ].slice(0, randInt(2, 6)),
       advice: "Your foundational skills are a great match, but you may want to explicitly mention any experience you have with the missing keywords in your resume or cover letter."
     };
   }
@@ -944,7 +945,7 @@ ${userName}`;
     
     // Mock generating market trend data based on the role
     const role = job.role || "Software Engineer";
-    const demandTrend = ["High", "Medium", "Very High"][Math.floor(Math.random() * 3)];
+    const demandTrend = ["High", "Medium", "Very High"][randInt(0, 2)];
     
     // Generate some mock history data (e.g. past 6 months of postings)
     const monthlyPostings = [

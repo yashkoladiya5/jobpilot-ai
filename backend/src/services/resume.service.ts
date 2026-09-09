@@ -1,7 +1,7 @@
 import fs from "fs";
 import prisma from "../config/prisma";
 import { ApiError } from "../utils/ApiError";
-import { clampNumber } from "../utils/math";
+import { clampNumber, randInt } from "../utils/math";
 import { daysAgo } from "../utils/dates";
 
 /**
@@ -392,7 +392,7 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
 
     // In a real database, we would have a ResumeView table to record the views.
     // For this demonstration, we'll return a mock view count and log event.
-    const newViewCount = Math.floor(Math.random() * 100) + 1;
+    const newViewCount = randInt(1, 100);
     
     const viewLog = {
       resumeId: resume.id,
@@ -492,7 +492,7 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
     const titleLower = jobTitle.toLowerCase();
     
     // We mock checking if the job title appears in the user's resume content
-    let matchScore = 50 + Math.floor(Math.random() * 45); // 50-95
+    let matchScore = randInt(50, 94); // 50-95
     
     const keySkillsExpected = ["Communication", "Problem Solving"];
     if (titleLower.includes("engineer") || titleLower.includes("developer")) {
@@ -600,9 +600,9 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
     const resume = await this.requireOwnedResume(userId, id);
 
     // Mock generating a readability score based on NLP analysis
-    const wordCount = Math.floor(Math.random() * 300) + 200; // 200-500 words
-    const complexWordPercentage = Math.floor(Math.random() * 15) + 5; // 5-20%
-    const averageSentenceLength = Math.floor(Math.random() * 10) + 10; // 10-20 words
+    const wordCount = randInt(200, 499); // 200-500 words
+    const complexWordPercentage = randInt(5, 19); // 5-20%
+    const averageSentenceLength = randInt(10, 19); // 10-20 words
 
     // Flesch-Kincaid mock score
     const fleschKincaidScore = Math.floor(100 - (complexWordPercentage * 2) - (averageSentenceLength * 1.5));
