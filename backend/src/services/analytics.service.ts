@@ -2,7 +2,7 @@ import prisma from "../config/prisma";
 import { ApplicationStatus } from "@prisma/client";
 import { ApiError } from "../utils/ApiError";
 import { countBy } from "../utils/collections";
-import { dateKey, daysAgo, monthKey } from "../utils/dates";
+import { dateKey, daysAgo, elapsedDays, monthKey } from "../utils/dates";
 import { clampNumber, randInt } from "../utils/math";
 
 /**
@@ -957,7 +957,7 @@ export class AnalyticsService {
 
     const firstApplicationDate = applications[0].appliedDate;
     const now = new Date();
-    const searchDurationDays = Math.max(1, Math.floor((now.getTime() - firstApplicationDate.getTime()) / (1000 * 60 * 60 * 24)));
+    const searchDurationDays = elapsedDays(firstApplicationDate, now);
 
     const offerApplications = applications.filter(app => app.status === "OFFER");
     let averageTimeToOffer = 0;
@@ -1147,7 +1147,7 @@ export class AnalyticsService {
 
     // Mock retrieving retention statistics (e.g., active days over total account age)
     const now = new Date();
-    const accountAgeDays = Math.max(1, Math.floor((now.getTime() - user.createdAt.getTime()) / (1000 * 60 * 60 * 24)));
+    const accountAgeDays = elapsedDays(user.createdAt, now);
     
     // Simulate active days as a percentage (between 30% and 90%)
     const activeDays = Math.max(1, Math.floor(accountAgeDays * (0.3 + Math.random() * 0.6)));

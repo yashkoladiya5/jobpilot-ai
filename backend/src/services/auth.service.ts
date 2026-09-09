@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import prisma from "../config/prisma";
 import { ApiError } from "../utils/ApiError";
 import { clampNumber, randInt } from "../utils/math";
+import { elapsedDays } from "../utils/dates";
 
 const userSelect = {
   id: true,
@@ -345,7 +346,7 @@ export class AuthService {
 
     // In a real application, we would query the login history table
     // For this mock, we'll return a dynamic streak based on the user's creation date
-    const accountAgeDays = Math.max(1, Math.floor((Date.now() - user.createdAt.getTime()) / (1000 * 60 * 60 * 24)));
+    const accountAgeDays = elapsedDays(user.createdAt);
     
     // Simulate a streak that is somewhat believable based on account age
     const currentStreak = Math.min(accountAgeDays, randInt(1, 7));
