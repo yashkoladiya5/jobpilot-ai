@@ -2,7 +2,7 @@ import prisma from "../config/prisma";
 import { ApplicationStatus } from "@prisma/client";
 import { ApiError } from "../utils/ApiError";
 import { countBy } from "../utils/collections";
-import { daysAgo } from "../utils/dates";
+import { dateKey, daysAgo, monthKey } from "../utils/dates";
 import { clampNumber, randInt } from "../utils/math";
 
 /**
@@ -10,16 +10,6 @@ import { clampNumber, randInt } from "../utils/math";
  * used in the user's pipeline and timeline analytics dashboards.
  */
 export class AnalyticsService {
-  /** Formats a Date as a YYYY-MM month key for grouping metrics by month. */
-  private formatMonthKey(date: Date): string {
-    return date.toISOString().slice(0, 7);
-  }
-
-  /** Formats a Date as a YYYY-MM-DD key for grouping metrics by day. */
-  private formatDateKey(date: Date): string {
-    return date.toISOString().slice(0, 10);
-  }
-
   async getPipelineAnalytics(userId: string) {
     // Retrieve all job applications for the user, ordered by newest first
     const applications = await prisma.jobApplication.findMany({
@@ -74,7 +64,7 @@ export class AnalyticsService {
       [];
     const monthMap: Record<string, { applications: number; interviews: number; offers: number }> = {};
     for (const app of applications) {
-      const month = this.formatMonthKey(app.appliedDate);
+      const month = monthKey(app.appliedDate);
       if (!monthMap[month]) {
         monthMap[month] = { applications: 0, interviews: 0, offers: 0 };
       }
@@ -113,7 +103,7 @@ export class AnalyticsService {
     for (let i = 0; i < 12; i++) {
       const weekStart = new Date();
       weekStart.setDate(weekStart.getDate() - (11 - i) * 7);
-      const weekKey = this.formatDateKey(weekStart);
+      const weekKey = dateKey(weekStart);
       weekMap[weekKey] = { count: 0, statuses: {} };
     }
 
@@ -122,7 +112,7 @@ export class AnalyticsService {
       const daysSinceEpoch = Math.floor(appDate.getTime() / (1000 * 60 * 60 * 24));
       const weekStartDay = daysSinceEpoch - (daysSinceEpoch % 7);
       const weekStart = new Date(weekStartDay * 1000 * 60 * 60 * 24);
-      const weekKey = this.formatDateKey(weekStart);
+      const weekKey = dateKey(weekStart);
 
       if (!weekMap[weekKey]) {
         weekMap[weekKey] = { count: 0, statuses: {} };
@@ -313,7 +303,7 @@ export class AnalyticsService {
     for (const result of interviewResults) {
       if (!result.session.completedAt) continue;
       
-      const monthYear = this.formatMonthKey(result.session.completedAt);
+      const monthYear = monthKey(result.session.completedAt);
       if (!monthlyScores[monthYear]) {
         monthlyScores[monthYear] = { sum: 0, count: 0 };
       }
@@ -1133,7 +1123,7 @@ export class AnalyticsService {
       date.setDate(date.getDate() - i);
       
       data.push({
-        date: this.formatDateKey(date),
+        date: dateKey(date),
         views: randInt(10, 59) // Mock 10-60 views per day
       });
     }
@@ -1202,7 +1192,7 @@ export class AnalyticsService {
       currentActiveApplications: applications.filter(a => ["APPLIED", "INTERVIEW"].includes(a.status)).length,
       currentActiveInterviews: activeInterviews.length,
       estimatedDaysToHire: baselineDays,
-      estimatedHireDate: this.formatDateKey(estimatedDate),
+      estimatedHireDate: dateKey(estimatedDate),
       confidence: activeInterviews.length > 0 ? "High" : "Medium",
       message: `Based on your current pipeline velocity, we estimate your time to hire at ${baselineDays} days.`
     };

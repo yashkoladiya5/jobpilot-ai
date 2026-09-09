@@ -1,7 +1,7 @@
 import prisma from "../config/prisma";
 import { ApiError } from "../utils/ApiError";
 import { countBy } from "../utils/collections";
-import { daysAgo } from "../utils/dates";
+import { dateKey, daysAgo } from "../utils/dates";
 import { randInt } from "../utils/math";
 
 /**
@@ -509,7 +509,7 @@ export class DashboardService {
     }
 
     // Check for clustering (doing too much in too few days) vs sustained pace
-    const appsPerDay = countBy(applications, (app) => app.createdAt.toISOString().slice(0, 10));
+    const appsPerDay = countBy(applications, (app) => dateKey(app.createdAt));
 
     const daysActive = Object.keys(appsPerDay).length;
     let maxAppsInOneDay = 0;
@@ -562,7 +562,7 @@ export class DashboardService {
   }
 
   async getMorningBriefing(userId: string) {
-    const today = new Date().toISOString().slice(0, 10);
+    const today = dateKey(new Date());
     
     // Urgent follow-ups (e.g., jobs in INTERVIEW state for more than a few days)
     const urgentFollowUps = await prisma.jobApplication.findMany({
@@ -608,13 +608,12 @@ export class DashboardService {
       orderBy: { createdAt: "desc" }
     });
 
-    const activeDays = new Set(applications.map(app => app.createdAt.toISOString().slice(0, 10)));
+    const activeDays = new Set(applications.map(app => dateKey(app.createdAt)));
     
     // Mock current streak
     let currentStreak = 0;
-    const today = new Date().toISOString().slice(0, 10);
-    const yesterdayDate = daysAgo(1);
-    const yesterday = yesterdayDate.toISOString().slice(0, 10);
+    const today = dateKey(new Date());
+    const yesterday = dateKey(daysAgo(1));
 
     if (activeDays.has(today) || activeDays.has(yesterday)) {
       currentStreak = randInt(1, 5); // mock
@@ -819,11 +818,10 @@ export class DashboardService {
       orderBy: { createdAt: "desc" }
     });
 
-    const activeDays = new Set(applications.map(app => app.createdAt.toISOString().slice(0, 10)));
+    const activeDays = new Set(applications.map(app => dateKey(app.createdAt)));
     
-    const today = new Date().toISOString().slice(0, 10);
-    const yesterdayDate = daysAgo(1);
-    const yesterday = yesterdayDate.toISOString().slice(0, 10);
+    const today = dateKey(new Date());
+    const yesterday = dateKey(daysAgo(1));
 
     let currentStreak = 0;
     
