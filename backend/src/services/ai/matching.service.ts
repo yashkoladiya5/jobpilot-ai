@@ -3,30 +3,19 @@ import { generateStructuredResponse, toRawResponseJson } from "./gemini.client";
 import { buildResumeMatchingPrompt } from "./prompts/resume-matching.prompt";
 import { resumeMatchingSchema, ResumeMatchingOutput } from "./schemas/resume-matching.schema";
 import { ApiError } from "../../utils/ApiError";
+import { requireOwnedResume } from "../../utils/resume";
 import fs from "fs/promises";
 
 /**
  * Service that uses AI to score and match user resumes against specific job descriptions.
  */
 export class MatchingService {
-  private async requireOwnedResume(resumeId: string, userId: string) {
-    const resume = await prisma.resume.findFirst({
-      where: { id: resumeId, userId },
-    });
-
-    if (!resume) {
-      throw ApiError.notFound("Resume not found");
-    }
-
-    return resume;
-  }
-
   async matchResumeAndJob(
     userId: string,
     resumeId: string,
     jobDescription: string
   ): Promise<{ matchResult: ResumeMatchingOutput; analysisId: string }> {
-    const resume = await this.requireOwnedResume(resumeId, userId);
+    const resume = await requireOwnedResume(userId, resumeId);
 
     const resumeText = await fs.readFile(resume.filePath, "utf-8").catch(() => {
       throw ApiError.badRequest("Could not read resume file. Only text-based resumes are supported.");
@@ -75,7 +64,7 @@ export class MatchingService {
   }
 
   async getTopMatchesForResume(resumeId: string, userId: string, limit: number = 5) {
-    await this.requireOwnedResume(resumeId, userId);
+    await requireOwnedResume(userId, resumeId);
 
     return prisma.jobAnalysis.findMany({
       where: { userId, resumeMatchScore: { not: null } },

@@ -6,22 +6,11 @@ import { generateStructuredResponse, toRawResponseJson } from "./gemini.client";
 import { resumeAnalysisSchema } from "./schemas/resume-analysis.schema";
 import { buildResumeAnalysisPrompt } from "./prompts/resume-analysis.prompt";
 import { readTextFileSafely } from "../../utils/fs";
+import { requireOwnedResume } from "../../utils/resume";
 
 export class ResumeAnalysisService {
-  private async requireOwnedResume(resumeId: string, userId: string) {
-    const resume = await prisma.resume.findFirst({
-      where: { id: resumeId, userId },
-    });
-
-    if (!resume) {
-      throw ApiError.notFound("Resume not found");
-    }
-
-    return resume;
-  }
-
   async analyzeResume(userId: string, resumeId: string) {
-    const resume = await this.requireOwnedResume(resumeId, userId);
+    const resume = await requireOwnedResume(userId, resumeId);
 
     const resumeText = await readTextFileSafely(
       resume.filePath,
@@ -71,7 +60,7 @@ rawResponse: toRawResponseJson(result.rawResponse),
   }
 
   async getAnalysisByResume(resumeId: string, userId: string) {
-    const resume = await this.requireOwnedResume(resumeId, userId);
+    const resume = await requireOwnedResume(userId, resumeId);
 
     const analysis = await prisma.resumeAnalysis.findFirst({
       where: { resumeId },

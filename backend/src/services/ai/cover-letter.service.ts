@@ -4,6 +4,7 @@ import { generateStructuredResponse, toRawResponseJson } from "./gemini.client";
 import { coverLetterSchema } from "./schemas/cover-letter.schema";
 import { buildCoverLetterPrompt } from "./prompts/cover-letter.prompt";
 import { readTextFileSafely } from "../../utils/fs";
+import { requireOwnedResume } from "../../utils/resume";
 
 /**
  * Service for generating AI-powered cover letters using user resumes and job descriptions.
@@ -16,13 +17,7 @@ export class CoverLetterService {
     jobId?: string,
     tone?: string
   ) {
-    const resume = await prisma.resume.findFirst({
-      where: { id: resumeId, userId },
-    });
-
-    if (!resume) {
-      throw ApiError.notFound("Resume not found");
-    }
+    const resume = await requireOwnedResume(userId, resumeId);
 
     const resumeText = await readTextFileSafely(
       resume.filePath,
