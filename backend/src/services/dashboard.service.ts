@@ -163,7 +163,7 @@ export class DashboardService {
       where: {
         userId,
         status: 'INTERVIEW',
-        updatedAt: { gte: new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000) }
+        updatedAt: { gte: daysAgo(7) }
       },
       select: { companyName: true, role: true },
       take: 2
@@ -306,7 +306,7 @@ export class DashboardService {
         location: "New York, NY (Hybrid)",
         matchScore: 88,
         salary: "$110k - $140k",
-        postedAt: new Date(Date.now() - 1000 * 60 * 60 * 24) // 1 day ago
+        postedAt: daysAgo(1) // 1 day ago
       },
       {
         id: "rec_3",
