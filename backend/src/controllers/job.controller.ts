@@ -3,6 +3,7 @@ import { asyncHandler } from "../utils/asyncHandler";
 import { logger } from "../utils/logger";
 import { getUserId } from "../middleware/auth";
 import { parsePositiveInt } from "../utils/numbers";
+import { requireStringArray } from "../utils/request";
 import { ApiError } from "../utils/ApiError";
 import { JobService } from "../services/job.service";
 
@@ -89,12 +90,14 @@ export const archiveJob = asyncHandler(async (req: Request, res: Response) => {
 export const bulkUpdateStatus = asyncHandler(async (req: Request, res: Response) => {
   const userId = getUserId(req);
   const { jobIds, status } = req.body;
-  
+
 if (!status) {
     throw ApiError.badRequest("Status is required for bulk update.");
   }
-  
-  const result = await jobService.bulkUpdateJobStatus(userId, jobIds, status);
+
+  const validatedJobIds = requireStringArray(jobIds, "A valid array of job IDs is required.");
+
+  const result = await jobService.bulkUpdateJobStatus(userId, validatedJobIds, status);
 
   res.status(200).json({
     success: true,
@@ -106,12 +109,10 @@ if (!status) {
 export const bulkDeleteJobs = asyncHandler(async (req: Request, res: Response) => {
   const userId = getUserId(req);
   const { jobIds } = req.body;
-  
-if (!jobIds || !Array.isArray(jobIds)) {
-    throw ApiError.badRequest("A valid array of job IDs is required.");
-  }
-  
-  const result = await jobService.bulkDeleteJobs(userId, jobIds);
+
+  const validatedJobIds = requireStringArray(jobIds, "A valid array of job IDs is required.");
+
+  const result = await jobService.bulkDeleteJobs(userId, validatedJobIds);
 
   res.status(200).json({
     success: true,
@@ -123,12 +124,10 @@ if (!jobIds || !Array.isArray(jobIds)) {
 export const bulkArchiveJobs = asyncHandler(async (req: Request, res: Response) => {
   const userId = getUserId(req);
   const { jobIds } = req.body;
-  
-if (!jobIds || !Array.isArray(jobIds)) {
-    throw ApiError.badRequest("A valid array of job IDs is required.");
-  }
-  
-  const result = await jobService.bulkArchiveJobs(userId, jobIds);
+
+  const validatedJobIds = requireStringArray(jobIds, "A valid array of job IDs is required.");
+
+  const result = await jobService.bulkArchiveJobs(userId, validatedJobIds);
 
   res.status(200).json({
     success: true,

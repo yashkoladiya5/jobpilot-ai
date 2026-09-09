@@ -3,6 +3,7 @@ import { asyncHandler } from "../utils/asyncHandler";
 import { ApiError } from "../utils/ApiError";
 import { getUserId } from "../middleware/auth";
 import { parsePositiveInt } from "../utils/numbers";
+import { requireStringArray } from "../utils/request";
 import { ResumeService } from "../services/resume.service";
 
 const resumeService = new ResumeService();
@@ -332,12 +333,10 @@ export const generateResumeVariations = asyncHandler(async (req: Request, res: R
 export const bulkDeleteResumes = asyncHandler(async (req: Request, res: Response) => {
   const userId = getUserId(req);
   const { resumeIds } = req.body;
-  
-  if (!resumeIds || !Array.isArray(resumeIds)) {
-    throw ApiError.badRequest("A valid array of resume IDs is required.");
-  }
-  
-  const result = await resumeService.bulkDeleteResumes(userId, resumeIds);
+
+  const validatedResumeIds = requireStringArray(resumeIds, "A valid array of resume IDs is required.");
+
+  const result = await resumeService.bulkDeleteResumes(userId, validatedResumeIds);
   
   res.status(200).json({
     success: true,
