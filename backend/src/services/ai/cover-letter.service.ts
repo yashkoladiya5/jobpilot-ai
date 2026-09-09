@@ -3,7 +3,7 @@ import { ApiError } from "../../utils/ApiError";
 import { generateStructuredResponse, toRawResponseJson } from "./gemini.client";
 import { coverLetterSchema } from "./schemas/cover-letter.schema";
 import { buildCoverLetterPrompt } from "./prompts/cover-letter.prompt";
-import fs from "fs/promises";
+import { readTextFileSafely } from "../../utils/fs";
 
 /**
  * Service for generating AI-powered cover letters using user resumes and job descriptions.
@@ -24,12 +24,10 @@ export class CoverLetterService {
       throw ApiError.notFound("Resume not found");
     }
 
-    let resumeText: string;
-    try {
-      resumeText = await fs.readFile(resume.filePath, "utf-8");
-    } catch {
-      resumeText = `[Binary file: ${resume.fileName} (${resume.mimeType}) - text extraction not yet supported for this format]`;
-    }
+    const resumeText = await readTextFileSafely(
+      resume.filePath,
+      `[Binary file: ${resume.fileName} (${resume.mimeType}) - text extraction not yet supported for this format]`,
+    );
 
     const coverLetterRecord = await prisma.coverLetter.create({
       data: {

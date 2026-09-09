@@ -4,7 +4,7 @@ import { generateStructuredResponse, generateText, toRawResponseJson } from "./g
 import { logger } from "../../utils/logger";
 import { jobAnalysisSchema } from "./schemas/job-analysis.schema";
 import { buildJobAnalysisPrompt } from "./prompts/job-analysis.prompt";
-import fs from "fs/promises";
+import { readTextFileSafely } from "../../utils/fs";
 import { z } from "zod";
 
 /**
@@ -25,11 +25,10 @@ export class JobAnalysisService {
       }
 
       if (job.resume) {
-        try {
-          resumeText = await fs.readFile(job.resume.filePath, "utf-8");
-        } catch {
-          resumeText = `[Binary file: ${job.resume.fileName} - text extraction not yet supported]`;
-        }
+        resumeText = await readTextFileSafely(
+          job.resume.filePath,
+          `[Binary file: ${job.resume.fileName} - text extraction not yet supported]`,
+        );
       }
     }
 
@@ -111,11 +110,10 @@ export class JobAnalysisService {
     if (resumeId) {
       const resume = await prisma.resume.findFirst({ where: { id: resumeId, userId } });
       if (resume) {
-        try {
-          resumeText = await fs.readFile(resume.filePath, "utf-8");
-        } catch {
-          resumeText = `[Binary file - text extraction not supported yet]`;
-        }
+        resumeText = await readTextFileSafely(
+          resume.filePath,
+          `[Binary file: ${resume.fileName} - text extraction not yet supported]`,
+        );
       }
     }
 

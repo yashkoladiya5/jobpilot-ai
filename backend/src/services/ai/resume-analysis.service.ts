@@ -3,7 +3,7 @@ import { ApiError } from "../../utils/ApiError";
 import { generateStructuredResponse, toRawResponseJson } from "./gemini.client";
 import { resumeAnalysisSchema } from "./schemas/resume-analysis.schema";
 import { buildResumeAnalysisPrompt } from "./prompts/resume-analysis.prompt";
-import fs from "fs/promises";
+import { readTextFileSafely } from "../../utils/fs";
 
 export class ResumeAnalysisService {
   private async requireOwnedResume(resumeId: string, userId: string) {
@@ -21,12 +21,10 @@ export class ResumeAnalysisService {
   async analyzeResume(userId: string, resumeId: string) {
     const resume = await this.requireOwnedResume(resumeId, userId);
 
-    let resumeText: string;
-    try {
-      resumeText = await fs.readFile(resume.filePath, "utf-8");
-    } catch {
-      resumeText = `[Binary file: ${resume.fileName} (${resume.mimeType}) - text extraction not yet supported for this format]`;
-    }
+    const resumeText = await readTextFileSafely(
+      resume.filePath,
+      `[Binary file: ${resume.fileName} (${resume.mimeType}) - text extraction not yet supported for this format]`,
+    );
 
     const analysis = await prisma.resumeAnalysis.create({
       data: {
