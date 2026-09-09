@@ -1,6 +1,7 @@
 import prisma from "../config/prisma";
 import { $Enums, Prisma } from "@prisma/client";
 import { ApiError } from "../utils/ApiError";
+import { countBy } from "../utils/collections";
 import { daysAgo } from "../utils/dates";
 
 /**
@@ -168,13 +169,7 @@ export class JobService {
     });
 
     // Single-pass status counts instead of repeated filtering
-    const counts = jobs.reduce(
-      (acc, job) => {
-        acc[job.status] = (acc[job.status] || 0) + 1;
-        return acc;
-      },
-      {} as Record<string, number>
-    );
+    const counts = countBy(jobs, (job) => job.status);
 
     return {
       total: jobs.length,

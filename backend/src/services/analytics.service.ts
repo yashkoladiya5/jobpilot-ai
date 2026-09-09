@@ -1,6 +1,7 @@
 import prisma from "../config/prisma";
 import { ApplicationStatus } from "@prisma/client";
 import { ApiError } from "../utils/ApiError";
+import { countBy } from "../utils/collections";
 import { daysAgo } from "../utils/dates";
 import { clampNumber } from "../utils/math";
 
@@ -28,10 +29,7 @@ export class AnalyticsService {
 
     const totalApplications = applications.length;
 
-    const statusCounts: Record<string, number> = {};
-    for (const app of applications) {
-      statusCounts[app.status] = (statusCounts[app.status] || 0) + 1;
-    }
+    const statusCounts = countBy(applications, (app) => app.status);
 
     const byStatus = Object.entries(statusCounts).map(([status, count]) => ({
       status,
@@ -59,10 +57,7 @@ export class AnalyticsService {
     const averageDaysInPipeline =
       countWithDates > 0 ? Number((totalDays / countWithDates).toFixed(1)) : 0;
 
-    const companyCounts: Record<string, number> = {};
-    for (const app of applications) {
-      companyCounts[app.companyName] = (companyCounts[app.companyName] || 0) + 1;
-    }
+    const companyCounts = countBy(applications, (app) => app.companyName);
     const topCompanies = Object.entries(companyCounts)
       .map(([company, count]) => ({ company, count }))
       .sort((a, b) => b.count - a.count)
@@ -172,12 +167,7 @@ export class AnalyticsService {
 
     const totalRejections = rejectedApplications.length;
     
-    // Group rejections by role
-    const roleCounts: Record<string, number> = {};
-    for (const app of rejectedApplications) {
-      const role = app.role.toLowerCase();
-      roleCounts[role] = (roleCounts[role] || 0) + 1;
-    }
+    const roleCounts = countBy(rejectedApplications, (app) => app.role.toLowerCase());
 
     const topRejectedRoles = Object.entries(roleCounts)
       .map(([role, count]) => ({ role, count }))

@@ -1,5 +1,6 @@
 import prisma from "../config/prisma";
 import { ApiError } from "../utils/ApiError";
+import { countBy } from "../utils/collections";
 import { daysAgo } from "../utils/dates";
 
 /**
@@ -507,11 +508,7 @@ export class DashboardService {
     }
 
     // Check for clustering (doing too much in too few days) vs sustained pace
-    const appsPerDay: Record<string, number> = {};
-    for (const app of applications) {
-      const dateKey = app.createdAt.toISOString().slice(0, 10);
-      appsPerDay[dateKey] = (appsPerDay[dateKey] || 0) + 1;
-    }
+    const appsPerDay = countBy(applications, (app) => app.createdAt.toISOString().slice(0, 10));
 
     const daysActive = Object.keys(appsPerDay).length;
     let maxAppsInOneDay = 0;
