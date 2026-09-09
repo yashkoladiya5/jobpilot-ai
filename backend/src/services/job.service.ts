@@ -124,11 +124,15 @@ export class JobService {
     });
   }
 
-  async updateJobStatus(userId: string, id: string, status: $Enums.ApplicationStatus) {
+  private assertValidStatus(status: $Enums.ApplicationStatus) {
     const validStatuses = Object.values($Enums.ApplicationStatus);
     if (!(validStatuses as string[]).includes(status)) {
       throw ApiError.badRequest("Invalid job status provided");
     }
+  }
+
+  async updateJobStatus(userId: string, id: string, status: $Enums.ApplicationStatus) {
+    this.assertValidStatus(status);
 
     await this.getJobById(userId, id);
 
@@ -184,10 +188,7 @@ export class JobService {
   }
 
   async bulkUpdateJobStatus(userId: string, jobIds: string[], status: $Enums.ApplicationStatus) {
-    const validStatuses = Object.values($Enums.ApplicationStatus);
-    if (!(validStatuses as string[]).includes(status)) {
-      throw ApiError.badRequest("Invalid job status provided");
-    }
+    this.assertValidStatus(status);
 
     if (!jobIds || jobIds.length === 0) {
       throw ApiError.badRequest("No job IDs provided for bulk update");

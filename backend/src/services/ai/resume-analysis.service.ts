@@ -198,7 +198,7 @@ rawResponse: toRawResponseJson(result.rawResponse),
     const analysis = await this.getAnalysisByResume(resumeId, userId);
     
     // Simulate generating a quick 3-sentence summary for a recruiter
-    const strengthsStr = Array.isArray(analysis.strengths) ? analysis.strengths.slice(0, 2).join(" and ") : "their solid background";
+    const strengthsStr = stringList(analysis.strengths).slice(0, 2).join(" and ") || "their solid background";
     const experienceStr = analysis.experienceSummary?.trim() || "several years of relevant experience";
     const skillsStr = analysis.skillsSummary?.trim() || "their core technical skills";
     
