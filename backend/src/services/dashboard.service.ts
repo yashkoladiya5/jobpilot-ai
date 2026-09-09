@@ -8,6 +8,14 @@ import { randInt } from "../utils/math";
  * Provides data aggregation and statistical analysis for the user dashboard.
  */
 export class DashboardService {
+  /** Whether the user applied today or yesterday. */
+  private hasRecentActivity(activeDays: Set<string>): boolean {
+    return (
+      activeDays.has(dateKey(new Date())) ||
+      activeDays.has(dateKey(daysAgo(1)))
+    );
+  }
+
   async getStats(userId: string) {
     // Calculate the threshold for recent activity (last 7 days and 30 days)
     const sevenDaysAgo = daysAgo(7);
@@ -612,10 +620,8 @@ export class DashboardService {
     
     // Mock current streak
     let currentStreak = 0;
-    const today = dateKey(new Date());
-    const yesterday = dateKey(daysAgo(1));
 
-    if (activeDays.has(today) || activeDays.has(yesterday)) {
+    if (this.hasRecentActivity(activeDays)) {
       currentStreak = randInt(1, 5); // mock
     }
 
@@ -820,12 +826,9 @@ export class DashboardService {
 
     const activeDays = new Set(applications.map(app => dateKey(app.createdAt)));
     
-    const today = dateKey(new Date());
-    const yesterday = dateKey(daysAgo(1));
-
     let currentStreak = 0;
     
-    if (activeDays.has(today) || activeDays.has(yesterday)) {
+    if (this.hasRecentActivity(activeDays)) {
        currentStreak = randInt(2, 6); 
     }
 
