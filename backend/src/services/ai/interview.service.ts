@@ -33,6 +33,37 @@ export class InterviewService {
     return job as Prisma.JobApplicationGetPayload<{ include: { resume: true } }>;
   }
 
+  private async requireSession(
+    userId: string,
+    sessionId: string,
+    include: { questions: { orderBy: { orderIndex: "asc" } } }
+  ): Promise<Prisma.InterviewSessionGetPayload<{ include: { questions: { orderBy: { orderIndex: "asc" } } } }>>;
+  private async requireSession(
+    userId: string,
+    sessionId: string,
+    include: { questions: true }
+  ): Promise<Prisma.InterviewSessionGetPayload<{ include: { questions: true } }>>;
+  private async requireSession(
+    userId: string,
+    sessionId: string
+  ): Promise<Prisma.InterviewSessionGetPayload<{}>>;
+  private async requireSession(
+    userId: string,
+    sessionId: string,
+    include?: { questions: true } | { questions: { orderBy: { orderIndex: "asc" } } }
+  ) {
+    const session = await prisma.interviewSession.findFirst({
+      where: { id: sessionId, userId },
+      include,
+    });
+
+    if (!session) throw ApiError.notFound("Interview session not found");
+
+    return session as Prisma.InterviewSessionGetPayload<{
+      include: { questions: { orderBy: { orderIndex: "asc" } } };
+    }>;
+  }
+
   async generateQuestions(userId: string, jobId: string) {
     const job = await this.requireInterviewJob(userId, jobId, true);
 
@@ -117,11 +148,9 @@ export class InterviewService {
   }
 
   async getSession(sessionId: string, userId: string) {
-    const session = await prisma.interviewSession.findFirst({
-      where: { id: sessionId, userId },
-      include: { questions: { orderBy: { orderIndex: "asc" } } },
+    const session = await this.requireSession(userId, sessionId, {
+      questions: { orderBy: { orderIndex: "asc" } },
     });
-    if (!session) throw ApiError.notFound("Interview session not found");
     return session;
   }
 
@@ -187,12 +216,7 @@ export class InterviewService {
   }
 
   async completeSession(sessionId: string, userId: string) {
-    const session = await prisma.interviewSession.findFirst({
-      where: { id: sessionId, userId },
-      include: { questions: true },
-    });
-
-    if (!session) throw ApiError.notFound("Interview session not found");
+    const session = await this.requireSession(userId, sessionId, { questions: true });
 
     const answered = session.questions.filter(q => q.answeredAt);
     const totalScore = answered.reduce((sum, q) => sum + (q.score || 0), 0);
@@ -243,10 +267,7 @@ export class InterviewService {
   }
 
   async getResult(sessionId: string, userId: string) {
-    const session = await prisma.interviewSession.findFirst({
-      where: { id: sessionId, userId },
-    });
-    if (!session) throw ApiError.notFound("Interview session not found");
+    const session = await this.requireSession(userId, sessionId);
 
     const result = await prisma.interviewResult.findFirst({
       where: { sessionId },
@@ -256,10 +277,7 @@ export class InterviewService {
   }
 
   async resetSession(sessionId: string, userId: string) {
-    const session = await prisma.interviewSession.findFirst({
-      where: { id: sessionId, userId },
-    });
-    if (!session) throw ApiError.notFound("Interview session not found");
+    const session = await this.requireSession(userId, sessionId);
 
     // Clear answers and feedbacks from all questions
     await prisma.interviewQuestion.updateMany({
@@ -293,13 +311,7 @@ export class InterviewService {
   }
 
   async deleteSession(sessionId: string, userId: string) {
-    const session = await prisma.interviewSession.findFirst({
-      where: { id: sessionId, userId },
-    });
-    
-    if (!session) {
-      throw ApiError.notFound("Interview session not found");
-    }
+    const session = await this.requireSession(userId, sessionId);
 
     await prisma.interviewSession.delete({
       where: { id: sessionId },
@@ -309,13 +321,7 @@ export class InterviewService {
   }
 
   async archiveInterviewSession(sessionId: string, userId: string) {
-    const session = await prisma.interviewSession.findFirst({
-      where: { id: sessionId, userId },
-    });
-    
-    if (!session) {
-      throw ApiError.notFound("Interview session not found");
-    }
+    const session = await this.requireSession(userId, sessionId);
 
     // We use a prefix on jobDescription as a lightweight archive flag 
     // since status might be strictly constrained by Prisma enums.
