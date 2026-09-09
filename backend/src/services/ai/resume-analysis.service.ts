@@ -6,7 +6,7 @@ import { buildResumeAnalysisPrompt } from "./prompts/resume-analysis.prompt";
 import fs from "fs/promises";
 
 export class ResumeAnalysisService {
-  async analyzeResume(userId: string, resumeId: string) {
+  private async requireOwnedResume(resumeId: string, userId: string) {
     const resume = await prisma.resume.findFirst({
       where: { id: resumeId, userId },
     });
@@ -14,6 +14,12 @@ export class ResumeAnalysisService {
     if (!resume) {
       throw ApiError.notFound("Resume not found");
     }
+
+    return resume;
+  }
+
+  async analyzeResume(userId: string, resumeId: string) {
+    const resume = await this.requireOwnedResume(resumeId, userId);
 
     let resumeText: string;
     try {
@@ -65,13 +71,7 @@ export class ResumeAnalysisService {
   }
 
   async getAnalysisByResume(resumeId: string, userId: string) {
-    const resume = await prisma.resume.findFirst({
-      where: { id: resumeId, userId },
-    });
-
-    if (!resume) {
-      throw ApiError.notFound("Resume not found");
-    }
+    const resume = await this.requireOwnedResume(resumeId, userId);
 
     const analysis = await prisma.resumeAnalysis.findFirst({
       where: { resumeId },
