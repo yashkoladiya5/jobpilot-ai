@@ -1,6 +1,6 @@
 import prisma from "../../config/prisma";
 import { ApiError } from "../../utils/ApiError";
-import { generateStructuredResponse } from "./gemini.client";
+import { generateStructuredResponse, toRawResponseJson } from "./gemini.client";
 import { resumeAnalysisSchema } from "./schemas/resume-analysis.schema";
 import { buildResumeAnalysisPrompt } from "./prompts/resume-analysis.prompt";
 import fs from "fs/promises";
@@ -52,7 +52,7 @@ export class ResumeAnalysisService {
           experienceSummary: result.data.experienceSummary,
           skillsSummary: result.data.skillsSummary,
           recruiterFeedback: result.data.recruiterFeedback,
-          rawResponse: result.rawResponse ? { text: result.rawResponse } : undefined,
+rawResponse: toRawResponseJson(result.rawResponse),
           analyzedAt: new Date(),
         },
       });

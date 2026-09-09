@@ -1,6 +1,6 @@
 import prisma from "../../config/prisma";
 import { Prisma } from "@prisma/client";
-import { generateStructuredResponse } from "./gemini.client";
+import { generateStructuredResponse, toRawResponseJson } from "./gemini.client";
 import { buildInterviewQuestionsPrompt } from "./prompts/interview.prompt";
 import { interviewQuestionsSchema, InterviewQuestionsOutput } from "./schemas/interview.schema";
 import { ApiError } from "../../utils/ApiError";
@@ -115,7 +115,7 @@ export class InterviewService {
         behavioralQuestions: response.data.behavioralQuestions,
         followUpQuestions: response.data.followUpQuestions,
         totalQuestions,
-        rawResponse: response.rawResponse ? { text: response.rawResponse } : undefined,
+        rawResponse: toRawResponseJson(response.rawResponse),
       },
     });
 

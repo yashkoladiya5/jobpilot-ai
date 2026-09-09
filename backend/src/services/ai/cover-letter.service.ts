@@ -1,6 +1,6 @@
 import prisma from "../../config/prisma";
 import { ApiError } from "../../utils/ApiError";
-import { generateStructuredResponse } from "./gemini.client";
+import { generateStructuredResponse, toRawResponseJson } from "./gemini.client";
 import { coverLetterSchema } from "./schemas/cover-letter.schema";
 import { buildCoverLetterPrompt } from "./prompts/cover-letter.prompt";
 import fs from "fs/promises";
@@ -54,7 +54,7 @@ export class CoverLetterService {
           status: "COMPLETED",
           coverLetterText: result.data.coverLetter,
           tone: result.data.tone,
-          rawResponse: result.rawResponse ? { text: result.rawResponse } : undefined,
+          rawResponse: toRawResponseJson(result.rawResponse),
           generatedAt: new Date(),
         },
       });
@@ -66,7 +66,7 @@ export class CoverLetterService {
       data: {
         status: "FAILED",
         errorMessage: result.error || "Cover letter generation failed",
-        rawResponse: result.rawResponse ? { text: result.rawResponse } : undefined,
+        rawResponse: toRawResponseJson(result.rawResponse),
       },
     });
     return failed;

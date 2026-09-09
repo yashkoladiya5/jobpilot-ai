@@ -1,6 +1,6 @@
 import prisma from "../../config/prisma";
 import { ApiError } from "../../utils/ApiError";
-import { generateStructuredResponse, generateText } from "./gemini.client";
+import { generateStructuredResponse, generateText, toRawResponseJson } from "./gemini.client";
 import { logger } from "../../utils/logger";
 import { jobAnalysisSchema } from "./schemas/job-analysis.schema";
 import { buildJobAnalysisPrompt } from "./prompts/job-analysis.prompt";
@@ -56,7 +56,7 @@ export class JobAnalysisService {
           missingSkills: result.data.missingSkills,
           resumeMatchScore: result.data.resumeMatchScore,
           recommendedChanges: result.data.recommendedChanges,
-          rawResponse: result.rawResponse ? { text: result.rawResponse } : undefined,
+          rawResponse: toRawResponseJson(result.rawResponse),
           analyzedAt: new Date(),
         },
       });
@@ -68,7 +68,7 @@ export class JobAnalysisService {
       data: {
         status: "FAILED",
         errorMessage: result.error || "Job analysis failed",
-        rawResponse: result.rawResponse ? { text: result.rawResponse } : undefined,
+        rawResponse: toRawResponseJson(result.rawResponse),
       },
     });
     return failed;

@@ -10,6 +10,12 @@ interface GeminiResponse<T> {
   error?: string;
 }
 
+/**
+ * Wraps a raw model response in the JSON shape stored on analysis records.
+ */
+export const toRawResponseJson = (rawResponse?: string): { text: string } | undefined =>
+  rawResponse ? { text: rawResponse } : undefined;
+
 export async function generateStructuredResponse<T>(
   prompt: string,
   schema: { parse: (data: unknown) => T },

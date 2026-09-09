@@ -1,5 +1,5 @@
 import prisma from "../../config/prisma";
-import { generateStructuredResponse } from "./gemini.client";
+import { generateStructuredResponse, toRawResponseJson } from "./gemini.client";
 import { buildResumeMatchingPrompt } from "./prompts/resume-matching.prompt";
 import { resumeMatchingSchema, ResumeMatchingOutput } from "./schemas/resume-matching.schema";
 import { ApiError } from "../../utils/ApiError";
@@ -58,7 +58,7 @@ export class MatchingService {
         resumeMatchScore: response.data.matchScore,
         missingSkills: response.data.missingSkills,
         recommendedChanges: response.data.priorityImprovements,
-        rawResponse: response.rawResponse ? { text: response.rawResponse } : undefined,
+        rawResponse: toRawResponseJson(response.rawResponse),
         analyzedAt: new Date(),
       },
     });
