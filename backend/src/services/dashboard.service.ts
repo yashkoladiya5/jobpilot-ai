@@ -3,6 +3,7 @@ import { ApiError } from "../utils/ApiError";
 import { countBy } from "../utils/collections";
 import { dateKey, daysAgo } from "../utils/dates";
 import { clampNumber, randInt } from "../utils/math";
+import { requireUser } from "../utils/user";
 
 /**
  * Provides data aggregation and statistical analysis for the user dashboard.
@@ -766,8 +767,7 @@ export class DashboardService {
   }
 
   async dismissAllAlerts(userId: string) {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) throw ApiError.notFound("User not found");
+    const user = await requireUser(userId);
 
     // In a real database we would update an Alert table.
     // Since alerts are dynamically generated here, we can mock dismissing them
@@ -785,8 +785,7 @@ export class DashboardService {
     // In a real application we would have a table to track which action items were dismissed.
     // For now, since action items are derived from jobs needing follow-up, 
     // we can simulate clearing them by adding a timestamp to the user preferences.
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) throw ApiError.notFound("User not found");
+    const user = await requireUser(userId);
 
     return {
       userId,

@@ -2,6 +2,7 @@ import prisma from "../config/prisma";
 import { $Enums, Prisma } from "@prisma/client";
 import { ApiError } from "../utils/ApiError";
 import { countBy } from "../utils/collections";
+import { requireUser } from "../utils/user";
 import { daysAgo } from "../utils/dates";
 import { randInt } from "../utils/math";
 
@@ -770,8 +771,7 @@ export class JobService {
 
   async generateCoverLetterDraft(userId: string, id: string) {
     const job = await this.getJobById(userId, id);
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) throw ApiError.notFound("User not found");
+    const user = await requireUser(userId);
 
     // Fetch primary resume for context
     const resume = await prisma.resume.findFirst({

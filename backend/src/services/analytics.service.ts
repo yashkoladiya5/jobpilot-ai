@@ -4,6 +4,7 @@ import { ApiError } from "../utils/ApiError";
 import { countBy } from "../utils/collections";
 import { dateKey, daysAgo, elapsedDays, monthKey } from "../utils/dates";
 import { clampNumber, randInt } from "../utils/math";
+import { requireUser } from "../utils/user";
 
 /**
  * Service for calculating advanced insights and aggregated metrics
@@ -804,8 +805,7 @@ export class AnalyticsService {
   }
 
   async exportAnalyticsReport(userId: string) {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) throw ApiError.notFound("User not found");
+    const user = await requireUser(userId);
 
     // We'd generate a CSV or PDF in a real app, here we return a structured JSON representing the export
     const basicStats = await this.getPipelineAnalytics(userId);
@@ -1140,10 +1140,7 @@ export class AnalyticsService {
   }
 
   async getUserRetentionStats(userId: string) {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) {
-      throw ApiError.notFound("User not found");
-    }
+    const user = await requireUser(userId);
 
     // Mock retrieving retention statistics (e.g., active days over total account age)
     const now = new Date();
