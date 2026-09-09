@@ -140,7 +140,7 @@ export class CareerInsightsService {
     if (!response.success || !response.data) {
       return {
         careerScore: this.computeFallbackScore(careerData),
-        interviewReadiness: completedInterviews > 0 ? Math.min(100, completedInterviews * 20) : 20,
+        interviewReadiness: completedInterviews > 0 ? clampNumber(completedInterviews * 20, 0, 100) : 20,
         resumeStrength: avgAts._avg.atsScore || 50,
         jobMatchQuality: avgMatch._avg.resumeMatchScore || 50,
         applicationSuccessRate: totalApplications > 0 ? Math.round((offersThisMonth / totalApplications) * 100) : 0,

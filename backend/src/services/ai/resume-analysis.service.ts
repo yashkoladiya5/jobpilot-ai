@@ -1,5 +1,6 @@
 import prisma from "../../config/prisma";
 import { ApiError } from "../../utils/ApiError";
+import { clampNumber } from "../../utils/math";
 import { generateStructuredResponse, toRawResponseJson } from "./gemini.client";
 import { resumeAnalysisSchema } from "./schemas/resume-analysis.schema";
 import { buildResumeAnalysisPrompt } from "./prompts/resume-analysis.prompt";
@@ -187,7 +188,7 @@ rawResponse: toRawResponseJson(result.rawResponse),
     return {
       resumeId,
       score: atsScore,
-      message: `Adding these keywords could boost your ATS score to ${Math.min(100, atsScore + 15)}`,
+      message: `Adding these keywords could boost your ATS score to ${clampNumber(atsScore + 15, 0, 100)}`,
       recommendations: keywordImpacts
     };
   }

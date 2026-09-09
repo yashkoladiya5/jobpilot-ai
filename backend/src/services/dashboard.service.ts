@@ -2,7 +2,7 @@ import prisma from "../config/prisma";
 import { ApiError } from "../utils/ApiError";
 import { countBy } from "../utils/collections";
 import { dateKey, daysAgo } from "../utils/dates";
-import { randInt } from "../utils/math";
+import { clampNumber, randInt } from "../utils/math";
 
 /**
  * Provides data aggregation and statistical analysis for the user dashboard.
@@ -264,7 +264,7 @@ export class DashboardService {
       }
     ];
 
-    const progress = Math.min(100, Math.round(((applicationsToday / 3) * 50) + ((mockInterviewsCompletedToday / 1) * 50)));
+    const progress = clampNumber(Math.round(((applicationsToday / 3) * 50) + ((mockInterviewsCompletedToday / 1) * 50)), 0, 100);
 
     return {
       date: new Date().toISOString(),
@@ -1037,7 +1037,7 @@ export class DashboardService {
       { interviewsSecured: 0, offersReceived: 0 }
     );
 
-    const performanceScore = Math.min(100, (applicationsSubmitted * 2) + (interviewsSecured * 10) + (offersReceived * 20));
+    const performanceScore = clampNumber((applicationsSubmitted * 2) + (interviewsSecured * 10) + (offersReceived * 20), 0, 100);
 
     let feedback = "Good effort this week!";
     if (performanceScore > 80) feedback = "Outstanding performance! You are highly active.";
