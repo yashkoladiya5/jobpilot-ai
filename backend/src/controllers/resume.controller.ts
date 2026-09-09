@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
 import { ApiError } from "../utils/ApiError";
 import { getUserId } from "../middleware/auth";
+import { parsePositiveInt } from "../utils/numbers";
 import { ResumeService } from "../services/resume.service";
 
 const resumeService = new ResumeService();
@@ -28,8 +29,8 @@ export const getResumes = asyncHandler(async (req: Request, res: Response) => {
   const { limit, offset } = req.query;
 
   // Optional pagination parsing
-  const parsedLimit = limit ? parseInt(limit as string, 10) : undefined;
-  const parsedOffset = offset ? parseInt(offset as string, 10) : undefined;
+  const parsedLimit = parsePositiveInt(limit, undefined);
+  const parsedOffset = parsePositiveInt(offset, undefined);
   
   if ((parsedLimit !== undefined && (isNaN(parsedLimit) || parsedLimit < 1)) ||
       (parsedOffset !== undefined && (isNaN(parsedOffset) || parsedOffset < 0))) {

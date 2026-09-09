@@ -228,7 +228,7 @@ export const getTopMatches = asyncHandler(async (req: Request, res: Response) =>
   
   const parsedLimit = parsePositiveInt(limit, 5);
   
-  if (isNaN(parsedLimit) || parsedLimit < 1) {
+  if (typeof parsedLimit !== "number" || isNaN(parsedLimit) || parsedLimit < 1) {
     throw ApiError.badRequest("limit must be a positive integer");
   }
   
@@ -264,7 +264,7 @@ export const getRecentMatches = asyncHandler(async (req: Request, res: Response)
   
   const parsedLimit = parsePositiveInt(limit, 5);
   
-  if (isNaN(parsedLimit) || parsedLimit < 1) {
+  if (typeof parsedLimit !== "number" || isNaN(parsedLimit) || parsedLimit < 1) {
     throw ApiError.badRequest("limit must be a positive integer");
   }
   

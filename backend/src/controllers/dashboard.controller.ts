@@ -47,7 +47,7 @@ export const getRecentActivityLogs = asyncHandler(async (req: Request, res: Resp
 
   const parsedLimit = parsePositiveInt(limit, 10);
   
-if (isNaN(parsedLimit) || parsedLimit < 1) {
+if (typeof parsedLimit !== "number" || isNaN(parsedLimit) || parsedLimit < 1) {
     throw ApiError.badRequest("limit must be a positive integer.");
   }
   

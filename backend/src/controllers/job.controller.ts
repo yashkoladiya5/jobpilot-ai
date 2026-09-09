@@ -376,7 +376,7 @@ export const archiveOldApplications = asyncHandler(async (req: Request, res: Res
   
   const parsedDays = parsePositiveInt(olderThanDays, 30);
   
-  if (isNaN(parsedDays) || parsedDays < 1) {
+  if (typeof parsedDays !== "number" || isNaN(parsedDays) || parsedDays < 1) {
     throw ApiError.badRequest("olderThanDays must be a positive integer.");
   }
 
