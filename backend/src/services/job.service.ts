@@ -1,5 +1,6 @@
 import prisma from "../config/prisma";
 import { $Enums, Prisma } from "@prisma/client";
+import { ACTIVE_APPLICATION_STATUSES } from "../constants";
 import { ApiError } from "../utils/ApiError";
 import { countBy } from "../utils/collections";
 import { requireUser } from "../utils/user";
@@ -244,7 +245,7 @@ export class JobService {
     const jobs = await prisma.jobApplication.findMany({
       where: {
         userId,
-        status: { in: ["APPLIED", "INTERVIEW"] },
+        status: { in: ACTIVE_APPLICATION_STATUSES },
         updatedAt: { lte: fourteenDaysAgo }
       },
       orderBy: { updatedAt: "asc" },

@@ -1,5 +1,6 @@
 import prisma from "../config/prisma";
 import { ApplicationStatus } from "@prisma/client";
+import { ACTIVE_APPLICATION_STATUSES } from "../constants";
 import { ApiError } from "../utils/ApiError";
 import { countBy } from "../utils/collections";
 import { dateKey, daysAgo, elapsedDays, monthKey } from "../utils/dates";
@@ -677,7 +678,7 @@ export class AnalyticsService {
 
   async getApplicationGhostingPredictor(userId: string) {
     const applications = await prisma.jobApplication.findMany({
-      where: { userId, status: { in: ["APPLIED", "INTERVIEW"] } },
+      where: { userId, status: { in: ACTIVE_APPLICATION_STATUSES } },
       select: { id: true, companyName: true, role: true, status: true, updatedAt: true }
     });
 
@@ -1186,7 +1187,7 @@ export class AnalyticsService {
 
     return {
       userId,
-      currentActiveApplications: applications.filter(a => ["APPLIED", "INTERVIEW"].includes(a.status)).length,
+      currentActiveApplications: applications.filter(a => ACTIVE_APPLICATION_STATUSES.includes(a.status)).length,
       currentActiveInterviews: activeInterviews.length,
       estimatedDaysToHire: baselineDays,
       estimatedHireDate: dateKey(estimatedDate),
