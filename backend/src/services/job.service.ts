@@ -396,7 +396,7 @@ export class JobService {
     const activeJobs = await prisma.jobApplication.findMany({
       where: { 
         userId, 
-        status: { in: ["APPLIED", "INTERVIEW"] }
+        status: { in: ACTIVE_APPLICATION_STATUSES }
       },
       orderBy: { updatedAt: "desc" },
       take: 10
@@ -409,9 +409,34 @@ export class JobService {
       };
     }
 
-    const reminders = [];
+    const reminders: {
+      jobId: string;
+      companyName: string;
+      role: string;
+      type: string;
+      urgency: string;
+      daysLeft: number;
+      message: string;
+    }[] = [];
     
     // Mock analyzing notes for dates or deadlines
+    const pushReminder = (
+      job: (typeof activeJobs)[number],
+      type: string,
+      urgency: string,
+      daysLeft: number,
+    ) => {
+      reminders.push({
+        jobId: job.id,
+        companyName: job.companyName,
+        role: job.role,
+        type,
+        urgency,
+        daysLeft,
+        message: `${type} for ${job.companyName} is in approximately ${daysLeft} days.`
+      });
+    };
+
     for (const job of activeJobs) {
       const lowerNotes = (job.notes || "").toLowerCase();
       
@@ -429,15 +454,7 @@ export class JobService {
         daysLeft = randInt(1, 5); // Mock 1 to 5 days
       }
 
-      reminders.push({
-        jobId: job.id,
-        companyName: job.companyName,
-        role: job.role,
-        type,
-        urgency,
-        daysLeft,
-        message: `${type} for ${job.companyName} is in approximately ${daysLeft} days.`
-      });
+      pushReminder(job, type, urgency, daysLeft);
     }
 
     // Sort by most urgent
