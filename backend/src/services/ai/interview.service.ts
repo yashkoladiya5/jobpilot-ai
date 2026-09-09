@@ -12,13 +12,29 @@ import { z } from "zod";
  * Manages question generation, answer evaluation, and scoring.
  */
 export class InterviewService {
-  async generateQuestions(userId: string, jobId: string) {
+  private async requireInterviewJob(
+    userId: string,
+    jobId: string,
+    withResume: true
+  ): Promise<Prisma.JobApplicationGetPayload<{ include: { resume: true } }>>;
+  private async requireInterviewJob(
+    userId: string,
+    jobId: string,
+    withResume?: boolean
+  ): Promise<Prisma.JobApplicationGetPayload<{}>>;
+  private async requireInterviewJob(userId: string, jobId: string, withResume = false) {
     const job = await prisma.jobApplication.findFirst({
       where: { id: jobId, userId },
-      include: { resume: true },
+      include: withResume ? { resume: true } : undefined,
     });
 
     if (!job) throw ApiError.notFound("Job not found");
+
+    return job as Prisma.JobApplicationGetPayload<{ include: { resume: true } }>;
+  }
+
+  async generateQuestions(userId: string, jobId: string) {
+    const job = await this.requireInterviewJob(userId, jobId, true);
 
     let resumeText: string | undefined;
     if (job.resume) {
@@ -436,11 +452,7 @@ export class InterviewService {
   }
 
   async generateMockTechnicalAssessment(userId: string, jobId: string) {
-    const job = await prisma.jobApplication.findFirst({
-      where: { id: jobId, userId }
-    });
-
-    if (!job) throw ApiError.notFound("Job not found");
+    const job = await this.requireInterviewJob(userId, jobId);
     
     // Simulate generation of a take-home assignment based on the job role
     const roleUpper = job.role.toUpperCase();
@@ -478,11 +490,7 @@ export class InterviewService {
   }
 
   async generateMockBehavioralAssessment(userId: string, jobId: string) {
-    const job = await prisma.jobApplication.findFirst({
-      where: { id: jobId, userId }
-    });
-
-    if (!job) throw ApiError.notFound("Job not found");
+    const job = await this.requireInterviewJob(userId, jobId);
     
     // Simulate generation of a behavioral assessment based on company culture/role
     const roleUpper = job.role.toUpperCase();
@@ -509,11 +517,7 @@ export class InterviewService {
   }
 
   async generateMockSystemDesignAssessment(userId: string, jobId: string) {
-    const job = await prisma.jobApplication.findFirst({
-      where: { id: jobId, userId }
-    });
-
-    if (!job) throw ApiError.notFound("Job not found");
+    const job = await this.requireInterviewJob(userId, jobId);
     
     const roleUpper = job.role.toUpperCase();
     
@@ -586,12 +590,7 @@ export class InterviewService {
   }
 
   async generateElevatorPitch(userId: string, jobId: string) {
-    const job = await prisma.jobApplication.findFirst({
-      where: { id: jobId, userId },
-      include: { resume: true }
-    });
-
-    if (!job) throw ApiError.notFound("Job not found");
+    const job = await this.requireInterviewJob(userId, jobId, true);
 
     let resumeText = "";
     if (job.resume) {
