@@ -6,6 +6,7 @@ import { generateStructuredResponse } from "./gemini.client";
 import { buildCareerInsightsPrompt, CareerDataInput } from "./prompts/career-insights.prompt";
 import { careerInsightsSchema, CareerInsightsOutput } from "./schemas/career-insights.schema";
 import { ApiError } from "../../utils/ApiError";
+import { stringList } from "../../utils/collections";
 import { startOfWeek } from "date-fns";
 
 /**
@@ -27,12 +28,8 @@ export class CareerInsightsService {
           resumeStrength: existing.resumeStrength ?? 0,
           jobMatchQuality: existing.jobMatchQuality ?? 0,
           applicationSuccessRate: existing.applicationSuccessRate ?? 0,
-          skillGaps: Array.isArray(existing.skillGaps)
-            ? existing.skillGaps.filter((gap): gap is string => typeof gap === "string")
-            : [],
-          recommendations: Array.isArray(existing.recommendations)
-            ? existing.recommendations.filter((rec): rec is string => typeof rec === "string")
-            : [],
+          skillGaps: stringList(existing.skillGaps),
+          recommendations: stringList(existing.recommendations),
         };
       }
     }

@@ -1,5 +1,6 @@
 import prisma from "../../config/prisma";
 import { ApiError } from "../../utils/ApiError";
+import { stringList } from "../../utils/collections";
 import { clampNumber } from "../../utils/math";
 import { generateStructuredResponse, toRawResponseJson } from "./gemini.client";
 import { resumeAnalysisSchema } from "./schemas/resume-analysis.schema";
@@ -140,7 +141,7 @@ rawResponse: toRawResponseJson(result.rawResponse),
       redFlags.push({ type: "CRITICAL", issue: "Severe ATS parse failure. Use a standard single-column layout." });
     }
     
-    for (const w of (analysis.weaknesses as string[] || [])) {
+    for (const w of stringList(analysis.weaknesses)) {
       if (w.toLowerCase().includes("typo") || w.toLowerCase().includes("grammar")) {
         redFlags.push({ type: "CRITICAL", issue: "Typos or grammatical errors detected. Needs proofreading." });
       }
@@ -165,7 +166,7 @@ rawResponse: toRawResponseJson(result.rawResponse),
     
     // Simulate keyword optimization feature where we recommend
     // industry standard keywords based on the resume's missing keywords
-    const missingKeywords = (analysis.missingKeywords as string[]) || [];
+    const missingKeywords = stringList(analysis.missingKeywords);
     
     if (missingKeywords.length === 0) {
       return {
