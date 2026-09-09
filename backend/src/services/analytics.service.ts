@@ -4,7 +4,7 @@ import { ACTIVE_APPLICATION_STATUSES } from "../constants";
 import { ApiError } from "../utils/ApiError";
 import { countBy } from "../utils/collections";
 import { dateKey, daysAgo, elapsedDays, monthKey } from "../utils/dates";
-import { clampNumber, randInt } from "../utils/math";
+import { clampNumber, percentOf, randInt } from "../utils/math";
 import { requireUser } from "../utils/user";
 
 /**
@@ -26,7 +26,7 @@ export class AnalyticsService {
     const byStatus = Object.entries(statusCounts).map(([status, count]) => ({
       status,
       count,
-      percentage: totalApplications > 0 ? Math.round((count / totalApplications) * 100) : 0,
+      percentage: percentOf(count, totalApplications),
     }));
 
     const applied = statusCounts["APPLIED"] || 0;
@@ -34,9 +34,9 @@ export class AnalyticsService {
     const offer = statusCounts["OFFER"] || 0;
 
     const conversionRates = {
-      appliedToInterview: applied > 0 ? Math.round((interview / applied) * 100) : 0,
-      interviewToOffer: interview > 0 ? Math.round((offer / interview) * 100) : 0,
-      overallSuccessRate: totalApplications > 0 ? Math.round((offer / totalApplications) * 100) : 0,
+      appliedToInterview: percentOf(interview, applied),
+      interviewToOffer: percentOf(offer, interview),
+      overallSuccessRate: percentOf(offer, totalApplications),
     };
 
     const now = new Date();
@@ -364,8 +364,8 @@ export class AnalyticsService {
     const analytics = Object.entries(sourceStats).map(([source, stats]) => ({
       source,
       totalApplications: stats.total,
-      interviewRate: stats.total > 0 ? Math.round((stats.interviews / stats.total) * 100) : 0,
-      offerRate: stats.total > 0 ? Math.round((stats.offers / stats.total) * 100) : 0,
+      interviewRate: percentOf(stats.interviews, stats.total),
+      offerRate: percentOf(stats.offers, stats.total),
     })).sort((a, b) => b.totalApplications - a.totalApplications);
 
     return analytics;
@@ -516,14 +516,14 @@ export class AnalyticsService {
       },
       { interviewCount: 0, userOfferCount: 0 }
     );
-    const userInterviewRate = totalApps > 0 ? Math.round((interviewCount / totalApps) * 100) : 0;
+    const userInterviewRate = percentOf(interviewCount, totalApps);
     
     // Mock peer averages
     const peerInterviewRate = 18; // 18%
     const peerOfferRate = 4; // 4%
     const peerAvgSalary = "$120,000";
 
-    const userOfferRate = totalApps > 0 ? Math.round((userOfferCount / totalApps) * 100) : 0;
+    const userOfferRate = percentOf(userOfferCount, totalApps);
 
     return {
       hasData: true,
@@ -854,7 +854,7 @@ export class AnalyticsService {
 
     // Calculate success rate based on resolved interviews (Offers / (Offers + Rejections))
     const resolvedInterviews = offers + rejections;
-    const successRate = resolvedInterviews > 0 ? Math.round((offers / resolvedInterviews) * 100) : 0;
+    const successRate = percentOf(offers, resolvedInterviews);
 
     return {
       totalInterviews: totalInterviewed,
@@ -924,18 +924,18 @@ export class AnalyticsService {
       { 
         stage: "Interview", 
         count: interviewCount, 
-        percentage: appliedCount > 0 ? Math.round((interviewCount / appliedCount) * 100) : 0 
+        percentage: percentOf(interviewCount, appliedCount) 
       },
       { 
         stage: "Offer", 
         count: offerCount, 
-        percentage: interviewCount > 0 ? Math.round((offerCount / interviewCount) * 100) : 0 
+        percentage: percentOf(offerCount, interviewCount) 
       }
     ];
 
     return {
       stages: funnel,
-      overallConversionRate: appliedCount > 0 ? Math.round((offerCount / appliedCount) * 100) : 0,
+      overallConversionRate: percentOf(offerCount, appliedCount),
       message: "Here is your application conversion funnel from application to offer."
     };
   }
@@ -1064,8 +1064,8 @@ export class AnalyticsService {
     const formatted = Object.entries(channels).map(([channel, data]) => ({
       channel,
       total: data.total,
-      interviewRate: data.total > 0 ? Math.round((data.interviews / data.total) * 100) : 0,
-      offerRate: data.total > 0 ? Math.round((data.offers / data.total) * 100) : 0
+      interviewRate: percentOf(data.interviews, data.total),
+      offerRate: percentOf(data.offers, data.total)
     }));
 
     return {
@@ -1149,7 +1149,7 @@ export class AnalyticsService {
     
     // Simulate active days as a percentage (between 30% and 90%)
     const activeDays = Math.max(1, Math.floor(accountAgeDays * (0.3 + Math.random() * 0.6)));
-    const retentionRate = Math.round((activeDays / accountAgeDays) * 100);
+    const retentionRate = percentOf(activeDays, accountAgeDays);
 
     return {
       userId,

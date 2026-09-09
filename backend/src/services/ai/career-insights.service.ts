@@ -1,6 +1,6 @@
 import prisma from "../../config/prisma";
 import { Prisma } from "@prisma/client";
-import { clampNumber } from "../../utils/math";
+import { clampNumber, percentOf } from "../../utils/math";
 import { daysAgo } from "../../utils/dates";
 import { generateStructuredResponse } from "./gemini.client";
 import { buildCareerInsightsPrompt, CareerDataInput } from "./prompts/career-insights.prompt";
@@ -113,7 +113,7 @@ export class CareerInsightsService {
       count: s._count,
     }));
 
-    const rejectionRate = totalApplications > 0 ? Math.round((rejected / totalApplications) * 100) : 0;
+    const rejectionRate = percentOf(rejected, totalApplications);
 
     const careerData: CareerDataInput = {
       totalApplications,
@@ -140,7 +140,7 @@ export class CareerInsightsService {
         interviewReadiness: completedInterviews > 0 ? clampNumber(completedInterviews * 20, 0, 100) : 20,
         resumeStrength: avgAts._avg.atsScore || 50,
         jobMatchQuality: avgMatch._avg.resumeMatchScore || 50,
-        applicationSuccessRate: totalApplications > 0 ? Math.round((offersThisMonth / totalApplications) * 100) : 0,
+        applicationSuccessRate: percentOf(offersThisMonth, totalApplications),
         skillGaps: [],
         recommendations: ["Upload and analyze your resume to get personalized recommendations."],
       };
