@@ -837,8 +837,7 @@ ${userName}`;
     if (job.salaryRange) {
       const numbers = job.salaryRange.match(/\d+/g);
       if (numbers && numbers.length >= 1) {
-        offerValue = parseInt(numbers[numbers.length - 1]);
-        if (offerValue < 1000) offerValue *= 1000;
+        offerValue = normalizeSalaryFigure(parseInt(numbers[numbers.length - 1]));
       }
     }
     
