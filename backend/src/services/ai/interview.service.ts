@@ -5,6 +5,7 @@ import { buildInterviewQuestionsPrompt } from "./prompts/interview.prompt";
 import { interviewQuestionsSchema, InterviewQuestionsOutput } from "./schemas/interview.schema";
 import { ApiError } from "../../utils/ApiError";
 import fs from "fs/promises";
+import { readTextFileSafely } from "../../utils/fs";
 import { z } from "zod";
 
 /**
@@ -600,7 +601,7 @@ export class InterviewService {
 
     let resumeText = "";
     if (job.resume) {
-      resumeText = await fs.readFile(job.resume.filePath, "utf-8").catch(() => "");
+      resumeText = await readTextFileSafely(job.resume.filePath, "");
     }
 
     // Mock AI generation of a pitch
