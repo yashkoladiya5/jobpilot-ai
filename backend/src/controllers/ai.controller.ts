@@ -18,36 +18,24 @@ const resumeAnalysisService = new ResumeAnalysisService();
 const jobAnalysisService = new JobAnalysisService();
 
 /**
- * Reads the jobId path parameter and responds with a 400 when it is missing.
- * Returns the jobId, or null after sending the error response.
+ * Reads a path parameter and responds with a 400 when it is missing.
+ * Returns the value, or null after sending the error response.
  */
-function requireJobIdParam(req: Request, res: Response): string | null {
-  const { jobId } = req.params;
-  if (!jobId) {
-    res.status(400).json({ success: false, message: "Job ID is required." });
+function requireIdParam(req: Request, res: Response, param: "jobId" | "resumeId"): string | null {
+  const value = req.params[param];
+  if (!value) {
+    const label = param === "jobId" ? "Job ID" : "Resume ID";
+    res.status(400).json({ success: false, message: `${label} is required.` });
     return null;
   }
-  return jobId;
-}
-
-/**
- * Reads the resumeId path parameter and responds with a 400 when it is missing.
- * Returns the resumeId, or null after sending the error response.
- */
-function requireResumeIdParam(req: Request, res: Response): string | null {
-  const { resumeId } = req.params;
-  if (!resumeId) {
-    res.status(400).json({ success: false, message: "Resume ID is required." });
-    return null;
-  }
-  return resumeId;
+  return value;
 }
 
 // Resume Analysis
 
 export const analyzeResume = asyncHandler(async (req: Request, res: Response) => {
   const userId = getUserId(req);
-  const resumeId = requireResumeIdParam(req, res);
+  const resumeId = requireIdParam(req, res, "resumeId");
   if (!resumeId) return;
 
   logger.info(`[AI Controller] Starting resume analysis for user ${userId}, resume ${resumeId}`);
@@ -97,7 +85,7 @@ export const getLatestResumeAnalysis = asyncHandler(async (req: Request, res: Re
 
 export const getResumeRedFlags = asyncHandler(async (req: Request, res: Response) => {
   const userId = getUserId(req);
-  const resumeId = requireResumeIdParam(req, res);
+  const resumeId = requireIdParam(req, res, "resumeId");
   if (!resumeId) return;
   
   const result = await resumeAnalysisService.getResumeRedFlags(userId, resumeId);
@@ -111,7 +99,7 @@ export const getResumeRedFlags = asyncHandler(async (req: Request, res: Response
 
 export const getResumeKeywordOptimization = asyncHandler(async (req: Request, res: Response) => {
   const userId = getUserId(req);
-  const resumeId = requireResumeIdParam(req, res);
+  const resumeId = requireIdParam(req, res, "resumeId");
   if (!resumeId) return;
   
   const optimization = await resumeAnalysisService.getResumeKeywordOptimization(userId, resumeId);
@@ -125,7 +113,7 @@ export const getResumeKeywordOptimization = asyncHandler(async (req: Request, re
 
 export const getSmartResumeSummary = asyncHandler(async (req: Request, res: Response) => {
   const userId = getUserId(req);
-  const resumeId = requireResumeIdParam(req, res);
+  const resumeId = requireIdParam(req, res, "resumeId");
   if (!resumeId) return;
   
   const summary = await resumeAnalysisService.generateSmartResumeSummary(userId, resumeId);
@@ -403,7 +391,7 @@ export const getInterviewReadinessScore = asyncHandler(async (req: Request, res:
 
 export const generateMockTechnicalAssessment = asyncHandler(async (req: Request, res: Response) => {
   const userId = getUserId(req);
-  const jobId = requireJobIdParam(req, res);
+  const jobId = requireIdParam(req, res, "jobId");
   if (!jobId) return;
   
   const assessment = await interviewService.generateMockTechnicalAssessment(userId, jobId);
@@ -417,7 +405,7 @@ export const generateMockTechnicalAssessment = asyncHandler(async (req: Request,
 
 export const generateMockBehavioralAssessment = asyncHandler(async (req: Request, res: Response) => {
   const userId = getUserId(req);
-  const jobId = requireJobIdParam(req, res);
+  const jobId = requireIdParam(req, res, "jobId");
   if (!jobId) return;
   
   const assessment = await interviewService.generateMockBehavioralAssessment(userId, jobId);
@@ -431,7 +419,7 @@ export const generateMockBehavioralAssessment = asyncHandler(async (req: Request
 
 export const generateMockSystemDesignAssessment = asyncHandler(async (req: Request, res: Response) => {
   const userId = getUserId(req);
-  const jobId = requireJobIdParam(req, res);
+  const jobId = requireIdParam(req, res, "jobId");
   if (!jobId) return;
   
   const assessment = await interviewService.generateMockSystemDesignAssessment(userId, jobId);
@@ -521,7 +509,7 @@ export const detectJobRedFlags = asyncHandler(async (req: Request, res: Response
 
 export const generateElevatorPitch = asyncHandler(async (req: Request, res: Response) => {
   const userId = getUserId(req);
-  const jobId = requireJobIdParam(req, res);
+  const jobId = requireIdParam(req, res, "jobId");
   if (!jobId) return;
   
   const result = await interviewService.generateElevatorPitch(userId, jobId);
