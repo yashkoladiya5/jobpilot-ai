@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import prisma from "../config/prisma";
 import { ApiError } from "../utils/ApiError";
 import { clampNumber, randInt } from "../utils/math";
-import { elapsedDays } from "../utils/dates";
+import { daysAgo, elapsedDays } from "../utils/dates";
 
 const userSelect = {
   id: true,
@@ -167,7 +167,7 @@ export class AuthService {
         id: "sess_2",
         device: "iPhone 14 - Safari",
         ipAddress: "192.168.1.5",
-        lastActive: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2), // 2 days ago
+        lastActive: daysAgo(2), // 2 days ago
         isCurrent: false,
         location: "San Francisco, CA"
       }
@@ -192,7 +192,7 @@ export class AuthService {
       },
       {
         id: "log_2",
-        timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24 * 1), // 1 day ago
+        timestamp: daysAgo(1), // 1 day ago
         status: "SUCCESS",
         ipAddress: "192.168.1.5",
         device: "iPhone 14 - Safari",
@@ -200,7 +200,7 @@ export class AuthService {
       },
       {
         id: "log_3",
-        timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5), // 5 days ago
+        timestamp: daysAgo(5), // 5 days ago
         status: "FAILED_ATTEMPT",
         ipAddress: "104.28.192.3",
         device: "Unknown Device - Firefox",
