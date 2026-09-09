@@ -296,39 +296,56 @@ export class JobService {
       orderBy: { updatedAt: "desc" },
     });
 
-    const actionItems = [];
+    const actionItems: {
+      jobId: string;
+      company: string;
+      role: string;
+      type: string;
+      priority: string;
+      message: string;
+    }[] = [];
     const now = new Date().getTime();
+
+    const pushItem = (
+      job: (typeof jobs)[number],
+      type: string,
+      priority: string,
+      message: string,
+    ) => {
+      actionItems.push({
+        jobId: job.id,
+        company: job.companyName,
+        role: job.role,
+        type,
+        priority,
+        message,
+      });
+    };
 
     for (const job of jobs) {
       const daysSinceUpdate = Math.floor((now - job.updatedAt.getTime()) / (1000 * 60 * 60 * 24));
       
       if (job.status === "APPLIED" && daysSinceUpdate >= 7) {
-        actionItems.push({
-          jobId: job.id,
-          company: job.companyName,
-          role: job.role,
-          type: "FOLLOW_UP",
-          priority: daysSinceUpdate >= 14 ? "HIGH" : "MEDIUM",
-          message: `It's been ${daysSinceUpdate} days since you applied. Consider sending a follow-up email.`
-        });
+        pushItem(
+          job,
+          "FOLLOW_UP",
+          daysSinceUpdate >= 14 ? "HIGH" : "MEDIUM",
+          `It's been ${daysSinceUpdate} days since you applied. Consider sending a follow-up email.`
+        );
       } else if (job.status === "INTERVIEW") {
-        actionItems.push({
-          jobId: job.id,
-          company: job.companyName,
-          role: job.role,
-          type: "PREPARE",
-          priority: "HIGH",
-          message: "You have an active interview phase. Have you practiced your mock interviews recently?"
-        });
+        pushItem(
+          job,
+          "PREPARE",
+          "HIGH",
+          "You have an active interview phase. Have you practiced your mock interviews recently?"
+        );
       } else if (job.status === "OFFER" && daysSinceUpdate >= 3) {
-        actionItems.push({
-          jobId: job.id,
-          company: job.companyName,
-          role: job.role,
-          type: "DECISION",
-          priority: "HIGH",
-          message: "You received an offer recently. Don't forget to negotiate or respond by the deadline."
-        });
+        pushItem(
+          job,
+          "DECISION",
+          "HIGH",
+          "You received an offer recently. Don't forget to negotiate or respond by the deadline."
+        );
       }
     }
 
