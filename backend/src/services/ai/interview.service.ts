@@ -247,7 +247,7 @@ export class InterviewService {
       data: {
         sessionId,
         overallScore,
-        categoryScores: categoryScores as Prisma.InputJsonValue,
+        categoryScores,
         strengths,
         improvements,
         summary: `Completed ${answered.length}/${session.totalQuestions} questions. Overall score: ${overallScore}/100.`,
