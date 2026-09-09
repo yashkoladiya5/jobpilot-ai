@@ -4,7 +4,6 @@ import { generateStructuredResponse, toRawResponseJson } from "./gemini.client";
 import { buildInterviewQuestionsPrompt } from "./prompts/interview.prompt";
 import { interviewQuestionsSchema, InterviewQuestionsOutput } from "./schemas/interview.schema";
 import { ApiError } from "../../utils/ApiError";
-import fs from "fs/promises";
 import { readTextFileSafely } from "../../utils/fs";
 import { z } from "zod";
 
@@ -70,7 +69,7 @@ export class InterviewService {
 
     let resumeText: string | undefined;
     if (job.resume) {
-      resumeText = await fs.readFile(job.resume.filePath, "utf-8").catch(() => undefined);
+      resumeText = await readTextFileSafely(job.resume.filePath, undefined);
     }
 
     const session = await prisma.interviewSession.create({
