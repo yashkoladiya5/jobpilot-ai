@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { authenticate } from "../middleware/auth";
-import { getStats, getRecentActivityLogs, getActionItems, getDashboardSummary, getDashboardAlerts, getUpcomingEvents, getDailyGoals, getRecommendedJobs, getWeeklySnapshot, getTopSkillsTrending, getGamificationScore, getSkillGapAnalysis, getBurnoutPredictor, getMorningBriefing, getConsistencyTracker, generateWeeklyReport, updateNotificationPreferences, snoozeNotifications, dismissAlert, pinAlert, dismissAllAlerts, clearAllActionItems, updateWidgetPreferences, getGoalStreaks, getCareerMilestones, getUpcomingDeadlines, getApplicationSuggestions, getWeeklyPerformance, getInterviewPrepGuide } from "../controllers/dashboard.controller";
+import { getStats, getRecentActivityLogs, getActionItems, getDashboardSummary, getDashboardAlerts, getUpcomingEvents, getDailyGoals, getRecommendedJobs, getWeeklySnapshot, getTopSkillsTrending, getGamificationScore, getSkillGapAnalysis, getBurnoutPredictor, getMorningBriefing, getConsistencyTracker, generateWeeklyReport, updateNotificationPreferences, snoozeNotifications, dismissAlert, pinAlert, dismissAllAlerts, clearAllActionItems, updateWidgetPreferences, getGoalStreaks, getCareerMilestones, getUpcomingDeadlines, getApplicationSuggestions, getWeeklyPerformance, getInterviewPrepGuide, getDashboardMentalHealthCheck } from "../controllers/dashboard.controller";
 
 /**
  * Express router for dashboard endpoints.
@@ -37,5 +37,6 @@ router.get("/upcoming-deadlines", authenticate, getUpcomingDeadlines);
 router.get("/application-suggestions", authenticate, getApplicationSuggestions);
 router.get("/weekly-performance", authenticate, getWeeklyPerformance);
 router.get("/interview-prep-guide", authenticate, getInterviewPrepGuide);
+router.get("/mental-health", authenticate, getDashboardMentalHealthCheck);
 
 export default router;

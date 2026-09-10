@@ -1098,4 +1098,81 @@ export class DashboardService {
       message: `Prep guide generated for your upcoming interview at ${companyName}.`
     };
   }
+
+  async getSkillGapAnalysis(userId: string) {
+    const jobs = await prisma.jobApplication.findMany({
+      where: { userId },
+      select: { role: true },
+      take: 20
+    });
+
+    if (jobs.length === 0) {
+      return {
+        missingSkills: [],
+        recommendations: [],
+        message: "No applications found to analyze skill gaps."
+      };
+    }
+
+    // Mock analysis of common skills missing based on applied roles
+    const hasEngineeringRoles = jobs.some(j => (j.role || "").toLowerCase().includes("engineer") || (j.role || "").toLowerCase().includes("developer"));
+    const hasManagerRoles = jobs.some(j => (j.role || "").toLowerCase().includes("manager"));
+
+    const missingSkills = [];
+    const recommendations = [];
+
+    if (hasEngineeringRoles) {
+      missingSkills.push({ skill: "Docker / Kubernetes", frequency: "High" });
+      missingSkills.push({ skill: "GraphQL", frequency: "Medium" });
+      recommendations.push("Consider taking a short course on containerization.");
+    }
+    
+    if (hasManagerRoles) {
+      missingSkills.push({ skill: "Agile/Scrum Certification", frequency: "High" });
+      missingSkills.push({ skill: "Conflict Resolution", frequency: "Medium" });
+      recommendations.push("Highlight leadership methodologies in your resume.");
+    }
+
+    if (missingSkills.length === 0) {
+      missingSkills.push({ skill: "Advanced Excel", frequency: "Low" });
+      recommendations.push("Review general productivity tools.");
+    }
+
+    return {
+      missingSkills,
+      recommendations,
+      message: "Skill gap analysis generated based on your recent applications."
+    };
+  }
+
+  async getDashboardMentalHealthCheck(userId: string) {
+    const jobs = await prisma.jobApplication.findMany({
+      where: { userId },
+      select: { status: true, createdAt: true }
+    });
+
+    const recentRejections = jobs.filter(j => 
+      j.status === "REJECTED" && 
+      (new Date().getTime() - j.createdAt.getTime()) / (1000 * 3600 * 24) < 7
+    ).length;
+
+    let healthStatus = "Good";
+    let message = "You're doing great! Keep up the positive momentum.";
+
+    if (recentRejections >= 3) {
+      healthStatus = "Stressed";
+      message = "You've faced a few rejections recently. It's perfectly normal, but remember to take a break if you need it. Mental health comes first!";
+    } else if (jobs.length > 50) {
+      healthStatus = "At Risk of Burnout";
+      message = "You're applying at a very high volume. Make sure to prioritize quality over quantity and take some time to recharge.";
+    }
+
+    return {
+      healthStatus,
+      recentRejections,
+      totalApplications: jobs.length,
+      recommendation: message,
+      generatedAt: new Date().toISOString()
+    };
+  }
 }

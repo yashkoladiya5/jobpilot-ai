@@ -477,3 +477,27 @@ export const getInterviewPrepGuide = asyncHandler(async (req: Request, res: Resp
     data: result 
   });
 });
+
+export const getSkillGapAnalysis = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  
+  const result = await dashboardService.getSkillGapAnalysis(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Skill gap analysis generated successfully", 
+    data: result 
+  });
+});
+
+export const getDashboardMentalHealthCheck = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  
+  const result = await dashboardService.getDashboardMentalHealthCheck(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Mental health check generated successfully", 
+    data: result 
+  });
+});
