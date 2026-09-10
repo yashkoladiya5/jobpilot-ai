@@ -320,3 +320,15 @@ export const getTimeToHirePredictor = asyncHandler(async (req: Request, res: Res
     data: result 
   });
 });
+
+export const predictOfferProbability = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  
+  const result = await analyticsService.predictOfferProbability(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Offer probability calculated successfully", 
+    data: result 
+  });
+});

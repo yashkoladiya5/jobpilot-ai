@@ -1195,4 +1195,54 @@ export class AnalyticsService {
       message: `Based on your current pipeline velocity, we estimate your time to hire at ${baselineDays} days.`
     };
   }
+
+  async predictOfferProbability(userId: string) {
+    const applications = await prisma.jobApplication.findMany({
+      where: { userId },
+      select: {
+        status: true,
+        updatedAt: true
+      }
+    });
+
+    if (applications.length === 0) {
+      return {
+        userId,
+        offerProbabilityPercent: 0,
+        factorAnalysis: "Insufficient data to predict offer probability.",
+        message: "Apply to more jobs to start seeing predictions."
+      };
+    }
+
+    const totalApplications = applications.length;
+    const interviews = applications.filter(a => a.status === "INTERVIEW").length;
+    const offers = applications.filter(a => a.status === "OFFER").length;
+
+    let baseProbability = 5; // Base 5% chance
+    if (interviews > 0) {
+      baseProbability += (interviews / totalApplications) * 50; 
+    }
+    if (offers > 0) {
+      baseProbability += 20; // Proven closer
+    }
+
+    // Decay probability if no recent updates
+    const recentActivity = applications.some(a => {
+      const daysSinceUpdate = (new Date().getTime() - a.updatedAt.getTime()) / (1000 * 3600 * 24);
+      return daysSinceUpdate < 7;
+    });
+
+    if (!recentActivity) {
+      baseProbability *= 0.8; // 20% penalty for stale pipeline
+    }
+
+    const finalProbability = Math.min(Math.round(baseProbability), 95); // Cap at 95%
+
+    return {
+      userId,
+      offerProbabilityPercent: finalProbability,
+      factorAnalysis: recentActivity ? "Your recent activity and interview rate show positive momentum." : "Pipeline is stalling. Follow up on recent applications to improve your chances.",
+      message: "Offer probability calculated successfully based on historical conversion rates."
+    };
+  }
 }
