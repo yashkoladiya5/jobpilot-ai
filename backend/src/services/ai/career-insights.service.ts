@@ -5,7 +5,6 @@ import { daysAgo } from "../../utils/dates";
 import { generateStructuredResponse } from "./gemini.client";
 import { buildCareerInsightsPrompt, CareerDataInput } from "./prompts/career-insights.prompt";
 import { careerInsightsSchema, CareerInsightsOutput } from "./schemas/career-insights.schema";
-import { ApiError } from "../../utils/ApiError";
 import { stringList } from "../../utils/collections";
 import { startOfWeek } from "date-fns";
 
