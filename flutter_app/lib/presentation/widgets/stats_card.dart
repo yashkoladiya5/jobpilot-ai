@@ -51,7 +51,7 @@ class StatsCard extends StatelessWidget {
                       size: 24,
                     ),
                   ),
-                  if (trailingIcon != null) trailingIcon!,
+                  ?trailingIcon,
                 ],
               ),
               const SizedBox(height: 12),
