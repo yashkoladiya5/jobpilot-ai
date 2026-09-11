@@ -12,7 +12,6 @@ import {
   getJobAnalysis,
   getJobAnalyses,
   deleteJobAnalysis,
-  generateCoverLetter,
   matchResumeJob,
   getMatchResult,
   getTopMatches,
@@ -73,7 +72,6 @@ router.get("/job/analysis/:analysisId", getJobAnalysis);
 router.get("/job/analyses", getJobAnalyses);
 router.delete("/job/analysis/:analysisId", deleteJobAnalysis);
 router.delete("/resume/analysis/:analysisId", deleteResumeAnalysis);
-router.post("/cover-letter/generate", generateCoverLetter);
 router.post("/cover-letter/rewrite-tone", rewriteCoverLetterTone);
 router.post("/cover-letter/highlight-keywords", highlightCoverLetterKeywords);
 router.post("/resignation-letter/generate", generateResignationLetter);
