@@ -36,8 +36,7 @@ class AiRemoteDataSource {
       ApiConstants.jobAnalyze,
       data: {
         'jobDescription': jobDescription,
-        // ignore: use_null_aware_elements
-        if (jobId != null) 'jobId': jobId,
+        'jobId': ?jobId,
       },
     );
     return response.data as Map<String, dynamic>;
