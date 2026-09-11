@@ -49,21 +49,32 @@ async function withJobId<T>(
   res.status(200).json({ success: true, message, data: result });
 }
 
-// Resume Analysis
-
-export const analyzeResume = asyncHandler(async (req: Request, res: Response) => {
+/**
+ * Loads the resumeId path parameter, then runs and responds with the given service call.
+ * Sends a 400 response when the resumeId route parameter is absent.
+ */
+async function withResumeId<T>(
+  req: Request,
+  res: Response,
+  message: string,
+  run: (userId: string, resumeId: string) => Promise<T>
+) {
   const userId = getUserId(req);
   const resumeId = requireIdParam(req, res, "resumeId");
   if (!resumeId) return;
 
-  logger.info(`[AI Controller] Starting resume analysis for user ${userId}, resume ${resumeId}`);
-  const analysis = await resumeAnalysisService.analyzeResume(userId, resumeId);
-  logger.info(`[AI Controller] Finished resume analysis for resume ${resumeId}`);
-  
-  res.status(200).json({
-    success: true,
-    message: "Resume analysis completed successfully",
-    data: analysis,
+  const result = await run(userId, resumeId);
+  res.status(200).json({ success: true, message, data: result });
+}
+
+// Resume Analysis
+
+export const analyzeResume = asyncHandler(async (req: Request, res: Response) => {
+  await withResumeId(req, res, "Resume analysis completed successfully", async (userId, resumeId) => {
+    logger.info(`[AI Controller] Starting resume analysis for user ${userId}, resume ${resumeId}`);
+    const analysis = await resumeAnalysisService.analyzeResume(userId, resumeId);
+    logger.info(`[AI Controller] Finished resume analysis for resume ${resumeId}`);
+    return analysis;
   });
 });
 
@@ -102,45 +113,18 @@ export const getLatestResumeAnalysis = asyncHandler(async (req: Request, res: Re
 });
 
 export const getResumeRedFlags = asyncHandler(async (req: Request, res: Response) => {
-  const userId = getUserId(req);
-  const resumeId = requireIdParam(req, res, "resumeId");
-  if (!resumeId) return;
-  
-  const result = await resumeAnalysisService.getResumeRedFlags(userId, resumeId);
-  
-  res.status(200).json({
-    success: true,
-    message: "Resume red flags generated successfully",
-    data: result,
-  });
+  await withResumeId(req, res, "Resume red flags generated successfully",
+    (userId, resumeId) => resumeAnalysisService.getResumeRedFlags(userId, resumeId));
 });
 
 export const getResumeKeywordOptimization = asyncHandler(async (req: Request, res: Response) => {
-  const userId = getUserId(req);
-  const resumeId = requireIdParam(req, res, "resumeId");
-  if (!resumeId) return;
-  
-  const optimization = await resumeAnalysisService.getResumeKeywordOptimization(userId, resumeId);
-  
-  res.status(200).json({
-    success: true,
-    message: "Resume keyword optimization generated successfully",
-    data: optimization,
-  });
+  await withResumeId(req, res, "Resume keyword optimization generated successfully",
+    (userId, resumeId) => resumeAnalysisService.getResumeKeywordOptimization(userId, resumeId));
 });
 
 export const getSmartResumeSummary = asyncHandler(async (req: Request, res: Response) => {
-  const userId = getUserId(req);
-  const resumeId = requireIdParam(req, res, "resumeId");
-  if (!resumeId) return;
-  
-  const summary = await resumeAnalysisService.generateSmartResumeSummary(userId, resumeId);
-  
-  res.status(200).json({
-    success: true,
-    message: "Smart resume summary generated successfully",
-    data: summary,
-  });
+  await withResumeId(req, res, "Smart resume summary generated successfully",
+    (userId, resumeId) => resumeAnalysisService.generateSmartResumeSummary(userId, resumeId));
 });
 
 // Job Analysis
