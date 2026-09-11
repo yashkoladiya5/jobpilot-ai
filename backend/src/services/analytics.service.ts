@@ -134,7 +134,7 @@ export class AnalyticsService {
     return timeline;
   }
 
-  async getSkillMatchAnalytics(userId: string) {
+  async getSkillMatchAnalytics(_userId: string) {
     // Basic mock implementation for skill match insights based on user profile
     const mockSkillData = [
       { skill: "React", matchScore: 90, frequency: 15 },
@@ -371,7 +371,7 @@ export class AnalyticsService {
     return analytics;
   }
 
-  async getSkillsGapAnalytics(userId: string) {
+  async getSkillsGapAnalytics(_userId: string) {
     // In a real application, we'd extract preferred skills from all job descriptions
     // the user applied to and compare them to the user's parsed resume skills.
     
@@ -801,7 +801,7 @@ export class AnalyticsService {
   }
 
   async exportAnalyticsReport(userId: string) {
-    const user = await requireUser(userId);
+    await requireUser(userId);
 
     // We'd generate a CSV or PDF in a real app, here we return a structured JSON representing the export
     const basicStats = await this.getPipelineAnalytics(userId);
@@ -1109,7 +1109,7 @@ export class AnalyticsService {
     };
   }
 
-  async getProfileViewsHistory(userId: string) {
+  async getProfileViewsHistory(_userId: string) {
     // Generate a mock time-series data for profile views over the last 30 days
     const data = [];
     const now = new Date();
