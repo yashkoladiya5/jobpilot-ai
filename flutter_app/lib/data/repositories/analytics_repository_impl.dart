@@ -50,6 +50,16 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
     }
   }
 
+  @override
+  Future<Either<Failure, void>> refreshAnalyticsData() async {
+    try {
+      await _remoteDataSource.getPipelineAnalytics();
+      return const Right(null);
+    } on DioException catch (e) {
+      return Left(_handleDioError(e));
+    }
+  }
+
   Failure _handleDioError(DioException e) {
     if (e.error is AuthException) {
       return Failure.authFailure(
