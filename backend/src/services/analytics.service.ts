@@ -6,6 +6,7 @@ import { countBy } from "../utils/collections";
 import { MS_PER_DAY, dateKey, daysAgo, elapsedDays, monthKey } from "../utils/dates";
 import { clampNumber, percentOf, randInt } from "../utils/math";
 import { requireUser } from "../utils/user";
+import { startOfWeek } from "date-fns";
 
 /**
  * Service for calculating advanced insights and aggregated metrics
@@ -103,18 +104,12 @@ export class AnalyticsService {
     const weekMap: Record<string, { count: number; statuses: Record<string, number> }> = {};
 
     for (let i = 0; i < 12; i++) {
-      const weekStart = new Date();
-      weekStart.setDate(weekStart.getDate() - (11 - i) * 7);
-      const weekKey = dateKey(weekStart);
+      const weekKey = dateKey(startOfWeek(daysAgo((11 - i) * 7), { weekStartsOn: 1 }));
       weekMap[weekKey] = { count: 0, statuses: {} };
     }
 
     for (const app of applications) {
-      const appDate = app.createdAt;
-      const daysSinceEpoch = Math.floor(appDate.getTime() / MS_PER_DAY);
-      const weekStartDay = daysSinceEpoch - (daysSinceEpoch % 7);
-      const weekStart = new Date(weekStartDay * MS_PER_DAY);
-      const weekKey = dateKey(weekStart);
+      const weekKey = dateKey(startOfWeek(app.createdAt, { weekStartsOn: 1 }));
 
       if (!weekMap[weekKey]) {
         weekMap[weekKey] = { count: 0, statuses: {} };
