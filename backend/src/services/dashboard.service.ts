@@ -156,8 +156,6 @@ export class DashboardService {
   }
 
   async getDashboardAlerts(userId: string) {
-    const now = new Date();
-    
     // Find jobs in INTERVIEW status that were recently updated
     const upcomingInterviews = await prisma.jobApplication.findMany({
       where: {
@@ -198,7 +196,6 @@ export class DashboardService {
 
   async getUpcomingEvents(userId: string) {
     const now = new Date();
-    const nextWeek = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
     
     // In a real application, we'd query an Interview or Event table.
     // For now, we find jobs in INTERVIEW status that were recently updated
@@ -215,7 +212,7 @@ export class DashboardService {
 
     const events = upcomingInterviews.map((interview, index) => {
       // Mock event dates based on the index to stagger them in the next few days
-      const eventDate = new Date(now.getTime() + (index + 1) * 2 * 24 * 60 * 60 * 1000);
+      const eventDate = new Date(now.getTime() + (index + 1) * 2 * MS_PER_DAY);
       
       return {
         id: `evt_${interview.id}`,
