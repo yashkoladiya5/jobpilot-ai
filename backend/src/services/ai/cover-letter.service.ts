@@ -6,6 +6,9 @@ import { buildCoverLetterPrompt } from "./prompts/cover-letter.prompt";
 import { readTextFileSafely } from "../../utils/fs";
 import { requireOwnedResume } from "../../utils/resume";
 
+/** Tones accepted when generating or adjusting a cover letter. */
+const SUPPORTED_COVER_LETTER_TONES: readonly string[] = ["professional", "enthusiastic", "confident", "humorous", "formal"];
+
 /**
  * Service for generating AI-powered cover letters using user resumes and job descriptions.
  */
@@ -97,6 +100,10 @@ export class CoverLetterService {
       throw ApiError.badRequest("Cannot update a cover letter that has not finished generating");
     }
 
+    if (tone && !SUPPORTED_COVER_LETTER_TONES.includes(tone)) {
+      throw ApiError.badRequest(`Unsupported tone. Supported tones: ${SUPPORTED_COVER_LETTER_TONES.join(', ')}`);
+    }
+
     return prisma.coverLetter.update({
       where: { id },
       data: {
@@ -124,10 +131,9 @@ export class CoverLetterService {
     }
     
     // Check if tone is one of the supported ones
-    const supportedTones = ["professional", "enthusiastic", "confident", "humorous", "formal"];
     const requestedTone = newTone.toLowerCase();
-    if (!supportedTones.includes(requestedTone)) {
-      throw ApiError.badRequest(`Unsupported tone. Supported tones: ${supportedTones.join(', ')}`);
+    if (!SUPPORTED_COVER_LETTER_TONES.includes(requestedTone)) {
+      throw ApiError.badRequest(`Unsupported tone. Supported tones: ${SUPPORTED_COVER_LETTER_TONES.join(', ')}`);
     }
 
     // Since we are mocking AI here without making an actual LLM call for simplicity:
