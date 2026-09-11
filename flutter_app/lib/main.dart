@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jobpilot_ai/app.dart';
 import 'package:jobpilot_ai/core/di/injection.dart';
 import 'package:jobpilot_ai/presentation/bloc/app_bloc_observer.dart';
