@@ -53,7 +53,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         await Future.delayed(const Duration(seconds: 2));
         emit(DashboardExportSuccess(
           currentState.stats, 
-          "Data exported successfully to ${event.format} format"
+          'Data exported successfully to ${event.format} format'
         ));
         // Revert back to the loaded state to restore normal UI
         emit(currentState);
