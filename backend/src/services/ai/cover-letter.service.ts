@@ -24,19 +24,20 @@ export class CoverLetterService {
       `[Binary file: ${resume.fileName} (${resume.mimeType}) - text extraction not yet supported for this format]`,
     );
 
+    const selectedTone = tone || "professional";
+
     const coverLetterRecord = await prisma.coverLetter.create({
       data: {
         userId,
         resumeId,
         jobId: jobId || null,
         jobDescription,
-        tone: tone || "professional",
+        tone: selectedTone,
         coverLetterText: "",
         status: "PROCESSING",
       },
     });
 
-    const selectedTone = tone || "professional";
     const prompt = buildCoverLetterPrompt(resumeText, jobDescription, selectedTone);
     const result = await generateStructuredResponse(prompt, coverLetterSchema);
 
