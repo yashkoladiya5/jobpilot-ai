@@ -64,6 +64,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
               DashboardLoading() => const _DashboardShimmer(),
               DashboardLoaded(:final stats) =>
                 _buildDashboardContent(context, stats),
+              DashboardExportSuccess(:final stats) =>
+                _buildDashboardContent(context, stats),
               DashboardError(:final message) => ErrorDisplay(
                   message: message,
                   onRetry: () =>
