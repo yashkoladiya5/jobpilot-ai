@@ -71,7 +71,7 @@ export class AuthService {
   }
 
   async updateProfile(userId: string, data: { name?: string; bio?: string }) {
-    const user = await this.requireUser(userId, "User not found in the system");
+    await this.requireUser(userId, "User not found in the system");
 
     const updatedUser = await prisma.user.update({
       where: { id: userId },
@@ -83,7 +83,7 @@ export class AuthService {
   }
 
   async deleteAccount(userId: string) {
-    const user = await this.requireUser(userId, "User not found in the system");
+    await this.requireUser(userId, "User not found in the system");
 
     // Instead of hard deleting, we might want to deactivate or hard delete
     // based on business logic. Let's hard delete for compliance (e.g. GDPR).
@@ -152,7 +152,7 @@ export class AuthService {
   async getActiveSessions(userId: string, currentIp?: string) {
     // In a real app, you'd fetch from a Session table or Redis
     // We mock active sessions for the user's dashboard view here
-    const user = await this.requireUser(userId);
+    await this.requireUser(userId);
 
     const sessions = [
       {
@@ -179,7 +179,7 @@ export class AuthService {
   async getLoginHistory(userId: string) {
     // In a real application, you would query an audit log or LoginHistory table.
     // We provide mock login history to support the frontend dashboard security view.
-    const user = await this.requireUser(userId);
+    await this.requireUser(userId);
 
     const history = [
       {
@@ -212,7 +212,7 @@ export class AuthService {
   }
 
   async registerDeviceFingerprint(userId: string, fingerprint: string, deviceName: string) {
-    const user = await this.requireUser(userId);
+    await this.requireUser(userId);
 
     if (!fingerprint || !deviceName) {
       throw ApiError.badRequest("Fingerprint and deviceName are required.");
@@ -368,7 +368,7 @@ export class AuthService {
   }
 
   async revokeSession(userId: string, sessionId: string) {
-    const user = await this.requireUser(userId);
+    await this.requireUser(userId);
 
     if (!sessionId) {
       throw ApiError.badRequest("Session ID is required to revoke a session.");
@@ -554,7 +554,7 @@ export class AuthService {
   }
 
   async toggleTwoFactorAuth(userId: string, enable: boolean) {
-    const user = await this.requireUser(userId);
+    await this.requireUser(userId);
 
     // We don't have is2FAEnabled in Prisma, so we'll mock it like we mock other MFA setup.
     // In a real app we'd update `user.is2FAEnabled`.
@@ -616,7 +616,7 @@ export class AuthService {
   }
 
   async revokeOtherSessions(userId: string, currentSessionId: string) {
-    const user = await this.requireUser(userId);
+    await this.requireUser(userId);
 
     if (!currentSessionId) {
       throw ApiError.badRequest("Current session ID is required to revoke other sessions.");
@@ -634,7 +634,7 @@ export class AuthService {
   }
 
   async terminateIdleSessions(userId: string, idleThresholdMinutes: number = 60) {
-    const user = await this.requireUser(userId);
+    await this.requireUser(userId);
 
     if (idleThresholdMinutes < 5) {
       throw ApiError.badRequest("Idle threshold must be at least 5 minutes.");
@@ -657,7 +657,7 @@ export class AuthService {
   }
 
   async revokeAllSessions(userId: string) {
-    const user = await this.requireUser(userId);
+    await this.requireUser(userId);
 
     // In a real application, we would delete all active sessions from the DB/Redis 
     // for this user.
@@ -742,7 +742,7 @@ export class AuthService {
   }
 
   async addEmailAlias(userId: string, aliasEmail: string) {
-    const user = await this.requireUser(userId);
+    await this.requireUser(userId);
 
     if (!aliasEmail || !aliasEmail.includes('@')) {
       throw ApiError.badRequest("A valid alias email is required");
@@ -760,7 +760,7 @@ export class AuthService {
   }
 
   async removeEmailAlias(userId: string, aliasEmail: string) {
-    const user = await this.requireUser(userId);
+    await this.requireUser(userId);
 
     if (!aliasEmail) {
       throw ApiError.badRequest("Alias email is required to remove it");
@@ -776,7 +776,7 @@ export class AuthService {
   }
 
   async getTrustedDevices(userId: string) {
-    const user = await this.requireUser(userId);
+    await this.requireUser(userId);
 
     // In a real application, we would query the TrustedDevice table
     // For this mock, we will return some mock data
@@ -806,7 +806,7 @@ export class AuthService {
   }
 
   async getSessionMapCoordinates(userId: string) {
-    const user = await this.requireUser(userId);
+    await this.requireUser(userId);
 
     // Mock coordinates for active sessions to display on a map
     return {
@@ -832,7 +832,7 @@ export class AuthService {
   }
 
   async registerDeviceLocation(userId: string, deviceId: string, locationData: { lat: number, lng: number, name: string }) {
-    const user = await this.requireUser(userId);
+    await this.requireUser(userId);
 
     if (!deviceId) throw ApiError.badRequest("Device ID is required");
 
@@ -849,7 +849,7 @@ export class AuthService {
   }
 
   async renameTrustedDevice(userId: string, deviceId: string, newName: string) {
-    const user = await this.requireUser(userId);
+    await this.requireUser(userId);
 
     if (!deviceId) throw ApiError.badRequest("Device ID is required");
     if (!newName || newName.trim().length === 0) throw ApiError.badRequest("New device name is required");
