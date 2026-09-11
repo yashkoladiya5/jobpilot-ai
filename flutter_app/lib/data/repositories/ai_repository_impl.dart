@@ -6,10 +6,10 @@ import 'package:jobpilot_ai/core/errors/failures.dart';
 import 'package:jobpilot_ai/data/datasources/remote/ai_remote_datasource.dart';
 import 'package:jobpilot_ai/data/models/api_response_model.dart';
 import 'package:jobpilot_ai/domain/entities/career_insight.dart';
+import 'package:jobpilot_ai/domain/entities/cover_letter.dart';
 import 'package:jobpilot_ai/domain/entities/interview_result.dart';
 import 'package:jobpilot_ai/domain/entities/interview_session.dart';
 import 'package:jobpilot_ai/domain/entities/job_analysis.dart';
-import 'package:jobpilot_ai/domain/entities/cover_letter.dart';
 import 'package:jobpilot_ai/domain/entities/resume_analysis.dart';
 import 'package:jobpilot_ai/domain/repositories/ai_repository.dart';
 
