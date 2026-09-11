@@ -226,14 +226,7 @@ export class AnalyticsService {
 
     const totalApplied = applicationsThisWeek.length;
 
-    // Single-pass status counts instead of repeated filtering
-    const statusCounts = applicationsThisWeek.reduce(
-      (acc, app) => {
-        acc[app.status] = (acc[app.status] || 0) + 1;
-        return acc;
-      },
-      {} as Record<string, number>
-    );
+    const statusCounts = countBy(applicationsThisWeek, app => app.status);
 
     return {
       timeframe: "Last 7 days",
