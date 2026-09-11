@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
 import { logger } from "../utils/logger";
 import { getUserId } from "../middleware/auth";
-import { parsePositiveInt } from "../utils/numbers";
+import { parsePositiveIntOrThrow } from "../utils/numbers";
 import { ApiError } from "../utils/ApiError";
 import { ResumeAnalysisService } from "../services/ai/resume-analysis.service";
 import { JobAnalysisService } from "../services/ai/job-analysis.service";
@@ -29,14 +29,6 @@ function requireIdParam(req: Request, res: Response, param: "jobId" | "resumeId"
     return null;
   }
   return value;
-}
-
-function parseLimit(value: unknown): number {
-  const parsed = parsePositiveInt(value, 5);
-  if (typeof parsed !== "number" || isNaN(parsed) || parsed < 1) {
-    throw ApiError.badRequest("limit must be a positive integer");
-  }
-  return parsed;
 }
 
 // Resume Analysis
@@ -221,7 +213,7 @@ export const getTopMatches = asyncHandler(async (req: Request, res: Response) =>
   const userId = getUserId(req);
   const { resumeId } = req.params;
   
-  const parsedLimit = parseLimit(req.query.limit);
+  const parsedLimit = parsePositiveIntOrThrow(req.query.limit, 5, "limit must be a positive integer");
   
   const matches = await matchingService.getTopMatchesForResume(resumeId, userId, parsedLimit);
   
@@ -252,7 +244,7 @@ export const getMatchDetails = asyncHandler(async (req: Request, res: Response) 
 export const getRecentMatches = asyncHandler(async (req: Request, res: Response) => {
   const userId = getUserId(req);
   
-  const parsedLimit = parseLimit(req.query.limit);
+  const parsedLimit = parsePositiveIntOrThrow(req.query.limit, 5, "limit must be a positive integer");
   
   const matches = await matchingService.getRecentMatches(userId, parsedLimit);
   

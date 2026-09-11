@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
 import { getUserId } from "../middleware/auth";
-import { parsePositiveInt } from "../utils/numbers";
-import { ApiError } from "../utils/ApiError";
+import { parsePositiveIntOrThrow } from "../utils/numbers";
 import { DashboardService } from "../services/dashboard.service";
 
 /**
@@ -45,11 +44,7 @@ export const getRecentActivityLogs = asyncHandler(async (req: Request, res: Resp
      return;
   }
 
-  const parsedLimit = parsePositiveInt(limit, 10);
-  
-if (typeof parsedLimit !== "number" || isNaN(parsedLimit) || parsedLimit < 1) {
-    throw ApiError.badRequest("limit must be a positive integer.");
-  }
+  const parsedLimit = parsePositiveIntOrThrow(limit, 10, "limit must be a positive integer.");
   
   const activityLogs = await dashboardService.getRecentActivityLogs(userId, parsedLimit);
   
