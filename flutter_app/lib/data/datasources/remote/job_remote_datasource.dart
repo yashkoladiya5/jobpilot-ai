@@ -1,5 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:jobpilot_ai/core/constants/api_constants.dart';
+import 'package:jobpilot_ai/core/constants/app_constants.dart';
 import 'package:jobpilot_ai/core/network/dio_client.dart';
 
 @lazySingleton
