@@ -717,7 +717,7 @@ export class DashboardService {
   }
 
   async dismissAllAlerts(userId: string) {
-    const user = await requireUser(userId);
+    await requireUser(userId);
 
     // In a real database we would update an Alert table.
     // Since alerts are dynamically generated here, we can mock dismissing them
@@ -735,7 +735,7 @@ export class DashboardService {
     // In a real application we would have a table to track which action items were dismissed.
     // For now, since action items are derived from jobs needing follow-up, 
     // we can simulate clearing them by adding a timestamp to the user preferences.
-    const user = await requireUser(userId);
+    await requireUser(userId);
 
     return {
       userId,
