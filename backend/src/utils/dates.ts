@@ -17,7 +17,7 @@ export const dateKey = (date: Date): string => date.toISOString().slice(0, 10);
  */
 export const monthKey = (date: Date): string => date.toISOString().slice(0, 7);
 
-const MS_PER_DAY = 1000 * 60 * 60 * 24;
+export const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
 /**
  * Returns the number of whole days between `from` and `to` (inclusive of

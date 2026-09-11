@@ -1,7 +1,7 @@
 import prisma from "../config/prisma";
 import { ApiError } from "../utils/ApiError";
 import { countBy } from "../utils/collections";
-import { dateKey, daysAgo } from "../utils/dates";
+import { MS_PER_DAY, dateKey, daysAgo } from "../utils/dates";
 import { clampNumber, randInt } from "../utils/math";
 import { requireUser } from "../utils/user";
 
@@ -1106,7 +1106,7 @@ export class DashboardService {
 
     const recentRejections = jobs.filter(j => 
       j.status === "REJECTED" && 
-      (new Date().getTime() - j.createdAt.getTime()) / (1000 * 3600 * 24) < 7
+      (new Date().getTime() - j.createdAt.getTime()) / MS_PER_DAY < 7
     ).length;
 
     let healthStatus = "Good";

@@ -3,7 +3,7 @@ import { ApplicationStatus } from "@prisma/client";
 import { ACTIVE_APPLICATION_STATUSES } from "../constants";
 import { ApiError } from "../utils/ApiError";
 import { countBy } from "../utils/collections";
-import { dateKey, daysAgo, elapsedDays, monthKey } from "../utils/dates";
+import { MS_PER_DAY, dateKey, daysAgo, elapsedDays, monthKey } from "../utils/dates";
 import { clampNumber, percentOf, randInt } from "../utils/math";
 import { requireUser } from "../utils/user";
 
@@ -43,7 +43,7 @@ export class AnalyticsService {
     let totalDays = 0;
     let countWithDates = 0;
     for (const app of applications) {
-      totalDays += (now.getTime() - app.appliedDate.getTime()) / (1000 * 60 * 60 * 24);
+      totalDays += (now.getTime() - app.appliedDate.getTime()) / MS_PER_DAY;
       countWithDates++;
     }
     const averageDaysInPipeline =
@@ -111,9 +111,9 @@ export class AnalyticsService {
 
     for (const app of applications) {
       const appDate = app.createdAt;
-      const daysSinceEpoch = Math.floor(appDate.getTime() / (1000 * 60 * 60 * 24));
+      const daysSinceEpoch = Math.floor(appDate.getTime() / MS_PER_DAY);
       const weekStartDay = daysSinceEpoch - (daysSinceEpoch % 7);
-      const weekStart = new Date(weekStartDay * 1000 * 60 * 60 * 24);
+      const weekStart = new Date(weekStartDay * MS_PER_DAY);
       const weekKey = dateKey(weekStart);
 
       if (!weekMap[weekKey]) {
@@ -689,7 +689,7 @@ export class AnalyticsService {
     const ghostedApplications = [];
 
     for (const app of applications) {
-      const daysSinceUpdate = Math.floor((now - app.updatedAt.getTime()) / (1000 * 60 * 60 * 24));
+      const daysSinceUpdate = Math.floor((now - app.updatedAt.getTime()) / MS_PER_DAY);
       
       // Assume ghosting if it's been more than 21 days since APPLIED or 14 days since INTERVIEW
       let ghostingProbability = 0;
@@ -961,7 +961,7 @@ export class AnalyticsService {
     if (offerApplications.length > 0) {
       let totalDaysToOffer = 0;
       for (const app of offerApplications) {
-        totalDaysToOffer += Math.floor((app.updatedAt.getTime() - app.appliedDate.getTime()) / (1000 * 60 * 60 * 24));
+        totalDaysToOffer += Math.floor((app.updatedAt.getTime() - app.appliedDate.getTime()) / MS_PER_DAY);
       }
       averageTimeToOffer = Math.round(totalDaysToOffer / offerApplications.length);
     }
@@ -1223,7 +1223,7 @@ export class AnalyticsService {
 
     // Decay probability if no recent updates
     const recentActivity = applications.some(a => {
-      const daysSinceUpdate = (new Date().getTime() - a.updatedAt.getTime()) / (1000 * 3600 * 24);
+      const daysSinceUpdate = (new Date().getTime() - a.updatedAt.getTime()) / MS_PER_DAY;
       return daysSinceUpdate < 7;
     });
 

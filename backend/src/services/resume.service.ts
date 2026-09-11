@@ -2,7 +2,7 @@ import fs from "fs";
 import prisma from "../config/prisma";
 import { ApiError } from "../utils/ApiError";
 import { clampNumber, randInt } from "../utils/math";
-import { daysAgo } from "../utils/dates";
+import { MS_PER_DAY, daysAgo } from "../utils/dates";
 import { requireOwnedResume } from "../utils/resume";
 
 /**
@@ -225,7 +225,7 @@ export class ResumeService {
       },
       {
         version: "v1.1",
-        date: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 2), // 2 days ago
+        date: new Date(now.getTime() - MS_PER_DAY * 2), // 2 days ago
         changes: ["Added latest work experience", "Fixed typos"],
         isActive: false
       },

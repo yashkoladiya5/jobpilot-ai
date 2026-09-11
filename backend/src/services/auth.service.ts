@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import prisma from "../config/prisma";
 import { ApiError } from "../utils/ApiError";
 import { clampNumber, randInt } from "../utils/math";
-import { daysAgo, elapsedDays } from "../utils/dates";
+import { MS_PER_DAY, daysAgo, elapsedDays } from "../utils/dates";
 
 const userSelect = {
   id: true,
@@ -353,7 +353,7 @@ export class AuthService {
     const longestStreak = Math.max(currentStreak, Math.min(accountAgeDays, 14));
     
     const today = new Date();
-    const lastLogin = new Date(today.getTime() - (Math.random() > 0.5 ? 0 : 1000 * 60 * 60 * 24)); // Either today or yesterday
+    const lastLogin = new Date(today.getTime() - (Math.random() > 0.5 ? 0 : MS_PER_DAY)); // Either today or yesterday
     
     const isStreakActive = lastLogin.toDateString() === today.toDateString();
 
@@ -430,7 +430,7 @@ export class AuthService {
     const user = await this.requireUser(userId);
 
     // Check password age (mocking that we check if it was updated recently)
-    const passwordAgeDays = Math.floor((Date.now() - user.updatedAt.getTime()) / (1000 * 60 * 60 * 24));
+    const passwordAgeDays = Math.floor((Date.now() - user.updatedAt.getTime()) / MS_PER_DAY);
     const passwordRecent = passwordAgeDays <= 90;
     const hasMfa = false; // In reality we'd check a field on the user model
 
@@ -585,10 +585,10 @@ export class AuthService {
 
     // Determine session health based on mock last login time
     const now = new Date();
-    const daysSinceLogin = Math.floor((now.getTime() - user.updatedAt.getTime()) / (1000 * 60 * 60 * 24));
+    const daysSinceLogin = Math.floor((now.getTime() - user.updatedAt.getTime()) / MS_PER_DAY);
     
     // We mock email verification as true for older accounts and false for new ones
-    const isEmailVerified = (now.getTime() - user.createdAt.getTime()) > (1000 * 60 * 60 * 24);
+    const isEmailVerified = (now.getTime() - user.createdAt.getTime()) > MS_PER_DAY;
 
     let healthStatus = "HEALTHY";
     let message = "Session is secure and active.";
@@ -689,7 +689,7 @@ export class AuthService {
     }
 
     // Check Password Age
-    const passwordAgeDays = Math.floor((Date.now() - user.updatedAt.getTime()) / (1000 * 60 * 60 * 24));
+    const passwordAgeDays = Math.floor((Date.now() - user.updatedAt.getTime()) / MS_PER_DAY);
     if (passwordAgeDays > 90) {
       issues.push({ severity: "MEDIUM", check: "Password Age", detail: `Your password hasn't been changed in ${passwordAgeDays} days.` });
     } else {
