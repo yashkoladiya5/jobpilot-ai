@@ -415,11 +415,6 @@ export class AnalyticsService {
       };
     }
 
-    const averageSalaryString = offerApplications
-      .map(app => app.salaryRange)
-      .filter(Boolean)
-      .join(", ");
-      
     // Mock parsing salary ranges and giving negotiation insights
     const mockAverageOfferValue = 120000;
     const marketAverage = 115000;
