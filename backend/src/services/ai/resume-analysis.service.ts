@@ -53,7 +53,7 @@ rawResponse: toRawResponseJson(result.rawResponse),
       data: {
         status: "FAILED",
         errorMessage: result.error || "Analysis failed",
-        rawResponse: result.rawResponse ? { text: result.rawResponse } : undefined,
+        rawResponse: toRawResponseJson(result.rawResponse),
       },
     });
     return failed;
