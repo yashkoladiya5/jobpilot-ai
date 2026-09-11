@@ -86,11 +86,11 @@ router.get("/match/:matchId", getMatchResult);
 router.get("/match/:matchId/details", getMatchDetails);
 
 // Feedback endpoints for AI improvements
-router.post("/resume/analyses/:analysisId/feedback", (req, res) => {
+router.post("/resume/analyses/:analysisId/feedback", (_req, res) => {
   res.status(200).json({ success: true, message: "Resume analysis feedback recorded successfully" });
 });
 
-router.post("/job/analyses/:analysisId/feedback", (req, res) => {
+router.post("/job/analyses/:analysisId/feedback", (_req, res) => {
   res.status(200).json({ success: true, message: "Job analysis feedback recorded successfully" });
 });
 
