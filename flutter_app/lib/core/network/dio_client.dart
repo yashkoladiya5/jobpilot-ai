@@ -198,17 +198,23 @@ class _ErrorInterceptor extends Interceptor {
     DioException err,
     ErrorInterceptorHandler handler,
   ) {
+    void rejectWith(Object error) {
+      handler.reject(
+        DioException(
+          requestOptions: err.requestOptions,
+          error: error,
+        ),
+      );
+    }
+
     switch (err.type) {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
-        handler.reject(
-          DioException(
-            requestOptions: err.requestOptions,
-            error: const TimeoutException(
-              message: 'The connection timed out after 30 seconds. Please check your network and try again.',
-              statusCode: 408,
-            ),
+        rejectWith(
+          const TimeoutException(
+            message: 'The connection timed out after 30 seconds. Please check your network and try again.',
+            statusCode: 408,
           ),
         );
       case DioExceptionType.badResponse:
@@ -219,96 +225,49 @@ class _ErrorInterceptor extends Interceptor {
             'An unexpected error occurred';
         switch (statusCode) {
           case 401:
-            handler.reject(
-              DioException(
-                requestOptions: err.requestOptions,
-                error: AuthException(message: message, statusCode: statusCode),
-              ),
-            );
+            rejectWith(AuthException(message: message, statusCode: statusCode));
           case 403:
-            handler.reject(
-              DioException(
-                requestOptions: err.requestOptions,
-                error: ServerException(
-                  message: 'Access denied. You do not have permission for this action.',
-                  statusCode: statusCode,
-                ),
-              ),
-            );
+            rejectWith(ServerException(
+              message: 'Access denied. You do not have permission for this action.',
+              statusCode: statusCode,
+            ));
           case 404:
-            handler.reject(
-              DioException(
-                requestOptions: err.requestOptions,
-                error:
-                    ServerException(message: message, statusCode: statusCode),
-              ),
-            );
+            rejectWith(ServerException(message: message, statusCode: statusCode));
           case 422:
-            handler.reject(
-              DioException(
-                requestOptions: err.requestOptions,
-                error: ValidationException(
-                    message: message, statusCode: statusCode),
-              ),
-            );
+            rejectWith(ValidationException(message: message, statusCode: statusCode));
           case 429:
-            handler.reject(
-              DioException(
-                requestOptions: err.requestOptions,
-                error: ServerException(
-                  message: 'Too many requests. Please try again later.',
-                  statusCode: statusCode,
-                ),
-              ),
-            );
+            rejectWith(ServerException(
+              message: 'Too many requests. Please try again later.',
+              statusCode: statusCode,
+            ));
           case 500:
-            handler.reject(
-              DioException(
-                requestOptions: err.requestOptions,
-                error: ServerException(
-                  message: 'Internal server error. Please try again later.',
-                  statusCode: statusCode,
-                ),
-              ),
-            );
+            rejectWith(ServerException(
+              message: 'Internal server error. Please try again later.',
+              statusCode: statusCode,
+            ));
           default:
-            handler.reject(
-              DioException(
-                requestOptions: err.requestOptions,
-                error:
-                    ServerException(message: message, statusCode: statusCode),
-              ),
-            );
+            rejectWith(ServerException(message: message, statusCode: statusCode));
         }
       case DioExceptionType.cancel:
         handler.next(err);
       case DioExceptionType.unknown:
         if (err.message?.contains('SocketException') ?? false) {
-          handler.reject(
-            DioException(
-              requestOptions: err.requestOptions,
-                error: const NetworkException(
-                  message: 'No internet connection. Please check your network.',
-                ),
+          rejectWith(
+            const NetworkException(
+              message: 'No internet connection. Please check your network.',
             ),
           );
         } else {
-          handler.reject(
-            DioException(
-              requestOptions: err.requestOptions,
-              error: const NetworkException(
-                message: 'Network error occurred. Please try again.',
-              ),
+          rejectWith(
+            const NetworkException(
+              message: 'Network error occurred. Please try again.',
             ),
           );
         }
       default:
-        handler.reject(
-          DioException(
-            requestOptions: err.requestOptions,
-            error: const NetworkException(
-              message: 'Network error occurred. Please try again.',
-            ),
+        rejectWith(
+          const NetworkException(
+            message: 'Network error occurred. Please try again.',
           ),
         );
     }
