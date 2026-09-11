@@ -72,7 +72,7 @@ export class ResumeService {
   }
 
   async setPrimaryResume(userId: string, id: string) {
-    const resume = await requireOwnedResume(userId, id);
+    await requireOwnedResume(userId, id);
     // Unset the current primary and set the new one atomically so the
     // user always has exactly one primary resume.
     const [, updatedResume] = await prisma.$transaction([
@@ -89,7 +89,7 @@ export class ResumeService {
   }
 
   async renameResume(userId: string, id: string, newName: string) {
-    const resume = await requireOwnedResume(userId, id);
+    await requireOwnedResume(userId, id);
 
     return prisma.resume.update({
       where: { id },

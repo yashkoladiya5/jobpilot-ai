@@ -60,7 +60,7 @@ rawResponse: toRawResponseJson(result.rawResponse),
   }
 
   async getAnalysisByResume(resumeId: string, userId: string) {
-    const resume = await requireOwnedResume(userId, resumeId);
+    await requireOwnedResume(userId, resumeId);
 
     const analysis = await prisma.resumeAnalysis.findFirst({
       where: { resumeId },
