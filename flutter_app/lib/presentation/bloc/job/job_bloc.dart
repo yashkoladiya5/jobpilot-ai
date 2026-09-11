@@ -1,11 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:jobpilot_ai/domain/repositories/job_repository.dart';
 import 'package:jobpilot_ai/domain/usecases/job/create_job_usecase.dart';
 import 'package:jobpilot_ai/domain/usecases/job/delete_job_usecase.dart';
 import 'package:jobpilot_ai/domain/usecases/job/get_job_usecase.dart';
 import 'package:jobpilot_ai/domain/usecases/job/get_jobs_usecase.dart';
 import 'package:jobpilot_ai/domain/usecases/job/update_job_usecase.dart';
-import 'package:jobpilot_ai/domain/repositories/job_repository.dart';
 import 'package:jobpilot_ai/presentation/bloc/job/job_event.dart';
 import 'package:jobpilot_ai/presentation/bloc/job/job_state.dart';
 
