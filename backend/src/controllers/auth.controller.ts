@@ -79,12 +79,10 @@ export const getMe = asyncHandler(async (req: Request, res: Response) => {
  * Handles user logout requests.
  * Invalidates the current session token if possible, or lets the client clear it.
  */
-export const logout = asyncHandler(async (req: Request, res: Response) => {
-  const userId = getUserId(req);
-  
+export const logout = asyncHandler(async (_req: Request, res: Response) => {
   // Potential server-side logout logic here (e.g. invalidating refresh token or redis session)
   // await authService.logout(userId);
-  
+
   res.status(200).json({
     success: true,
     message: "Logged out successfully. Have a great day!",
