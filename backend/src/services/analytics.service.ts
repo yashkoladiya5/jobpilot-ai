@@ -968,7 +968,7 @@ export class AnalyticsService {
 
     return {
       hasData: true,
-      firstApplicationDate: firstApplicationDate.toISOString().split('T')[0],
+      firstApplicationDate: dateKey(firstApplicationDate),
       searchDurationDays,
       offersReceived: offerApplications.length,
       averageTimeToOffer,
