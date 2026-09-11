@@ -902,7 +902,7 @@ export class DashboardService {
     });
 
     const deadlines = recentJobs.map((job, index) => {
-      const deadlineDate = new Date(now.getTime() + (index + 1) * 24 * 60 * 60 * 1000);
+      const deadlineDate = new Date(now.getTime() + (index + 1) * MS_PER_DAY);
       let task = "Submit take-home assignment";
       if (job.status === "APPLIED") task = "Follow up on application";
       

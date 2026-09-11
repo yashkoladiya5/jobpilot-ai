@@ -480,7 +480,7 @@ export class AuthService {
       deviceId,
       deviceName: deviceName || "Unknown Device",
       trustedAt: new Date().toISOString(),
-      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 days
+      expiresAt: new Date(Date.now() + 30 * MS_PER_DAY).toISOString(), // 30 days
       message: `Device ${deviceName || deviceId} has been trusted for 30 days. You will not be prompted for 2FA on this device.`
     };
   }
@@ -784,15 +784,15 @@ export class AuthService {
       {
         deviceId: "dev_9x8c7b6a",
         deviceName: "MacBook Pro - Chrome",
-        trustedAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000), // 15 days ago
-        expiresAt: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000), // expires in 15 days
+        trustedAt: new Date(Date.now() - 15 * MS_PER_DAY), // 15 days ago
+        expiresAt: new Date(Date.now() + 15 * MS_PER_DAY), // expires in 15 days
         isCurrentDevice: true
       },
       {
         deviceId: "dev_1a2b3c4d",
         deviceName: "iPhone 14 - Safari",
-        trustedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
-        expiresAt: new Date(Date.now() + 25 * 24 * 60 * 60 * 1000), // expires in 25 days
+        trustedAt: new Date(Date.now() - 5 * MS_PER_DAY), // 5 days ago
+        expiresAt: new Date(Date.now() + 25 * MS_PER_DAY), // expires in 25 days
         isCurrentDevice: false
       }
     ];
