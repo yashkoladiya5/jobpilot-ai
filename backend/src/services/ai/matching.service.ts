@@ -4,7 +4,7 @@ import { buildResumeMatchingPrompt } from "./prompts/resume-matching.prompt";
 import { resumeMatchingSchema, ResumeMatchingOutput } from "./schemas/resume-matching.schema";
 import { ApiError } from "../../utils/ApiError";
 import { requireOwnedResume } from "../../utils/resume";
-import fs from "fs/promises";
+import { readTextFileOrThrow } from "../../utils/fs";
 
 /**
  * Service that uses AI to score and match user resumes against specific job descriptions.
@@ -17,9 +17,10 @@ export class MatchingService {
   ): Promise<{ matchResult: ResumeMatchingOutput; analysisId: string }> {
     const resume = await requireOwnedResume(userId, resumeId);
 
-    const resumeText = await fs.readFile(resume.filePath, "utf-8").catch(() => {
-      throw ApiError.badRequest("Could not read resume file. Only text-based resumes are supported.");
-    });
+    const resumeText = await readTextFileOrThrow(
+      resume.filePath,
+      "Could not read resume file. Only text-based resumes are supported.",
+    );
 
     const analysis = await prisma.jobAnalysis.create({
       data: {
