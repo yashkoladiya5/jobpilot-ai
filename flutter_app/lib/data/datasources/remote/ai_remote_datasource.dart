@@ -146,9 +146,8 @@ class AiRemoteDataSource {
       data: {
         'resumeId': resumeId,
         'jobDescription': jobDescription,
-        // ignore: use_null_aware_elements
-        if (jobId != null) 'jobId': jobId,
-        if (tone != null) 'tone': tone,
+        'jobId': ?jobId,
+        'tone': ?tone,
       },
     );
     return response.data as Map<String, dynamic>;
