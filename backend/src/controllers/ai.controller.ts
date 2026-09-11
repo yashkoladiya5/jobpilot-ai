@@ -31,6 +31,24 @@ function requireIdParam(req: Request, res: Response, param: "jobId" | "resumeId"
   return value;
 }
 
+/**
+ * Loads the jobId path parameter, then runs and responds with the given service call.
+ * Sends a 400 response when the jobId route parameter is absent.
+ */
+async function withJobId<T>(
+  req: Request,
+  res: Response,
+  message: string,
+  run: (userId: string, jobId: string) => Promise<T>
+) {
+  const userId = getUserId(req);
+  const jobId = requireIdParam(req, res, "jobId");
+  if (!jobId) return;
+
+  const result = await run(userId, jobId);
+  res.status(200).json({ success: true, message, data: result });
+}
+
 // Resume Analysis
 
 export const analyzeResume = asyncHandler(async (req: Request, res: Response) => {
@@ -380,45 +398,18 @@ export const getInterviewReadinessScore = asyncHandler(async (req: Request, res:
 });
 
 export const generateMockTechnicalAssessment = asyncHandler(async (req: Request, res: Response) => {
-  const userId = getUserId(req);
-  const jobId = requireIdParam(req, res, "jobId");
-  if (!jobId) return;
-  
-  const assessment = await interviewService.generateMockTechnicalAssessment(userId, jobId);
-  
-  res.status(200).json({
-    success: true,
-    message: "Mock technical assessment generated successfully",
-    data: assessment,
-  });
+  await withJobId(req, res, "Mock technical assessment generated successfully",
+    (userId, jobId) => interviewService.generateMockTechnicalAssessment(userId, jobId));
 });
 
 export const generateMockBehavioralAssessment = asyncHandler(async (req: Request, res: Response) => {
-  const userId = getUserId(req);
-  const jobId = requireIdParam(req, res, "jobId");
-  if (!jobId) return;
-  
-  const assessment = await interviewService.generateMockBehavioralAssessment(userId, jobId);
-  
-  res.status(200).json({
-    success: true,
-    message: "Mock behavioral assessment generated successfully",
-    data: assessment,
-  });
+  await withJobId(req, res, "Mock behavioral assessment generated successfully",
+    (userId, jobId) => interviewService.generateMockBehavioralAssessment(userId, jobId));
 });
 
 export const generateMockSystemDesignAssessment = asyncHandler(async (req: Request, res: Response) => {
-  const userId = getUserId(req);
-  const jobId = requireIdParam(req, res, "jobId");
-  if (!jobId) return;
-  
-  const assessment = await interviewService.generateMockSystemDesignAssessment(userId, jobId);
-  
-  res.status(200).json({
-    success: true,
-    message: "Mock system design assessment generated successfully",
-    data: assessment,
-  });
+  await withJobId(req, res, "Mock system design assessment generated successfully",
+    (userId, jobId) => interviewService.generateMockSystemDesignAssessment(userId, jobId));
 });
 
 // Career Insights
@@ -498,17 +489,8 @@ export const detectJobRedFlags = asyncHandler(async (req: Request, res: Response
 });
 
 export const generateElevatorPitch = asyncHandler(async (req: Request, res: Response) => {
-  const userId = getUserId(req);
-  const jobId = requireIdParam(req, res, "jobId");
-  if (!jobId) return;
-  
-  const result = await interviewService.generateElevatorPitch(userId, jobId);
-  
-  res.status(200).json({
-    success: true,
-    message: "Elevator pitch generated successfully",
-    data: result,
-  });
+  await withJobId(req, res, "Elevator pitch generated successfully",
+    (userId, jobId) => interviewService.generateElevatorPitch(userId, jobId));
 });
 
 export const rewriteCoverLetterTone = asyncHandler(async (req: Request, res: Response) => {
