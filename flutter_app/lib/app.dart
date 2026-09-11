@@ -5,14 +5,14 @@ import 'package:jobpilot_ai/core/theme/app_theme.dart';
 import 'package:jobpilot_ai/presentation/bloc/ai_job/ai_job_bloc.dart';
 import 'package:jobpilot_ai/presentation/bloc/ai_match/ai_match_bloc.dart';
 import 'package:jobpilot_ai/presentation/bloc/ai_resume/ai_resume_bloc.dart';
+import 'package:jobpilot_ai/presentation/bloc/analytics/analytics_bloc.dart';
 import 'package:jobpilot_ai/presentation/bloc/auth/auth_bloc.dart';
 import 'package:jobpilot_ai/presentation/bloc/career_insights/career_insights_bloc.dart';
+import 'package:jobpilot_ai/presentation/bloc/cover_letter/cover_letter_bloc.dart';
 import 'package:jobpilot_ai/presentation/bloc/dashboard/dashboard_bloc.dart';
 import 'package:jobpilot_ai/presentation/bloc/interview/interview_bloc.dart';
 import 'package:jobpilot_ai/presentation/bloc/job/job_bloc.dart';
 import 'package:jobpilot_ai/presentation/bloc/resume/resume_bloc.dart';
-import 'package:jobpilot_ai/presentation/bloc/analytics/analytics_bloc.dart';
-import 'package:jobpilot_ai/presentation/bloc/cover_letter/cover_letter_bloc.dart';
 import 'package:jobpilot_ai/router/app_router.dart';
 import 'package:jobpilot_ai/router/auth_guard.dart';
 

@@ -1,6 +1,7 @@
+import 'dart:developer' as developer;
+
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
-import 'dart:developer' as developer;
 import 'injection.config.dart';
 
 /// Global instance of GetIt for dependency injection.
