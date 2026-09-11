@@ -156,7 +156,7 @@ class AppTheme {
         ),
         actionTextColor: AppColors.primaryLight,
       ),
-      dialogTheme: DialogTheme(
+      dialogTheme: DialogThemeData(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
