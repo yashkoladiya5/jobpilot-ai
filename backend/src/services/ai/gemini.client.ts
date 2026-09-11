@@ -67,9 +67,11 @@ export async function generateStructuredResponse<T>(
   return { success: false, error: lastError };
 }
 
+let cachedGenAI: GoogleGenerativeAI | undefined;
+
 function getModel() {
-  const genAI = new GoogleGenerativeAI(geminiConfig.apiKey);
-  return genAI.getGenerativeModel({
+  cachedGenAI ??= new GoogleGenerativeAI(geminiConfig.apiKey);
+  return cachedGenAI.getGenerativeModel({
     model: geminiConfig.model,
     generationConfig: geminiConfig.generationConfig,
     safetySettings: geminiConfig.safetySettings,
