@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:jobpilot_ai/core/errors/failures.dart';
 import 'package:jobpilot_ai/domain/entities/career_insight.dart';
+import 'package:jobpilot_ai/domain/entities/cover_letter.dart';
 import 'package:jobpilot_ai/domain/entities/interview_result.dart';
 import 'package:jobpilot_ai/domain/entities/interview_session.dart';
 import 'package:jobpilot_ai/domain/entities/job_analysis.dart';
-import 'package:jobpilot_ai/domain/entities/cover_letter.dart';
 import 'package:jobpilot_ai/domain/entities/resume_analysis.dart';
 
 /// Abstract definition of the AI Repository.
