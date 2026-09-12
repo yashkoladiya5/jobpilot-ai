@@ -44,8 +44,8 @@ class ApiConstants {
   static String get interviewAnswer => '$_baseUrl/ai/interview/answer';
   static String interviewComplete(String id) => '$_baseUrl/ai/interview/complete/$id';
   static String interviewResult(String id) => '$_baseUrl/ai/interview/result/$id';
-  static String get careerInsights => '$_baseUrl/ai/insights';
-  static String get careerInsightsHistory => '$_baseUrl/ai/insights/history';
+  static String get careerInsights => '$_baseUrl/ai/career/insights';
+  static String get careerInsightsHistory => '$_baseUrl/ai/career/insights/history';
   static String coverLetterGenerate() => '$_baseUrl/ai/cover-letter/generate';
   static String coverLetter(String id) => '$_baseUrl/ai/cover-letter/$id';
   static String get coverLetterList => '$_baseUrl/ai/cover-letter/list';
