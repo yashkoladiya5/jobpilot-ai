@@ -15,6 +15,8 @@ const userSelect = {
 /**
  * Handles business logic for user authentication, registration, and profile retrieval.
  */
+const normalizeEmail = (email: string): string => email.trim().toLowerCase();
+
 export class AuthService {
   /**
    * Fetches the user by id, throwing a 404 when the user does not exist.
@@ -28,8 +30,10 @@ export class AuthService {
   }
 
   async register(email: string, password: string, name: string) {
+    const normalizedEmail = normalizeEmail(email);
+
     // Check if the provided email already exists in the system
-    const existingUser = await prisma.user.findUnique({ where: { email } });
+    const existingUser = await prisma.user.findUnique({ where: { email: normalizedEmail } });
     if (existingUser) {
       throw ApiError.badRequest("Email already in use");
     }
@@ -37,7 +41,7 @@ export class AuthService {
     const passwordHash = await bcrypt.hash(password, 10);
 
     const user = await prisma.user.create({
-      data: { email, passwordHash, name },
+      data: { email: normalizedEmail, passwordHash, name },
       select: userSelect,
     });
 
@@ -45,7 +49,7 @@ export class AuthService {
   }
 
   async login(email: string, password: string) {
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await prisma.user.findUnique({ where: { email: normalizeEmail(email) } });
     if (!user) {
       throw ApiError.unauthorized("Invalid email or password");
     }
