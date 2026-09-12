@@ -1,3 +1,4 @@
+import { AnalysisStatus } from "@prisma/client";
 import prisma from "../../config/prisma";
 import { generateStructuredResponse, toRawResponseJson } from "./gemini.client";
 import { buildResumeMatchingPrompt } from "./prompts/resume-matching.prompt";
@@ -26,7 +27,7 @@ export class MatchingService {
       data: {
         userId,
         jobDescription,
-        status: "PROCESSING",
+        status: AnalysisStatus.PROCESSING,
       },
     });
 
@@ -36,7 +37,7 @@ export class MatchingService {
     if (!response.success || !response.data) {
       await prisma.jobAnalysis.update({
         where: { id: analysis.id },
-        data: { status: "FAILED", errorMessage: response.error || "Analysis failed" },
+        data: { status: AnalysisStatus.FAILED, errorMessage: response.error || "Analysis failed" },
       });
       throw ApiError.internal(response.error || "Failed to analyze match");
     }
@@ -44,7 +45,7 @@ export class MatchingService {
     await prisma.jobAnalysis.update({
       where: { id: analysis.id },
       data: {
-        status: "COMPLETED",
+        status: AnalysisStatus.COMPLETED,
         resumeMatchScore: response.data.matchScore,
         missingSkills: response.data.missingSkills,
         recommendedChanges: response.data.priorityImprovements,
@@ -106,7 +107,7 @@ export class MatchingService {
       where: { 
         userId, 
         resumeMatchScore: { not: null },
-        status: "COMPLETED"
+        status: AnalysisStatus.COMPLETED
       },
       orderBy: { analyzedAt: "desc" },
       take: limit,
