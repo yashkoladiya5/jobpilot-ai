@@ -53,9 +53,6 @@ export const errorHandler = (
     return;
   }
 
-  // Enhanced unhandled error logging
-  logger.error(`[Unhandled Error] ${err.name}: ${err.message}`, { stack: err.stack });
-
   if (err instanceof MulterError) {
     const message =
       err.code === "LIMIT_FILE_SIZE"
@@ -64,6 +61,9 @@ export const errorHandler = (
     sendError(400, message);
     return;
   }
+
+  // Enhanced unhandled error logging
+  logger.error(`[Unhandled Error] ${err.name}: ${err.message}`, { stack: err.stack });
 
   sendError(500, "Internal Server Error");
 };
