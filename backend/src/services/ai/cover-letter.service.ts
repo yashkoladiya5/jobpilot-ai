@@ -1,3 +1,4 @@
+import { AnalysisStatus } from "@prisma/client";
 import prisma from "../../config/prisma";
 import { ApiError } from "../../utils/ApiError";
 import { generateStructuredResponse, toRawResponseJson } from "./gemini.client";
@@ -37,7 +38,7 @@ export class CoverLetterService {
         jobDescription,
         tone: selectedTone,
         coverLetterText: "",
-        status: "PROCESSING",
+        status: AnalysisStatus.PROCESSING,
       },
     });
 
@@ -48,7 +49,7 @@ export class CoverLetterService {
       const updated = await prisma.coverLetter.update({
         where: { id: coverLetterRecord.id },
         data: {
-          status: "COMPLETED",
+          status: AnalysisStatus.COMPLETED,
           coverLetterText: result.data.coverLetter,
           tone: result.data.tone,
           rawResponse: toRawResponseJson(result.rawResponse),
@@ -61,7 +62,7 @@ export class CoverLetterService {
     const failed = await prisma.coverLetter.update({
       where: { id: coverLetterRecord.id },
       data: {
-        status: "FAILED",
+        status: AnalysisStatus.FAILED,
         errorMessage: result.error || "Cover letter generation failed",
         rawResponse: toRawResponseJson(result.rawResponse),
       },
@@ -96,7 +97,7 @@ export class CoverLetterService {
   async updateCoverLetter(userId: string, id: string, coverLetterText: string, tone?: string) {
     const coverLetter = await this.getCoverLetter(id, userId);
 
-    if (coverLetter.status !== "COMPLETED") {
+    if (coverLetter.status !== AnalysisStatus.COMPLETED) {
       throw ApiError.badRequest("Cannot update a cover letter that has not finished generating");
     }
 
@@ -126,7 +127,7 @@ export class CoverLetterService {
   async adjustCoverLetterTone(userId: string, id: string, newTone: string) {
     const coverLetter = await this.getCoverLetter(id, userId);
 
-    if (coverLetter.status !== "COMPLETED") {
+    if (coverLetter.status !== AnalysisStatus.COMPLETED) {
       throw ApiError.badRequest("Cannot adjust tone of an incomplete cover letter");
     }
     
