@@ -39,6 +39,12 @@ Failure mapDioError(
       code: (e.error as CacheException).statusCode,
     );
   }
+  if (e.error is TimeoutException) {
+    return Failure.timeoutFailure(
+      message: (e.error as TimeoutException).message,
+      code: (e.error as TimeoutException).statusCode,
+    );
+  }
   return Failure.serverFailure(
     message: e.message ?? fallbackMessage,
   );
