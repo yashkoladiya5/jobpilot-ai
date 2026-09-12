@@ -30,8 +30,8 @@ class ApiConstants {
   static String get dashboardStats => '$_baseUrl/dashboard/stats';
 
   // AI endpoints
-  static String resumeAnalyze(String resumeId) => '$_baseUrl/ai/resume/analyze/$resumeId';
-  static String resumeAnalysis(String resumeId) => '$_baseUrl/ai/resume/analysis/$resumeId';
+  static String resumeAnalyze(String resumeId) => '$_baseUrl/ai/resume/$resumeId/analyze';
+  static String resumeAnalysis(String resumeId) => '$_baseUrl/ai/resume/$resumeId/analysis';
   static String get resumeAnalyses => '$_baseUrl/ai/resume/analyses';
   static String get jobAnalyze => '$_baseUrl/ai/job/analyze';
   static String jobAnalysis(String id) => '$_baseUrl/ai/job/analysis/$id';
