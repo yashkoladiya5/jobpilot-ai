@@ -30,9 +30,9 @@ export class AnalyticsService {
       percentage: percentOf(count, totalApplications),
     }));
 
-    const applied = statusCounts["APPLIED"] || 0;
-    const interview = statusCounts["INTERVIEW"] || 0;
-    const offer = statusCounts["OFFER"] || 0;
+    const applied = statusCounts[ApplicationStatus.APPLIED] || 0;
+    const interview = statusCounts[ApplicationStatus.INTERVIEW] || 0;
+    const offer = statusCounts[ApplicationStatus.OFFER] || 0;
 
     const conversionRates = {
       appliedToInterview: percentOf(interview, applied),
@@ -72,8 +72,8 @@ export class AnalyticsService {
         monthMap[month] = { applications: 0, interviews: 0, offers: 0 };
       }
       monthMap[month].applications++;
-      if (app.status === "INTERVIEW") monthMap[month].interviews++;
-      if (app.status === "OFFER") monthMap[month].offers++;
+      if (app.status === ApplicationStatus.INTERVIEW) monthMap[month].interviews++;
+      if (app.status === ApplicationStatus.OFFER) monthMap[month].offers++;
     }
     for (const [month, data] of Object.entries(monthMap).sort((a, b) => a[0].localeCompare(b[0]))) {
       monthlyTrend.push({ month, ...data });
@@ -148,7 +148,7 @@ export class AnalyticsService {
 
   async getRejectionAnalytics(userId: string) {
     const rejectedApplications = await prisma.jobApplication.findMany({
-      where: { userId, status: "REJECTED" },
+      where: { userId, status: ApplicationStatus.REJECTED },
       orderBy: { updatedAt: "desc" },
     });
 
@@ -195,7 +195,7 @@ export class AnalyticsService {
   }
 
   async getOfferAnalytics(userId: string) {
-    const { total, companies, recent } = await this.getApplicationAnalyticsByStatus(userId, "OFFER");
+    const { total, companies, recent } = await this.getApplicationAnalyticsByStatus(userId, ApplicationStatus.OFFER);
 
     return {
       totalOffers: total,
@@ -205,7 +205,7 @@ export class AnalyticsService {
   }
 
   async getInterviewAnalytics(userId: string) {
-    const { total, companies, recent } = await this.getApplicationAnalyticsByStatus(userId, "INTERVIEW");
+    const { total, companies, recent } = await this.getApplicationAnalyticsByStatus(userId, ApplicationStatus.INTERVIEW);
 
     return {
       totalInterviews: total,
@@ -231,9 +231,9 @@ export class AnalyticsService {
     return {
       timeframe: "Last 7 days",
       totalApplied,
-      interviewCount: statusCounts["INTERVIEW"] || 0,
-      offerCount: statusCounts["OFFER"] || 0,
-      rejectionCount: statusCounts["REJECTED"] || 0,
+      interviewCount: statusCounts[ApplicationStatus.INTERVIEW] || 0,
+      offerCount: statusCounts[ApplicationStatus.OFFER] || 0,
+      rejectionCount: statusCounts[ApplicationStatus.REJECTED] || 0,
       activeCompanies: [...new Set(applicationsThisWeek.map(app => app.companyName))],
     };
   }
@@ -345,8 +345,8 @@ export class AnalyticsService {
       }
 
       sourceStats[source].total++;
-      if (app.status === "INTERVIEW") sourceStats[source].interviews++;
-      if (app.status === "OFFER") sourceStats[source].offers++;
+      if (app.status === ApplicationStatus.INTERVIEW) sourceStats[source].interviews++;
+      if (app.status === ApplicationStatus.OFFER) sourceStats[source].offers++;
     }
 
     const analytics = Object.entries(sourceStats).map(([source, stats]) => ({
@@ -391,7 +391,7 @@ export class AnalyticsService {
 
   async getOfferNegotiationInsights(userId: string) {
     const offerApplications = await prisma.jobApplication.findMany({
-      where: { userId, status: "OFFER" },
+      where: { userId, status: ApplicationStatus.OFFER },
       orderBy: { updatedAt: "desc" },
     });
 
@@ -493,8 +493,8 @@ export class AnalyticsService {
     const totalApps = applications.length;
     const { interviewCount, userOfferCount } = applications.reduce(
       (counts, a) => {
-        if (a.status === "INTERVIEW" || a.status === "OFFER") counts.interviewCount += 1;
-        if (a.status === "OFFER") counts.userOfferCount += 1;
+        if (a.status === ApplicationStatus.INTERVIEW || a.status === ApplicationStatus.OFFER) counts.interviewCount += 1;
+        if (a.status === ApplicationStatus.OFFER) counts.userOfferCount += 1;
         return counts;
       },
       { interviewCount: 0, userOfferCount: 0 }
@@ -540,7 +540,7 @@ export class AnalyticsService {
       select: { role: true, status: true, companyName: true }
     });
 
-    const activeInterviews = applications.filter(a => a.status === "INTERVIEW");
+    const activeInterviews = applications.filter(a => a.status === ApplicationStatus.INTERVIEW);
     
     if (activeInterviews.length === 0) {
       return {
@@ -595,8 +595,8 @@ export class AnalyticsService {
       return Math.round((apps.filter(a => a.status === targetStatus).length / apps.length) * 100);
     };
 
-    const referredInterviewRate = calcRate(referredApps, "INTERVIEW") || 35; // Mock fallback
-    const coldInterviewRate = calcRate(coldApps, "INTERVIEW") || 10;
+    const referredInterviewRate = calcRate(referredApps, ApplicationStatus.INTERVIEW) || 35; // Mock fallback
+    const coldInterviewRate = calcRate(coldApps, ApplicationStatus.INTERVIEW) || 10;
     
     const roiMultiplier = coldInterviewRate > 0 ? (referredInterviewRate / coldInterviewRate).toFixed(1) : "3.5";
 
@@ -624,8 +624,8 @@ export class AnalyticsService {
     const total = applications.length;
     const { interviews, offers } = applications.reduce(
       (counts, a) => {
-        if (a.status === "INTERVIEW" || a.status === "OFFER") counts.interviews += 1;
-        if (a.status === "OFFER") counts.offers += 1;
+        if (a.status === ApplicationStatus.INTERVIEW || a.status === ApplicationStatus.OFFER) counts.interviews += 1;
+        if (a.status === ApplicationStatus.OFFER) counts.offers += 1;
         return counts;
       },
       { interviews: 0, offers: 0 }
@@ -683,12 +683,12 @@ export class AnalyticsService {
       let ghostingProbability = 0;
       let reason = "";
 
-      if (app.status === "APPLIED") {
+      if (app.status === ApplicationStatus.APPLIED) {
         if (daysSinceUpdate >= 21) {
           ghostingProbability = clampNumber(50 + (daysSinceUpdate - 21) * 2, 0, 95);
           reason = `It's been ${daysSinceUpdate} days since you applied.`;
         }
-      } else if (app.status === "INTERVIEW") {
+      } else if (app.status === ApplicationStatus.INTERVIEW) {
         if (daysSinceUpdate >= 14) {
           ghostingProbability = clampNumber(60 + (daysSinceUpdate - 14) * 3, 0, 95);
           reason = `It's been ${daysSinceUpdate} days since your last interview update.`;
@@ -760,14 +760,14 @@ export class AnalyticsService {
       prisma.jobApplication.count({
         where: {
           userId,
-          status: "INTERVIEW",
+          status: ApplicationStatus.INTERVIEW,
           appliedDate: { gte: startDate, lte: endDate }
         }
       }),
       prisma.jobApplication.count({
         where: {
           userId,
-          status: "OFFER",
+          status: ApplicationStatus.OFFER,
           appliedDate: { gte: startDate, lte: endDate }
         }
       })
@@ -811,7 +811,7 @@ export class AnalyticsService {
     const applications = await prisma.jobApplication.findMany({
       where: { 
         userId,
-        status: { in: ["INTERVIEW", "OFFER", "REJECTED", "WITHDRAWN"] }
+        status: { in: [ApplicationStatus.INTERVIEW, ApplicationStatus.OFFER, ApplicationStatus.REJECTED, ApplicationStatus.WITHDRAWN] }
       },
       select: { status: true, updatedAt: true, companyName: true }
     });
@@ -827,9 +827,9 @@ export class AnalyticsService {
 
     const { offers, rejections, active } = applications.reduce(
       (counts, a) => {
-        if (a.status === "OFFER") counts.offers += 1;
-        else if (a.status === "REJECTED") counts.rejections += 1;
-        else if (a.status === "INTERVIEW") counts.active += 1;
+        if (a.status === ApplicationStatus.OFFER) counts.offers += 1;
+        else if (a.status === ApplicationStatus.REJECTED) counts.rejections += 1;
+        else if (a.status === ApplicationStatus.INTERVIEW) counts.active += 1;
         return counts;
       },
       { offers: 0, rejections: 0, active: 0 }
@@ -898,8 +898,8 @@ export class AnalyticsService {
 
     // A job might be in OFFER but it passed through APPLIED and INTERVIEW.
     // For a funnel, we count cumulative achievements.
-    const offerCount = jobs.filter(j => j.status === 'OFFER').length;
-    const interviewCount = jobs.filter(j => j.status === 'INTERVIEW').length + offerCount; // If you got an offer, you interviewed
+    const offerCount = jobs.filter(j => j.status === ApplicationStatus.OFFER).length;
+    const interviewCount = jobs.filter(j => j.status === ApplicationStatus.INTERVIEW).length + offerCount; // If you got an offer, you interviewed
     const appliedCount = total; // All saved/rejected/etc started as applied mostly
 
     const funnel = [
@@ -943,7 +943,7 @@ export class AnalyticsService {
     const now = new Date();
     const searchDurationDays = elapsedDays(firstApplicationDate, now);
 
-    const offerApplications = applications.filter(app => app.status === "OFFER");
+    const offerApplications = applications.filter(app => app.status === ApplicationStatus.OFFER);
     let averageTimeToOffer = 0;
 
     if (offerApplications.length > 0) {
@@ -968,12 +968,12 @@ export class AnalyticsService {
 
   async getOfferNegotiationLeverage(userId: string) {
     const offerApplications = await prisma.jobApplication.findMany({
-      where: { userId, status: "OFFER" },
+      where: { userId, status: ApplicationStatus.OFFER },
       orderBy: { updatedAt: "desc" },
     });
 
     const activeInterviews = await prisma.jobApplication.count({
-      where: { userId, status: "INTERVIEW" }
+      where: { userId, status: ApplicationStatus.INTERVIEW }
     });
 
     if (offerApplications.length === 0) {
@@ -1040,8 +1040,8 @@ export class AnalyticsService {
       }
       
       channels[channel].total++;
-      if (app.status === "INTERVIEW") channels[channel].interviews++;
-      if (app.status === "OFFER") channels[channel].offers++;
+      if (app.status === ApplicationStatus.INTERVIEW) channels[channel].interviews++;
+      if (app.status === ApplicationStatus.OFFER) channels[channel].offers++;
     }
 
     const formatted = Object.entries(channels).map(([channel, data]) => ({
@@ -1150,7 +1150,7 @@ export class AnalyticsService {
       select: { role: true, status: true, appliedDate: true, updatedAt: true }
     });
 
-    const activeInterviews = applications.filter(a => a.status === "INTERVIEW");
+    const activeInterviews = applications.filter(a => a.status === ApplicationStatus.INTERVIEW);
     
     // Determine baseline days based on current pipeline momentum
     let baselineDays = 45; // average time to hire in days
@@ -1198,8 +1198,8 @@ export class AnalyticsService {
     }
 
     const totalApplications = applications.length;
-    const interviews = applications.filter(a => a.status === "INTERVIEW").length;
-    const offers = applications.filter(a => a.status === "OFFER").length;
+    const interviews = applications.filter(a => a.status === ApplicationStatus.INTERVIEW).length;
+    const offers = applications.filter(a => a.status === ApplicationStatus.OFFER).length;
 
     let baseProbability = 5; // Base 5% chance
     if (interviews > 0) {
