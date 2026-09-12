@@ -1,3 +1,4 @@
+import { AnalysisStatus, ApplicationStatus } from "@prisma/client";
 import prisma from "../config/prisma";
 import { ApiError } from "../utils/ApiError";
 import { countBy } from "../utils/collections";
@@ -57,7 +58,7 @@ export class DashboardService {
         prisma.resume.count({ where: { userId } }),
 
         prisma.jobApplication.count({
-          where: { userId, status: 'INTERVIEW' },
+          where: { userId, status: ApplicationStatus.INTERVIEW },
         }),
       ]);
 
@@ -113,14 +114,14 @@ export class DashboardService {
       prisma.jobApplication.findMany({
         where: { 
           userId, 
-          status: 'INTERVIEW', 
+          status: ApplicationStatus.INTERVIEW, 
           updatedAt: { lte: threeDaysAgo }
         },
         select: { id: true, companyName: true, role: true },
         take: 5
       }),
       prisma.jobAnalysis.count({
-        where: { userId, status: 'PROCESSING' }
+        where: { userId, status: AnalysisStatus.PROCESSING }
       }),
     ]);
 
@@ -134,8 +135,8 @@ export class DashboardService {
   async getDashboardSummary(userId: string) {
     const [totalJobs, interviews, offers] = await Promise.all([
       prisma.jobApplication.count({ where: { userId } }),
-      prisma.jobApplication.count({ where: { userId, status: 'INTERVIEW' } }),
-      prisma.jobApplication.count({ where: { userId, status: 'OFFER' } }),
+      prisma.jobApplication.count({ where: { userId, status: ApplicationStatus.INTERVIEW } }),
+      prisma.jobApplication.count({ where: { userId, status: ApplicationStatus.OFFER } }),
     ]);
 
     let summaryText = "You're off to a great start. Keep applying!";
@@ -160,7 +161,7 @@ export class DashboardService {
     const upcomingInterviews = await prisma.jobApplication.findMany({
       where: {
         userId,
-        status: 'INTERVIEW',
+        status: ApplicationStatus.INTERVIEW,
         updatedAt: { gte: daysAgo(7) }
       },
       select: { companyName: true, role: true },
@@ -180,7 +181,7 @@ export class DashboardService {
     }
 
     const pendingOffers = await prisma.jobApplication.count({
-      where: { userId, status: 'OFFER' }
+      where: { userId, status: ApplicationStatus.OFFER }
     });
 
     if (pendingOffers > 0) {
@@ -203,7 +204,7 @@ export class DashboardService {
     const upcomingInterviews = await prisma.jobApplication.findMany({
       where: {
         userId,
-        status: 'INTERVIEW',
+        status: ApplicationStatus.INTERVIEW,
       },
       select: { id: true, companyName: true, role: true, updatedAt: true },
       orderBy: { updatedAt: "desc" },
@@ -220,7 +221,7 @@ export class DashboardService {
         title: `Interview with ${interview.companyName}`,
         description: `${interview.role} - Technical Round`,
         date: eventDate,
-        type: 'INTERVIEW'
+        type: 'INTERVIEW' as const
       };
     });
 
@@ -346,8 +347,8 @@ export class DashboardService {
 
     const { interviewsScheduled, offersReceived } = thisWeekApps.reduce(
       (counts, app) => {
-        if (app.status === "INTERVIEW") counts.interviewsScheduled += 1;
-        else if (app.status === "OFFER") counts.offersReceived += 1;
+        if (app.status === ApplicationStatus.INTERVIEW) counts.interviewsScheduled += 1;
+        else if (app.status === ApplicationStatus.OFFER) counts.offersReceived += 1;
         return counts;
       },
       { interviewsScheduled: 0, offersReceived: 0 }
@@ -410,7 +411,7 @@ export class DashboardService {
     const [totalApplications, resumeCount, activeInterviews] = await Promise.all([
       prisma.jobApplication.count({ where: { userId } }),
       prisma.resume.count({ where: { userId } }),
-      prisma.jobApplication.count({ where: { userId, status: 'INTERVIEW' } }),
+      prisma.jobApplication.count({ where: { userId, status: ApplicationStatus.INTERVIEW } }),
     ]);
 
     let score = 0;
@@ -527,7 +528,7 @@ export class DashboardService {
     const urgentFollowUps = await prisma.jobApplication.findMany({
       where: {
         userId,
-        status: 'INTERVIEW',
+        status: ApplicationStatus.INTERVIEW,
         updatedAt: { lte: daysAgo(3) }
       },
       select: { companyName: true, role: true },
@@ -605,7 +606,7 @@ export class DashboardService {
     const interviewsThisWeek = await prisma.jobApplication.findMany({
       where: {
         userId,
-        status: "INTERVIEW",
+        status: ApplicationStatus.INTERVIEW,
         updatedAt: { gte: oneWeekAgo }
       }
     });
@@ -614,7 +615,7 @@ export class DashboardService {
     const rejectionsThisWeek = await prisma.jobApplication.count({
       where: {
         userId,
-        status: "REJECTED",
+        status: ApplicationStatus.REJECTED,
         updatedAt: { gte: oneWeekAgo }
       }
     });
@@ -636,7 +637,7 @@ export class DashboardService {
         applicationsSent: applicationsThisWeek.length,
         interviewsSecured: interviewsThisWeek.length,
         rejections: rejectionsThisWeek,
-        activeJobsInPipeline: await prisma.jobApplication.count({ where: { userId, status: { notIn: ["SAVED", "REJECTED", "WITHDRAWN"] } } })
+        activeJobsInPipeline: await prisma.jobApplication.count({ where: { userId, status: { notIn: [ApplicationStatus.SAVED, ApplicationStatus.REJECTED, ApplicationStatus.WITHDRAWN] } } })
       },
       topCompaniesApplied: applicationsThisWeek.map(app => app.companyName).slice(0, 3),
       encouragementMessage: encouragement,
@@ -793,8 +794,8 @@ export class DashboardService {
   async getCareerMilestones(userId: string) {
     const [totalApplications, totalInterviews, totalOffers] = await Promise.all([
       prisma.jobApplication.count({ where: { userId } }),
-      prisma.jobApplication.count({ where: { userId, status: 'INTERVIEW' } }),
-      prisma.jobApplication.count({ where: { userId, status: 'OFFER' } })
+      prisma.jobApplication.count({ where: { userId, status: ApplicationStatus.INTERVIEW } }),
+      prisma.jobApplication.count({ where: { userId, status: ApplicationStatus.OFFER } })
     ]);
 
     const milestones = [
@@ -865,9 +866,9 @@ export class DashboardService {
     const { applied, interviews, offers } = applications.reduce(
       (acc, a) => {
         return {
-          applied: acc.applied + (a.status !== "SAVED" ? 1 : 0),
-          interviews: acc.interviews + (a.status === "INTERVIEW" || a.status === "OFFER" ? 1 : 0),
-          offers: acc.offers + (a.status === "OFFER" ? 1 : 0),
+          applied: acc.applied + (a.status !== ApplicationStatus.SAVED ? 1 : 0),
+          interviews: acc.interviews + (a.status === ApplicationStatus.INTERVIEW || a.status === ApplicationStatus.OFFER ? 1 : 0),
+          offers: acc.offers + (a.status === ApplicationStatus.OFFER ? 1 : 0),
         };
       },
       { applied: 0, interviews: 0, offers: 0 }
@@ -895,7 +896,7 @@ export class DashboardService {
     const recentJobs = await prisma.jobApplication.findMany({
       where: {
         userId,
-        status: { in: ['APPLIED', 'INTERVIEW'] },
+        status: { in: [ApplicationStatus.APPLIED, ApplicationStatus.INTERVIEW] },
       },
       select: { id: true, companyName: true, role: true, status: true },
       take: 5
@@ -904,7 +905,7 @@ export class DashboardService {
     const deadlines = recentJobs.map((job, index) => {
       const deadlineDate = new Date(now.getTime() + (index + 1) * MS_PER_DAY);
       let task = "Submit take-home assignment";
-      if (job.status === "APPLIED") task = "Follow up on application";
+      if (job.status === ApplicationStatus.APPLIED) task = "Follow up on application";
       
       return {
         jobId: job.id,
@@ -979,8 +980,8 @@ export class DashboardService {
     const applicationsSubmitted = applications.length;
     const { interviewsSecured, offersReceived } = applications.reduce(
       (counts, app) => {
-        if (app.status === "INTERVIEW") counts.interviewsSecured += 1;
-        else if (app.status === "OFFER") counts.offersReceived += 1;
+        if (app.status === ApplicationStatus.INTERVIEW) counts.interviewsSecured += 1;
+        else if (app.status === ApplicationStatus.OFFER) counts.offersReceived += 1;
         return counts;
       },
       { interviewsSecured: 0, offersReceived: 0 }
@@ -1009,7 +1010,7 @@ export class DashboardService {
     const upcomingInterviews = await prisma.jobApplication.findMany({
       where: {
         userId,
-        status: 'INTERVIEW'
+        status: ApplicationStatus.INTERVIEW
       },
       select: { companyName: true, role: true },
       take: 1
@@ -1102,7 +1103,7 @@ export class DashboardService {
     });
 
     const recentRejections = jobs.filter(j => 
-      j.status === "REJECTED" && 
+      j.status === ApplicationStatus.REJECTED && 
       (new Date().getTime() - j.createdAt.getTime()) / MS_PER_DAY < 7
     ).length;
 
