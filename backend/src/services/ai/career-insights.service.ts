@@ -1,3 +1,4 @@
+import { AnalysisStatus, ApplicationStatus } from "@prisma/client";
 import prisma from "../../config/prisma";
 import { Prisma } from "@prisma/client";
 import { clampNumber, percentOf } from "../../utils/math";
@@ -66,30 +67,30 @@ export class CareerInsightsService {
       }),
 
       prisma.jobApplication.count({
-        where: { userId, status: "INTERVIEW", updatedAt: { gte: firstOfMonth } },
+        where: { userId, status: ApplicationStatus.INTERVIEW, updatedAt: { gte: firstOfMonth } },
       }),
 
       prisma.jobApplication.count({
-        where: { userId, status: "OFFER", updatedAt: { gte: firstOfMonth } },
+        where: { userId, status: ApplicationStatus.OFFER, updatedAt: { gte: firstOfMonth } },
       }),
 
       prisma.jobApplication.count({
-        where: { userId, status: "REJECTED" },
+        where: { userId, status: ApplicationStatus.REJECTED },
       }),
 
       prisma.resume.count({ where: { userId } }),
 
       prisma.resumeAnalysis.count({
-        where: { userId, status: "COMPLETED" },
+        where: { userId, status: AnalysisStatus.COMPLETED },
       }),
 
       prisma.resumeAnalysis.aggregate({
-        where: { userId, status: "COMPLETED", atsScore: { not: null } },
+        where: { userId, status: AnalysisStatus.COMPLETED, atsScore: { not: null } },
         _avg: { atsScore: true },
       }),
 
       prisma.interviewSession.count({
-        where: { userId, status: "COMPLETED" },
+        where: { userId, status: AnalysisStatus.COMPLETED },
       }),
 
       prisma.interviewResult.aggregate({
@@ -98,11 +99,11 @@ export class CareerInsightsService {
       }),
 
       prisma.jobAnalysis.count({
-        where: { userId, status: "COMPLETED", resumeMatchScore: { not: null } },
+        where: { userId, status: AnalysisStatus.COMPLETED, resumeMatchScore: { not: null } },
       }),
 
       prisma.jobAnalysis.aggregate({
-        where: { userId, status: "COMPLETED", resumeMatchScore: { not: null } },
+        where: { userId, status: AnalysisStatus.COMPLETED, resumeMatchScore: { not: null } },
         _avg: { resumeMatchScore: true },
       }),
     ]);
