@@ -42,7 +42,7 @@ export class ResumeAnalysisService {
           experienceSummary: result.data.experienceSummary,
           skillsSummary: result.data.skillsSummary,
           recruiterFeedback: result.data.recruiterFeedback,
-rawResponse: toRawResponseJson(result.rawResponse),
+          rawResponse: toRawResponseJson(result.rawResponse),
           analyzedAt: new Date(),
         },
       });
@@ -132,10 +132,11 @@ rawResponse: toRawResponseJson(result.rawResponse),
     }
     
     for (const w of stringList(analysis.weaknesses)) {
-      if (w.toLowerCase().includes("typo") || w.toLowerCase().includes("grammar")) {
+      const weakPoint = w.toLowerCase();
+      if (weakPoint.includes("typo") || weakPoint.includes("grammar")) {
         redFlags.push({ type: "CRITICAL", issue: "Typos or grammatical errors detected. Needs proofreading." });
       }
-      if (w.toLowerCase().includes("contact") || w.toLowerCase().includes("email")) {
+      if (weakPoint.includes("contact") || weakPoint.includes("email")) {
         redFlags.push({ type: "HIGH", issue: "Contact information may be missing or unreadable." });
       }
     }
