@@ -1,3 +1,4 @@
+import { AnalysisStatus } from "@prisma/client";
 import prisma from "../../config/prisma";
 import { ApiError } from "../../utils/ApiError";
 import { stringList } from "../../utils/collections";
@@ -21,7 +22,7 @@ export class ResumeAnalysisService {
       data: {
         resumeId,
         userId,
-        status: "PROCESSING",
+        status: AnalysisStatus.PROCESSING,
       },
     });
 
@@ -32,7 +33,7 @@ export class ResumeAnalysisService {
       const updated = await prisma.resumeAnalysis.update({
         where: { id: analysis.id },
         data: {
-          status: "COMPLETED",
+          status: AnalysisStatus.COMPLETED,
           atsScore: result.data.atsScore,
           strengths: result.data.strengths,
           weaknesses: result.data.weaknesses,
@@ -51,7 +52,7 @@ rawResponse: toRawResponseJson(result.rawResponse),
     const failed = await prisma.resumeAnalysis.update({
       where: { id: analysis.id },
       data: {
-        status: "FAILED",
+        status: AnalysisStatus.FAILED,
         errorMessage: result.error || "Analysis failed",
         rawResponse: toRawResponseJson(result.rawResponse),
       },
