@@ -118,19 +118,20 @@ export class AuthService {
 
   async updateEmail(userId: string, newEmail: string) {
     const user = await this.requireUser(userId);
+    const normalizedEmail = normalizeEmail(newEmail);
 
-    if (user.email === newEmail) {
+    if (user.email === normalizedEmail) {
       throw ApiError.badRequest("New email must be different from current email");
     }
 
-    const existingUser = await prisma.user.findUnique({ where: { email: newEmail } });
+    const existingUser = await prisma.user.findUnique({ where: { email: normalizedEmail } });
     if (existingUser) {
       throw ApiError.badRequest("Email already in use by another account");
     }
     
     const updatedUser = await prisma.user.update({
       where: { id: userId },
-      data: { email: newEmail },
+      data: { email: normalizedEmail },
       select: userSelect,
     });
 
