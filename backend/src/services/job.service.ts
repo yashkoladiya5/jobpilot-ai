@@ -4,6 +4,7 @@ import { ACTIVE_APPLICATION_STATUSES } from "../constants";
 import { ApiError } from "../utils/ApiError";
 import { countBy } from "../utils/collections";
 import { requireUser } from "../utils/user";
+import { requireOwnedJob } from "../utils/job";
 import { daysAgo } from "../utils/dates";
 import { randInt } from "../utils/math";
 
@@ -48,15 +49,7 @@ export class JobService {
   }
 
   async getJobById(userId: string, id: string) {
-    const job = await prisma.jobApplication.findFirst({
-      where: { id, userId },
-    });
-
-    if (!job) {
-      throw ApiError.notFound("Job application not found");
-    }
-
-    return job;
+    return requireOwnedJob(userId, id);
   }
 
   async createJob(
@@ -1107,6 +1100,46 @@ ${userName}`;
       companyName: job.companyName,
       questions,
       message: "Mock interview questions generated successfully based on your role."
+    };
+  }
+
+  async detectJobRedFlags(userId: string, id: string, jobDescriptionText: string) {
+    const job = await this.getJobById(userId, id);
+
+    if (!jobDescriptionText || jobDescriptionText.trim().length < 50) {
+      throw ApiError.badRequest("Job description text is too short to analyze.");
+    }
+
+    const lowerJd = jobDescriptionText.toLowerCase();
+    const flags = [];
+
+    // Common phrases that might indicate a toxic workplace or poor role scoping
+    if (lowerJd.includes("wear many hats") || lowerJd.includes("wear multiple hats")) {
+      flags.push({ severity: "Medium", issue: "Vague Role Boundaries", description: "The phrase 'wear many hats' often indicates a lack of clear role definition and potential overwork." });
+    }
+    if (lowerJd.includes("fast-paced environment") && lowerJd.includes("under pressure")) {
+      flags.push({ severity: "High", issue: "High Stress Potential", description: "Mention of a 'fast-paced environment' combined with working 'under pressure' can be a code word for chaotic management and poor work-life balance." });
+    }
+    if (lowerJd.includes("family") && lowerJd.includes("work hard play hard")) {
+      flags.push({ severity: "Medium", issue: "Culture Masking", description: "'We are a family' and 'work hard play hard' are sometimes used to justify lack of boundaries or mandatory unpaid overtime." });
+    }
+    if (lowerJd.includes("rockstar") || lowerJd.includes("ninja") || lowerJd.includes("guru")) {
+      flags.push({ severity: "Low", issue: "Unrealistic Expectations", description: "Terms like 'rockstar' or 'ninja' can imply they expect the output of multiple people from one employee, or lack professional maturity." });
+    }
+    
+    // Check salary if provided in the app
+    if (job.salaryRange && (job.salaryRange.includes("competitive") || job.salaryRange.includes("DOE"))) {
+       flags.push({ severity: "Low", issue: "Opaque Compensation", description: "The stated salary range is vague ('Competitive' or 'DOE'), which may indicate a lower-than-market offer." });
+    }
+
+    return {
+      jobId: id,
+      companyName: job.companyName,
+      role: job.role,
+      flagsDetected: flags,
+      totalFlags: flags.length,
+      overallAssessment: flags.length > 2 ? "Proceed with caution. Several potential red flags detected." : flags.length > 0 ? "A few things to keep an eye on during the interview process." : "No major textual red flags detected in the description.",
+      generatedAt: new Date().toISOString()
     };
   }
 }

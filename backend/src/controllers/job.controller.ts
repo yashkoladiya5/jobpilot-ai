@@ -500,3 +500,17 @@ export const generateInterviewQuestions = asyncHandler(async (req: Request, res:
     data: questions,
   });
 });
+
+export const detectJobRedFlags = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { id } = req.params;
+  const { jobDescriptionText } = req.body;
+  
+  const analysis = await jobService.detectJobRedFlags(userId, id, jobDescriptionText);
+  
+  res.status(200).json({
+    success: true,
+    message: "Red flag analysis completed successfully",
+    data: analysis,
+  });
+});
