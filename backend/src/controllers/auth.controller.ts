@@ -496,3 +496,12 @@ export const renameTrustedDevice = asyncHandler(async (req: Request, res: Respon
   const result = await authService.renameTrustedDevice(userId, deviceId, newName);
   res.status(200).json({ success: true, message: result.message, data: result });
 });
+
+export const requirePasswordReset = asyncHandler(async (req: Request, res: Response) => {
+  const adminId = getUserId(req); // Assuming caller is admin
+  const { targetUserId } = req.params;
+  const { reason } = req.body;
+  
+  const result = await authService.requirePasswordReset(adminId, targetUserId, reason);
+  res.status(200).json({ success: true, message: result.message, data: result });
+});

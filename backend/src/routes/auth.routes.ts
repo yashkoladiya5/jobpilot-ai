@@ -1,5 +1,14 @@
 import { Router } from "express";
-import { register, login, getMe, deleteAccount, updatePassword, updateEmail, updateName, getActiveSessions, getLoginHistory, registerDevice, initiateMfaSetup, verifyMfaSetup, generateBackupCodes, initiatePasswordlessLogin, initiateSmsTwoFactor, getLoginStreak, revokeSession, exportUserData, getUserSecurityScore, trustDevice, getProfileCompleteness, verifyEmailDomain, toggleTwoFactorAuth, verifySessionHealth, revokeOtherSessions, terminateIdleSessions, revokeAllSessions, getAccountSecurityAudit, getEmailAliases, addEmailAlias, removeEmailAlias, getTrustedDevices, getSessionMapCoordinates, registerDeviceLocation, renameTrustedDevice } from "../controllers/auth.controller";
+import { register, login, getMe, deleteAccount, updatePassword, updateEmail, updateName, getActiveSessions, getLoginHistory, registerDevice, initiateMfaSetup, verifyMfaSetup, generateBackupCodes, initiatePasswordlessLogin, initiateSmsTwoFactor, getLoginStreak, revokeSession, exportUserData, getUserSecurityScore, trustDevice, getProfileCompleteness, verifyEmailDomain, toggleTwoFactorAuth, verifySessionHealth, revokeOtherSessions, terminateIdleSessions, revokeAllSessions,  getAccountSecurityAudit,
+  getEmailAliases,
+  addEmailAlias,
+  removeEmailAlias,
+  getTrustedDevices,
+  getSessionMapCoordinates,
+  registerDeviceLocation,
+  renameTrustedDevice,
+  requirePasswordReset,
+} from "../controllers/auth.controller";
 import { authenticate } from "../middleware/auth";
 import { validate } from "../middleware/validate";
 import { registerSchema, loginSchema } from "../validators/auth.validator";
@@ -45,5 +54,6 @@ router.delete("/email-aliases", authenticate, removeEmailAlias);
 router.get("/trusted-devices", authenticate, getTrustedDevices);
 router.patch("/device/:deviceId/rename", authenticate, renameTrustedDevice);
 router.post("/device/location", authenticate, registerDeviceLocation);
+router.post("/admin/require-password-reset/:targetUserId", authenticate, requirePasswordReset);
 
 export default router;
