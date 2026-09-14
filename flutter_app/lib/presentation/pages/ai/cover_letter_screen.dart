@@ -16,8 +16,9 @@ import 'package:shimmer/shimmer.dart';
 enum CoverLetterTone {
   professional('Professional', 'professional'),
   enthusiastic('Enthusiastic', 'enthusiastic'),
-  formal('Formal', 'formal'),
-  casual('Casual', 'casual');
+  confident('Confident', 'confident'),
+  humorous('Humorous', 'humorous'),
+  formal('Formal', 'formal');
 
   const CoverLetterTone(this.label, this.value);
   final String label;
