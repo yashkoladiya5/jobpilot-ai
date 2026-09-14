@@ -1068,7 +1068,8 @@ export class AnalyticsService {
     
     // Check if user has a primary resume
     const hasResume = await prisma.resume.findFirst({
-      where: { userId, isPrimary: true }
+      where: { userId, isPrimary: true },
+      select: { id: true },
     });
     
     let score = 50; // base score
