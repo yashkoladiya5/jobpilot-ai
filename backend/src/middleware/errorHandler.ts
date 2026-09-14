@@ -62,6 +62,13 @@ export const errorHandler = (
     return;
   }
 
+  // Oversized bodies from express.json/express.urlencoded surface as body-parser
+  // HttpError with type 'entity.too.large' (non-ApiError); return 413 not 500.
+  if ((err as { type?: string }).type === 'entity.too.large') {
+    sendError(413, "Request body is too large. Maximum allowed size is 10MB.");
+    return;
+  }
+
   // Enhanced unhandled error logging
   logger.error(`[Unhandled Error] ${err.name}: ${err.message}`, { stack: err.stack });
 

@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+import { randomBytes } from "node:crypto";
 import prisma from "../config/prisma";
 import { ApiError } from "../utils/ApiError";
 import { clampNumber, randInt } from "../utils/math";
@@ -882,7 +883,7 @@ export class AuthService {
 
     // Since we don't have a direct "requiresPasswordReset" column in the current mock schema,
     // we simulate the action that would log the user out and set the flag.
-    const resetToken = crypto.randomBytes(32).toString("hex");
+    const resetToken = randomBytes(32).toString("hex");
 
     return {
       targetUserId,
