@@ -98,10 +98,37 @@ function extractJson(text: string): string | null {
   if (codeBlockMatch) {
     return codeBlockMatch[1].trim();
   }
-  // Try to find JSON object directly
-  const jsonMatch = text.match(/\{[\s\S]*\}/);
-  if (jsonMatch) {
-    return jsonMatch[0];
+  // Otherwise, find the first balanced JSON object. A naive /{[\s\S]*}/ would
+  // greedily swallow any trailing prose after the closing brace, breaking parse.
+  const start = text.indexOf("{");
+  if (start === -1) {
+    return null;
+  }
+  let depth = 0;
+  let inString = false;
+  let escaped = false;
+  for (let i = start; i < text.length; i++) {
+    const ch = text[i];
+    if (inString) {
+      if (escaped) {
+        escaped = false;
+      } else if (ch === "\\") {
+        escaped = true;
+      } else if (ch === '"') {
+        inString = false;
+      }
+      continue;
+    }
+    if (ch === '"') {
+      inString = true;
+    } else if (ch === "{") {
+      depth++;
+    } else if (ch === "}") {
+      depth--;
+      if (depth === 0) {
+        return text.slice(start, i + 1);
+      }
+    }
   }
   return null;
 }
