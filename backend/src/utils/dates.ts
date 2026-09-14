@@ -8,14 +8,21 @@ export const daysAgo = (days: number): Date => {
 };
 
 /**
+ * Returns the leading `length` characters of the UTC ISO timestamp, which is
+ * what both date/month bucketing keys are derived from.
+ */
+const isoPrefix = (date: Date, length: number): string =>
+  date.toISOString().slice(0, length);
+
+/**
  * Formats a Date as a YYYY-MM-DD key for grouping metrics by day.
  */
-export const dateKey = (date: Date): string => date.toISOString().slice(0, 10);
+export const dateKey = (date: Date): string => isoPrefix(date, 10);
 
 /**
  * Formats a Date as a YYYY-MM key for grouping metrics by month.
  */
-export const monthKey = (date: Date): string => date.toISOString().slice(0, 7);
+export const monthKey = (date: Date): string => isoPrefix(date, 7);
 
 export const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
