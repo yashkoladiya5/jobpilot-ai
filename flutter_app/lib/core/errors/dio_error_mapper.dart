@@ -45,7 +45,25 @@ Failure mapDioError(
       code: (e.error as TimeoutException).statusCode,
     );
   }
+  // Prefer the backend's human-readable message (which the error handler and
+  // validation middleware place in the `{ success, message, ... }` envelope)
+  // over the generic dio-derived message, so users see the real explanation.
+  final backendMessage = _backendMessage(e);
   return Failure.serverFailure(
-    message: e.message ?? fallbackMessage,
+    message: backendMessage ?? e.message ?? fallbackMessage,
   );
+}
+
+/// Extracts the human-readable `message` the backend included in its error
+/// envelope, returning null when absent or malformed so callers fall back to
+/// the generic dio message.
+String? _backendMessage(DioException e) {
+  final data = e.response?.data;
+  if (data is Map<String, dynamic>) {
+    final message = data['message'];
+    if (message is String && message.trim().isNotEmpty) {
+      return message.trim();
+    }
+  }
+  return null;
 }
