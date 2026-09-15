@@ -17,7 +17,7 @@ export const generateCoverLetter = asyncHandler(async (req: Request, res: Respon
     throw ApiError.badRequest("resumeId and jobDescription are required");
   }
   const result = await coverLetterService.generateCoverLetter(userId, resumeId, jobDescription, jobId, tone);
-  res.status(200).json({
+  res.status(201).json({
     success: true,
     message: "Cover letter generated successfully",
     data: result,
