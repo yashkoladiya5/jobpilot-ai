@@ -35,7 +35,7 @@ export const authenticate = (
   }
 
   try {
-    const decoded = jwt.verify(token, config.jwtSecret) as { userId: string, iat: number, exp: number };
+    const decoded = jwt.verify(token, config.jwtSecret, { algorithms: ["HS256"] }) as { userId: string, iat: number, exp: number };
     
     if (!decoded.userId) {
       return next(ApiError.unauthorized("Authentication required: Token payload is missing the user id"));
