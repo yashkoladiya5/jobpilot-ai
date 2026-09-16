@@ -90,6 +90,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                     context.read<JobBloc>().add(LoadJobDetail(widget.jobId)),
               ),
             JobsLoaded() => const SizedBox.shrink(),
+            AnalyticsLoaded() => const SizedBox.shrink(),
             JobOperationSuccess() => _lastLoadedJob != null
                 ? _buildDetailContent(context, _lastLoadedJob!)
                 : const SizedBox.shrink(),
