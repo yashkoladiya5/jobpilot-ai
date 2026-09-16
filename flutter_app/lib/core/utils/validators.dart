@@ -64,7 +64,8 @@ class Validators {
   static String? phone(String? value) {
     if (value == null || value.trim().isEmpty) return null;
     final phoneRegex = RegExp(r'^\+?[0-9]{7,15}$');
-    if (!phoneRegex.hasMatch(value.trim())) {
+    final normalized = value.trim().replaceAll(RegExp(r'[\s\-()]'), '');
+    if (!phoneRegex.hasMatch(normalized)) {
       return 'Please enter a valid phone number';
     }
     return null;
