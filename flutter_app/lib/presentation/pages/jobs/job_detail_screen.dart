@@ -91,6 +91,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
               ),
             JobsLoaded() => const SizedBox.shrink(),
             AnalyticsLoaded() => const SizedBox.shrink(),
+            SearchResultsLoaded() => const SizedBox.shrink(),
             JobOperationSuccess() => _lastLoadedJob != null
                 ? _buildDetailContent(context, _lastLoadedJob!)
                 : const SizedBox.shrink(),
