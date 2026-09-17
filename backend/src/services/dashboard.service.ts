@@ -1126,4 +1126,59 @@ export class DashboardService {
       generatedAt: new Date().toISOString()
     };
   }
+
+  async getInterviewConfidenceScore(userId: string) {
+    const jobs = await prisma.jobApplication.findMany({
+      where: { userId },
+      select: { status: true }
+    });
+
+    if (jobs.length === 0) {
+      return {
+        userId,
+        confidenceScore: 0,
+        level: "Beginner",
+        advice: "Start applying to jobs and completing mock interviews to build your confidence score.",
+        factors: []
+      };
+    }
+
+    const interviews = jobs.filter(j => j.status === "INTERVIEW" || j.status === "OFFER").length;
+    let baseScore = 40; // Base baseline
+    
+    const factors = [];
+    if (interviews > 0) {
+      baseScore += Math.min(interviews * 10, 40);
+      factors.push({ factor: "Recent Interviews", impact: "+ Positive" });
+    } else {
+      factors.push({ factor: "Recent Interviews", impact: "Needs Improvement" });
+    }
+
+    if (jobs.length > 10) {
+      baseScore += 10;
+      factors.push({ factor: "Application Volume", impact: "+ Positive" });
+    }
+
+    // Cap at 99
+    const finalScore = Math.min(baseScore, 99);
+    
+    let level = "Developing";
+    let advice = "Keep practicing mock interviews to improve your delivery.";
+    if (finalScore >= 80) {
+      level = "Highly Confident";
+      advice = "You're in a great spot! Trust your preparation.";
+    } else if (finalScore >= 60) {
+      level = "Prepared";
+      advice = "You are ready, but could use a bit more polish on behavioral questions.";
+    }
+
+    return {
+      userId,
+      confidenceScore: finalScore,
+      level,
+      advice,
+      factors,
+      generatedAt: new Date().toISOString()
+    };
+  }
 }

@@ -479,3 +479,15 @@ export const getDashboardMentalHealthCheck = asyncHandler(async (req: Request, r
     data: result 
   });
 });
+
+export const getInterviewConfidenceScore = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  
+  const result = await dashboardService.getInterviewConfidenceScore(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Interview confidence score generated successfully", 
+    data: result 
+  });
+});
