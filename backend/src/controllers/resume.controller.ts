@@ -411,3 +411,17 @@ export const checkCoverLetterGrammar = asyncHandler(async (req: Request, res: Re
     data: grammarData,
   });
 });
+
+export const analyzeTone = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { id } = req.params;
+  const { documentText } = req.body;
+  
+  const toneData = await resumeService.analyzeTone(userId, id, documentText);
+  
+  res.status(200).json({
+    success: true,
+    message: "Resume/Cover letter tone analyzed successfully",
+    data: toneData,
+  });
+});

@@ -29,6 +29,7 @@ import {
   parseResumeSections,
   generateResumeATSFormattingTips,
   checkCoverLetterGrammar,
+  analyzeTone,
 } from "../controllers/resume.controller";
 import { authenticate } from "../middleware/auth";
 import { upload } from "../middleware/upload";
@@ -81,5 +82,6 @@ router.post("/:id/match-keywords", authenticate, matchResumeKeywords);
 router.get("/:id/parse-sections", authenticate, parseResumeSections);
 router.get("/:id/ats-formatting", authenticate, generateResumeATSFormattingTips);
 router.post("/:id/grammar-check", authenticate, checkCoverLetterGrammar);
+router.post("/:id/analyze-tone", authenticate, analyzeTone);
 
 export default router;

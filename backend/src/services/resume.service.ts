@@ -756,4 +756,60 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
       generatedAt: new Date().toISOString()
     };
   }
+
+  async analyzeTone(userId: string, id: string, documentText: string) {
+    const resume = await prisma.resume.findUnique({ where: { id } });
+    if (!resume || resume.userId !== userId) {
+      throw ApiError.notFound("Resume not found");
+    }
+
+    if (!documentText || documentText.trim().length < 20) {
+      throw ApiError.badRequest("Document text is too short to analyze tone.");
+    }
+
+    const lowerText = documentText.toLowerCase();
+    
+    // Simple heuristic for tone analysis
+    const passiveWords = ["was", "were", "been", "being", "am", "is", "are", "by"];
+    const aggressiveWords = ["crushed", "dominated", "demanded", "forced", "always", "never"];
+    const confidentWords = ["achieved", "delivered", "spearheaded", "orchestrated", "led"];
+
+    let passiveCount = 0;
+    let aggressiveCount = 0;
+    let confidentCount = 0;
+
+    const words = lowerText.split(/\s+/);
+    words.forEach(word => {
+      const cleanWord = word.replace(/[^a-z]/g, '');
+      if (passiveWords.includes(cleanWord)) passiveCount++;
+      if (aggressiveWords.includes(cleanWord)) aggressiveCount++;
+      if (confidentWords.includes(cleanWord)) confidentCount++;
+    });
+
+    let primaryTone = "Neutral";
+    let advice = "Your tone is balanced, but consider adding more action verbs.";
+
+    if (aggressiveCount > confidentCount && aggressiveCount > 2) {
+      primaryTone = "Aggressive";
+      advice = "The tone comes across as a bit aggressive. Try softening absolute terms like 'always' or 'never'.";
+    } else if (passiveCount > confidentCount + 3) {
+      primaryTone = "Passive";
+      advice = "Your phrasing is quite passive. Use active voice and strong action verbs to project more confidence.";
+    } else if (confidentCount >= passiveCount) {
+      primaryTone = "Confident";
+      advice = "Excellent! Your tone is confident and professional.";
+    }
+
+    return {
+      resumeId: resume.id,
+      primaryTone,
+      metrics: {
+        passiveLanguageScore: passiveCount,
+        aggressiveLanguageScore: aggressiveCount,
+        confidentLanguageScore: confidentCount,
+      },
+      advice,
+      generatedAt: new Date().toISOString()
+    };
+  }
 }
