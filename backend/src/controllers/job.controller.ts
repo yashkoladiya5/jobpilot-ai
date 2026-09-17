@@ -514,3 +514,16 @@ export const detectJobRedFlags = asyncHandler(async (req: Request, res: Response
     data: analysis,
   });
 });
+
+export const evaluateApplicationQuality = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { id } = req.params;
+  
+  const result = await jobService.evaluateApplicationQuality(userId, id);
+  
+  res.status(200).json({
+    success: true,
+    message: result.message,
+    data: result,
+  });
+});

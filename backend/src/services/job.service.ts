@@ -1142,4 +1142,52 @@ ${userName}`;
       generatedAt: new Date().toISOString()
     };
   }
+
+  async evaluateApplicationQuality(userId: string, id: string) {
+    const job = await prisma.jobApplication.findUnique({
+      where: { id },
+      include: { events: true }
+    });
+
+    if (!job || job.userId !== userId) {
+      throw ApiError.notFound("Job application not found");
+    }
+
+    let score = 50; // Base score
+    const factors = [];
+
+    if (job.resumeId) {
+      score += 20;
+      factors.push("+ Tailored Resume Included");
+    } else {
+      factors.push("- Missing linked resume");
+    }
+
+    if (job.coverLetterId) {
+      score += 15;
+      factors.push("+ Cover Letter Included");
+    }
+
+    // Check for follow-up events
+    const hasFollowUp = job.events.some(e => 
+      e.type === "EMAIL" || e.type === "FOLLOW_UP" || (e.notes && e.notes.toLowerCase().includes("follow up"))
+    );
+
+    if (hasFollowUp) {
+      score += 15;
+      factors.push("+ Followed up appropriately");
+    } else if (job.status !== "APPLIED") {
+      factors.push("- No documented follow-up after initial application");
+    }
+
+    const finalScore = Math.min(score, 100);
+
+    return {
+      jobId: id,
+      qualityScore: finalScore,
+      rating: finalScore >= 80 ? "Excellent" : finalScore >= 60 ? "Good" : "Needs Improvement",
+      factors,
+      message: "Application quality evaluated."
+    };
+  }
 }

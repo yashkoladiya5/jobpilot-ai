@@ -37,6 +37,7 @@ import {
   getJobApplicationInsights,
   generateInterviewQuestions,
   detectJobRedFlags,
+  evaluateApplicationQuality,
 } from "../controllers/job.controller";
 import { authenticate } from "../middleware/auth";
 import { validate } from "../middleware/validate";
@@ -81,6 +82,7 @@ router.get("/salary-estimates", authenticate, getJobSalaryEstimates);
 router.get("/:id/insights", authenticate, getJobApplicationInsights);
 router.get("/:id/interview-questions", authenticate, generateInterviewQuestions);
 router.post("/:id/detect-red-flags", authenticate, detectJobRedFlags);
+router.get("/:id/evaluate-quality", authenticate, evaluateApplicationQuality);
 
 // CRUD operations for jobs, all requiring user authentication
 router.get("/", authenticate, getJobs);
