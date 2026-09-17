@@ -1,6 +1,11 @@
 import { Router } from "express";
 import { authenticate } from "../middleware/auth";
-import { getPipelineAnalytics, getTimelineData, getSkillMatchAnalytics, getRejectionAnalytics, getOfferAnalytics, getInterviewAnalytics, getWeeklyActivitySummary, getResumeAnalytics, getInterviewTrends, getJobSourceAnalytics, getSkillsGapAnalytics, getOfferNegotiationInsights, getCareerGrowthPotential, getPeerComparisonAnalytics, getOfferPredictor, getNetworkingROI, getJobSearchEffectiveness, getApplicationGhostingPredictor, trackLoginDuration, getCustomDateRangeStats, exportAnalyticsReport as getExportAnalyticsReport, getSkillDemandForecast, getApplicationConversionFunnel, getInterviewSuccessRate, getJobSearchDuration, getOfferNegotiationLeverage, getApplicationChannelEffectiveness, getProfileVisibilityScore, getProfileViewsHistory, getUserRetentionStats, getTimeToHirePredictor, predictOfferProbability } from "../controllers/analytics.controller";
+import { getPipelineAnalytics, getTimelineData, getSkillMatchAnalytics, getRejectionAnalytics, getOfferAnalytics, getInterviewAnalytics, getWeeklyActivitySummary, getResumeAnalytics, getInterviewTrends, getJobSourceAnalytics, getSkillsGapAnalytics, getOfferNegotiationInsights, getCareerGrowthPotential, getPeerComparisonAnalytics, getOfferPredictor, getNetworkingROI, getJobSearchEffectiveness, getApplicationGhostingPredictor, trackLoginDuration, getCustomDateRangeStats, exportAnalyticsReport as getExportAnalyticsReport, getSkillDemandForecast, getApplicationConversionFunnel, getInterviewSuccessRate, getJobSearchDuration, getOfferNegotiationLeverage, getApplicationChannelEffectiveness, getProfileVisibilityScore,  getProfileViewsHistory,
+  getUserRetentionStats,
+  getTimeToHirePredictor,
+  predictOfferProbability,
+  getApplicationFrequencyHeatmap,
+} from "../controllers/analytics.controller";
 
 /**
  * Express router for analytics and reporting endpoints.
@@ -42,5 +47,6 @@ router.get("/profile-views", getProfileViewsHistory);
 router.get("/retention", getUserRetentionStats);
 router.get("/time-to-hire", getTimeToHirePredictor);
 router.get("/predict-offer", predictOfferProbability);
+router.get("/application-heatmap", getApplicationFrequencyHeatmap);
 
 export default router;

@@ -1229,4 +1229,48 @@ export class AnalyticsService {
       message: "Offer probability calculated successfully based on historical conversion rates."
     };
   }
+
+  async getApplicationFrequencyHeatmap(userId: string) {
+    const oneYearAgo = new Date();
+    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+
+    const applications = await prisma.jobApplication.findMany({
+      where: { 
+        userId,
+        createdAt: { gte: oneYearAgo }
+      },
+      select: { createdAt: true }
+    });
+
+    // Group by date string (YYYY-MM-DD)
+    const frequencyMap: Record<string, number> = {};
+    
+    applications.forEach(app => {
+      const dateStr = app.createdAt.toISOString().split('T')[0];
+      frequencyMap[dateStr] = (frequencyMap[dateStr] || 0) + 1;
+    });
+
+    // Format for charting libraries (like GitHub contributions heatmap)
+    const heatmapData = Object.keys(frequencyMap).map(date => {
+      const count = frequencyMap[date];
+      let intensity = 0;
+      if (count === 1) intensity = 1;
+      else if (count >= 2 && count <= 3) intensity = 2;
+      else if (count >= 4 && count <= 5) intensity = 3;
+      else if (count > 5) intensity = 4;
+      
+      return {
+        date,
+        count,
+        intensity
+      };
+    });
+
+    return {
+      userId,
+      totalYearlyApplications: applications.length,
+      heatmapData,
+      message: "Application frequency heatmap data generated successfully."
+    };
+  }
 }

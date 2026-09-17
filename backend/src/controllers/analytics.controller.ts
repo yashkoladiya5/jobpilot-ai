@@ -332,3 +332,15 @@ export const predictOfferProbability = asyncHandler(async (req: Request, res: Re
     data: result 
   });
 });
+
+export const getApplicationFrequencyHeatmap = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  
+  const result = await analyticsService.getApplicationFrequencyHeatmap(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Application frequency heatmap data generated successfully", 
+    data: result 
+  });
+});
