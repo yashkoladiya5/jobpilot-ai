@@ -215,7 +215,14 @@ class _ResumeScreenState extends State<ResumeScreen> {
 
     return RefreshIndicator(
       onRefresh: () async {
-        context.read<ResumeBloc>().add(const LoadResumes());
+        final bloc = context.read<ResumeBloc>();
+        await bloc.stream.firstWhere(
+          (s) => s is ResumesLoaded || s is ResumeError,
+        );
+        bloc.add(const LoadResumes());
+        await bloc.stream.firstWhere(
+          (s) => s is ResumesLoaded || s is ResumeError,
+        );
       },
       child: ListView.builder(
         padding: const EdgeInsets.only(top: 10, bottom: 96),
