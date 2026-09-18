@@ -37,7 +37,14 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          context.read<AnalyticsBloc>().add(const RefreshAllAnalytics());
+          final bloc = context.read<AnalyticsBloc>();
+          await bloc.stream.firstWhere(
+            (s) => s is AnalyticsLoaded || s is AnalyticsError,
+          );
+          bloc.add(const RefreshAllAnalytics());
+          await bloc.stream.firstWhere(
+            (s) => s is AnalyticsLoaded || s is AnalyticsError,
+          );
         },
         child: BlocBuilder<AnalyticsBloc, AnalyticsState>(
           builder: (context, state) {
