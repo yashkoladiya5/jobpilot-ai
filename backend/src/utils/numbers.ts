@@ -10,7 +10,10 @@ export const parsePositiveInt = (value: unknown, fallback: number | undefined): 
   if (value === undefined || value === null || value === "") {
     return fallback;
   }
-  return parseInt(String(value), 10);
+  const raw = String(value).trim();
+  // Strict full-string numeric check: "12abc" must NOT silently become 12,
+  // and "-3" / "abc" are not positive integers.
+  return /^\d+$/.test(raw) ? parseInt(raw, 10) : NaN;
 };
 
 /**
