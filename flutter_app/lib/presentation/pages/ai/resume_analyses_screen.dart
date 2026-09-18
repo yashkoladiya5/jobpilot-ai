@@ -28,8 +28,14 @@ class _ResumeAnalysesScreenState extends State<ResumeAnalysesScreen> {
   }
 
   Future<void> _onRefresh() {
-    context.read<AiResumeBloc>().add(const LoadAllResumeAnalyses());
-    return Future.value();
+    final bloc = context.read<AiResumeBloc>();
+    return bloc.stream
+        .firstWhere(
+          (s) => s is AiResumeAnalysesLoaded || s is AiResumeError,
+        )
+        .then(
+      (_) => bloc.add(const LoadAllResumeAnalyses()),
+    );
   }
 
   @override
