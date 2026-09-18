@@ -57,7 +57,14 @@ class _JobsListScreenState extends State<JobsListScreen> {
         builder: (context, state) {
           return RefreshIndicator(
             onRefresh: () async {
-              context.read<JobBloc>().add(const LoadJobs());
+              final bloc = context.read<JobBloc>();
+              await bloc.stream.firstWhere(
+                (s) => s is JobsLoaded || s is JobError,
+              );
+              bloc.add(const LoadJobs());
+              await bloc.stream.firstWhere(
+                (s) => s is JobsLoaded || s is JobError,
+              );
             },
             child: _buildStateContent(state),
           );
