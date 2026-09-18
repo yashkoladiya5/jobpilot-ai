@@ -33,7 +33,14 @@ export const errorHandler = (
     return;
   }
 
-  if (err instanceof SyntaxError) {
+  // Body-parser tags malformed-JSON bodies with type 'entity.parse.failed'.
+  // Other SyntaxErrors (e.g. from application code) indicate a server bug and
+  // must not be misreported as a client-side 400 — let them fall through to the
+  // 500 handler so they reach the error logger.
+  if (
+    err instanceof SyntaxError &&
+    (err as { type?: string }).type === "entity.parse.failed"
+  ) {
     sendError(400, "Invalid JSON format in the request body. Please verify the syntax.");
     return;
   }
