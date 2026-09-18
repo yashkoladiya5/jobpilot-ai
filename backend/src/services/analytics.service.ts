@@ -1294,7 +1294,13 @@ export class AnalyticsService {
     });
 
     const weeklyVelocity: Record<string, number> = {};
-    const recentMilestones = [];
+    const recentMilestones: Array<{
+      jobId: string;
+      company: string;
+      role: string;
+      milestone: ApplicationStatus;
+      date: string;
+    }> = [];
 
     applications.forEach(app => {
       // Create weekly buckets
