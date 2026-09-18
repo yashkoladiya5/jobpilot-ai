@@ -38,12 +38,17 @@ class _CareerInsightsScreenState extends State<CareerInsightsScreen> {
           ),
         ],
       ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          context
-              .read<CareerInsightsBloc>()
-              .add(const RefreshCareerInsights());
-        },
+        body: RefreshIndicator(
+          onRefresh: () async {
+            final bloc = context.read<CareerInsightsBloc>();
+            await bloc.stream.firstWhere(
+              (s) => s is CareerInsightsLoaded || s is CareerInsightsError,
+            );
+            bloc.add(const RefreshCareerInsights());
+            await bloc.stream.firstWhere(
+              (s) => s is CareerInsightsLoaded || s is CareerInsightsError,
+            );
+          },
         child: BlocBuilder<CareerInsightsBloc, CareerInsightsState>(
           builder: (context, state) {
             return switch (state) {
