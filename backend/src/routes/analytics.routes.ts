@@ -5,6 +5,7 @@ import { getPipelineAnalytics, getTimelineData, getSkillMatchAnalytics, getRejec
   getTimeToHirePredictor,
   predictOfferProbability,
   getApplicationFrequencyHeatmap,
+  getApplicationTimelineReport,
 } from "../controllers/analytics.controller";
 
 /**
@@ -48,5 +49,6 @@ router.get("/retention", getUserRetentionStats);
 router.get("/time-to-hire", getTimeToHirePredictor);
 router.get("/predict-offer", predictOfferProbability);
 router.get("/application-heatmap", getApplicationFrequencyHeatmap);
+router.get("/application-timeline", getApplicationTimelineReport);
 
 export default router;

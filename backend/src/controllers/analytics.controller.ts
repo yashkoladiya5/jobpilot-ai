@@ -344,3 +344,15 @@ export const getApplicationFrequencyHeatmap = asyncHandler(async (req: Request, 
     data: result 
   });
 });
+
+export const getApplicationTimelineReport = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  
+  const result = await analyticsService.getApplicationTimelineReport(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Application timeline report generated successfully", 
+    data: result 
+  });
+});

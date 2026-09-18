@@ -1273,4 +1273,58 @@ export class AnalyticsService {
       message: "Application frequency heatmap data generated successfully."
     };
   }
+
+  async getApplicationTimelineReport(userId: string) {
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    const applications = await prisma.jobApplication.findMany({
+      where: { 
+        userId,
+        createdAt: { gte: thirtyDaysAgo }
+      },
+      orderBy: { createdAt: 'asc' },
+      select: {
+        id: true,
+        companyName: true,
+        role: true,
+        createdAt: true,
+        status: true
+      }
+    });
+
+    const weeklyVelocity: Record<string, number> = {};
+    const recentMilestones = [];
+
+    applications.forEach(app => {
+      // Create weekly buckets
+      const weekStart = new Date(app.createdAt);
+      weekStart.setDate(weekStart.getDate() - weekStart.getDay()); // Start of week (Sunday)
+      const weekKey = weekStart.toISOString().split('T')[0];
+      
+      weeklyVelocity[weekKey] = (weeklyVelocity[weekKey] || 0) + 1;
+
+      if (app.status === "INTERVIEW" || app.status === "OFFER") {
+        recentMilestones.push({
+          jobId: app.id,
+          company: app.companyName,
+          role: app.role,
+          milestone: app.status,
+          date: app.createdAt.toISOString()
+        });
+      }
+    });
+
+    return {
+      userId,
+      totalRecentApplications: applications.length,
+      weeklyVelocity: Object.keys(weeklyVelocity).map(week => ({
+        weekOf: week,
+        applicationsSubmitted: weeklyVelocity[week]
+      })),
+      recentMilestones,
+      insights: applications.length > 10 ? "Great momentum! You're consistently applying to jobs." : "Try to increase your application volume for better chances.",
+      generatedAt: new Date().toISOString()
+    };
+  }
 }
