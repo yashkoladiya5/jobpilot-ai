@@ -47,7 +47,14 @@ class _CoverLettersListScreenState extends State<CoverLettersListScreen> {
         builder: (context, state) {
           return RefreshIndicator(
             onRefresh: () async {
-              context.read<CoverLetterBloc>().add(const LoadCoverLetters());
+              final bloc = context.read<CoverLetterBloc>();
+              await bloc.stream.firstWhere(
+                (s) => s is CoverLettersLoaded || s is CoverLetterError,
+              );
+              bloc.add(const LoadCoverLetters());
+              await bloc.stream.firstWhere(
+                (s) => s is CoverLettersLoaded || s is CoverLetterError,
+              );
             },
             child: switch (state) {
               CoverLetterInitial() => const SizedBox.shrink(),
