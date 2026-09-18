@@ -28,8 +28,14 @@ class _JobAnalysesScreenState extends State<JobAnalysesScreen> {
   }
 
   Future<void> _onRefresh() {
-    context.read<AiJobBloc>().add(const LoadAllJobAnalyses());
-    return Future.value();
+    final bloc = context.read<AiJobBloc>();
+    return bloc.stream
+        .firstWhere(
+          (s) => s is AiJobAnalysesLoaded || s is AiJobError,
+        )
+        .then(
+      (s) => bloc.add(const LoadAllJobAnalyses()),
+    );
   }
 
   @override
