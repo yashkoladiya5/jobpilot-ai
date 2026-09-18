@@ -812,4 +812,51 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
       generatedAt: new Date().toISOString()
     };
   }
+
+  async calculateKeywordDensity(userId: string, id: string, documentText: string, targetKeywords: string[]) {
+    const resume = await prisma.resume.findUnique({ where: { id } });
+    if (!resume || resume.userId !== userId) {
+      throw ApiError.notFound("Resume not found");
+    }
+
+    if (!documentText || documentText.trim().length === 0) {
+      throw ApiError.badRequest("Document text is required to calculate keyword density.");
+    }
+    
+    if (!targetKeywords || targetKeywords.length === 0) {
+      throw ApiError.badRequest("At least one target keyword is required.");
+    }
+
+    const lowerText = documentText.toLowerCase();
+    const words = lowerText.split(/\s+/).filter(w => w.length > 0);
+    const totalWords = words.length;
+
+    const densityReport = targetKeywords.map(keyword => {
+      const lowerKeyword = keyword.toLowerCase();
+      // Simple regex to find exact matches of the keyword phrase
+      const regex = new RegExp(`\\b${lowerKeyword}\\b`, 'g');
+      const matches = lowerText.match(regex);
+      const count = matches ? matches.length : 0;
+      // Density = (count * words in keyword) / total words
+      const keywordWordCount = lowerKeyword.split(/\s+/).length;
+      const density = totalWords > 0 ? ((count * keywordWordCount) / totalWords) * 100 : 0;
+      
+      return {
+        keyword,
+        count,
+        densityPercent: parseFloat(density.toFixed(2))
+      };
+    });
+
+    const averageDensity = densityReport.reduce((acc, curr) => acc + curr.densityPercent, 0) / densityReport.length;
+
+    return {
+      resumeId: resume.id,
+      totalWords,
+      averageDensityPercent: parseFloat(averageDensity.toFixed(2)),
+      densityReport,
+      advice: averageDensity < 1 ? "Consider naturally weaving these keywords into your experience bullet points." : (averageDensity > 5 ? "Be careful of keyword stuffing. Ensure the resume reads naturally." : "Good keyword usage!"),
+      generatedAt: new Date().toISOString()
+    };
+  }
 }

@@ -425,3 +425,17 @@ export const analyzeTone = asyncHandler(async (req: Request, res: Response) => {
     data: toneData,
   });
 });
+
+export const calculateKeywordDensity = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { id } = req.params;
+  const { documentText, targetKeywords } = req.body;
+  
+  const densityData = await resumeService.calculateKeywordDensity(userId, id, documentText, targetKeywords);
+  
+  res.status(200).json({
+    success: true,
+    message: "Keyword density calculated successfully",
+    data: densityData,
+  });
+});
