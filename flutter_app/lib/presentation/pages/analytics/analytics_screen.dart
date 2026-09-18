@@ -347,7 +347,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(Icons.arrow_downward, size: 16, color: AppColors.textHint),
+        const Icon(Icons.arrow_downward, size: 16, color: AppColors.textHint),
         const SizedBox(width: 4),
         Text(
           '$rate%',
