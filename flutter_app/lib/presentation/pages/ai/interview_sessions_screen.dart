@@ -51,7 +51,14 @@ class _InterviewSessionsScreenState extends State<InterviewSessionsScreen> {
         builder: (context, state) {
           return RefreshIndicator(
             onRefresh: () async {
-              context.read<InterviewBloc>().add(const LoadInterviewSessions());
+              final bloc = context.read<InterviewBloc>();
+              await bloc.stream.firstWhere(
+                (s) => s is InterviewSessionsLoaded || s is InterviewError,
+              );
+              bloc.add(const LoadInterviewSessions());
+              await bloc.stream.firstWhere(
+                (s) => s is InterviewSessionsLoaded || s is InterviewError,
+              );
             },
             child: switch (state) {
               InterviewInitial() => const SizedBox.shrink(),
