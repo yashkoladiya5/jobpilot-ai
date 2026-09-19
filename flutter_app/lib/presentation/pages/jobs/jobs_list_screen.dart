@@ -97,6 +97,14 @@ class _JobsListScreenState extends State<JobsListScreen> {
         return _lastLoadedJobs != null && _lastLoadedJobs!.isNotEmpty
             ? _buildJobsList(context, _lastLoadedJobs!)
             : const _JobsShimmer();
+      case AnalyticsLoaded():
+        return _lastLoadedJobs != null && _lastLoadedJobs!.isNotEmpty
+            ? _buildJobsList(context, _lastLoadedJobs!)
+            : const _JobsShimmer();
+      case SearchResultsLoaded():
+        return _lastLoadedJobs != null && _lastLoadedJobs!.isNotEmpty
+            ? _buildJobsList(context, _lastLoadedJobs!)
+            : const _JobsShimmer();
       case JobError(:final message):
         return ErrorDisplay(
           message: message,
