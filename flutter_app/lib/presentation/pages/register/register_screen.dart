@@ -54,7 +54,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           state.whenOrNull(
-            authenticated: (_) => context.go(AppConstants.dashboardRoute),
+            authenticated: (_, _) => context.go(AppConstants.dashboardRoute),
             authError: (message) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
