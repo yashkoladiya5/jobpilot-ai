@@ -505,3 +505,12 @@ export const requirePasswordReset = asyncHandler(async (req: Request, res: Respo
   const result = await authService.requirePasswordReset(adminId, targetUserId, reason);
   res.status(200).json({ success: true, message: result.message, data: result });
 });
+
+export const requireTwoFactorSetup = asyncHandler(async (req: Request, res: Response) => {
+  const adminId = getUserId(req);
+  const { targetUserId } = req.params;
+  const { reason } = req.body;
+  
+  const result = await authService.requireTwoFactorSetup(adminId, targetUserId, reason);
+  res.status(200).json({ success: true, message: result.message, data: result });
+});

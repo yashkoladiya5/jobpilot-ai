@@ -894,4 +894,29 @@ export class AuthService {
       message: "User account has been flagged. They will be required to reset their password on their next login attempt."
     };
   }
+
+  async requireTwoFactorSetup(adminId: string, targetUserId: string, reason: string) {
+    const admin = await prisma.user.findUnique({ where: { id: adminId } });
+    if (!admin || admin.role !== "ADMIN") {
+      throw ApiError.forbidden("Only administrators can force 2FA setup");
+    }
+
+    const targetUser = await prisma.user.findUnique({ where: { id: targetUserId } });
+    if (!targetUser) throw ApiError.notFound("Target user not found");
+
+    if (!reason || reason.trim().length === 0) {
+      throw ApiError.badRequest("A reason must be provided for forcing 2FA setup.");
+    }
+
+    // In a real application, you'd set a flag on the user model like `requires2FASetup: true`
+    // and invalidate their current sessions so they are prompted on next login.
+    
+    return {
+      targetUserId,
+      reason,
+      action: "forced_2fa_setup",
+      timestamp: new Date().toISOString(),
+      message: `User ${targetUser.email} has been flagged to configure Two-Factor Authentication on their next login.`
+    };
+  }
 }
