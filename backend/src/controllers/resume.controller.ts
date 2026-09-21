@@ -439,3 +439,17 @@ export const calculateKeywordDensity = asyncHandler(async (req: Request, res: Re
     data: densityData,
   });
 });
+
+export const calculateActionVerbDensity = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { id } = req.params;
+  const { documentText } = req.body;
+  
+  const verbData = await resumeService.calculateActionVerbDensity(userId, id, documentText);
+  
+  res.status(200).json({
+    success: true,
+    message: "Action verb density calculated successfully",
+    data: verbData,
+  });
+});

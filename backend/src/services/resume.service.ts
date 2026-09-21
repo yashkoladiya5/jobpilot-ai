@@ -859,4 +859,49 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
       generatedAt: new Date().toISOString()
     };
   }
+
+  async calculateActionVerbDensity(userId: string, id: string, documentText: string) {
+    const resume = await prisma.resume.findUnique({ where: { id } });
+    if (!resume || resume.userId !== userId) {
+      throw ApiError.notFound("Resume not found");
+    }
+
+    if (!documentText || documentText.trim().length === 0) {
+      throw ApiError.badRequest("Document text is required to calculate action verb density.");
+    }
+
+    const actionVerbs = [
+      "achieved", "improved", "trained", "mentored", "managed", "created", "resolved", "volunteered",
+      "influenced", "increased", "decreased", "negotiated", "launched", "revenue", "under budget", "spearheaded"
+    ];
+
+    const lowerText = documentText.toLowerCase();
+    const words = lowerText.split(/\s+/).filter(w => w.length > 0);
+    const totalWords = words.length;
+
+    let verbCount = 0;
+    const foundVerbs: { verb: string, count: number }[] = [];
+
+    actionVerbs.forEach(verb => {
+      const regex = new RegExp(`\\b${verb}\\b`, 'g');
+      const matches = lowerText.match(regex);
+      if (matches && matches.length > 0) {
+        verbCount += matches.length;
+        foundVerbs.push({ verb, count: matches.length });
+      }
+    });
+
+    const density = totalWords > 0 ? (verbCount / totalWords) * 100 : 0;
+    const isStrong = density >= 2.5; // Arbitrary strong threshold
+
+    return {
+      resumeId: resume.id,
+      totalWords,
+      actionVerbCount: verbCount,
+      densityPercent: parseFloat(density.toFixed(2)),
+      foundVerbs,
+      advice: isStrong ? "Excellent use of strong action verbs to describe your impact!" : "Try replacing passive language with strong action verbs (e.g., 'spearheaded', 'achieved') to make your bullet points more impactful.",
+      generatedAt: new Date().toISOString()
+    };
+  }
 }

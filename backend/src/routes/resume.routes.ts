@@ -31,6 +31,7 @@ import {
   checkCoverLetterGrammar,
   analyzeTone,
   calculateKeywordDensity,
+  calculateActionVerbDensity,
 } from "../controllers/resume.controller";
 import { authenticate } from "../middleware/auth";
 import { upload } from "../middleware/upload";
@@ -85,5 +86,6 @@ router.get("/:id/ats-formatting", authenticate, generateResumeATSFormattingTips)
 router.post("/:id/grammar-check", authenticate, checkCoverLetterGrammar);
 router.post("/:id/analyze-tone", authenticate, analyzeTone);
 router.post("/:id/keyword-density", authenticate, calculateKeywordDensity);
+router.post("/:id/action-verb-density", authenticate, calculateActionVerbDensity);
 
 export default router;
