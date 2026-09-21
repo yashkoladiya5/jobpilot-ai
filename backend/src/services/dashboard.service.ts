@@ -1181,4 +1181,49 @@ export class DashboardService {
       generatedAt: new Date().toISOString()
     };
   }
+
+  async suggestNextAction(userId: string) {
+    const upcomingInterviews = await prisma.jobApplication.findMany({
+      where: { userId, status: "INTERVIEW" },
+      orderBy: { createdAt: 'desc' },
+      take: 1
+    });
+
+    if (upcomingInterviews.length > 0) {
+      return {
+        userId,
+        suggestedAction: "Prepare for your upcoming interview",
+        details: `You have an active interview process with ${upcomingInterviews[0].companyName}. Review your notes and practice common questions.`,
+        actionType: "INTERVIEW_PREP",
+        targetId: upcomingInterviews[0].id
+      };
+    }
+
+    const recentApplications = await prisma.jobApplication.findMany({
+      where: { userId, status: "APPLIED" },
+      orderBy: { createdAt: 'desc' },
+      take: 1
+    });
+
+    if (recentApplications.length > 0) {
+      const daysSinceApplied = (new Date().getTime() - recentApplications[0].createdAt.getTime()) / (1000 * 3600 * 24);
+      if (daysSinceApplied >= 7) {
+        return {
+          userId,
+          suggestedAction: "Follow up on a recent application",
+          details: `It's been over a week since you applied to ${recentApplications[0].companyName}. Consider sending a polite follow-up email.`,
+          actionType: "FOLLOW_UP",
+          targetId: recentApplications[0].id
+        };
+      }
+    }
+
+    return {
+      userId,
+      suggestedAction: "Apply to new jobs",
+      details: "Your pipeline is looking a bit light. Try to submit at least 2 new applications today.",
+      actionType: "APPLY",
+      targetId: null
+    };
+  }
 }

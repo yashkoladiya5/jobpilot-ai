@@ -491,3 +491,15 @@ export const getInterviewConfidenceScore = asyncHandler(async (req: Request, res
     data: result 
   });
 });
+
+export const suggestNextAction = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  
+  const result = await dashboardService.suggestNextAction(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Next action suggested successfully", 
+    data: result 
+  });
+});
