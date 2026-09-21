@@ -356,3 +356,15 @@ export const getApplicationTimelineReport = asyncHandler(async (req: Request, re
     data: result 
   });
 });
+
+export const getWeeklyProductivityScore = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  
+  const result = await analyticsService.getWeeklyProductivityScore(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Weekly productivity score generated successfully", 
+    data: result 
+  });
+});

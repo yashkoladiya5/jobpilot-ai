@@ -1333,4 +1333,53 @@ export class AnalyticsService {
       generatedAt: new Date().toISOString()
     };
   }
+
+  async getWeeklyProductivityScore(userId: string) {
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    const applications = await prisma.jobApplication.findMany({
+      where: {
+        userId,
+        createdAt: { gte: sevenDaysAgo }
+      },
+      select: {
+        status: true
+      }
+    });
+
+    let score = 0;
+    const breakdown = {
+      applicationsSubmitted: 0,
+      interviewsScheduled: 0,
+      offersReceived: 0
+    };
+
+    applications.forEach(app => {
+      // Base points for applying
+      score += 10;
+      breakdown.applicationsSubmitted++;
+
+      // Bonus points for progress
+      if (app.status === "INTERVIEW") {
+        score += 25;
+        breakdown.interviewsScheduled++;
+      } else if (app.status === "OFFER") {
+        score += 50;
+        breakdown.offersReceived++;
+      }
+    });
+
+    // Cap the score at 100
+    const finalScore = Math.min(score, 100);
+
+    return {
+      userId,
+      weeklyProductivityScore: finalScore,
+      rating: finalScore >= 80 ? "Highly Productive" : finalScore >= 40 ? "Steady Progress" : "Needs Momentum",
+      breakdown,
+      insights: finalScore < 40 ? "Set a goal to apply to at least 3 jobs this week to build momentum." : "Keep up the great work!",
+      generatedAt: new Date().toISOString()
+    };
+  }
 }
