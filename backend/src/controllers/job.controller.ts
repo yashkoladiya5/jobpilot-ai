@@ -527,3 +527,16 @@ export const evaluateApplicationQuality = asyncHandler(async (req: Request, res:
     data: result,
   });
 });
+
+export const checkApplicationUrgency = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { id } = req.params;
+  
+  const result = await jobService.checkApplicationUrgency(userId, id);
+  
+  res.status(200).json({
+    success: true,
+    message: "Application urgency checked successfully",
+    data: result,
+  });
+});

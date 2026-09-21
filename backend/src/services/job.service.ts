@@ -1190,4 +1190,46 @@ ${userName}`;
       message: "Application quality evaluated."
     };
   }
+
+  async checkApplicationUrgency(userId: string, id: string) {
+    const job = await prisma.jobApplication.findUnique({
+      where: { id },
+      include: { events: { orderBy: { date: 'desc' } } }
+    });
+
+    if (!job || job.userId !== userId) {
+      throw ApiError.notFound("Job application not found");
+    }
+
+    // Determine the last interaction date (either the last event or the application creation date)
+    const lastInteractionDate = job.events.length > 0 ? job.events[0].date : job.createdAt;
+    const daysSinceLastInteraction = (new Date().getTime() - lastInteractionDate.getTime()) / (1000 * 3600 * 24);
+
+    let urgencyLevel = "Low";
+    let recommendedAction = "Wait for a response.";
+
+    if (job.status === "OFFER") {
+      urgencyLevel = "Critical";
+      recommendedAction = "Review and respond to the offer before the deadline.";
+    } else if (job.status === "INTERVIEW" && daysSinceLastInteraction > 3) {
+      urgencyLevel = "High";
+      recommendedAction = "Send a thank-you note or follow up on interview feedback.";
+    } else if (job.status === "APPLIED" && daysSinceLastInteraction > 10) {
+      urgencyLevel = "Medium";
+      recommendedAction = "Follow up on your initial application to show continued interest.";
+    } else if (job.status === "REJECTED") {
+      urgencyLevel = "None";
+      recommendedAction = "No further action needed. Keep applying to other roles!";
+    }
+
+    return {
+      jobId: id,
+      company: job.companyName,
+      status: job.status,
+      daysSinceLastInteraction: Math.round(daysSinceLastInteraction),
+      urgencyLevel,
+      recommendedAction,
+      generatedAt: new Date().toISOString()
+    };
+  }
 }
