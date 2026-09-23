@@ -904,4 +904,46 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
       generatedAt: new Date().toISOString()
     };
   }
+
+  async calculateReadTime(userId: string, id: string, documentText: string) {
+    const resume = await prisma.resume.findUnique({ where: { id } });
+    if (!resume || resume.userId !== userId) {
+      throw ApiError.notFound("Resume not found");
+    }
+
+    if (!documentText || documentText.trim().length === 0) {
+      throw ApiError.badRequest("Document text is required to calculate read time.");
+    }
+
+    // Average adult reading speed is ~238 words per minute
+    // Source: https://en.wikipedia.org/wiki/Words_per_minute#Reading_and_comprehension
+    const WPM = 238;
+    
+    const words = documentText.trim().split(/\s+/).filter(w => w.length > 0);
+    const totalWords = words.length;
+
+    const readTimeMinutes = totalWords / WPM;
+    const readTimeSeconds = Math.round(readTimeMinutes * 60);
+
+    const formattedTime = readTimeMinutes >= 1 
+      ? `${Math.floor(readTimeMinutes)} min ${readTimeSeconds % 60} sec`
+      : `${readTimeSeconds} sec`;
+
+    // Recruiters typically spend 6-7 seconds on a first pass.
+    let advice = "Your resume length is ideal for a quick scan.";
+    if (readTimeSeconds > 120) {
+      advice = "Your resume might be too long. Consider trimming it down to ensure recruiters can easily scan your key achievements.";
+    } else if (readTimeSeconds < 30) {
+      advice = "Your resume might be too short. Make sure you've included all relevant experience and skills.";
+    }
+
+    return {
+      resumeId: resume.id,
+      totalWords,
+      estimatedReadTimeSeconds: readTimeSeconds,
+      formattedTime,
+      advice,
+      generatedAt: new Date().toISOString()
+    };
+  }
 }

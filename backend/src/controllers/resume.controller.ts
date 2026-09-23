@@ -453,3 +453,17 @@ export const calculateActionVerbDensity = asyncHandler(async (req: Request, res:
     data: verbData,
   });
 });
+
+export const calculateReadTime = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { id } = req.params;
+  const { documentText } = req.body;
+  
+  const readTimeData = await resumeService.calculateReadTime(userId, id, documentText);
+  
+  res.status(200).json({
+    success: true,
+    message: "Resume read time calculated successfully",
+    data: readTimeData,
+  });
+});
