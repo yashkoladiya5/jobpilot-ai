@@ -1271,4 +1271,41 @@ export class DashboardService {
       generatedAt: now.toISOString()
     };
   }
+
+  async suggestNetworkingAction(userId: string) {
+    // Generate a networking suggestion based on user's recent activity
+    const now = new Date();
+    const suggestions = [
+      {
+        action: "Connect with a Recruiter",
+        description: "Reach out to an internal recruiter at one of your top target companies on LinkedIn.",
+        difficulty: "Medium"
+      },
+      {
+        action: "Request an Informational Interview",
+        description: "Find an alumni from your university working in your desired role and ask for a 15-minute chat.",
+        difficulty: "Hard"
+      },
+      {
+        action: "Engage with Industry Content",
+        description: "Leave a thoughtful comment on a recent post from a thought leader in your field.",
+        difficulty: "Easy"
+      },
+      {
+        action: "Update Your Profile Headline",
+        description: "Ensure your LinkedIn headline accurately reflects the roles you are targeting.",
+        difficulty: "Easy"
+      }
+    ];
+
+    // Pick a random suggestion for variety
+    const randomIndex = Math.floor(Math.random() * suggestions.length);
+    const selectedSuggestion = suggestions[randomIndex];
+
+    return {
+      userId,
+      ...selectedSuggestion,
+      generatedAt: now.toISOString()
+    };
+  }
 }

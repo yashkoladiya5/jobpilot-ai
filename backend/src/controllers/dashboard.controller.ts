@@ -515,3 +515,15 @@ export const getJobSearchHealthScore = asyncHandler(async (req: Request, res: Re
     data: result 
   });
 });
+
+export const suggestNetworkingAction = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  
+  const result = await dashboardService.suggestNetworkingAction(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Networking action suggested successfully", 
+    data: result 
+  });
+});
