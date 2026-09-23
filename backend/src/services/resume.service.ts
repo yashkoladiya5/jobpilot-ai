@@ -998,4 +998,58 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
       generatedAt: new Date().toISOString()
     };
   }
+
+  async suggestActionVerbs(userId: string, id: string, documentText: string) {
+    const resume = await prisma.resume.findUnique({ where: { id } });
+    if (!resume || resume.userId !== userId) {
+      throw ApiError.notFound("Resume not found");
+    }
+
+    if (!documentText) {
+      throw ApiError.badRequest("Document text is required to suggest action verbs.");
+    }
+
+    const weakVerbs = ["helped", "worked", "did", "made", "responsible for", "assisted"];
+    const textLower = documentText.toLowerCase();
+    
+    const replacements = [];
+    
+    for (const weakVerb of weakVerbs) {
+      if (textLower.includes(weakVerb)) {
+        let suggestedReplacements: string[] = [];
+        
+        switch(weakVerb) {
+          case "helped":
+          case "assisted":
+            suggestedReplacements = ["Facilitated", "Collaborated", "Supported", "Guided"];
+            break;
+          case "worked":
+          case "did":
+            suggestedReplacements = ["Executed", "Operated", "Spearheaded", "Directed"];
+            break;
+          case "made":
+            suggestedReplacements = ["Developed", "Engineered", "Constructed", "Formulated"];
+            break;
+          case "responsible for":
+            suggestedReplacements = ["Managed", "Orchestrated", "Oversaw", "Led"];
+            break;
+        }
+
+        replacements.push({
+          weakVerb,
+          suggestedReplacements
+        });
+      }
+    }
+
+    return {
+      resumeId: resume.id,
+      findingsCount: replacements.length,
+      replacements,
+      message: replacements.length > 0 
+        ? `Found ${replacements.length} weak verbs that could be improved.` 
+        : "Great job! We didn't find common weak verbs in your text.",
+      generatedAt: new Date().toISOString()
+    };
+  }
 }
