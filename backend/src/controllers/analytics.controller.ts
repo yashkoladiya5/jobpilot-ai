@@ -368,3 +368,15 @@ export const getWeeklyProductivityScore = asyncHandler(async (req: Request, res:
     data: result 
   });
 });
+
+export const getApplicationVelocityTrend = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  
+  const result = await analyticsService.getApplicationVelocityTrend(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Application velocity trend generated successfully", 
+    data: result 
+  });
+});

@@ -1382,4 +1382,51 @@ export class AnalyticsService {
       generatedAt: new Date().toISOString()
     };
   }
+
+  async getApplicationVelocityTrend(userId: string) {
+    const now = new Date();
+    const fourteenDaysAgo = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
+    const twentyEightDaysAgo = new Date(now.getTime() - 28 * 24 * 60 * 60 * 1000);
+
+    const recentPeriodApps = await prisma.jobApplication.count({
+      where: {
+        userId,
+        createdAt: { gte: fourteenDaysAgo, lte: now }
+      }
+    });
+
+    const previousPeriodApps = await prisma.jobApplication.count({
+      where: {
+        userId,
+        createdAt: { gte: twentyEightDaysAgo, lt: fourteenDaysAgo }
+      }
+    });
+
+    let trend = "Stable";
+    let changePercentage = 0;
+
+    if (previousPeriodApps > 0) {
+      changePercentage = ((recentPeriodApps - previousPeriodApps) / previousPeriodApps) * 100;
+      if (changePercentage >= 20) {
+        trend = "Increasing";
+      } else if (changePercentage <= -20) {
+        trend = "Decreasing";
+      }
+    } else if (recentPeriodApps > 0) {
+      trend = "Increasing";
+      changePercentage = 100;
+    }
+
+    return {
+      userId,
+      recentPeriodCount: recentPeriodApps,
+      previousPeriodCount: previousPeriodApps,
+      trend,
+      changePercentage: parseFloat(changePercentage.toFixed(2)),
+      insights: trend === "Decreasing" 
+        ? "Your application volume has dropped compared to the previous period. Consider dedicating an hour today to sourcing new opportunities."
+        : "You are maintaining or growing your application pipeline.",
+      generatedAt: now.toISOString()
+    };
+  }
 }
