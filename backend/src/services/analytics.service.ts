@@ -1464,4 +1464,27 @@ export class AnalyticsService {
       generatedAt: now.toISOString()
     };
   }
+
+  async getKeywordMatchTrend(userId: string) {
+    const now = new Date();
+    // Simulate keyword match trend data over the last 4 weeks
+    // In a real app, you would query resume optimization history
+    
+    const weeks = ["Week 1", "Week 2", "Week 3", "Week 4"];
+    const matchRates = [65, 68, 72, 78]; // Simulated match rates
+
+    const improvement = matchRates[3] - matchRates[0];
+    
+    return {
+      userId,
+      trendData: weeks.map((week, index) => ({
+        period: week,
+        averageMatchRate: matchRates[index]
+      })),
+      overallImprovement: improvement,
+      status: improvement >= 10 ? "Great Progress" : improvement > 0 ? "Steady Improvement" : "Needs Optimization",
+      suggestion: "To further improve your match rate, make sure you are tailoring your skills section exactly to the job description keywords.",
+      generatedAt: now.toISOString()
+    };
+  }
 }

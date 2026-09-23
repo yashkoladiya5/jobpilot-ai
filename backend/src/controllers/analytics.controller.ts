@@ -392,3 +392,15 @@ export const getInterviewSuccessRateTrend = asyncHandler(async (req: Request, re
     data: result 
   });
 });
+
+export const getKeywordMatchTrend = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  
+  const result = await analyticsService.getKeywordMatchTrend(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Keyword match trend generated successfully", 
+    data: result 
+  });
+});
