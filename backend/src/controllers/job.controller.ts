@@ -540,3 +540,16 @@ export const checkApplicationUrgency = asyncHandler(async (req: Request, res: Re
     data: result,
   });
 });
+
+export const generateFollowUpEmailDraft = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { id } = req.params;
+  
+  const result = await jobService.generateFollowUpEmailDraft(userId, id);
+  
+  res.status(200).json({
+    success: true,
+    message: "Follow-up email draft generated successfully",
+    data: result,
+  });
+});

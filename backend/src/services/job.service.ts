@@ -1232,4 +1232,40 @@ ${userName}`;
       generatedAt: new Date().toISOString()
     };
   }
+
+  async generateFollowUpEmailDraft(userId: string, id: string) {
+    const job = await prisma.jobApplication.findUnique({
+      where: { id }
+    });
+
+    if (!job || job.userId !== userId) {
+      throw ApiError.notFound("Job application not found");
+    }
+
+    let subject = "";
+    let body = "";
+
+    if (job.status === "APPLIED") {
+      subject = `Following up on my application for ${job.role} at ${job.companyName}`;
+      body = `Dear Hiring Team,\n\nI recently applied for the ${job.role} position and wanted to express my continued interest. I believe my skills strongly align with your requirements.\n\nThank you for your time,\n[Your Name]`;
+    } else if (job.status === "INTERVIEW") {
+      subject = `Thank you - Interview for ${job.role} at ${job.companyName}`;
+      body = `Dear Interviewer,\n\nThank you for taking the time to speak with me about the ${job.role} position. I really enjoyed learning more about ${job.companyName} and am very excited about the opportunity.\n\nBest regards,\n[Your Name]`;
+    } else {
+      subject = `Checking in regarding the ${job.role} position`;
+      body = `Hi Team,\n\nI'm checking in on the status of my application for the ${job.role} role. Let me know if you need any further information from my end.\n\nBest,\n[Your Name]`;
+    }
+
+    return {
+      jobId: id,
+      company: job.companyName,
+      status: job.status,
+      draft: {
+        subject,
+        body
+      },
+      message: "Follow-up email draft generated successfully.",
+      generatedAt: new Date().toISOString()
+    };
+  }
 }
