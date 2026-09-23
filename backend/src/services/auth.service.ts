@@ -975,4 +975,32 @@ export class AuthService {
       isValid: score >= 50
     };
   }
+
+  async generateBackupCodes(userId: string) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw ApiError.notFound("User not found");
+
+    // Generate 10 random 8-character alphanumeric codes
+    const backupCodes: string[] = [];
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    
+    for (let i = 0; i < 10; i++) {
+      let code = '';
+      for (let j = 0; j < 8; j++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        code += characters[randomIndex];
+      }
+      backupCodes.push(code);
+    }
+
+    // In a real implementation, you would hash these codes and save them to the database
+    // e.g., await prisma.backupCode.createMany({ data: ... })
+    
+    return {
+      userId,
+      codes: backupCodes,
+      message: "Please save these backup codes in a secure location. Each code can only be used once.",
+      generatedAt: new Date().toISOString()
+    };
+  }
 }

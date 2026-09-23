@@ -521,3 +521,10 @@ export const checkPasswordStrength = asyncHandler(async (req: Request, res: Resp
   const result = await authService.checkPasswordStrength(password);
   res.status(200).json({ success: true, message: "Password strength evaluated", data: result });
 });
+
+export const generateBackupCodes = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  
+  const result = await authService.generateBackupCodes(userId);
+  res.status(200).json({ success: true, message: "Backup codes generated", data: result });
+});
