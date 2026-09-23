@@ -380,3 +380,15 @@ export const getApplicationVelocityTrend = asyncHandler(async (req: Request, res
     data: result 
   });
 });
+
+export const getInterviewSuccessRateTrend = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  
+  const result = await analyticsService.getInterviewSuccessRateTrend(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Interview success rate trend generated successfully", 
+    data: result 
+  });
+});

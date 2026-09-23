@@ -1429,4 +1429,39 @@ export class AnalyticsService {
       generatedAt: now.toISOString()
     };
   }
+
+  async getInterviewSuccessRateTrend(userId: string) {
+    const now = new Date();
+    const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+    const sixtyDaysAgo = new Date(now.getTime() - 60 * 24 * 60 * 60 * 1000);
+
+    // Calculate for recent 30 days
+    const recentInterviews = await prisma.jobApplication.count({
+      where: { userId, status: { in: ["INTERVIEW", "OFFER", "REJECTED"] }, updatedAt: { gte: thirtyDaysAgo } }
+    });
+    const recentOffers = await prisma.jobApplication.count({
+      where: { userId, status: "OFFER", updatedAt: { gte: thirtyDaysAgo } }
+    });
+    const recentSuccessRate = recentInterviews > 0 ? (recentOffers / recentInterviews) * 100 : 0;
+
+    // Calculate for previous 30 days
+    const pastInterviews = await prisma.jobApplication.count({
+      where: { userId, status: { in: ["INTERVIEW", "OFFER", "REJECTED"] }, updatedAt: { gte: sixtyDaysAgo, lt: thirtyDaysAgo } }
+    });
+    const pastOffers = await prisma.jobApplication.count({
+      where: { userId, status: "OFFER", updatedAt: { gte: sixtyDaysAgo, lt: thirtyDaysAgo } }
+    });
+    const pastSuccessRate = pastInterviews > 0 ? (pastOffers / pastInterviews) * 100 : 0;
+
+    const improvement = recentSuccessRate - pastSuccessRate;
+
+    return {
+      userId,
+      recentSuccessRate: parseFloat(recentSuccessRate.toFixed(2)),
+      pastSuccessRate: parseFloat(pastSuccessRate.toFixed(2)),
+      improvement: parseFloat(improvement.toFixed(2)),
+      trend: improvement > 0 ? "Improving" : improvement < 0 ? "Declining" : "Stable",
+      generatedAt: now.toISOString()
+    };
+  }
 }
