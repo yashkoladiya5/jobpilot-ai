@@ -919,4 +919,60 @@ export class AuthService {
       message: `User ${targetUser.email} has been flagged to configure Two-Factor Authentication on their next login.`
     };
   }
+
+  async checkPasswordStrength(password: string) {
+    if (!password) {
+      throw ApiError.badRequest("Password must be provided for strength checking.");
+    }
+
+    let score = 0;
+    const suggestions: string[] = [];
+
+    // Length check
+    if (password.length >= 8) {
+      score += 20;
+    } else {
+      suggestions.push("Increase length to at least 8 characters.");
+    }
+    if (password.length >= 12) score += 10;
+
+    // Uppercase check
+    if (/[A-Z]/.test(password)) {
+      score += 20;
+    } else {
+      suggestions.push("Include at least one uppercase letter.");
+    }
+
+    // Lowercase check
+    if (/[a-z]/.test(password)) {
+      score += 20;
+    } else {
+      suggestions.push("Include at least one lowercase letter.");
+    }
+
+    // Number check
+    if (/[0-9]/.test(password)) {
+      score += 15;
+    } else {
+      suggestions.push("Include at least one number.");
+    }
+
+    // Special character check
+    if (/[^A-Za-z0-9]/.test(password)) {
+      score += 15;
+    } else {
+      suggestions.push("Include at least one special character (e.g., !@#$%^&*).");
+    }
+
+    let strength = "Weak";
+    if (score >= 80) strength = "Strong";
+    else if (score >= 50) strength = "Moderate";
+
+    return {
+      score,
+      strength,
+      suggestions,
+      isValid: score >= 50
+    };
+  }
 }

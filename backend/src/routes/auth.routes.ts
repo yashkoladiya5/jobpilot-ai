@@ -9,6 +9,7 @@ import { register, login, getMe, deleteAccount, updatePassword, updateEmail, upd
   renameTrustedDevice,
   requirePasswordReset,
   requireTwoFactorSetup,
+  checkPasswordStrength,
 } from "../controllers/auth.controller";
 import { authenticate } from "../middleware/auth";
 import { validate } from "../middleware/validate";
@@ -57,5 +58,6 @@ router.patch("/device/:deviceId/rename", authenticate, renameTrustedDevice);
 router.post("/device/location", authenticate, registerDeviceLocation);
 router.post("/admin/require-password-reset/:targetUserId", authenticate, requirePasswordReset);
 router.post("/admin/require-2fa-setup/:targetUserId", authenticate, requireTwoFactorSetup);
+router.post("/password-strength", authenticate, checkPasswordStrength);
 
 export default router;
