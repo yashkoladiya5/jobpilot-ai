@@ -4,6 +4,7 @@ import { getStats, getRecentActivityLogs, getActionItems, getDashboardSummary, g
   getDashboardMentalHealthCheck,
   getInterviewConfidenceScore,
   suggestNextAction,
+  getJobSearchHealthScore,
 } from "../controllers/dashboard.controller";
 
 /**
@@ -44,5 +45,6 @@ router.get("/interview-prep-guide", authenticate, getInterviewPrepGuide);
 router.get("/mental-health", authenticate, getDashboardMentalHealthCheck);
 router.get("/interview-confidence", authenticate, getInterviewConfidenceScore);
 router.get("/suggest-next-action", authenticate, suggestNextAction);
+router.get("/health-score", authenticate, getJobSearchHealthScore);
 
 export default router;

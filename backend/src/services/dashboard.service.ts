@@ -1226,4 +1226,49 @@ export class DashboardService {
       targetId: null
     };
   }
+
+  async getJobSearchHealthScore(userId: string) {
+    // A simplified algorithm to determine the overall "health" of the job search.
+    // It considers recent applications (velocity) and active interviews (progress).
+
+    const now = new Date();
+    const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+
+    const activeInterviews = await prisma.jobApplication.count({
+      where: {
+        userId,
+        status: "INTERVIEW"
+      }
+    });
+
+    const recentApplications = await prisma.jobApplication.count({
+      where: {
+        userId,
+        createdAt: { gte: thirtyDaysAgo }
+      }
+    });
+
+    let score = 50; // Base score
+
+    // Add points for recent applications (up to 30 points)
+    score += Math.min(recentApplications * 2, 30);
+
+    // Add points for active interviews (up to 20 points)
+    score += Math.min(activeInterviews * 10, 20);
+
+    let healthStatus = "Needs Attention";
+    if (score >= 80) healthStatus = "Excellent";
+    else if (score >= 60) healthStatus = "Good";
+
+    return {
+      userId,
+      healthScore: score,
+      status: healthStatus,
+      metrics: {
+        activeInterviews,
+        recentApplications
+      },
+      generatedAt: now.toISOString()
+    };
+  }
 }

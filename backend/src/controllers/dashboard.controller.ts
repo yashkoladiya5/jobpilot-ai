@@ -503,3 +503,15 @@ export const suggestNextAction = asyncHandler(async (req: Request, res: Response
     data: result 
   });
 });
+
+export const getJobSearchHealthScore = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  
+  const result = await dashboardService.getJobSearchHealthScore(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Job search health score generated successfully", 
+    data: result 
+  });
+});
