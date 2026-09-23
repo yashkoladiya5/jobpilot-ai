@@ -40,6 +40,7 @@ import {
   evaluateApplicationQuality,
   checkApplicationUrgency,
   generateFollowUpEmailDraft,
+  checkApplicationCompleteness,
 } from "../controllers/job.controller";
 import { authenticate } from "../middleware/auth";
 import { validate } from "../middleware/validate";
@@ -87,6 +88,7 @@ router.post("/:id/detect-red-flags", authenticate, detectJobRedFlags);
 router.get("/:id/evaluate-quality", authenticate, evaluateApplicationQuality);
 router.get("/:id/urgency", authenticate, checkApplicationUrgency);
 router.get("/:id/follow-up-draft", authenticate, generateFollowUpEmailDraft);
+router.get("/:id/completeness", authenticate, checkApplicationCompleteness);
 
 // CRUD operations for jobs, all requiring user authentication
 router.get("/", authenticate, getJobs);

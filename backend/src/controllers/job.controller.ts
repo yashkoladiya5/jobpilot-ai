@@ -553,3 +553,16 @@ export const generateFollowUpEmailDraft = asyncHandler(async (req: Request, res:
     data: result,
   });
 });
+
+export const checkApplicationCompleteness = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { id } = req.params;
+  
+  const result = await jobService.checkApplicationCompleteness(userId, id);
+  
+  res.status(200).json({
+    success: true,
+    message: "Application completeness checked successfully",
+    data: result,
+  });
+});

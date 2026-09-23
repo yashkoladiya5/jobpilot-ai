@@ -1268,4 +1268,44 @@ ${userName}`;
       generatedAt: new Date().toISOString()
     };
   }
+
+  async checkApplicationCompleteness(userId: string, id: string) {
+    const job = await prisma.jobApplication.findUnique({
+      where: { id }
+    });
+
+    if (!job || job.userId !== userId) {
+      throw ApiError.notFound("Job application not found");
+    }
+
+    const missingFields: string[] = [];
+    const suggestions: string[] = [];
+
+    if (!job.url) {
+      missingFields.push("Job URL");
+      suggestions.push("Add the original job posting URL for future reference.");
+    }
+
+    if (!job.location) {
+      missingFields.push("Location");
+      suggestions.push("Specify the job location (e.g., Remote, City, State).");
+    }
+
+    if (!job.salary) {
+      missingFields.push("Salary Information");
+      suggestions.push("Note the expected or posted salary range to aid in future negotiations.");
+    }
+
+    const completenessScore = 100 - (missingFields.length * 20);
+
+    return {
+      jobId: id,
+      company: job.companyName,
+      completenessScore: Math.max(0, completenessScore),
+      isComplete: missingFields.length === 0,
+      missingFields,
+      suggestions,
+      generatedAt: new Date().toISOString()
+    };
+  }
 }
