@@ -467,3 +467,17 @@ export const calculateReadTime = asyncHandler(async (req: Request, res: Response
     data: readTimeData,
   });
 });
+
+export const estimateATSScore = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { id } = req.params;
+  const { documentText } = req.body;
+  
+  const atsData = await resumeService.estimateATSScore(userId, id, documentText);
+  
+  res.status(200).json({
+    success: true,
+    message: "ATS score estimated successfully",
+    data: atsData,
+  });
+});

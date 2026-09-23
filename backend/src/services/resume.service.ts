@@ -946,4 +946,56 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
       generatedAt: new Date().toISOString()
     };
   }
+
+  async estimateATSScore(userId: string, id: string, documentText: string) {
+    const resume = await prisma.resume.findUnique({ where: { id } });
+    if (!resume || resume.userId !== userId) {
+      throw ApiError.notFound("Resume not found");
+    }
+
+    if (!documentText || documentText.trim().length === 0) {
+      throw ApiError.badRequest("Document text is required to estimate ATS score.");
+    }
+
+    let score = 100;
+    const deductions: string[] = [];
+    const suggestions: string[] = [];
+
+    // Simple heuristic checks
+    if (documentText.includes("http") && !documentText.includes("linkedin.com")) {
+       score -= 5;
+       deductions.push("Missing LinkedIn profile link.");
+       suggestions.push("Add a link to your LinkedIn profile in the header.");
+    }
+
+    const standardSections = ["experience", "education", "skills"];
+    let missingSections = 0;
+    
+    standardSections.forEach(section => {
+      if (!documentText.toLowerCase().includes(section)) {
+        score -= 10;
+        missingSections++;
+        deductions.push(`Missing standard section header: ${section}`);
+        suggestions.push(`Ensure you have a clear '${section.charAt(0).toUpperCase() + section.slice(1)}' section.`);
+      }
+    });
+
+    if (documentText.length < 500) {
+      score -= 20;
+      deductions.push("Resume appears to be very brief.");
+      suggestions.push("Elaborate on your experience and provide more context for your achievements.");
+    }
+
+    // Ensure score doesn't drop below 0
+    score = Math.max(0, score);
+
+    return {
+      resumeId: resume.id,
+      atsScore: score,
+      rating: score >= 80 ? "High" : score >= 60 ? "Medium" : "Low",
+      deductions,
+      suggestions,
+      generatedAt: new Date().toISOString()
+    };
+  }
 }
