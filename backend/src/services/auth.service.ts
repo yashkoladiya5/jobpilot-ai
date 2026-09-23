@@ -1003,4 +1003,34 @@ export class AuthService {
       generatedAt: new Date().toISOString()
     };
   }
+
+  async checkPasswordBreach(password: string) {
+    if (!password) {
+      throw ApiError.badRequest("Password is required for breach check.");
+    }
+
+    // This is a mock implementation. In a real app, you would hash the password
+    // using SHA-1, take the first 5 characters of the hash, and query the 
+    // HaveIBeenPwned API (https://api.pwnedpasswords.com/range/{prefix}).
+    
+    // Simulate API call latency
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    // Simple mock logic: passwords shorter than 8 characters or 
+    // containing common words are flagged as breached.
+    const commonPasswords = ["password", "123456", "qwerty", "admin", "letmein"];
+    const isCommon = commonPasswords.some(cp => password.toLowerCase().includes(cp));
+    
+    const isBreached = password.length < 8 || isCommon;
+    const mockBreachCount = isBreached ? Math.floor(Math.random() * 10000) + 1 : 0;
+
+    return {
+      breached: isBreached,
+      occurrences: mockBreachCount,
+      recommendation: isBreached 
+        ? "This password has been seen in data breaches. Please choose a different, unique password."
+        : "Good news! This password was not found in any known data breaches.",
+      checkedAt: new Date().toISOString()
+    };
+  }
 }

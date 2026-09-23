@@ -528,3 +528,10 @@ export const generateBackupCodes = asyncHandler(async (req: Request, res: Respon
   const result = await authService.generateBackupCodes(userId);
   res.status(200).json({ success: true, message: "Backup codes generated", data: result });
 });
+
+export const checkPasswordBreach = asyncHandler(async (req: Request, res: Response) => {
+  const { password } = req.body;
+  
+  const result = await authService.checkPasswordBreach(password);
+  res.status(200).json({ success: true, message: "Password breach check completed", data: result });
+});
