@@ -527,3 +527,15 @@ export const suggestNetworkingAction = asyncHandler(async (req: Request, res: Re
     data: result 
   });
 });
+
+export const suggestUpskillingResource = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  
+  const result = await dashboardService.suggestUpskillingResource(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Upskilling resource suggested successfully", 
+    data: result 
+  });
+});

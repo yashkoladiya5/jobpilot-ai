@@ -1308,4 +1308,44 @@ export class DashboardService {
       generatedAt: now.toISOString()
     };
   }
+
+  async suggestUpskillingResource(userId: string) {
+    const now = new Date();
+    
+    // In a real application, you would query the user's targeted roles, 
+    // skills, or resume gaps, and match them with a database of resources.
+    
+    const resources = [
+      {
+        title: "AWS Certified Cloud Practitioner",
+        provider: "Coursera",
+        type: "Certification",
+        estimatedHours: 40,
+        relevance: "High (matches 'Cloud Computing' interest)"
+      },
+      {
+        title: "Advanced React Patterns",
+        provider: "Frontend Masters",
+        type: "Course",
+        estimatedHours: 15,
+        relevance: "Medium (matches 'Frontend Developer' target role)"
+      },
+      {
+        title: "System Design Interview Prep",
+        provider: "Educative.io",
+        type: "Interactive Course",
+        estimatedHours: 25,
+        relevance: "High (prepares for upcoming interviews)"
+      }
+    ];
+
+    const randomResource = resources[Math.floor(Math.random() * resources.length)];
+
+    return {
+      userId,
+      resource: randomResource,
+      message: "Here is an upskilling resource tailored to your career goals.",
+      generatedAt: now.toISOString()
+    };
+  }
 }

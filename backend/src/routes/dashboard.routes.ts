@@ -6,6 +6,7 @@ import { getStats, getRecentActivityLogs, getActionItems, getDashboardSummary, g
   suggestNextAction,
   getJobSearchHealthScore,
   suggestNetworkingAction,
+  suggestUpskillingResource,
 } from "../controllers/dashboard.controller";
 
 /**
@@ -48,5 +49,6 @@ router.get("/interview-confidence", authenticate, getInterviewConfidenceScore);
 router.get("/suggest-next-action", authenticate, suggestNextAction);
 router.get("/health-score", authenticate, getJobSearchHealthScore);
 router.get("/suggest-networking", authenticate, suggestNetworkingAction);
+router.get("/suggest-upskilling", authenticate, suggestUpskillingResource);
 
 export default router;
