@@ -1308,4 +1308,33 @@ ${userName}`;
       generatedAt: new Date().toISOString()
     };
   }
+
+  async generateInterviewFeedbackDraft(userId: string, id: string) {
+    const job = await prisma.jobApplication.findUnique({
+      where: { id }
+    });
+
+    if (!job || job.userId !== userId) {
+      throw ApiError.notFound("Job application not found");
+    }
+
+    if (job.status !== "REJECTED") {
+      throw ApiError.badRequest("Feedback drafts are typically used for rejected applications.");
+    }
+
+    const subject = `Feedback Request - ${job.role} position at ${job.companyName}`;
+    const body = `Dear [Interviewer/Recruiter Name],\n\nThank you again for the opportunity to interview for the ${job.role} position. While I'm disappointed not to be moving forward, I truly enjoyed learning more about ${job.companyName} and the team.\n\nI am always looking to improve, and I would greatly appreciate any feedback you could share regarding my interview or application. Even a brief note on areas where I could strengthen my skills would be incredibly helpful for my continued professional growth.\n\nThank you again for your time and consideration.\n\nBest regards,\n[Your Name]`;
+
+    return {
+      jobId: id,
+      company: job.companyName,
+      status: job.status,
+      draft: {
+        subject,
+        body
+      },
+      message: "Feedback request draft generated successfully.",
+      generatedAt: new Date().toISOString()
+    };
+  }
 }

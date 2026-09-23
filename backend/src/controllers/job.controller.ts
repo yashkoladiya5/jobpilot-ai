@@ -566,3 +566,16 @@ export const checkApplicationCompleteness = asyncHandler(async (req: Request, re
     data: result,
   });
 });
+
+export const generateInterviewFeedbackDraft = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { id } = req.params;
+  
+  const result = await jobService.generateInterviewFeedbackDraft(userId, id);
+  
+  res.status(200).json({
+    success: true,
+    message: "Feedback request draft generated successfully",
+    data: result,
+  });
+});
