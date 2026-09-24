@@ -1487,4 +1487,36 @@ export class AnalyticsService {
       generatedAt: now.toISOString()
     };
   }
+
+  async getApplicationChannelROI(userId: string) {
+    // In a real implementation, we would group job applications by their source/channel 
+    // and calculate the percentage of those that resulted in an interview or offer.
+
+    // Simulated data for demonstration
+    const channels = [
+      { name: "LinkedIn", totalApplications: 45, interviews: 5, offers: 1 },
+      { name: "Company Career Site", totalApplications: 20, interviews: 4, offers: 1 },
+      { name: "Referral", totalApplications: 3, interviews: 2, offers: 1 },
+      { name: "Indeed", totalApplications: 30, interviews: 1, offers: 0 }
+    ];
+
+    const analyzedChannels = channels.map(c => {
+      const interviewRate = (c.interviews / c.totalApplications) * 100;
+      return {
+        ...c,
+        interviewRate: parseFloat(interviewRate.toFixed(1)),
+        roiScore: (c.interviews * 2 + c.offers * 10) / c.totalApplications
+      };
+    }).sort((a, b) => b.roiScore - a.roiScore);
+
+    const bestChannel = analyzedChannels[0];
+
+    return {
+      userId,
+      channels: analyzedChannels,
+      bestPerformingChannel: bestChannel.name,
+      recommendation: `Focus your efforts on ${bestChannel.name} as it has the highest return on investment for your applications.`,
+      generatedAt: new Date().toISOString()
+    };
+  }
 }

@@ -404,3 +404,15 @@ export const getKeywordMatchTrend = asyncHandler(async (req: Request, res: Respo
     data: result 
   });
 });
+
+export const getApplicationChannelROI = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  
+  const result = await analyticsService.getApplicationChannelROI(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Application channel ROI generated successfully", 
+    data: result 
+  });
+});

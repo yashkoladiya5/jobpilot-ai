@@ -10,6 +10,7 @@ import { getPipelineAnalytics, getTimelineData, getSkillMatchAnalytics, getRejec
   getApplicationVelocityTrend,
   getInterviewSuccessRateTrend,
   getKeywordMatchTrend,
+  getApplicationChannelROI,
 } from "../controllers/analytics.controller";
 
 /**
@@ -58,5 +59,6 @@ router.get("/productivity-score", getWeeklyProductivityScore);
 router.get("/velocity-trend", getApplicationVelocityTrend);
 router.get("/interview-success-trend", getInterviewSuccessRateTrend);
 router.get("/keyword-match-trend", getKeywordMatchTrend);
+router.get("/channel-roi", getApplicationChannelROI);
 
 export default router;
