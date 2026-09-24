@@ -539,3 +539,15 @@ export const suggestUpskillingResource = asyncHandler(async (req: Request, res: 
     data: result 
   });
 });
+
+export const suggestResumeUpdate = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  
+  const result = await dashboardService.suggestResumeUpdate(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Resume update suggestion generated successfully", 
+    data: result 
+  });
+});

@@ -1348,4 +1348,41 @@ export class DashboardService {
       generatedAt: now.toISOString()
     };
   }
+
+  async suggestResumeUpdate(userId: string) {
+    // Find the user's primary resume or most recently updated resume
+    const latestResume = await prisma.resume.findFirst({
+      where: { userId },
+      orderBy: { updatedAt: 'desc' }
+    });
+
+    if (!latestResume) {
+      return {
+        userId,
+        needsUpdate: false,
+        message: "You haven't created a resume yet. Let's build your first one!",
+        actionRequired: "Create Resume",
+        checkedAt: new Date().toISOString()
+      };
+    }
+
+    const now = new Date();
+    const daysSinceUpdate = Math.floor((now.getTime() - latestResume.updatedAt.getTime()) / (1000 * 3600 * 24));
+    
+    // Suggest an update if the resume hasn't been touched in over 60 days
+    const needsUpdate = daysSinceUpdate > 60;
+
+    return {
+      userId,
+      needsUpdate,
+      resumeId: latestResume.id,
+      resumeTitle: latestResume.title,
+      daysSinceUpdate,
+      message: needsUpdate 
+        ? `Your resume "${latestResume.title}" hasn't been updated in ${daysSinceUpdate} days. Consider adding recent accomplishments to keep it fresh.`
+        : `Your resume is up to date (last modified ${daysSinceUpdate} days ago).`,
+      actionRequired: needsUpdate ? "Update Resume" : "None",
+      checkedAt: now.toISOString()
+    };
+  }
 }
