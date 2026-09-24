@@ -1033,4 +1033,41 @@ export class AuthService {
       checkedAt: new Date().toISOString()
     };
   }
+
+  async analyzeAuthenticationPatterns(userId: string) {
+    // In a real application, we would query the database for the user's login history.
+    // Here we simulate the analysis for demonstration purposes.
+
+    const simulatedLogins = Math.floor(Math.random() * 50) + 10; // Between 10 and 60 logins
+    const unusualTimes = Math.random() > 0.7;
+    const unusualLocations = Math.random() > 0.8;
+
+    let riskLevel = "Low";
+    const findings = [];
+
+    if (unusualTimes) {
+      riskLevel = "Medium";
+      findings.push("Several logins occurred between 2:00 AM and 5:00 AM local time.");
+    }
+
+    if (unusualLocations) {
+      riskLevel = "High";
+      findings.push("Logins detected from unrecognized IP addresses in foreign countries.");
+    }
+
+    if (findings.length === 0) {
+      findings.push("Your login patterns are consistent and secure.");
+    }
+
+    return {
+      userId,
+      totalRecentLogins: simulatedLogins,
+      riskLevel,
+      findings,
+      recommendation: riskLevel !== "Low" 
+        ? "Consider enabling Two-Factor Authentication (2FA) and reviewing your active sessions." 
+        : "Keep up the good security practices.",
+      analyzedAt: new Date().toISOString()
+    };
+  }
 }

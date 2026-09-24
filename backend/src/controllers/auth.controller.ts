@@ -535,3 +535,10 @@ export const checkPasswordBreach = asyncHandler(async (req: Request, res: Respon
   const result = await authService.checkPasswordBreach(password);
   res.status(200).json({ success: true, message: "Password breach check completed", data: result });
 });
+
+export const analyzeAuthenticationPatterns = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  
+  const result = await authService.analyzeAuthenticationPatterns(userId);
+  res.status(200).json({ success: true, message: "Authentication patterns analyzed", data: result });
+});

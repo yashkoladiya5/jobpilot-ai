@@ -12,6 +12,7 @@ import { register, login, getMe, deleteAccount, updatePassword, updateEmail, upd
   checkPasswordStrength,
   generateBackupCodes,
   checkPasswordBreach,
+  analyzeAuthenticationPatterns,
 } from "../controllers/auth.controller";
 import { authenticate } from "../middleware/auth";
 import { validate } from "../middleware/validate";
@@ -63,5 +64,6 @@ router.post("/admin/require-2fa-setup/:targetUserId", authenticate, requireTwoFa
 router.post("/password-strength", authenticate, checkPasswordStrength);
 router.post("/2fa/backup-codes", authenticate, generateBackupCodes);
 router.post("/password-breach-check", authenticate, checkPasswordBreach);
+router.get("/auth-patterns", authenticate, analyzeAuthenticationPatterns);
 
 export default router;
