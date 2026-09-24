@@ -579,3 +579,16 @@ export const generateInterviewFeedbackDraft = asyncHandler(async (req: Request, 
     data: result,
   });
 });
+
+export const checkApplicationDuplication = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { companyName, role } = req.body;
+  
+  const result = await jobService.checkApplicationDuplication(userId, companyName, role);
+  
+  res.status(200).json({
+    success: true,
+    message: "Application duplication check completed",
+    data: result,
+  });
+});

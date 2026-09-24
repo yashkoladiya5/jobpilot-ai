@@ -1337,4 +1337,60 @@ ${userName}`;
       generatedAt: new Date().toISOString()
     };
   }
+
+  async checkApplicationDuplication(userId: string, companyName: string, role: string) {
+    if (!companyName || !role) {
+      throw ApiError.badRequest("Company name and role are required to check for duplicates.");
+    }
+
+    // Check for applications to the same company and role within the last 90 days
+    const ninetyDaysAgo = new Date();
+    ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+
+    const duplicateApplications = await prisma.jobApplication.findMany({
+      where: {
+        userId,
+        companyName: {
+          equals: companyName,
+          mode: 'insensitive'
+        },
+        role: {
+          equals: role,
+          mode: 'insensitive'
+        },
+        createdAt: {
+          gte: ninetyDaysAgo
+        }
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+
+    const hasDuplicate = duplicateApplications.length > 0;
+    let message = "No recent duplicate applications found. Safe to apply.";
+    let warningLevel = "None";
+
+    if (hasDuplicate) {
+      const recentApp = duplicateApplications[0];
+      const daysSince = Math.floor((new Date().getTime() - recentApp.createdAt.getTime()) / (1000 * 3600 * 24));
+      
+      message = `You already applied for ${role} at ${companyName} ${daysSince} days ago (Status: ${recentApp.status}).`;
+      warningLevel = daysSince < 30 ? "High" : "Medium";
+    }
+
+    return {
+      userId,
+      hasDuplicate,
+      warningLevel,
+      duplicateApplicationsCount: duplicateApplications.length,
+      recentDuplicate: hasDuplicate ? {
+        id: duplicateApplications[0].id,
+        appliedAt: duplicateApplications[0].createdAt,
+        status: duplicateApplications[0].status
+      } : null,
+      message,
+      checkedAt: new Date().toISOString()
+    };
+  }
 }
