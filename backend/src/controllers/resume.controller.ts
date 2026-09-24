@@ -495,3 +495,17 @@ export const suggestActionVerbs = asyncHandler(async (req: Request, res: Respons
     data: result,
   });
 });
+
+export const suggestSummaryStatement = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { id } = req.params;
+  const { documentText } = req.body;
+  
+  const result = await resumeService.suggestSummaryStatement(userId, id, documentText);
+  
+  res.status(200).json({
+    success: true,
+    message: "Summary statement suggested successfully",
+    data: result,
+  });
+});

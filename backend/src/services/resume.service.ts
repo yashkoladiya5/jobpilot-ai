@@ -1052,4 +1052,35 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
       generatedAt: new Date().toISOString()
     };
   }
+
+  async suggestSummaryStatement(userId: string, id: string, documentText: string) {
+    const resume = await prisma.resume.findUnique({ where: { id } });
+    if (!resume || resume.userId !== userId) {
+      throw ApiError.notFound("Resume not found");
+    }
+
+    if (!documentText) {
+      throw ApiError.badRequest("Document text is required to generate a summary.");
+    }
+
+    // In a real application, you would pass the parsed document text to an LLM 
+    // to extract key skills and draft a compelling summary. Here we provide mock suggestions.
+    
+    const isTechnical = documentText.toLowerCase().includes("engineer") || documentText.toLowerCase().includes("developer");
+    
+    const drafts = isTechnical ? [
+      "Results-driven Software Engineer with 5+ years of experience in full-stack development, specializing in scalable cloud architectures and modern JavaScript frameworks.",
+      "Innovative Developer adept at bridging the gap between technical requirements and user-centric design, with a proven track record of delivering robust applications on time."
+    ] : [
+      "Dynamic Professional with a strong background in cross-functional collaboration, project management, and driving operational efficiency in fast-paced environments.",
+      "Detail-oriented Specialist offering proven expertise in strategic planning, process improvement, and stakeholder communication to achieve business objectives."
+    ];
+
+    return {
+      resumeId: resume.id,
+      drafts,
+      message: "Here are a few professional summary drafts tailored to your profile.",
+      generatedAt: new Date().toISOString()
+    };
+  }
 }

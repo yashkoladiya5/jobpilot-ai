@@ -35,6 +35,7 @@ import {
   calculateReadTime,
   estimateATSScore,
   suggestActionVerbs,
+  suggestSummaryStatement,
 } from "../controllers/resume.controller";
 import { authenticate } from "../middleware/auth";
 import { upload } from "../middleware/upload";
@@ -93,5 +94,6 @@ router.post("/:id/action-verb-density", authenticate, calculateActionVerbDensity
 router.post("/:id/read-time", authenticate, calculateReadTime);
 router.post("/:id/ats-score", authenticate, estimateATSScore);
 router.post("/:id/suggest-verbs", authenticate, suggestActionVerbs);
+router.post("/:id/suggest-summary", authenticate, suggestSummaryStatement);
 
 export default router;
