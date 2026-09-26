@@ -551,3 +551,15 @@ export const suggestResumeUpdate = asyncHandler(async (req: Request, res: Respon
     data: result 
   });
 });
+
+export const suggestUrgentAction = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  
+  const result = await dashboardService.suggestUrgentAction(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Urgent action suggestion generated successfully", 
+    data: result 
+  });
+});

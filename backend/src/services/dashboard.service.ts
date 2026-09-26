@@ -1385,4 +1385,41 @@ export class DashboardService {
       checkedAt: now.toISOString()
     };
   }
+
+  async suggestUrgentAction(userId: string) {
+    // Check if there are any upcoming interviews within the next 48 hours
+    const now = new Date();
+    const twoDaysFromNow = new Date(now.getTime() + (48 * 60 * 60 * 1000));
+
+    const upcomingInterviews = await prisma.jobApplication.findMany({
+      where: {
+        userId,
+        status: 'INTERVIEW',
+        updatedAt: {
+          gte: now,
+          lte: twoDaysFromNow
+        }
+      },
+      take: 1
+    });
+
+    if (upcomingInterviews.length > 0) {
+      return {
+        userId,
+        actionRequired: "Prepare for Interview",
+        urgency: "High",
+        message: `You have an interview coming up for ${upcomingInterviews[0].role} at ${upcomingInterviews[0].companyName}. Review your notes!`,
+        generatedAt: now.toISOString()
+      };
+    }
+
+    // Default action if no urgent items
+    return {
+      userId,
+      actionRequired: "Apply for Jobs",
+      urgency: "Low",
+      message: "You have no urgent tasks. Take some time to browse new job listings.",
+      generatedAt: now.toISOString()
+    };
+  }
 }
