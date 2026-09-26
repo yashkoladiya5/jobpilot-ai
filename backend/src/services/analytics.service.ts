@@ -1519,4 +1519,33 @@ export class AnalyticsService {
       generatedAt: new Date().toISOString()
     };
   }
+
+  async getApplicationStrategy(userId: string) {
+    // In a real implementation, analyze application volume vs response rate
+    // to determine if the user is using a "spray and pray" or highly targeted strategy.
+
+    const mockTotalApps = Math.floor(Math.random() * 200) + 20;
+    const mockResponses = Math.floor(mockTotalApps * (Math.random() * 0.2 + 0.05)); // 5% to 25% response rate
+    const responseRate = (mockResponses / mockTotalApps) * 100;
+
+    let strategyType = "Balanced";
+    let advice = "Your strategy is balanced. Continue refining your resume for specific roles.";
+
+    if (mockTotalApps > 100 && responseRate < 10) {
+      strategyType = "High Volume, Low Targeting";
+      advice = "You're applying to many jobs but getting few responses. Try focusing on quality over quantity by customizing your resume for each application.";
+    } else if (mockTotalApps < 30 && responseRate > 20) {
+      strategyType = "Low Volume, High Targeting";
+      advice = "Your applications are highly effective. You might want to slightly increase your application volume to maximize your chances.";
+    }
+
+    return {
+      userId,
+      totalApplications: mockTotalApps,
+      responseRate: parseFloat(responseRate.toFixed(1)),
+      strategyType,
+      advice,
+      analyzedAt: new Date().toISOString()
+    };
+  }
 }

@@ -416,3 +416,15 @@ export const getApplicationChannelROI = asyncHandler(async (req: Request, res: R
     data: result 
   });
 });
+
+export const getApplicationStrategy = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  
+  const result = await analyticsService.getApplicationStrategy(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Application strategy generated successfully", 
+    data: result 
+  });
+});
