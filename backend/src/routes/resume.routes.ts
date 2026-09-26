@@ -36,6 +36,7 @@ import {
   estimateATSScore,
   suggestActionVerbs,
   suggestSummaryStatement,
+  generateObjectiveStatement,
 } from "../controllers/resume.controller";
 import { authenticate } from "../middleware/auth";
 import { upload } from "../middleware/upload";
@@ -95,5 +96,6 @@ router.post("/:id/read-time", authenticate, calculateReadTime);
 router.post("/:id/ats-score", authenticate, estimateATSScore);
 router.post("/:id/suggest-verbs", authenticate, suggestActionVerbs);
 router.post("/:id/suggest-summary", authenticate, suggestSummaryStatement);
+router.post("/:id/generate-objective", authenticate, generateObjectiveStatement);
 
 export default router;

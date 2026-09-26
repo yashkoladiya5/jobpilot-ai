@@ -509,3 +509,17 @@ export const suggestSummaryStatement = asyncHandler(async (req: Request, res: Re
     data: result,
   });
 });
+
+export const generateObjectiveStatement = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { id } = req.params;
+  const { targetRole } = req.body;
+  
+  const result = await resumeService.generateObjectiveStatement(userId, id, targetRole);
+  
+  res.status(200).json({
+    success: true,
+    message: "Objective statement generated successfully",
+    data: result,
+  });
+});

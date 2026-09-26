@@ -1083,4 +1083,30 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
       generatedAt: new Date().toISOString()
     };
   }
+
+  async generateObjectiveStatement(userId: string, id: string, targetRole: string) {
+    const resume = await prisma.resume.findUnique({ where: { id } });
+    if (!resume || resume.userId !== userId) {
+      throw ApiError.notFound("Resume not found");
+    }
+
+    if (!targetRole) {
+      throw ApiError.badRequest("Target role is required to generate an objective statement.");
+    }
+
+    // Mocking the generation of objective statements based on a target role
+    const statements = [
+      `To secure a challenging position as a ${targetRole} where I can leverage my expertise to drive company growth and innovation.`,
+      `Highly motivated professional seeking a ${targetRole} role to contribute to a forward-thinking team and expand my skill set.`,
+      `Looking for an opportunity as a ${targetRole} to apply my strong analytical skills and dedication to achieving organizational success.`
+    ];
+
+    return {
+      resumeId: resume.id,
+      targetRole,
+      statements,
+      message: `Objective statements generated for the role of ${targetRole}.`,
+      generatedAt: new Date().toISOString()
+    };
+  }
 }
