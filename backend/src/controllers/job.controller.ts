@@ -592,3 +592,15 @@ export const checkApplicationDuplication = asyncHandler(async (req: Request, res
     data: result,
   });
 });
+
+export const checkApplicationActivity = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  
+  const result = await jobService.checkApplicationActivity(userId);
+  
+  res.status(200).json({
+    success: true,
+    message: "Application activity check completed",
+    data: result,
+  });
+});

@@ -1393,4 +1393,38 @@ ${userName}`;
       checkedAt: new Date().toISOString()
     };
   }
+
+  async checkApplicationActivity(userId: string) {
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+    const recentApplications = await prisma.jobApplication.count({
+      where: {
+        userId,
+        createdAt: {
+          gte: oneWeekAgo
+        }
+      }
+    });
+
+    // Mock logic for determining activity level
+    let activityLevel = "Low";
+    let advice = "Try to apply to at least 5-10 jobs per week to maintain momentum.";
+
+    if (recentApplications >= 15) {
+      activityLevel = "High";
+      advice = "Great job! Make sure you are tailoring your resumes and not just mass-applying.";
+    } else if (recentApplications >= 5) {
+      activityLevel = "Medium";
+      advice = "Good steady pace. Keep tracking your application responses.";
+    }
+
+    return {
+      userId,
+      applicationsLast7Days: recentApplications,
+      activityLevel,
+      advice,
+      checkedAt: new Date().toISOString()
+    };
+  }
 }
