@@ -1070,4 +1070,36 @@ export class AuthService {
       analyzedAt: new Date().toISOString()
     };
   }
+
+  async analyzePasswordAge(userId: string) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    
+    if (!user) {
+      throw ApiError.notFound("User not found");
+    }
+
+    // In a real application, we would track when the password was last updated.
+    // Assuming createdAt is the last password change for this mock, or generate a random age.
+    const now = new Date();
+    const lastChanged = user.createdAt; 
+    const daysOld = Math.floor((now.getTime() - lastChanged.getTime()) / (1000 * 3600 * 24));
+    
+    const maxAge = 90; // Recommend changing every 90 days
+    const needsChange = daysOld > maxAge;
+
+    let recommendation = "";
+    if (needsChange) {
+      recommendation = `Your password is ${daysOld} days old. We recommend changing it every ${maxAge} days to maintain account security.`;
+    } else {
+      recommendation = `Your password was changed ${daysOld} days ago. It is still within the recommended ${maxAge}-day lifespan.`;
+    }
+
+    return {
+      userId,
+      passwordAgeDays: daysOld,
+      needsChange,
+      recommendation,
+      analyzedAt: now.toISOString()
+    };
+  }
 }

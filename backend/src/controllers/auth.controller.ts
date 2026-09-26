@@ -542,3 +542,10 @@ export const analyzeAuthenticationPatterns = asyncHandler(async (req: Request, r
   const result = await authService.analyzeAuthenticationPatterns(userId);
   res.status(200).json({ success: true, message: "Authentication patterns analyzed", data: result });
 });
+
+export const analyzePasswordAge = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  
+  const result = await authService.analyzePasswordAge(userId);
+  res.status(200).json({ success: true, message: "Password age analyzed", data: result });
+});
