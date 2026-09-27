@@ -523,3 +523,17 @@ export const generateObjectiveStatement = asyncHandler(async (req: Request, res:
     data: result,
   });
 });
+
+export const calculateGrammarScore = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { id } = req.params;
+  const { documentText } = req.body;
+  
+  const result = await resumeService.calculateGrammarScore(userId, id, documentText);
+  
+  res.status(200).json({
+    success: true,
+    message: "Grammar score calculated successfully",
+    data: result,
+  });
+});

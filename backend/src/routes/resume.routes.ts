@@ -37,6 +37,7 @@ import {
   suggestActionVerbs,
   suggestSummaryStatement,
   generateObjectiveStatement,
+  calculateGrammarScore,
 } from "../controllers/resume.controller";
 import { authenticate } from "../middleware/auth";
 import { upload } from "../middleware/upload";
@@ -97,5 +98,6 @@ router.post("/:id/ats-score", authenticate, estimateATSScore);
 router.post("/:id/suggest-verbs", authenticate, suggestActionVerbs);
 router.post("/:id/suggest-summary", authenticate, suggestSummaryStatement);
 router.post("/:id/generate-objective", authenticate, generateObjectiveStatement);
+router.post("/:id/grammar-score", authenticate, calculateGrammarScore);
 
 export default router;

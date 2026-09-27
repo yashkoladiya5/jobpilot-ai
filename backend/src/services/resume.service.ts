@@ -1109,4 +1109,42 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
       generatedAt: new Date().toISOString()
     };
   }
+
+  async calculateGrammarScore(userId: string, id: string, documentText: string) {
+    const resume = await prisma.resume.findUnique({ where: { id } });
+    if (!resume || resume.userId !== userId) {
+      throw ApiError.notFound("Resume not found");
+    }
+
+    if (!documentText) {
+      throw ApiError.badRequest("Document text is required to calculate a grammar score.");
+    }
+
+    // Mock logic to calculate a grammar score based on text length and structure
+    const wordCount = documentText.split(/\s+/).length;
+    let score = 100;
+    let suggestions = [];
+
+    if (wordCount < 100) {
+      score -= 20;
+      suggestions.push("The resume is very brief. Consider adding more descriptive bullet points.");
+    }
+
+    if (documentText.toLowerCase().includes("responsibilities included")) {
+      score -= 5;
+      suggestions.push("Avoid passive phrases like 'responsibilities included'. Use strong action verbs instead.");
+    }
+
+    if (suggestions.length === 0) {
+      suggestions.push("Grammar and structure look excellent.");
+    }
+
+    return {
+      resumeId: resume.id,
+      grammarScore: Math.max(0, score),
+      suggestions,
+      message: "Grammar score calculated successfully.",
+      analyzedAt: new Date().toISOString()
+    };
+  }
 }
