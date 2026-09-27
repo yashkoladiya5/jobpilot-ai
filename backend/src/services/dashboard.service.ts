@@ -1422,4 +1422,39 @@ export class DashboardService {
       generatedAt: now.toISOString()
     };
   }
+
+  async suggestMotivation(userId: string) {
+    // Basic logic to check recent activity to decide on the type of quote
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+    const recentApps = await prisma.jobApplication.count({
+      where: {
+        userId,
+        createdAt: { gte: oneWeekAgo }
+      }
+    });
+
+    let quote = "";
+    let context = "";
+
+    if (recentApps === 0) {
+      quote = "The secret of getting ahead is getting started.";
+      context = "It looks like you haven't applied to any jobs this week. Let's send out a few applications today!";
+    } else if (recentApps > 10) {
+      quote = "Success is no accident. It is hard work, perseverance, learning, studying, sacrifice and most of all, love of what you are doing or learning to do.";
+      context = "You're on fire! You've submitted many applications this week. Keep up the great momentum.";
+    } else {
+      quote = "Perseverance is failing 19 times and succeeding the 20th.";
+      context = "You are making steady progress. Consistency is key in the job search.";
+    }
+
+    return {
+      userId,
+      quote,
+      context,
+      recentApplications: recentApps,
+      generatedAt: new Date().toISOString()
+    };
+  }
 }

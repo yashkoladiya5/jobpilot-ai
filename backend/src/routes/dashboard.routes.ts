@@ -9,6 +9,7 @@ import { getStats, getRecentActivityLogs, getActionItems, getDashboardSummary, g
   suggestUpskillingResource,
   suggestResumeUpdate,
   suggestUrgentAction,
+  suggestMotivation,
 } from "../controllers/dashboard.controller";
 
 /**
@@ -54,5 +55,6 @@ router.get("/suggest-networking", authenticate, suggestNetworkingAction);
 router.get("/suggest-upskilling", authenticate, suggestUpskillingResource);
 router.get("/suggest-resume-update", authenticate, suggestResumeUpdate);
 router.get("/suggest-urgent-action", authenticate, suggestUrgentAction);
+router.get("/suggest-motivation", authenticate, suggestMotivation);
 
 export default router;

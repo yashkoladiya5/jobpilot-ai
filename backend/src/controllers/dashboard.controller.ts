@@ -563,3 +563,15 @@ export const suggestUrgentAction = asyncHandler(async (req: Request, res: Respon
     data: result 
   });
 });
+
+export const suggestMotivation = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  
+  const result = await dashboardService.suggestMotivation(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Motivation suggestion generated successfully", 
+    data: result 
+  });
+});
