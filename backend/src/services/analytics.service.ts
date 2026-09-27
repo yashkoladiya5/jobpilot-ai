@@ -1548,4 +1548,39 @@ export class AnalyticsService {
       analyzedAt: new Date().toISOString()
     };
   }
+
+  async getApplicationTrendDirection(userId: string) {
+    const now = new Date();
+    const thirtyDaysAgo = new Date(now.getTime() - (30 * 24 * 60 * 60 * 1000));
+    const sixtyDaysAgo = new Date(now.getTime() - (60 * 24 * 60 * 60 * 1000));
+
+    // Count applications in the last 30 days vs the previous 30 days
+    const currentPeriodCount = await prisma.jobApplication.count({
+      where: { userId, createdAt: { gte: thirtyDaysAgo } }
+    });
+
+    const previousPeriodCount = await prisma.jobApplication.count({
+      where: { userId, createdAt: { gte: sixtyDaysAgo, lt: thirtyDaysAgo } }
+    });
+
+    let trend = "Stable";
+    let message = "Your application volume is holding steady.";
+
+    if (currentPeriodCount > previousPeriodCount * 1.2) {
+      trend = "Increasing";
+      message = "Great job! You've increased your application volume compared to last month.";
+    } else if (currentPeriodCount < previousPeriodCount * 0.8) {
+      trend = "Decreasing";
+      message = "Your application volume has dropped recently. Try to get back on track.";
+    }
+
+    return {
+      userId,
+      currentPeriodCount,
+      previousPeriodCount,
+      trend,
+      message,
+      analyzedAt: new Date().toISOString()
+    };
+  }
 }

@@ -428,3 +428,15 @@ export const getApplicationStrategy = asyncHandler(async (req: Request, res: Res
     data: result 
   });
 });
+
+export const getApplicationTrendDirection = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  
+  const result = await analyticsService.getApplicationTrendDirection(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Application trend direction generated successfully", 
+    data: result 
+  });
+});
