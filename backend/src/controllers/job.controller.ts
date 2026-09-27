@@ -604,3 +604,16 @@ export const checkApplicationActivity = asyncHandler(async (req: Request, res: R
     data: result,
   });
 });
+
+export const checkApplicationCompletionStatus = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { id } = req.params;
+  
+  const result = await jobService.checkApplicationCompletionStatus(userId, id);
+  
+  res.status(200).json({
+    success: true,
+    message: "Application completion status check completed",
+    data: result,
+  });
+});

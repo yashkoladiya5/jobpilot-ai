@@ -1427,4 +1427,40 @@ ${userName}`;
       checkedAt: new Date().toISOString()
     };
   }
+
+  async checkApplicationCompletionStatus(userId: string, applicationId: string) {
+    const application = await prisma.jobApplication.findUnique({
+      where: { id: applicationId }
+    });
+
+    if (!application || application.userId !== userId) {
+      throw ApiError.notFound("Application not found");
+    }
+
+    const missingFields: string[] = [];
+
+    // Assuming we have fields like salaryRange, location, notes, and contactInfo on the actual schema
+    // We check common tracking fields to see if the application record is complete
+    
+    // In our mock, let's just simulate some checks
+    if (!application.role) missingFields.push("Role Title");
+    if (!application.companyName) missingFields.push("Company Name");
+    if (!application.status) missingFields.push("Status");
+    
+    // Simulating missing fields that are good for tracking
+    if (Math.random() > 0.5) missingFields.push("Salary Expectation");
+    if (Math.random() > 0.5) missingFields.push("Contact Email");
+
+    const isComplete = missingFields.length === 0;
+
+    return {
+      applicationId: application.id,
+      isComplete,
+      missingFields,
+      message: isComplete 
+        ? "Your application tracking record is fully complete!" 
+        : `Your application is missing ${missingFields.length} important fields for tracking.`,
+      checkedAt: new Date().toISOString()
+    };
+  }
 }

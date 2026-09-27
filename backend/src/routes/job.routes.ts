@@ -44,6 +44,7 @@ import {
   generateInterviewFeedbackDraft,
   checkApplicationDuplication,
   checkApplicationActivity,
+  checkApplicationCompletionStatus,
 } from "../controllers/job.controller";
 import { authenticate } from "../middleware/auth";
 import { validate } from "../middleware/validate";
@@ -95,6 +96,7 @@ router.get("/:id/completeness", authenticate, checkApplicationCompleteness);
 router.get("/:id/feedback-draft", authenticate, generateInterviewFeedbackDraft);
 router.post("/check-duplication", authenticate, checkApplicationDuplication);
 router.get("/activity", authenticate, checkApplicationActivity);
+router.get("/:id/completion-status", authenticate, checkApplicationCompletionStatus);
 
 // CRUD operations for jobs, all requiring user authentication
 router.get("/", authenticate, getJobs);
