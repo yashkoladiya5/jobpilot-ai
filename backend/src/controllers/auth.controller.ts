@@ -549,3 +549,10 @@ export const analyzePasswordAge = asyncHandler(async (req: Request, res: Respons
   const result = await authService.analyzePasswordAge(userId);
   res.status(200).json({ success: true, message: "Password age analyzed", data: result });
 });
+
+export const checkPasswordResetFlag = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  
+  const result = await authService.checkPasswordResetFlag(userId);
+  res.status(200).json({ success: true, message: "Password reset flag checked", data: result });
+});

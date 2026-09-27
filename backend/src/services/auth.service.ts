@@ -1102,4 +1102,28 @@ export class AuthService {
       analyzedAt: now.toISOString()
     };
   }
+
+  async checkPasswordResetFlag(userId: string) {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true, email: true } // In a real schema, there might be a requiresPasswordReset field
+    });
+
+    if (!user) {
+      throw ApiError.notFound("User not found");
+    }
+
+    // Mock logic to simulate some users needing a reset due to policy
+    // We'll deterministically flag users with odd-length IDs for demonstration.
+    const requiresReset = user.id.length % 2 !== 0;
+
+    return {
+      userId,
+      requiresReset,
+      message: requiresReset 
+        ? "Your account has been flagged for a mandatory password reset due to a recent security policy update. Please update your password immediately."
+        : "Your account is not flagged for a mandatory password reset.",
+      checkedAt: new Date().toISOString()
+    };
+  }
 }

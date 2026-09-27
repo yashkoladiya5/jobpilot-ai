@@ -14,6 +14,7 @@ import { register, login, getMe, deleteAccount, updatePassword, updateEmail, upd
   checkPasswordBreach,
   analyzeAuthenticationPatterns,
   analyzePasswordAge,
+  checkPasswordResetFlag,
 } from "../controllers/auth.controller";
 import { authenticate } from "../middleware/auth";
 import { validate } from "../middleware/validate";
@@ -67,5 +68,6 @@ router.post("/2fa/backup-codes", authenticate, generateBackupCodes);
 router.post("/password-breach-check", authenticate, checkPasswordBreach);
 router.get("/auth-patterns", authenticate, analyzeAuthenticationPatterns);
 router.get("/password-age", authenticate, analyzePasswordAge);
+router.get("/password-reset-flag", authenticate, checkPasswordResetFlag);
 
 export default router;
