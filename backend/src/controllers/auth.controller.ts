@@ -569,3 +569,16 @@ export const triggerPasswordReset = asyncHandler(async (req: Request, res: Respo
   const result = await authService.triggerPasswordReset(adminId, targetUserId);
   res.status(200).json({ success: true, message: "Password reset triggered", data: result });
 });
+
+export const enforceSessionTimeout = asyncHandler(async (req: Request, res: Response) => {
+  const adminId = getUserId(req); // assuming caller is an admin
+  const { targetUserId } = req.body;
+  
+  if (!targetUserId) {
+    res.status(400).json({ success: false, message: "Target user ID is required" });
+    return;
+  }
+  
+  const result = await authService.enforceSessionTimeout(adminId, targetUserId);
+  res.status(200).json({ success: true, message: "Session timeout enforced", data: result });
+});

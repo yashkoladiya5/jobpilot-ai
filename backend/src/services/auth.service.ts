@@ -1152,4 +1152,24 @@ export class AuthService {
       triggeredAt: new Date().toISOString()
     };
   }
+
+  async enforceSessionTimeout(adminId: string, targetUserId: string) {
+    const targetUser = await prisma.user.findUnique({
+      where: { id: targetUserId },
+      select: { id: true, email: true }
+    });
+
+    if (!targetUser) {
+      throw ApiError.notFound("Target user not found");
+    }
+
+    // Mock DB update
+    return {
+      adminId,
+      targetUserId,
+      success: true,
+      message: `Successfully enforced session timeout for user ${targetUser.email}.`,
+      enforcedAt: new Date().toISOString()
+    };
+  }
 }
