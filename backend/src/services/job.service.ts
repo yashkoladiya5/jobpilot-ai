@@ -1490,4 +1490,31 @@ ${userName}`;
       suggestedAt: new Date().toISOString()
     };
   }
+
+  async evaluateJobFit(userId: string, applicationId: string) {
+    const application = await prisma.jobApplication.findUnique({
+      where: { id: applicationId }
+    });
+
+    if (!application || application.userId !== userId) {
+      throw ApiError.notFound("Application not found");
+    }
+
+    // Mock fit score logic based on application status and provided fields
+    let fitScore = 50; 
+    
+    if (application.role && application.companyName) fitScore += 15;
+    if (application.salaryExpectation) fitScore += 10;
+    if (application.status === 'interview') fitScore += 20;
+
+    return {
+      applicationId: application.id,
+      role: application.role,
+      fitScore,
+      message: fitScore > 75 
+        ? "This role looks like a strong fit based on your provided details." 
+        : "This role seems like a moderate fit. Ensure you highlight relevant skills.",
+      evaluatedAt: new Date().toISOString()
+    };
+  }
 }

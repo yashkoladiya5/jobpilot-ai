@@ -630,3 +630,16 @@ export const suggestResumeCustomization = asyncHandler(async (req: Request, res:
     data: result,
   });
 });
+
+export const evaluateJobFit = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { id } = req.params;
+  
+  const result = await jobService.evaluateJobFit(userId, id);
+  
+  res.status(200).json({
+    success: true,
+    message: "Job fit evaluated successfully",
+    data: result,
+  });
+});
