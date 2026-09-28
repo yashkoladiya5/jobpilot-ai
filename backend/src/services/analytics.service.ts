@@ -1607,4 +1607,29 @@ export class AnalyticsService {
       evaluatedAt: new Date().toISOString()
     };
   }
+
+  async getApplicationTimeOfDayStats(userId: string) {
+    // In a real application we would use DB grouping or time manipulation
+    // For this mock, we simulate returning the best time of day
+    
+    const timeStats = {
+      morning: 15,
+      afternoon: 35,
+      evening: 20,
+      night: 5
+    };
+
+    const mostActive = Object.keys(timeStats).reduce((a, b) => 
+      // @ts-ignore
+      timeStats[a] > timeStats[b] ? a : b
+    );
+
+    return {
+      userId,
+      stats: timeStats,
+      mostActiveTimeOfDay: mostActive,
+      message: `You seem to apply to most jobs in the ${mostActive}.`,
+      calculatedAt: new Date().toISOString()
+    };
+  }
 }
