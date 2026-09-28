@@ -587,3 +587,15 @@ export const suggestRest = asyncHandler(async (req: Request, res: Response) => {
     data: result 
   });
 });
+
+export const suggestPortfolioUpdate = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  
+  const result = await dashboardService.suggestPortfolioUpdate(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Portfolio update suggestion generated successfully", 
+    data: result 
+  });
+});

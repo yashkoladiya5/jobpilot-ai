@@ -11,6 +11,7 @@ import { getStats, getRecentActivityLogs, getActionItems, getDashboardSummary, g
   suggestUrgentAction,
   suggestMotivation,
   suggestRest,
+  suggestPortfolioUpdate,
 } from "../controllers/dashboard.controller";
 
 /**
@@ -58,5 +59,6 @@ router.get("/suggest-resume-update", authenticate, suggestResumeUpdate);
 router.get("/suggest-urgent-action", authenticate, suggestUrgentAction);
 router.get("/suggest-motivation", authenticate, suggestMotivation);
 router.get("/suggest-rest", authenticate, suggestRest);
+router.get("/suggest-portfolio-update", authenticate, suggestPortfolioUpdate);
 
 export default router;

@@ -1481,4 +1481,29 @@ export class DashboardService {
       evaluatedAt: new Date().toISOString()
     };
   }
+
+  async suggestPortfolioUpdate(userId: string) {
+    // Mock logic: randomly decide if the user should update their portfolio
+    const needsUpdate = Math.random() > 0.5;
+
+    const suggestions = needsUpdate
+      ? [
+          "Add a recent project you completed to showcase new skills.",
+          "Ensure your GitHub links or personal website are still active.",
+          "Write a short case study on a problem you recently solved."
+        ]
+      : [
+          "Your portfolio seems up to date! Continue sharing it with recruiters."
+        ];
+
+    return {
+      userId,
+      needsUpdate,
+      suggestions,
+      message: needsUpdate 
+        ? "It might be time to freshen up your portfolio!" 
+        : "Your portfolio is looking good.",
+      suggestedAt: new Date().toISOString()
+    };
+  }
 }
