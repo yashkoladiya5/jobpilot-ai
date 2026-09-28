@@ -440,3 +440,15 @@ export const getApplicationTrendDirection = asyncHandler(async (req: Request, re
     data: result 
   });
 });
+
+export const getApplicationVelocityStatus = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  
+  const result = await analyticsService.getApplicationVelocityStatus(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Application velocity status generated successfully", 
+    data: result 
+  });
+});

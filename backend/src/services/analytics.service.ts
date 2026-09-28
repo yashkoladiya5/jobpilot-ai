@@ -1583,4 +1583,28 @@ export class AnalyticsService {
       analyzedAt: new Date().toISOString()
     };
   }
+
+  async getApplicationVelocityStatus(userId: string) {
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+    // Count apps in the last 7 days
+    const recentAppsCount = await prisma.jobApplication.count({
+      where: { userId, createdAt: { gte: oneWeekAgo } }
+    });
+
+    const targetAppsPerWeek = 10;
+    const isMeetingGoal = recentAppsCount >= targetAppsPerWeek;
+
+    return {
+      userId,
+      recentAppsCount,
+      targetAppsPerWeek,
+      isMeetingGoal,
+      message: isMeetingGoal 
+        ? "Excellent! You are meeting or exceeding your weekly application goal."
+        : `You are slightly behind your goal. Try to submit ${targetAppsPerWeek - recentAppsCount} more applications this week.`,
+      evaluatedAt: new Date().toISOString()
+    };
+  }
 }
