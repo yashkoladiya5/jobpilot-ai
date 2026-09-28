@@ -537,3 +537,17 @@ export const calculateGrammarScore = asyncHandler(async (req: Request, res: Resp
     data: result,
   });
 });
+
+export const extractKeyEntities = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { id } = req.params;
+  const { documentText } = req.body;
+  
+  const result = await resumeService.extractKeyEntities(userId, id, documentText);
+  
+  res.status(200).json({
+    success: true,
+    message: "Key entities extracted successfully",
+    data: result,
+  });
+});

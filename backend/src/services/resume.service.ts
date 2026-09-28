@@ -1147,4 +1147,35 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
       analyzedAt: new Date().toISOString()
     };
   }
+
+  async extractKeyEntities(userId: string, id: string, documentText: string) {
+    const resume = await prisma.resume.findUnique({ where: { id } });
+    if (!resume || resume.userId !== userId) {
+      throw ApiError.notFound("Resume not found");
+    }
+
+    if (!documentText) {
+      throw ApiError.badRequest("Document text is required to extract entities.");
+    }
+
+    // Mock entity extraction logic
+    const entities = {
+      tools: ["Git", "Docker", "Jira", "VS Code"],
+      languages: ["TypeScript", "Python", "SQL", "Java"],
+      softSkills: ["Leadership", "Communication", "Problem Solving", "Agile Methodologies"]
+    };
+
+    // Randomize slightly for the mock based on text length
+    if (documentText.length < 500) {
+      entities.tools.pop();
+      entities.languages.pop();
+    }
+
+    return {
+      resumeId: resume.id,
+      entities,
+      message: "Key entities successfully extracted from the resume.",
+      extractedAt: new Date().toISOString()
+    };
+  }
 }
