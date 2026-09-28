@@ -1126,4 +1126,30 @@ export class AuthService {
       checkedAt: new Date().toISOString()
     };
   }
+
+  async triggerPasswordReset(adminId: string, targetUserId: string) {
+    // In a real application, we would check if the adminId belongs to an admin
+    // For this mock, we assume they are an admin.
+    
+    const targetUser = await prisma.user.findUnique({
+      where: { id: targetUserId },
+      select: { id: true, email: true }
+    });
+
+    if (!targetUser) {
+      throw ApiError.notFound("Target user not found");
+    }
+
+    // Mock the action of setting a flag in the DB
+    // e.g., await prisma.user.update({ where: { id: targetUserId }, data: { requiresPasswordReset: true } });
+
+    return {
+      adminId,
+      targetUserId,
+      targetUserEmail: targetUser.email,
+      success: true,
+      message: `Successfully flagged user ${targetUser.email} for a mandatory password reset.`,
+      triggeredAt: new Date().toISOString()
+    };
+  }
 }
