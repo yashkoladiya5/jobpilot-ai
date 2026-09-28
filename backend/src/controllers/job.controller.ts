@@ -617,3 +617,16 @@ export const checkApplicationCompletionStatus = asyncHandler(async (req: Request
     data: result,
   });
 });
+
+export const suggestResumeCustomization = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { id } = req.params;
+  
+  const result = await jobService.suggestResumeCustomization(userId, id);
+  
+  res.status(200).json({
+    success: true,
+    message: "Resume customization suggestions generated",
+    data: result,
+  });
+});

@@ -1463,4 +1463,31 @@ ${userName}`;
       checkedAt: new Date().toISOString()
     };
   }
+
+  async suggestResumeCustomization(userId: string, applicationId: string) {
+    const application = await prisma.jobApplication.findUnique({
+      where: { id: applicationId }
+    });
+
+    if (!application || application.userId !== userId) {
+      throw ApiError.notFound("Application not found");
+    }
+
+    // Mock customization suggestions based on role
+    const role = application.role ? application.role.toLowerCase() : "the job";
+    const suggestions = [
+      `Highlight any direct experience you have related to ${role}.`,
+      `Ensure your summary explicitly states your interest in ${role} roles.`,
+      `If applying at ${application.companyName || 'this company'}, try to align your bullet points with their core values.`
+    ];
+
+    return {
+      applicationId: application.id,
+      role: application.role,
+      company: application.companyName,
+      suggestions,
+      message: "Resume customization suggestions generated.",
+      suggestedAt: new Date().toISOString()
+    };
+  }
 }
