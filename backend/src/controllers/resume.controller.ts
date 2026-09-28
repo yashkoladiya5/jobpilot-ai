@@ -551,3 +551,17 @@ export const extractKeyEntities = asyncHandler(async (req: Request, res: Respons
     data: result,
   });
 });
+
+export const estimateReadTime = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { id } = req.params;
+  const { documentText } = req.body;
+  
+  const result = await resumeService.estimateReadTime(userId, id, documentText);
+  
+  res.status(200).json({
+    success: true,
+    message: "Read time estimated successfully",
+    data: result,
+  });
+});

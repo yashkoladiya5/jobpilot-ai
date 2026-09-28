@@ -1178,4 +1178,32 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
       extractedAt: new Date().toISOString()
     };
   }
+
+  async estimateReadTime(userId: string, id: string, documentText: string) {
+    const resume = await prisma.resume.findUnique({ where: { id } });
+    if (!resume || resume.userId !== userId) {
+      throw ApiError.notFound("Resume not found");
+    }
+
+    if (!documentText) {
+      throw ApiError.badRequest("Document text is required to estimate read time.");
+    }
+
+    // Average reading speed is roughly 200-250 words per minute.
+    // For a resume, recruiters often skim it, but for a full read we calculate standard WPM.
+    const words = documentText.trim().split(/\s+/).length;
+    const wordsPerMinute = 225; 
+    
+    const readTimeMinutes = Math.ceil(words / wordsPerMinute);
+    const readTimeSeconds = Math.ceil((words / wordsPerMinute) * 60);
+
+    return {
+      resumeId: resume.id,
+      wordCount: words,
+      estimatedMinutes: readTimeMinutes,
+      estimatedSeconds: readTimeSeconds,
+      message: `Estimated read time is approx ${readTimeMinutes} minute(s).`,
+      calculatedAt: new Date().toISOString()
+    };
+  }
 }

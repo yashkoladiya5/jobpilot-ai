@@ -39,6 +39,7 @@ import {
   generateObjectiveStatement,
   calculateGrammarScore,
   extractKeyEntities,
+  estimateReadTime,
 } from "../controllers/resume.controller";
 import { authenticate } from "../middleware/auth";
 import { upload } from "../middleware/upload";
@@ -101,5 +102,6 @@ router.post("/:id/suggest-summary", authenticate, suggestSummaryStatement);
 router.post("/:id/generate-objective", authenticate, generateObjectiveStatement);
 router.post("/:id/grammar-score", authenticate, calculateGrammarScore);
 router.post("/:id/extract-entities", authenticate, extractKeyEntities);
+router.post("/:id/estimate-read-time", authenticate, estimateReadTime);
 
 export default router;
