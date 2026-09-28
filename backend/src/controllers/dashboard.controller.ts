@@ -575,3 +575,15 @@ export const suggestMotivation = asyncHandler(async (req: Request, res: Response
     data: result 
   });
 });
+
+export const suggestRest = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  
+  const result = await dashboardService.suggestRest(userId);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Rest suggestion generated successfully", 
+    data: result 
+  });
+});

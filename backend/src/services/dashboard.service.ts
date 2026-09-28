@@ -1457,4 +1457,28 @@ export class DashboardService {
       generatedAt: new Date().toISOString()
     };
   }
+
+  async suggestRest(userId: string) {
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+    const recentApps = await prisma.jobApplication.count({
+      where: {
+        userId,
+        createdAt: { gte: oneWeekAgo }
+      }
+    });
+
+    const isBurnoutRisk = recentApps > 50;
+
+    return {
+      userId,
+      recentApplications: recentApps,
+      isBurnoutRisk,
+      message: isBurnoutRisk
+        ? "You've been working extremely hard! Applying to over 50 jobs in a week can lead to burnout. Consider taking a day off to rest and recharge."
+        : "Your application pace is sustainable. Remember to take breaks when you need them.",
+      evaluatedAt: new Date().toISOString()
+    };
+  }
 }
