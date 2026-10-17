@@ -565,3 +565,31 @@ export const estimateReadTime = asyncHandler(async (req: Request, res: Response)
     data: result,
   });
 });
+
+export const analyzeKeywordGap = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { id } = req.params;
+  const { documentText, jobKeywords } = req.body;
+
+  const result = await resumeService.analyzeKeywordGap(userId, id, documentText, jobKeywords);
+
+  res.status(200).json({
+    success: true,
+    message: "Keyword gap analyzed successfully",
+    data: result,
+  });
+});
+
+export const scoreResumeCompleteness = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { id } = req.params;
+  const { documentText } = req.body;
+
+  const result = await resumeService.scoreResumeCompleteness(userId, id, documentText);
+
+  res.status(200).json({
+    success: true,
+    message: "Resume completeness scored successfully",
+    data: result,
+  });
+});

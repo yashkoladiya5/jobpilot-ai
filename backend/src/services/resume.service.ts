@@ -1206,4 +1206,105 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
       calculatedAt: new Date().toISOString()
     };
   }
+
+  async analyzeKeywordGap(userId: string, id: string, documentText: string, jobKeywords: string[]) {
+    const resume = await prisma.resume.findUnique({ where: { id } });
+    if (!resume || resume.userId !== userId) {
+      throw ApiError.notFound("Resume not found");
+    }
+
+    if (!documentText || documentText.trim().length === 0) {
+      throw ApiError.badRequest("Document text is required to analyze keyword gap.");
+    }
+
+    if (!Array.isArray(jobKeywords) || jobKeywords.length === 0) {
+      throw ApiError.badRequest("At least one job keyword is required.");
+    }
+
+    const normalizedText = documentText.toLowerCase();
+    const covered: { keyword: string; occurrences: number }[] = [];
+    const missing: string[] = [];
+
+    for (const keyword of jobKeywords) {
+      const needle = keyword.trim().toLowerCase();
+      if (needle.length === 0) continue;
+
+      let occurrences = 0;
+      let index = normalizedText.indexOf(needle);
+      while (index !== -1) {
+        occurrences += 1;
+        index = normalizedText.indexOf(needle, index + needle.length);
+      }
+
+      if (occurrences > 0) {
+        covered.push({ keyword: keyword.trim(), occurrences });
+      } else {
+        missing.push(keyword.trim());
+      }
+    }
+
+    const total = covered.length + missing.length;
+    const coveragePercent = total > 0 ? Math.round((covered.length / total) * 100) : 0;
+
+    return {
+      resumeId: resume.id,
+      keywordsChecked: total,
+      coveragePercent,
+      covered,
+      missing,
+      advice: coveragePercent >= 70
+        ? "Strong keyword alignment — your resume mirrors the job description well."
+        : `Consider weaving ${missing.length} missing keyword(s) into your experience bullets where truthful.`,
+      analyzedAt: new Date().toISOString()
+    };
+  }
+
+  async scoreResumeCompleteness(userId: string, id: string, documentText: string) {
+    const resume = await prisma.resume.findUnique({ where: { id } });
+    if (!resume || resume.userId !== userId) {
+      throw ApiError.notFound("Resume not found");
+    }
+
+    if (!documentText || documentText.trim().length === 0) {
+      throw ApiError.badRequest("Document text is required to score completeness.");
+    }
+
+    const text = documentText.toLowerCase();
+    const sections: { name: string; weight: number; patterns: RegExp[] }[] = [
+      { name: "contact", weight: 20, patterns: [/@\w+.\w+|\+\d[\d\s()-]{7,}/] },
+      { name: "summary", weight: 10, patterns: [/summary|profile|objective/] },
+      { name: "experience", weight: 30, patterns: [/experience|employment|work history/] },
+      { name: "education", weight: 15, patterns: [/education|bachelor|master|b\.?tech|university|college/] },
+      { name: "skills", weight: 15, patterns: [/skills|technologies|tech stack/] },
+      { name: "projects", weight: 10, patterns: [/projects?|portfolio/] }
+    ];
+
+    const present: string[] = [];
+    const absent: string[] = [];
+    let score = 0;
+
+    for (const section of sections) {
+      const found = section.patterns.some((p) => p.test(text));
+      if (found) {
+        present.push(section.name);
+        score += section.weight;
+      } else {
+        absent.push(section.name);
+      }
+    }
+
+    const grade = score >= 90 ? "excellent" : score >= 70 ? "good" : score >= 45 ? "needs work" : "incomplete";
+
+    return {
+      resumeId: resume.id,
+      score,
+      grade,
+      presentSections: present,
+      absentSections: absent,
+      message: absent.length === 0
+        ? "All expected resume sections are present — nice work."
+        : `Add these missing section(s) to raise your completeness: ${absent.join(", ")}.`,
+      scoredAt: new Date().toISOString()
+    };
+  }
 }
