@@ -5,6 +5,7 @@ import { buildInterviewQuestionsPrompt } from "./prompts/interview.prompt";
 import { interviewQuestionsSchema, InterviewQuestionsOutput } from "./schemas/interview.schema";
 import { ApiError } from "../../utils/ApiError";
 import { readTextFileSafely } from "../../utils/fs";
+import { requireOwnedJob } from "../../utils/job";
 import { z } from "zod";
 
 /**
@@ -23,14 +24,12 @@ export class InterviewService {
     withResume?: boolean
   ): Promise<Prisma.JobApplicationGetPayload<{}>>;
   private async requireInterviewJob(userId: string, jobId: string, withResume = false) {
-    const job = await prisma.jobApplication.findFirst({
-      where: { id: jobId, userId },
-      include: withResume ? { resume: true } : undefined,
-    });
-
-    if (!job) throw ApiError.notFound("Job not found");
-
-    return job as Prisma.JobApplicationGetPayload<{ include: { resume: true } }>;
+    return requireOwnedJob(
+      userId,
+      jobId,
+      withResume ? { resume: true } : undefined,
+      "Job not found",
+    ) as Prisma.JobApplicationGetPayload<{ include: { resume: true } }>;
   }
 
   private async requireSession(

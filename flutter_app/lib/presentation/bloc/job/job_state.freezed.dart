@@ -23,6 +23,8 @@ mixin _$JobState {
     required TResult Function() loading,
     required TResult Function(List<JobApplication> jobs) jobsLoaded,
     required TResult Function(JobApplication job) jobDetailLoaded,
+    required TResult Function(Map<String, dynamic> analytics) analyticsLoaded,
+    required TResult Function(List<JobApplication> results) searchResultsLoaded,
     required TResult Function(String message) operationSuccess,
     required TResult Function(String message) error,
   }) => throw _privateConstructorUsedError;
@@ -32,6 +34,8 @@ mixin _$JobState {
     TResult? Function()? loading,
     TResult? Function(List<JobApplication> jobs)? jobsLoaded,
     TResult? Function(JobApplication job)? jobDetailLoaded,
+    TResult? Function(Map<String, dynamic> analytics)? analyticsLoaded,
+    TResult? Function(List<JobApplication> results)? searchResultsLoaded,
     TResult? Function(String message)? operationSuccess,
     TResult? Function(String message)? error,
   }) => throw _privateConstructorUsedError;
@@ -41,6 +45,8 @@ mixin _$JobState {
     TResult Function()? loading,
     TResult Function(List<JobApplication> jobs)? jobsLoaded,
     TResult Function(JobApplication job)? jobDetailLoaded,
+    TResult Function(Map<String, dynamic> analytics)? analyticsLoaded,
+    TResult Function(List<JobApplication> results)? searchResultsLoaded,
     TResult Function(String message)? operationSuccess,
     TResult Function(String message)? error,
     required TResult orElse(),
@@ -51,6 +57,8 @@ mixin _$JobState {
     required TResult Function(JobLoading value) loading,
     required TResult Function(JobsLoaded value) jobsLoaded,
     required TResult Function(JobDetailLoaded value) jobDetailLoaded,
+    required TResult Function(AnalyticsLoaded value) analyticsLoaded,
+    required TResult Function(SearchResultsLoaded value) searchResultsLoaded,
     required TResult Function(JobOperationSuccess value) operationSuccess,
     required TResult Function(JobError value) error,
   }) => throw _privateConstructorUsedError;
@@ -60,6 +68,8 @@ mixin _$JobState {
     TResult? Function(JobLoading value)? loading,
     TResult? Function(JobsLoaded value)? jobsLoaded,
     TResult? Function(JobDetailLoaded value)? jobDetailLoaded,
+    TResult? Function(AnalyticsLoaded value)? analyticsLoaded,
+    TResult? Function(SearchResultsLoaded value)? searchResultsLoaded,
     TResult? Function(JobOperationSuccess value)? operationSuccess,
     TResult? Function(JobError value)? error,
   }) => throw _privateConstructorUsedError;
@@ -69,6 +79,8 @@ mixin _$JobState {
     TResult Function(JobLoading value)? loading,
     TResult Function(JobsLoaded value)? jobsLoaded,
     TResult Function(JobDetailLoaded value)? jobDetailLoaded,
+    TResult Function(AnalyticsLoaded value)? analyticsLoaded,
+    TResult Function(SearchResultsLoaded value)? searchResultsLoaded,
     TResult Function(JobOperationSuccess value)? operationSuccess,
     TResult Function(JobError value)? error,
     required TResult orElse(),
@@ -142,6 +154,8 @@ class _$JobInitialImpl implements JobInitial {
     required TResult Function() loading,
     required TResult Function(List<JobApplication> jobs) jobsLoaded,
     required TResult Function(JobApplication job) jobDetailLoaded,
+    required TResult Function(Map<String, dynamic> analytics) analyticsLoaded,
+    required TResult Function(List<JobApplication> results) searchResultsLoaded,
     required TResult Function(String message) operationSuccess,
     required TResult Function(String message) error,
   }) {
@@ -155,6 +169,8 @@ class _$JobInitialImpl implements JobInitial {
     TResult? Function()? loading,
     TResult? Function(List<JobApplication> jobs)? jobsLoaded,
     TResult? Function(JobApplication job)? jobDetailLoaded,
+    TResult? Function(Map<String, dynamic> analytics)? analyticsLoaded,
+    TResult? Function(List<JobApplication> results)? searchResultsLoaded,
     TResult? Function(String message)? operationSuccess,
     TResult? Function(String message)? error,
   }) {
@@ -168,6 +184,8 @@ class _$JobInitialImpl implements JobInitial {
     TResult Function()? loading,
     TResult Function(List<JobApplication> jobs)? jobsLoaded,
     TResult Function(JobApplication job)? jobDetailLoaded,
+    TResult Function(Map<String, dynamic> analytics)? analyticsLoaded,
+    TResult Function(List<JobApplication> results)? searchResultsLoaded,
     TResult Function(String message)? operationSuccess,
     TResult Function(String message)? error,
     required TResult orElse(),
@@ -185,6 +203,8 @@ class _$JobInitialImpl implements JobInitial {
     required TResult Function(JobLoading value) loading,
     required TResult Function(JobsLoaded value) jobsLoaded,
     required TResult Function(JobDetailLoaded value) jobDetailLoaded,
+    required TResult Function(AnalyticsLoaded value) analyticsLoaded,
+    required TResult Function(SearchResultsLoaded value) searchResultsLoaded,
     required TResult Function(JobOperationSuccess value) operationSuccess,
     required TResult Function(JobError value) error,
   }) {
@@ -198,6 +218,8 @@ class _$JobInitialImpl implements JobInitial {
     TResult? Function(JobLoading value)? loading,
     TResult? Function(JobsLoaded value)? jobsLoaded,
     TResult? Function(JobDetailLoaded value)? jobDetailLoaded,
+    TResult? Function(AnalyticsLoaded value)? analyticsLoaded,
+    TResult? Function(SearchResultsLoaded value)? searchResultsLoaded,
     TResult? Function(JobOperationSuccess value)? operationSuccess,
     TResult? Function(JobError value)? error,
   }) {
@@ -211,6 +233,8 @@ class _$JobInitialImpl implements JobInitial {
     TResult Function(JobLoading value)? loading,
     TResult Function(JobsLoaded value)? jobsLoaded,
     TResult Function(JobDetailLoaded value)? jobDetailLoaded,
+    TResult Function(AnalyticsLoaded value)? analyticsLoaded,
+    TResult Function(SearchResultsLoaded value)? searchResultsLoaded,
     TResult Function(JobOperationSuccess value)? operationSuccess,
     TResult Function(JobError value)? error,
     required TResult orElse(),
@@ -273,6 +297,8 @@ class _$JobLoadingImpl implements JobLoading {
     required TResult Function() loading,
     required TResult Function(List<JobApplication> jobs) jobsLoaded,
     required TResult Function(JobApplication job) jobDetailLoaded,
+    required TResult Function(Map<String, dynamic> analytics) analyticsLoaded,
+    required TResult Function(List<JobApplication> results) searchResultsLoaded,
     required TResult Function(String message) operationSuccess,
     required TResult Function(String message) error,
   }) {
@@ -286,6 +312,8 @@ class _$JobLoadingImpl implements JobLoading {
     TResult? Function()? loading,
     TResult? Function(List<JobApplication> jobs)? jobsLoaded,
     TResult? Function(JobApplication job)? jobDetailLoaded,
+    TResult? Function(Map<String, dynamic> analytics)? analyticsLoaded,
+    TResult? Function(List<JobApplication> results)? searchResultsLoaded,
     TResult? Function(String message)? operationSuccess,
     TResult? Function(String message)? error,
   }) {
@@ -299,6 +327,8 @@ class _$JobLoadingImpl implements JobLoading {
     TResult Function()? loading,
     TResult Function(List<JobApplication> jobs)? jobsLoaded,
     TResult Function(JobApplication job)? jobDetailLoaded,
+    TResult Function(Map<String, dynamic> analytics)? analyticsLoaded,
+    TResult Function(List<JobApplication> results)? searchResultsLoaded,
     TResult Function(String message)? operationSuccess,
     TResult Function(String message)? error,
     required TResult orElse(),
@@ -316,6 +346,8 @@ class _$JobLoadingImpl implements JobLoading {
     required TResult Function(JobLoading value) loading,
     required TResult Function(JobsLoaded value) jobsLoaded,
     required TResult Function(JobDetailLoaded value) jobDetailLoaded,
+    required TResult Function(AnalyticsLoaded value) analyticsLoaded,
+    required TResult Function(SearchResultsLoaded value) searchResultsLoaded,
     required TResult Function(JobOperationSuccess value) operationSuccess,
     required TResult Function(JobError value) error,
   }) {
@@ -329,6 +361,8 @@ class _$JobLoadingImpl implements JobLoading {
     TResult? Function(JobLoading value)? loading,
     TResult? Function(JobsLoaded value)? jobsLoaded,
     TResult? Function(JobDetailLoaded value)? jobDetailLoaded,
+    TResult? Function(AnalyticsLoaded value)? analyticsLoaded,
+    TResult? Function(SearchResultsLoaded value)? searchResultsLoaded,
     TResult? Function(JobOperationSuccess value)? operationSuccess,
     TResult? Function(JobError value)? error,
   }) {
@@ -342,6 +376,8 @@ class _$JobLoadingImpl implements JobLoading {
     TResult Function(JobLoading value)? loading,
     TResult Function(JobsLoaded value)? jobsLoaded,
     TResult Function(JobDetailLoaded value)? jobDetailLoaded,
+    TResult Function(AnalyticsLoaded value)? analyticsLoaded,
+    TResult Function(SearchResultsLoaded value)? searchResultsLoaded,
     TResult Function(JobOperationSuccess value)? operationSuccess,
     TResult Function(JobError value)? error,
     required TResult orElse(),
@@ -437,6 +473,8 @@ class _$JobsLoadedImpl implements JobsLoaded {
     required TResult Function() loading,
     required TResult Function(List<JobApplication> jobs) jobsLoaded,
     required TResult Function(JobApplication job) jobDetailLoaded,
+    required TResult Function(Map<String, dynamic> analytics) analyticsLoaded,
+    required TResult Function(List<JobApplication> results) searchResultsLoaded,
     required TResult Function(String message) operationSuccess,
     required TResult Function(String message) error,
   }) {
@@ -450,6 +488,8 @@ class _$JobsLoadedImpl implements JobsLoaded {
     TResult? Function()? loading,
     TResult? Function(List<JobApplication> jobs)? jobsLoaded,
     TResult? Function(JobApplication job)? jobDetailLoaded,
+    TResult? Function(Map<String, dynamic> analytics)? analyticsLoaded,
+    TResult? Function(List<JobApplication> results)? searchResultsLoaded,
     TResult? Function(String message)? operationSuccess,
     TResult? Function(String message)? error,
   }) {
@@ -463,6 +503,8 @@ class _$JobsLoadedImpl implements JobsLoaded {
     TResult Function()? loading,
     TResult Function(List<JobApplication> jobs)? jobsLoaded,
     TResult Function(JobApplication job)? jobDetailLoaded,
+    TResult Function(Map<String, dynamic> analytics)? analyticsLoaded,
+    TResult Function(List<JobApplication> results)? searchResultsLoaded,
     TResult Function(String message)? operationSuccess,
     TResult Function(String message)? error,
     required TResult orElse(),
@@ -480,6 +522,8 @@ class _$JobsLoadedImpl implements JobsLoaded {
     required TResult Function(JobLoading value) loading,
     required TResult Function(JobsLoaded value) jobsLoaded,
     required TResult Function(JobDetailLoaded value) jobDetailLoaded,
+    required TResult Function(AnalyticsLoaded value) analyticsLoaded,
+    required TResult Function(SearchResultsLoaded value) searchResultsLoaded,
     required TResult Function(JobOperationSuccess value) operationSuccess,
     required TResult Function(JobError value) error,
   }) {
@@ -493,6 +537,8 @@ class _$JobsLoadedImpl implements JobsLoaded {
     TResult? Function(JobLoading value)? loading,
     TResult? Function(JobsLoaded value)? jobsLoaded,
     TResult? Function(JobDetailLoaded value)? jobDetailLoaded,
+    TResult? Function(AnalyticsLoaded value)? analyticsLoaded,
+    TResult? Function(SearchResultsLoaded value)? searchResultsLoaded,
     TResult? Function(JobOperationSuccess value)? operationSuccess,
     TResult? Function(JobError value)? error,
   }) {
@@ -506,6 +552,8 @@ class _$JobsLoadedImpl implements JobsLoaded {
     TResult Function(JobLoading value)? loading,
     TResult Function(JobsLoaded value)? jobsLoaded,
     TResult Function(JobDetailLoaded value)? jobDetailLoaded,
+    TResult Function(AnalyticsLoaded value)? analyticsLoaded,
+    TResult Function(SearchResultsLoaded value)? searchResultsLoaded,
     TResult Function(JobOperationSuccess value)? operationSuccess,
     TResult Function(JobError value)? error,
     required TResult orElse(),
@@ -618,6 +666,8 @@ class _$JobDetailLoadedImpl implements JobDetailLoaded {
     required TResult Function() loading,
     required TResult Function(List<JobApplication> jobs) jobsLoaded,
     required TResult Function(JobApplication job) jobDetailLoaded,
+    required TResult Function(Map<String, dynamic> analytics) analyticsLoaded,
+    required TResult Function(List<JobApplication> results) searchResultsLoaded,
     required TResult Function(String message) operationSuccess,
     required TResult Function(String message) error,
   }) {
@@ -631,6 +681,8 @@ class _$JobDetailLoadedImpl implements JobDetailLoaded {
     TResult? Function()? loading,
     TResult? Function(List<JobApplication> jobs)? jobsLoaded,
     TResult? Function(JobApplication job)? jobDetailLoaded,
+    TResult? Function(Map<String, dynamic> analytics)? analyticsLoaded,
+    TResult? Function(List<JobApplication> results)? searchResultsLoaded,
     TResult? Function(String message)? operationSuccess,
     TResult? Function(String message)? error,
   }) {
@@ -644,6 +696,8 @@ class _$JobDetailLoadedImpl implements JobDetailLoaded {
     TResult Function()? loading,
     TResult Function(List<JobApplication> jobs)? jobsLoaded,
     TResult Function(JobApplication job)? jobDetailLoaded,
+    TResult Function(Map<String, dynamic> analytics)? analyticsLoaded,
+    TResult Function(List<JobApplication> results)? searchResultsLoaded,
     TResult Function(String message)? operationSuccess,
     TResult Function(String message)? error,
     required TResult orElse(),
@@ -661,6 +715,8 @@ class _$JobDetailLoadedImpl implements JobDetailLoaded {
     required TResult Function(JobLoading value) loading,
     required TResult Function(JobsLoaded value) jobsLoaded,
     required TResult Function(JobDetailLoaded value) jobDetailLoaded,
+    required TResult Function(AnalyticsLoaded value) analyticsLoaded,
+    required TResult Function(SearchResultsLoaded value) searchResultsLoaded,
     required TResult Function(JobOperationSuccess value) operationSuccess,
     required TResult Function(JobError value) error,
   }) {
@@ -674,6 +730,8 @@ class _$JobDetailLoadedImpl implements JobDetailLoaded {
     TResult? Function(JobLoading value)? loading,
     TResult? Function(JobsLoaded value)? jobsLoaded,
     TResult? Function(JobDetailLoaded value)? jobDetailLoaded,
+    TResult? Function(AnalyticsLoaded value)? analyticsLoaded,
+    TResult? Function(SearchResultsLoaded value)? searchResultsLoaded,
     TResult? Function(JobOperationSuccess value)? operationSuccess,
     TResult? Function(JobError value)? error,
   }) {
@@ -687,6 +745,8 @@ class _$JobDetailLoadedImpl implements JobDetailLoaded {
     TResult Function(JobLoading value)? loading,
     TResult Function(JobsLoaded value)? jobsLoaded,
     TResult Function(JobDetailLoaded value)? jobDetailLoaded,
+    TResult Function(AnalyticsLoaded value)? analyticsLoaded,
+    TResult Function(SearchResultsLoaded value)? searchResultsLoaded,
     TResult Function(JobOperationSuccess value)? operationSuccess,
     TResult Function(JobError value)? error,
     required TResult orElse(),
@@ -708,6 +768,387 @@ abstract class JobDetailLoaded implements JobState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$JobDetailLoadedImplCopyWith<_$JobDetailLoadedImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$AnalyticsLoadedImplCopyWith<$Res> {
+  factory _$$AnalyticsLoadedImplCopyWith(
+    _$AnalyticsLoadedImpl value,
+    $Res Function(_$AnalyticsLoadedImpl) then,
+  ) = __$$AnalyticsLoadedImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({Map<String, dynamic> analytics});
+}
+
+/// @nodoc
+class __$$AnalyticsLoadedImplCopyWithImpl<$Res>
+    extends _$JobStateCopyWithImpl<$Res, _$AnalyticsLoadedImpl>
+    implements _$$AnalyticsLoadedImplCopyWith<$Res> {
+  __$$AnalyticsLoadedImplCopyWithImpl(
+    _$AnalyticsLoadedImpl _value,
+    $Res Function(_$AnalyticsLoadedImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of JobState
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? analytics = null}) {
+    return _then(
+      _$AnalyticsLoadedImpl(
+        null == analytics
+            ? _value._analytics
+            : analytics // ignore: cast_nullable_to_non_nullable
+                  as Map<String, dynamic>,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+
+class _$AnalyticsLoadedImpl implements AnalyticsLoaded {
+  const _$AnalyticsLoadedImpl(final Map<String, dynamic> analytics)
+    : _analytics = analytics;
+
+  final Map<String, dynamic> _analytics;
+  @override
+  Map<String, dynamic> get analytics {
+    if (_analytics is EqualUnmodifiableMapView) return _analytics;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_analytics);
+  }
+
+  @override
+  String toString() {
+    return 'JobState.analyticsLoaded(analytics: $analytics)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$AnalyticsLoadedImpl &&
+            const DeepCollectionEquality().equals(
+              other._analytics,
+              _analytics,
+            ));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_analytics));
+
+  /// Create a copy of JobState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$AnalyticsLoadedImplCopyWith<_$AnalyticsLoadedImpl> get copyWith =>
+      __$$AnalyticsLoadedImplCopyWithImpl<_$AnalyticsLoadedImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function() loading,
+    required TResult Function(List<JobApplication> jobs) jobsLoaded,
+    required TResult Function(JobApplication job) jobDetailLoaded,
+    required TResult Function(Map<String, dynamic> analytics) analyticsLoaded,
+    required TResult Function(List<JobApplication> results) searchResultsLoaded,
+    required TResult Function(String message) operationSuccess,
+    required TResult Function(String message) error,
+  }) {
+    return analyticsLoaded(analytics);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function(List<JobApplication> jobs)? jobsLoaded,
+    TResult? Function(JobApplication job)? jobDetailLoaded,
+    TResult? Function(Map<String, dynamic> analytics)? analyticsLoaded,
+    TResult? Function(List<JobApplication> results)? searchResultsLoaded,
+    TResult? Function(String message)? operationSuccess,
+    TResult? Function(String message)? error,
+  }) {
+    return analyticsLoaded?.call(analytics);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function()? loading,
+    TResult Function(List<JobApplication> jobs)? jobsLoaded,
+    TResult Function(JobApplication job)? jobDetailLoaded,
+    TResult Function(Map<String, dynamic> analytics)? analyticsLoaded,
+    TResult Function(List<JobApplication> results)? searchResultsLoaded,
+    TResult Function(String message)? operationSuccess,
+    TResult Function(String message)? error,
+    required TResult orElse(),
+  }) {
+    if (analyticsLoaded != null) {
+      return analyticsLoaded(analytics);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(JobInitial value) initial,
+    required TResult Function(JobLoading value) loading,
+    required TResult Function(JobsLoaded value) jobsLoaded,
+    required TResult Function(JobDetailLoaded value) jobDetailLoaded,
+    required TResult Function(AnalyticsLoaded value) analyticsLoaded,
+    required TResult Function(SearchResultsLoaded value) searchResultsLoaded,
+    required TResult Function(JobOperationSuccess value) operationSuccess,
+    required TResult Function(JobError value) error,
+  }) {
+    return analyticsLoaded(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(JobInitial value)? initial,
+    TResult? Function(JobLoading value)? loading,
+    TResult? Function(JobsLoaded value)? jobsLoaded,
+    TResult? Function(JobDetailLoaded value)? jobDetailLoaded,
+    TResult? Function(AnalyticsLoaded value)? analyticsLoaded,
+    TResult? Function(SearchResultsLoaded value)? searchResultsLoaded,
+    TResult? Function(JobOperationSuccess value)? operationSuccess,
+    TResult? Function(JobError value)? error,
+  }) {
+    return analyticsLoaded?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(JobInitial value)? initial,
+    TResult Function(JobLoading value)? loading,
+    TResult Function(JobsLoaded value)? jobsLoaded,
+    TResult Function(JobDetailLoaded value)? jobDetailLoaded,
+    TResult Function(AnalyticsLoaded value)? analyticsLoaded,
+    TResult Function(SearchResultsLoaded value)? searchResultsLoaded,
+    TResult Function(JobOperationSuccess value)? operationSuccess,
+    TResult Function(JobError value)? error,
+    required TResult orElse(),
+  }) {
+    if (analyticsLoaded != null) {
+      return analyticsLoaded(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class AnalyticsLoaded implements JobState {
+  const factory AnalyticsLoaded(final Map<String, dynamic> analytics) =
+      _$AnalyticsLoadedImpl;
+
+  Map<String, dynamic> get analytics;
+
+  /// Create a copy of JobState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$AnalyticsLoadedImplCopyWith<_$AnalyticsLoadedImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$SearchResultsLoadedImplCopyWith<$Res> {
+  factory _$$SearchResultsLoadedImplCopyWith(
+    _$SearchResultsLoadedImpl value,
+    $Res Function(_$SearchResultsLoadedImpl) then,
+  ) = __$$SearchResultsLoadedImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({List<JobApplication> results});
+}
+
+/// @nodoc
+class __$$SearchResultsLoadedImplCopyWithImpl<$Res>
+    extends _$JobStateCopyWithImpl<$Res, _$SearchResultsLoadedImpl>
+    implements _$$SearchResultsLoadedImplCopyWith<$Res> {
+  __$$SearchResultsLoadedImplCopyWithImpl(
+    _$SearchResultsLoadedImpl _value,
+    $Res Function(_$SearchResultsLoadedImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of JobState
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? results = null}) {
+    return _then(
+      _$SearchResultsLoadedImpl(
+        null == results
+            ? _value._results
+            : results // ignore: cast_nullable_to_non_nullable
+                  as List<JobApplication>,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+
+class _$SearchResultsLoadedImpl implements SearchResultsLoaded {
+  const _$SearchResultsLoadedImpl(final List<JobApplication> results)
+    : _results = results;
+
+  final List<JobApplication> _results;
+  @override
+  List<JobApplication> get results {
+    if (_results is EqualUnmodifiableListView) return _results;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_results);
+  }
+
+  @override
+  String toString() {
+    return 'JobState.searchResultsLoaded(results: $results)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SearchResultsLoadedImpl &&
+            const DeepCollectionEquality().equals(other._results, _results));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_results));
+
+  /// Create a copy of JobState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SearchResultsLoadedImplCopyWith<_$SearchResultsLoadedImpl> get copyWith =>
+      __$$SearchResultsLoadedImplCopyWithImpl<_$SearchResultsLoadedImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function() loading,
+    required TResult Function(List<JobApplication> jobs) jobsLoaded,
+    required TResult Function(JobApplication job) jobDetailLoaded,
+    required TResult Function(Map<String, dynamic> analytics) analyticsLoaded,
+    required TResult Function(List<JobApplication> results) searchResultsLoaded,
+    required TResult Function(String message) operationSuccess,
+    required TResult Function(String message) error,
+  }) {
+    return searchResultsLoaded(results);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function(List<JobApplication> jobs)? jobsLoaded,
+    TResult? Function(JobApplication job)? jobDetailLoaded,
+    TResult? Function(Map<String, dynamic> analytics)? analyticsLoaded,
+    TResult? Function(List<JobApplication> results)? searchResultsLoaded,
+    TResult? Function(String message)? operationSuccess,
+    TResult? Function(String message)? error,
+  }) {
+    return searchResultsLoaded?.call(results);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function()? loading,
+    TResult Function(List<JobApplication> jobs)? jobsLoaded,
+    TResult Function(JobApplication job)? jobDetailLoaded,
+    TResult Function(Map<String, dynamic> analytics)? analyticsLoaded,
+    TResult Function(List<JobApplication> results)? searchResultsLoaded,
+    TResult Function(String message)? operationSuccess,
+    TResult Function(String message)? error,
+    required TResult orElse(),
+  }) {
+    if (searchResultsLoaded != null) {
+      return searchResultsLoaded(results);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(JobInitial value) initial,
+    required TResult Function(JobLoading value) loading,
+    required TResult Function(JobsLoaded value) jobsLoaded,
+    required TResult Function(JobDetailLoaded value) jobDetailLoaded,
+    required TResult Function(AnalyticsLoaded value) analyticsLoaded,
+    required TResult Function(SearchResultsLoaded value) searchResultsLoaded,
+    required TResult Function(JobOperationSuccess value) operationSuccess,
+    required TResult Function(JobError value) error,
+  }) {
+    return searchResultsLoaded(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(JobInitial value)? initial,
+    TResult? Function(JobLoading value)? loading,
+    TResult? Function(JobsLoaded value)? jobsLoaded,
+    TResult? Function(JobDetailLoaded value)? jobDetailLoaded,
+    TResult? Function(AnalyticsLoaded value)? analyticsLoaded,
+    TResult? Function(SearchResultsLoaded value)? searchResultsLoaded,
+    TResult? Function(JobOperationSuccess value)? operationSuccess,
+    TResult? Function(JobError value)? error,
+  }) {
+    return searchResultsLoaded?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(JobInitial value)? initial,
+    TResult Function(JobLoading value)? loading,
+    TResult Function(JobsLoaded value)? jobsLoaded,
+    TResult Function(JobDetailLoaded value)? jobDetailLoaded,
+    TResult Function(AnalyticsLoaded value)? analyticsLoaded,
+    TResult Function(SearchResultsLoaded value)? searchResultsLoaded,
+    TResult Function(JobOperationSuccess value)? operationSuccess,
+    TResult Function(JobError value)? error,
+    required TResult orElse(),
+  }) {
+    if (searchResultsLoaded != null) {
+      return searchResultsLoaded(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class SearchResultsLoaded implements JobState {
+  const factory SearchResultsLoaded(final List<JobApplication> results) =
+      _$SearchResultsLoadedImpl;
+
+  List<JobApplication> get results;
+
+  /// Create a copy of JobState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$SearchResultsLoadedImplCopyWith<_$SearchResultsLoadedImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -788,6 +1229,8 @@ class _$JobOperationSuccessImpl implements JobOperationSuccess {
     required TResult Function() loading,
     required TResult Function(List<JobApplication> jobs) jobsLoaded,
     required TResult Function(JobApplication job) jobDetailLoaded,
+    required TResult Function(Map<String, dynamic> analytics) analyticsLoaded,
+    required TResult Function(List<JobApplication> results) searchResultsLoaded,
     required TResult Function(String message) operationSuccess,
     required TResult Function(String message) error,
   }) {
@@ -801,6 +1244,8 @@ class _$JobOperationSuccessImpl implements JobOperationSuccess {
     TResult? Function()? loading,
     TResult? Function(List<JobApplication> jobs)? jobsLoaded,
     TResult? Function(JobApplication job)? jobDetailLoaded,
+    TResult? Function(Map<String, dynamic> analytics)? analyticsLoaded,
+    TResult? Function(List<JobApplication> results)? searchResultsLoaded,
     TResult? Function(String message)? operationSuccess,
     TResult? Function(String message)? error,
   }) {
@@ -814,6 +1259,8 @@ class _$JobOperationSuccessImpl implements JobOperationSuccess {
     TResult Function()? loading,
     TResult Function(List<JobApplication> jobs)? jobsLoaded,
     TResult Function(JobApplication job)? jobDetailLoaded,
+    TResult Function(Map<String, dynamic> analytics)? analyticsLoaded,
+    TResult Function(List<JobApplication> results)? searchResultsLoaded,
     TResult Function(String message)? operationSuccess,
     TResult Function(String message)? error,
     required TResult orElse(),
@@ -831,6 +1278,8 @@ class _$JobOperationSuccessImpl implements JobOperationSuccess {
     required TResult Function(JobLoading value) loading,
     required TResult Function(JobsLoaded value) jobsLoaded,
     required TResult Function(JobDetailLoaded value) jobDetailLoaded,
+    required TResult Function(AnalyticsLoaded value) analyticsLoaded,
+    required TResult Function(SearchResultsLoaded value) searchResultsLoaded,
     required TResult Function(JobOperationSuccess value) operationSuccess,
     required TResult Function(JobError value) error,
   }) {
@@ -844,6 +1293,8 @@ class _$JobOperationSuccessImpl implements JobOperationSuccess {
     TResult? Function(JobLoading value)? loading,
     TResult? Function(JobsLoaded value)? jobsLoaded,
     TResult? Function(JobDetailLoaded value)? jobDetailLoaded,
+    TResult? Function(AnalyticsLoaded value)? analyticsLoaded,
+    TResult? Function(SearchResultsLoaded value)? searchResultsLoaded,
     TResult? Function(JobOperationSuccess value)? operationSuccess,
     TResult? Function(JobError value)? error,
   }) {
@@ -857,6 +1308,8 @@ class _$JobOperationSuccessImpl implements JobOperationSuccess {
     TResult Function(JobLoading value)? loading,
     TResult Function(JobsLoaded value)? jobsLoaded,
     TResult Function(JobDetailLoaded value)? jobDetailLoaded,
+    TResult Function(AnalyticsLoaded value)? analyticsLoaded,
+    TResult Function(SearchResultsLoaded value)? searchResultsLoaded,
     TResult Function(JobOperationSuccess value)? operationSuccess,
     TResult Function(JobError value)? error,
     required TResult orElse(),
@@ -955,6 +1408,8 @@ class _$JobErrorImpl implements JobError {
     required TResult Function() loading,
     required TResult Function(List<JobApplication> jobs) jobsLoaded,
     required TResult Function(JobApplication job) jobDetailLoaded,
+    required TResult Function(Map<String, dynamic> analytics) analyticsLoaded,
+    required TResult Function(List<JobApplication> results) searchResultsLoaded,
     required TResult Function(String message) operationSuccess,
     required TResult Function(String message) error,
   }) {
@@ -968,6 +1423,8 @@ class _$JobErrorImpl implements JobError {
     TResult? Function()? loading,
     TResult? Function(List<JobApplication> jobs)? jobsLoaded,
     TResult? Function(JobApplication job)? jobDetailLoaded,
+    TResult? Function(Map<String, dynamic> analytics)? analyticsLoaded,
+    TResult? Function(List<JobApplication> results)? searchResultsLoaded,
     TResult? Function(String message)? operationSuccess,
     TResult? Function(String message)? error,
   }) {
@@ -981,6 +1438,8 @@ class _$JobErrorImpl implements JobError {
     TResult Function()? loading,
     TResult Function(List<JobApplication> jobs)? jobsLoaded,
     TResult Function(JobApplication job)? jobDetailLoaded,
+    TResult Function(Map<String, dynamic> analytics)? analyticsLoaded,
+    TResult Function(List<JobApplication> results)? searchResultsLoaded,
     TResult Function(String message)? operationSuccess,
     TResult Function(String message)? error,
     required TResult orElse(),
@@ -998,6 +1457,8 @@ class _$JobErrorImpl implements JobError {
     required TResult Function(JobLoading value) loading,
     required TResult Function(JobsLoaded value) jobsLoaded,
     required TResult Function(JobDetailLoaded value) jobDetailLoaded,
+    required TResult Function(AnalyticsLoaded value) analyticsLoaded,
+    required TResult Function(SearchResultsLoaded value) searchResultsLoaded,
     required TResult Function(JobOperationSuccess value) operationSuccess,
     required TResult Function(JobError value) error,
   }) {
@@ -1011,6 +1472,8 @@ class _$JobErrorImpl implements JobError {
     TResult? Function(JobLoading value)? loading,
     TResult? Function(JobsLoaded value)? jobsLoaded,
     TResult? Function(JobDetailLoaded value)? jobDetailLoaded,
+    TResult? Function(AnalyticsLoaded value)? analyticsLoaded,
+    TResult? Function(SearchResultsLoaded value)? searchResultsLoaded,
     TResult? Function(JobOperationSuccess value)? operationSuccess,
     TResult? Function(JobError value)? error,
   }) {
@@ -1024,6 +1487,8 @@ class _$JobErrorImpl implements JobError {
     TResult Function(JobLoading value)? loading,
     TResult Function(JobsLoaded value)? jobsLoaded,
     TResult Function(JobDetailLoaded value)? jobDetailLoaded,
+    TResult Function(AnalyticsLoaded value)? analyticsLoaded,
+    TResult Function(SearchResultsLoaded value)? searchResultsLoaded,
     TResult Function(JobOperationSuccess value)? operationSuccess,
     TResult Function(JobError value)? error,
     required TResult orElse(),

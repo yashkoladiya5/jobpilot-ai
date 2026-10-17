@@ -24,6 +24,9 @@ mixin _$User {
   String get id => throw _privateConstructorUsedError;
   String get email => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
+  String? get profilePictureUrl => throw _privateConstructorUsedError;
+  String? get bio => throw _privateConstructorUsedError;
+  bool get isEmailVerified => throw _privateConstructorUsedError;
   DateTime? get createdAt => throw _privateConstructorUsedError;
 
   /// Serializes this User to a JSON map.
@@ -40,7 +43,15 @@ abstract class $UserCopyWith<$Res> {
   factory $UserCopyWith(User value, $Res Function(User) then) =
       _$UserCopyWithImpl<$Res, User>;
   @useResult
-  $Res call({String id, String email, String name, DateTime? createdAt});
+  $Res call({
+    String id,
+    String email,
+    String name,
+    String? profilePictureUrl,
+    String? bio,
+    bool isEmailVerified,
+    DateTime? createdAt,
+  });
 }
 
 /// @nodoc
@@ -61,6 +72,9 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
     Object? id = null,
     Object? email = null,
     Object? name = null,
+    Object? profilePictureUrl = freezed,
+    Object? bio = freezed,
+    Object? isEmailVerified = null,
     Object? createdAt = freezed,
   }) {
     return _then(
@@ -77,6 +91,18 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
                 ? _value.name
                 : name // ignore: cast_nullable_to_non_nullable
                       as String,
+            profilePictureUrl: freezed == profilePictureUrl
+                ? _value.profilePictureUrl
+                : profilePictureUrl // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            bio: freezed == bio
+                ? _value.bio
+                : bio // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            isEmailVerified: null == isEmailVerified
+                ? _value.isEmailVerified
+                : isEmailVerified // ignore: cast_nullable_to_non_nullable
+                      as bool,
             createdAt: freezed == createdAt
                 ? _value.createdAt
                 : createdAt // ignore: cast_nullable_to_non_nullable
@@ -95,7 +121,15 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
   ) = __$$UserImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String id, String email, String name, DateTime? createdAt});
+  $Res call({
+    String id,
+    String email,
+    String name,
+    String? profilePictureUrl,
+    String? bio,
+    bool isEmailVerified,
+    DateTime? createdAt,
+  });
 }
 
 /// @nodoc
@@ -113,6 +147,9 @@ class __$$UserImplCopyWithImpl<$Res>
     Object? id = null,
     Object? email = null,
     Object? name = null,
+    Object? profilePictureUrl = freezed,
+    Object? bio = freezed,
+    Object? isEmailVerified = null,
     Object? createdAt = freezed,
   }) {
     return _then(
@@ -129,6 +166,18 @@ class __$$UserImplCopyWithImpl<$Res>
             ? _value.name
             : name // ignore: cast_nullable_to_non_nullable
                   as String,
+        profilePictureUrl: freezed == profilePictureUrl
+            ? _value.profilePictureUrl
+            : profilePictureUrl // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        bio: freezed == bio
+            ? _value.bio
+            : bio // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        isEmailVerified: null == isEmailVerified
+            ? _value.isEmailVerified
+            : isEmailVerified // ignore: cast_nullable_to_non_nullable
+                  as bool,
         createdAt: freezed == createdAt
             ? _value.createdAt
             : createdAt // ignore: cast_nullable_to_non_nullable
@@ -145,6 +194,9 @@ class _$UserImpl implements _User {
     required this.id,
     required this.email,
     required this.name,
+    this.profilePictureUrl,
+    this.bio,
+    this.isEmailVerified = false,
     this.createdAt,
   });
 
@@ -158,11 +210,18 @@ class _$UserImpl implements _User {
   @override
   final String name;
   @override
+  final String? profilePictureUrl;
+  @override
+  final String? bio;
+  @override
+  @JsonKey()
+  final bool isEmailVerified;
+  @override
   final DateTime? createdAt;
 
   @override
   String toString() {
-    return 'User(id: $id, email: $email, name: $name, createdAt: $createdAt)';
+    return 'User(id: $id, email: $email, name: $name, profilePictureUrl: $profilePictureUrl, bio: $bio, isEmailVerified: $isEmailVerified, createdAt: $createdAt)';
   }
 
   @override
@@ -173,13 +232,27 @@ class _$UserImpl implements _User {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.email, email) || other.email == email) &&
             (identical(other.name, name) || other.name == name) &&
+            (identical(other.profilePictureUrl, profilePictureUrl) ||
+                other.profilePictureUrl == profilePictureUrl) &&
+            (identical(other.bio, bio) || other.bio == bio) &&
+            (identical(other.isEmailVerified, isEmailVerified) ||
+                other.isEmailVerified == isEmailVerified) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, email, name, createdAt);
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    email,
+    name,
+    profilePictureUrl,
+    bio,
+    isEmailVerified,
+    createdAt,
+  );
 
   /// Create a copy of User
   /// with the given fields replaced by the non-null parameter values.
@@ -200,6 +273,9 @@ abstract class _User implements User {
     required final String id,
     required final String email,
     required final String name,
+    final String? profilePictureUrl,
+    final String? bio,
+    final bool isEmailVerified,
     final DateTime? createdAt,
   }) = _$UserImpl;
 
@@ -211,6 +287,12 @@ abstract class _User implements User {
   String get email;
   @override
   String get name;
+  @override
+  String? get profilePictureUrl;
+  @override
+  String? get bio;
+  @override
+  bool get isEmailVerified;
   @override
   DateTime? get createdAt;
 

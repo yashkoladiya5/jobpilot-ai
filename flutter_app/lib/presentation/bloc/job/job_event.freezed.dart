@@ -24,6 +24,8 @@ mixin _$JobEvent {
     required TResult Function(CreateJobParams params) createJob,
     required TResult Function(String id, UpdateJobParams params) updateJob,
     required TResult Function(String id) deleteJob,
+    required TResult Function() loadJobsAnalytics,
+    required TResult Function(String query) searchJobs,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
@@ -32,6 +34,8 @@ mixin _$JobEvent {
     TResult? Function(CreateJobParams params)? createJob,
     TResult? Function(String id, UpdateJobParams params)? updateJob,
     TResult? Function(String id)? deleteJob,
+    TResult? Function()? loadJobsAnalytics,
+    TResult? Function(String query)? searchJobs,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
@@ -40,6 +44,8 @@ mixin _$JobEvent {
     TResult Function(CreateJobParams params)? createJob,
     TResult Function(String id, UpdateJobParams params)? updateJob,
     TResult Function(String id)? deleteJob,
+    TResult Function()? loadJobsAnalytics,
+    TResult Function(String query)? searchJobs,
     required TResult orElse(),
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -49,6 +55,8 @@ mixin _$JobEvent {
     required TResult Function(CreateJob value) createJob,
     required TResult Function(UpdateJob value) updateJob,
     required TResult Function(DeleteJob value) deleteJob,
+    required TResult Function(LoadJobsAnalytics value) loadJobsAnalytics,
+    required TResult Function(SearchJobs value) searchJobs,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
@@ -57,6 +65,8 @@ mixin _$JobEvent {
     TResult? Function(CreateJob value)? createJob,
     TResult? Function(UpdateJob value)? updateJob,
     TResult? Function(DeleteJob value)? deleteJob,
+    TResult? Function(LoadJobsAnalytics value)? loadJobsAnalytics,
+    TResult? Function(SearchJobs value)? searchJobs,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
@@ -65,6 +75,8 @@ mixin _$JobEvent {
     TResult Function(CreateJob value)? createJob,
     TResult Function(UpdateJob value)? updateJob,
     TResult Function(DeleteJob value)? deleteJob,
+    TResult Function(LoadJobsAnalytics value)? loadJobsAnalytics,
+    TResult Function(SearchJobs value)? searchJobs,
     required TResult orElse(),
   }) => throw _privateConstructorUsedError;
 }
@@ -137,6 +149,8 @@ class _$LoadJobsImpl implements LoadJobs {
     required TResult Function(CreateJobParams params) createJob,
     required TResult Function(String id, UpdateJobParams params) updateJob,
     required TResult Function(String id) deleteJob,
+    required TResult Function() loadJobsAnalytics,
+    required TResult Function(String query) searchJobs,
   }) {
     return loadJobs();
   }
@@ -149,6 +163,8 @@ class _$LoadJobsImpl implements LoadJobs {
     TResult? Function(CreateJobParams params)? createJob,
     TResult? Function(String id, UpdateJobParams params)? updateJob,
     TResult? Function(String id)? deleteJob,
+    TResult? Function()? loadJobsAnalytics,
+    TResult? Function(String query)? searchJobs,
   }) {
     return loadJobs?.call();
   }
@@ -161,6 +177,8 @@ class _$LoadJobsImpl implements LoadJobs {
     TResult Function(CreateJobParams params)? createJob,
     TResult Function(String id, UpdateJobParams params)? updateJob,
     TResult Function(String id)? deleteJob,
+    TResult Function()? loadJobsAnalytics,
+    TResult Function(String query)? searchJobs,
     required TResult orElse(),
   }) {
     if (loadJobs != null) {
@@ -177,6 +195,8 @@ class _$LoadJobsImpl implements LoadJobs {
     required TResult Function(CreateJob value) createJob,
     required TResult Function(UpdateJob value) updateJob,
     required TResult Function(DeleteJob value) deleteJob,
+    required TResult Function(LoadJobsAnalytics value) loadJobsAnalytics,
+    required TResult Function(SearchJobs value) searchJobs,
   }) {
     return loadJobs(this);
   }
@@ -189,6 +209,8 @@ class _$LoadJobsImpl implements LoadJobs {
     TResult? Function(CreateJob value)? createJob,
     TResult? Function(UpdateJob value)? updateJob,
     TResult? Function(DeleteJob value)? deleteJob,
+    TResult? Function(LoadJobsAnalytics value)? loadJobsAnalytics,
+    TResult? Function(SearchJobs value)? searchJobs,
   }) {
     return loadJobs?.call(this);
   }
@@ -201,6 +223,8 @@ class _$LoadJobsImpl implements LoadJobs {
     TResult Function(CreateJob value)? createJob,
     TResult Function(UpdateJob value)? updateJob,
     TResult Function(DeleteJob value)? deleteJob,
+    TResult Function(LoadJobsAnalytics value)? loadJobsAnalytics,
+    TResult Function(SearchJobs value)? searchJobs,
     required TResult orElse(),
   }) {
     if (loadJobs != null) {
@@ -289,6 +313,8 @@ class _$LoadJobDetailImpl implements LoadJobDetail {
     required TResult Function(CreateJobParams params) createJob,
     required TResult Function(String id, UpdateJobParams params) updateJob,
     required TResult Function(String id) deleteJob,
+    required TResult Function() loadJobsAnalytics,
+    required TResult Function(String query) searchJobs,
   }) {
     return loadJobDetail(id);
   }
@@ -301,6 +327,8 @@ class _$LoadJobDetailImpl implements LoadJobDetail {
     TResult? Function(CreateJobParams params)? createJob,
     TResult? Function(String id, UpdateJobParams params)? updateJob,
     TResult? Function(String id)? deleteJob,
+    TResult? Function()? loadJobsAnalytics,
+    TResult? Function(String query)? searchJobs,
   }) {
     return loadJobDetail?.call(id);
   }
@@ -313,6 +341,8 @@ class _$LoadJobDetailImpl implements LoadJobDetail {
     TResult Function(CreateJobParams params)? createJob,
     TResult Function(String id, UpdateJobParams params)? updateJob,
     TResult Function(String id)? deleteJob,
+    TResult Function()? loadJobsAnalytics,
+    TResult Function(String query)? searchJobs,
     required TResult orElse(),
   }) {
     if (loadJobDetail != null) {
@@ -329,6 +359,8 @@ class _$LoadJobDetailImpl implements LoadJobDetail {
     required TResult Function(CreateJob value) createJob,
     required TResult Function(UpdateJob value) updateJob,
     required TResult Function(DeleteJob value) deleteJob,
+    required TResult Function(LoadJobsAnalytics value) loadJobsAnalytics,
+    required TResult Function(SearchJobs value) searchJobs,
   }) {
     return loadJobDetail(this);
   }
@@ -341,6 +373,8 @@ class _$LoadJobDetailImpl implements LoadJobDetail {
     TResult? Function(CreateJob value)? createJob,
     TResult? Function(UpdateJob value)? updateJob,
     TResult? Function(DeleteJob value)? deleteJob,
+    TResult? Function(LoadJobsAnalytics value)? loadJobsAnalytics,
+    TResult? Function(SearchJobs value)? searchJobs,
   }) {
     return loadJobDetail?.call(this);
   }
@@ -353,6 +387,8 @@ class _$LoadJobDetailImpl implements LoadJobDetail {
     TResult Function(CreateJob value)? createJob,
     TResult Function(UpdateJob value)? updateJob,
     TResult Function(DeleteJob value)? deleteJob,
+    TResult Function(LoadJobsAnalytics value)? loadJobsAnalytics,
+    TResult Function(SearchJobs value)? searchJobs,
     required TResult orElse(),
   }) {
     if (loadJobDetail != null) {
@@ -449,6 +485,8 @@ class _$CreateJobImpl implements CreateJob {
     required TResult Function(CreateJobParams params) createJob,
     required TResult Function(String id, UpdateJobParams params) updateJob,
     required TResult Function(String id) deleteJob,
+    required TResult Function() loadJobsAnalytics,
+    required TResult Function(String query) searchJobs,
   }) {
     return createJob(params);
   }
@@ -461,6 +499,8 @@ class _$CreateJobImpl implements CreateJob {
     TResult? Function(CreateJobParams params)? createJob,
     TResult? Function(String id, UpdateJobParams params)? updateJob,
     TResult? Function(String id)? deleteJob,
+    TResult? Function()? loadJobsAnalytics,
+    TResult? Function(String query)? searchJobs,
   }) {
     return createJob?.call(params);
   }
@@ -473,6 +513,8 @@ class _$CreateJobImpl implements CreateJob {
     TResult Function(CreateJobParams params)? createJob,
     TResult Function(String id, UpdateJobParams params)? updateJob,
     TResult Function(String id)? deleteJob,
+    TResult Function()? loadJobsAnalytics,
+    TResult Function(String query)? searchJobs,
     required TResult orElse(),
   }) {
     if (createJob != null) {
@@ -489,6 +531,8 @@ class _$CreateJobImpl implements CreateJob {
     required TResult Function(CreateJob value) createJob,
     required TResult Function(UpdateJob value) updateJob,
     required TResult Function(DeleteJob value) deleteJob,
+    required TResult Function(LoadJobsAnalytics value) loadJobsAnalytics,
+    required TResult Function(SearchJobs value) searchJobs,
   }) {
     return createJob(this);
   }
@@ -501,6 +545,8 @@ class _$CreateJobImpl implements CreateJob {
     TResult? Function(CreateJob value)? createJob,
     TResult? Function(UpdateJob value)? updateJob,
     TResult? Function(DeleteJob value)? deleteJob,
+    TResult? Function(LoadJobsAnalytics value)? loadJobsAnalytics,
+    TResult? Function(SearchJobs value)? searchJobs,
   }) {
     return createJob?.call(this);
   }
@@ -513,6 +559,8 @@ class _$CreateJobImpl implements CreateJob {
     TResult Function(CreateJob value)? createJob,
     TResult Function(UpdateJob value)? updateJob,
     TResult Function(DeleteJob value)? deleteJob,
+    TResult Function(LoadJobsAnalytics value)? loadJobsAnalytics,
+    TResult Function(SearchJobs value)? searchJobs,
     required TResult orElse(),
   }) {
     if (createJob != null) {
@@ -616,6 +664,8 @@ class _$UpdateJobImpl implements UpdateJob {
     required TResult Function(CreateJobParams params) createJob,
     required TResult Function(String id, UpdateJobParams params) updateJob,
     required TResult Function(String id) deleteJob,
+    required TResult Function() loadJobsAnalytics,
+    required TResult Function(String query) searchJobs,
   }) {
     return updateJob(id, params);
   }
@@ -628,6 +678,8 @@ class _$UpdateJobImpl implements UpdateJob {
     TResult? Function(CreateJobParams params)? createJob,
     TResult? Function(String id, UpdateJobParams params)? updateJob,
     TResult? Function(String id)? deleteJob,
+    TResult? Function()? loadJobsAnalytics,
+    TResult? Function(String query)? searchJobs,
   }) {
     return updateJob?.call(id, params);
   }
@@ -640,6 +692,8 @@ class _$UpdateJobImpl implements UpdateJob {
     TResult Function(CreateJobParams params)? createJob,
     TResult Function(String id, UpdateJobParams params)? updateJob,
     TResult Function(String id)? deleteJob,
+    TResult Function()? loadJobsAnalytics,
+    TResult Function(String query)? searchJobs,
     required TResult orElse(),
   }) {
     if (updateJob != null) {
@@ -656,6 +710,8 @@ class _$UpdateJobImpl implements UpdateJob {
     required TResult Function(CreateJob value) createJob,
     required TResult Function(UpdateJob value) updateJob,
     required TResult Function(DeleteJob value) deleteJob,
+    required TResult Function(LoadJobsAnalytics value) loadJobsAnalytics,
+    required TResult Function(SearchJobs value) searchJobs,
   }) {
     return updateJob(this);
   }
@@ -668,6 +724,8 @@ class _$UpdateJobImpl implements UpdateJob {
     TResult? Function(CreateJob value)? createJob,
     TResult? Function(UpdateJob value)? updateJob,
     TResult? Function(DeleteJob value)? deleteJob,
+    TResult? Function(LoadJobsAnalytics value)? loadJobsAnalytics,
+    TResult? Function(SearchJobs value)? searchJobs,
   }) {
     return updateJob?.call(this);
   }
@@ -680,6 +738,8 @@ class _$UpdateJobImpl implements UpdateJob {
     TResult Function(CreateJob value)? createJob,
     TResult Function(UpdateJob value)? updateJob,
     TResult Function(DeleteJob value)? deleteJob,
+    TResult Function(LoadJobsAnalytics value)? loadJobsAnalytics,
+    TResult Function(SearchJobs value)? searchJobs,
     required TResult orElse(),
   }) {
     if (updateJob != null) {
@@ -778,6 +838,8 @@ class _$DeleteJobImpl implements DeleteJob {
     required TResult Function(CreateJobParams params) createJob,
     required TResult Function(String id, UpdateJobParams params) updateJob,
     required TResult Function(String id) deleteJob,
+    required TResult Function() loadJobsAnalytics,
+    required TResult Function(String query) searchJobs,
   }) {
     return deleteJob(id);
   }
@@ -790,6 +852,8 @@ class _$DeleteJobImpl implements DeleteJob {
     TResult? Function(CreateJobParams params)? createJob,
     TResult? Function(String id, UpdateJobParams params)? updateJob,
     TResult? Function(String id)? deleteJob,
+    TResult? Function()? loadJobsAnalytics,
+    TResult? Function(String query)? searchJobs,
   }) {
     return deleteJob?.call(id);
   }
@@ -802,6 +866,8 @@ class _$DeleteJobImpl implements DeleteJob {
     TResult Function(CreateJobParams params)? createJob,
     TResult Function(String id, UpdateJobParams params)? updateJob,
     TResult Function(String id)? deleteJob,
+    TResult Function()? loadJobsAnalytics,
+    TResult Function(String query)? searchJobs,
     required TResult orElse(),
   }) {
     if (deleteJob != null) {
@@ -818,6 +884,8 @@ class _$DeleteJobImpl implements DeleteJob {
     required TResult Function(CreateJob value) createJob,
     required TResult Function(UpdateJob value) updateJob,
     required TResult Function(DeleteJob value) deleteJob,
+    required TResult Function(LoadJobsAnalytics value) loadJobsAnalytics,
+    required TResult Function(SearchJobs value) searchJobs,
   }) {
     return deleteJob(this);
   }
@@ -830,6 +898,8 @@ class _$DeleteJobImpl implements DeleteJob {
     TResult? Function(CreateJob value)? createJob,
     TResult? Function(UpdateJob value)? updateJob,
     TResult? Function(DeleteJob value)? deleteJob,
+    TResult? Function(LoadJobsAnalytics value)? loadJobsAnalytics,
+    TResult? Function(SearchJobs value)? searchJobs,
   }) {
     return deleteJob?.call(this);
   }
@@ -842,6 +912,8 @@ class _$DeleteJobImpl implements DeleteJob {
     TResult Function(CreateJob value)? createJob,
     TResult Function(UpdateJob value)? updateJob,
     TResult Function(DeleteJob value)? deleteJob,
+    TResult Function(LoadJobsAnalytics value)? loadJobsAnalytics,
+    TResult Function(SearchJobs value)? searchJobs,
     required TResult orElse(),
   }) {
     if (deleteJob != null) {
@@ -860,5 +932,314 @@ abstract class DeleteJob implements JobEvent {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$DeleteJobImplCopyWith<_$DeleteJobImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$LoadJobsAnalyticsImplCopyWith<$Res> {
+  factory _$$LoadJobsAnalyticsImplCopyWith(
+    _$LoadJobsAnalyticsImpl value,
+    $Res Function(_$LoadJobsAnalyticsImpl) then,
+  ) = __$$LoadJobsAnalyticsImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$LoadJobsAnalyticsImplCopyWithImpl<$Res>
+    extends _$JobEventCopyWithImpl<$Res, _$LoadJobsAnalyticsImpl>
+    implements _$$LoadJobsAnalyticsImplCopyWith<$Res> {
+  __$$LoadJobsAnalyticsImplCopyWithImpl(
+    _$LoadJobsAnalyticsImpl _value,
+    $Res Function(_$LoadJobsAnalyticsImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of JobEvent
+  /// with the given fields replaced by the non-null parameter values.
+}
+
+/// @nodoc
+
+class _$LoadJobsAnalyticsImpl implements LoadJobsAnalytics {
+  const _$LoadJobsAnalyticsImpl();
+
+  @override
+  String toString() {
+    return 'JobEvent.loadJobsAnalytics()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$LoadJobsAnalyticsImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() loadJobs,
+    required TResult Function(String id) loadJobDetail,
+    required TResult Function(CreateJobParams params) createJob,
+    required TResult Function(String id, UpdateJobParams params) updateJob,
+    required TResult Function(String id) deleteJob,
+    required TResult Function() loadJobsAnalytics,
+    required TResult Function(String query) searchJobs,
+  }) {
+    return loadJobsAnalytics();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? loadJobs,
+    TResult? Function(String id)? loadJobDetail,
+    TResult? Function(CreateJobParams params)? createJob,
+    TResult? Function(String id, UpdateJobParams params)? updateJob,
+    TResult? Function(String id)? deleteJob,
+    TResult? Function()? loadJobsAnalytics,
+    TResult? Function(String query)? searchJobs,
+  }) {
+    return loadJobsAnalytics?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? loadJobs,
+    TResult Function(String id)? loadJobDetail,
+    TResult Function(CreateJobParams params)? createJob,
+    TResult Function(String id, UpdateJobParams params)? updateJob,
+    TResult Function(String id)? deleteJob,
+    TResult Function()? loadJobsAnalytics,
+    TResult Function(String query)? searchJobs,
+    required TResult orElse(),
+  }) {
+    if (loadJobsAnalytics != null) {
+      return loadJobsAnalytics();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(LoadJobs value) loadJobs,
+    required TResult Function(LoadJobDetail value) loadJobDetail,
+    required TResult Function(CreateJob value) createJob,
+    required TResult Function(UpdateJob value) updateJob,
+    required TResult Function(DeleteJob value) deleteJob,
+    required TResult Function(LoadJobsAnalytics value) loadJobsAnalytics,
+    required TResult Function(SearchJobs value) searchJobs,
+  }) {
+    return loadJobsAnalytics(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(LoadJobs value)? loadJobs,
+    TResult? Function(LoadJobDetail value)? loadJobDetail,
+    TResult? Function(CreateJob value)? createJob,
+    TResult? Function(UpdateJob value)? updateJob,
+    TResult? Function(DeleteJob value)? deleteJob,
+    TResult? Function(LoadJobsAnalytics value)? loadJobsAnalytics,
+    TResult? Function(SearchJobs value)? searchJobs,
+  }) {
+    return loadJobsAnalytics?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(LoadJobs value)? loadJobs,
+    TResult Function(LoadJobDetail value)? loadJobDetail,
+    TResult Function(CreateJob value)? createJob,
+    TResult Function(UpdateJob value)? updateJob,
+    TResult Function(DeleteJob value)? deleteJob,
+    TResult Function(LoadJobsAnalytics value)? loadJobsAnalytics,
+    TResult Function(SearchJobs value)? searchJobs,
+    required TResult orElse(),
+  }) {
+    if (loadJobsAnalytics != null) {
+      return loadJobsAnalytics(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class LoadJobsAnalytics implements JobEvent {
+  const factory LoadJobsAnalytics() = _$LoadJobsAnalyticsImpl;
+}
+
+/// @nodoc
+abstract class _$$SearchJobsImplCopyWith<$Res> {
+  factory _$$SearchJobsImplCopyWith(
+    _$SearchJobsImpl value,
+    $Res Function(_$SearchJobsImpl) then,
+  ) = __$$SearchJobsImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String query});
+}
+
+/// @nodoc
+class __$$SearchJobsImplCopyWithImpl<$Res>
+    extends _$JobEventCopyWithImpl<$Res, _$SearchJobsImpl>
+    implements _$$SearchJobsImplCopyWith<$Res> {
+  __$$SearchJobsImplCopyWithImpl(
+    _$SearchJobsImpl _value,
+    $Res Function(_$SearchJobsImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of JobEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? query = null}) {
+    return _then(
+      _$SearchJobsImpl(
+        null == query
+            ? _value.query
+            : query // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+
+class _$SearchJobsImpl implements SearchJobs {
+  const _$SearchJobsImpl(this.query);
+
+  @override
+  final String query;
+
+  @override
+  String toString() {
+    return 'JobEvent.searchJobs(query: $query)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SearchJobsImpl &&
+            (identical(other.query, query) || other.query == query));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, query);
+
+  /// Create a copy of JobEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SearchJobsImplCopyWith<_$SearchJobsImpl> get copyWith =>
+      __$$SearchJobsImplCopyWithImpl<_$SearchJobsImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() loadJobs,
+    required TResult Function(String id) loadJobDetail,
+    required TResult Function(CreateJobParams params) createJob,
+    required TResult Function(String id, UpdateJobParams params) updateJob,
+    required TResult Function(String id) deleteJob,
+    required TResult Function() loadJobsAnalytics,
+    required TResult Function(String query) searchJobs,
+  }) {
+    return searchJobs(query);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? loadJobs,
+    TResult? Function(String id)? loadJobDetail,
+    TResult? Function(CreateJobParams params)? createJob,
+    TResult? Function(String id, UpdateJobParams params)? updateJob,
+    TResult? Function(String id)? deleteJob,
+    TResult? Function()? loadJobsAnalytics,
+    TResult? Function(String query)? searchJobs,
+  }) {
+    return searchJobs?.call(query);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? loadJobs,
+    TResult Function(String id)? loadJobDetail,
+    TResult Function(CreateJobParams params)? createJob,
+    TResult Function(String id, UpdateJobParams params)? updateJob,
+    TResult Function(String id)? deleteJob,
+    TResult Function()? loadJobsAnalytics,
+    TResult Function(String query)? searchJobs,
+    required TResult orElse(),
+  }) {
+    if (searchJobs != null) {
+      return searchJobs(query);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(LoadJobs value) loadJobs,
+    required TResult Function(LoadJobDetail value) loadJobDetail,
+    required TResult Function(CreateJob value) createJob,
+    required TResult Function(UpdateJob value) updateJob,
+    required TResult Function(DeleteJob value) deleteJob,
+    required TResult Function(LoadJobsAnalytics value) loadJobsAnalytics,
+    required TResult Function(SearchJobs value) searchJobs,
+  }) {
+    return searchJobs(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(LoadJobs value)? loadJobs,
+    TResult? Function(LoadJobDetail value)? loadJobDetail,
+    TResult? Function(CreateJob value)? createJob,
+    TResult? Function(UpdateJob value)? updateJob,
+    TResult? Function(DeleteJob value)? deleteJob,
+    TResult? Function(LoadJobsAnalytics value)? loadJobsAnalytics,
+    TResult? Function(SearchJobs value)? searchJobs,
+  }) {
+    return searchJobs?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(LoadJobs value)? loadJobs,
+    TResult Function(LoadJobDetail value)? loadJobDetail,
+    TResult Function(CreateJob value)? createJob,
+    TResult Function(UpdateJob value)? updateJob,
+    TResult Function(DeleteJob value)? deleteJob,
+    TResult Function(LoadJobsAnalytics value)? loadJobsAnalytics,
+    TResult Function(SearchJobs value)? searchJobs,
+    required TResult orElse(),
+  }) {
+    if (searchJobs != null) {
+      return searchJobs(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class SearchJobs implements JobEvent {
+  const factory SearchJobs(final String query) = _$SearchJobsImpl;
+
+  String get query;
+
+  /// Create a copy of JobEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$SearchJobsImplCopyWith<_$SearchJobsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

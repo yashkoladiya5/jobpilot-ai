@@ -27,6 +27,8 @@ import 'package:jobpilot_ai/data/datasources/remote/job_remote_datasource.dart'
 import 'package:jobpilot_ai/data/datasources/remote/resume_remote_datasource.dart'
     as _i696;
 import 'package:jobpilot_ai/data/repositories/ai_repository_impl.dart' as _i867;
+import 'package:jobpilot_ai/data/repositories/analytics_repository_impl.dart'
+    as _i404;
 import 'package:jobpilot_ai/data/repositories/auth_repository_impl.dart'
     as _i70;
 import 'package:jobpilot_ai/data/repositories/dashboard_repository_impl.dart'
@@ -36,6 +38,8 @@ import 'package:jobpilot_ai/data/repositories/job_repository_impl.dart'
 import 'package:jobpilot_ai/data/repositories/resume_repository_impl.dart'
     as _i163;
 import 'package:jobpilot_ai/domain/repositories/ai_repository.dart' as _i708;
+import 'package:jobpilot_ai/domain/repositories/analytics_repository.dart'
+    as _i1072;
 import 'package:jobpilot_ai/domain/repositories/auth_repository.dart' as _i498;
 import 'package:jobpilot_ai/domain/repositories/dashboard_repository.dart'
     as _i989;
@@ -48,12 +52,18 @@ import 'package:jobpilot_ai/domain/usecases/ai/analyze_resume_usecase.dart'
     as _i384;
 import 'package:jobpilot_ai/domain/usecases/ai/complete_interview_usecase.dart'
     as _i741;
+import 'package:jobpilot_ai/domain/usecases/ai/generate_cover_letter_usecase.dart'
+    as _i860;
 import 'package:jobpilot_ai/domain/usecases/ai/generate_interview_usecase.dart'
     as _i220;
 import 'package:jobpilot_ai/domain/usecases/ai/get_career_insights_history_usecase.dart'
     as _i152;
 import 'package:jobpilot_ai/domain/usecases/ai/get_career_insights_usecase.dart'
     as _i233;
+import 'package:jobpilot_ai/domain/usecases/ai/get_cover_letter_usecase.dart'
+    as _i94;
+import 'package:jobpilot_ai/domain/usecases/ai/get_cover_letters_usecase.dart'
+    as _i395;
 import 'package:jobpilot_ai/domain/usecases/ai/get_interview_result_usecase.dart'
     as _i884;
 import 'package:jobpilot_ai/domain/usecases/ai/get_interview_session_usecase.dart'
@@ -72,6 +82,10 @@ import 'package:jobpilot_ai/domain/usecases/ai/match_resume_job_usecase.dart'
     as _i1028;
 import 'package:jobpilot_ai/domain/usecases/ai/submit_answer_usecase.dart'
     as _i560;
+import 'package:jobpilot_ai/domain/usecases/analytics/get_pipeline_analytics_usecase.dart'
+    as _i274;
+import 'package:jobpilot_ai/domain/usecases/analytics/get_timeline_data_usecase.dart'
+    as _i1027;
 import 'package:jobpilot_ai/domain/usecases/auth/login_usecase.dart' as _i691;
 import 'package:jobpilot_ai/domain/usecases/auth/logout_usecase.dart' as _i1;
 import 'package:jobpilot_ai/domain/usecases/auth/register_usecase.dart'
@@ -99,24 +113,19 @@ import 'package:jobpilot_ai/presentation/bloc/ai_match/ai_match_bloc.dart'
     as _i887;
 import 'package:jobpilot_ai/presentation/bloc/ai_resume/ai_resume_bloc.dart'
     as _i998;
+import 'package:jobpilot_ai/presentation/bloc/analytics/analytics_bloc.dart'
+    as _i67;
 import 'package:jobpilot_ai/presentation/bloc/auth/auth_bloc.dart' as _i653;
 import 'package:jobpilot_ai/presentation/bloc/career_insights/career_insights_bloc.dart'
     as _i783;
+import 'package:jobpilot_ai/presentation/bloc/cover_letter/cover_letter_bloc.dart'
+    as _i638;
 import 'package:jobpilot_ai/presentation/bloc/dashboard/dashboard_bloc.dart'
     as _i514;
 import 'package:jobpilot_ai/presentation/bloc/interview/interview_bloc.dart'
     as _i711;
 import 'package:jobpilot_ai/presentation/bloc/job/job_bloc.dart' as _i365;
 import 'package:jobpilot_ai/presentation/bloc/resume/resume_bloc.dart' as _i10;
-import 'package:jobpilot_ai/data/repositories/analytics_repository_impl.dart' as _iAR;
-import 'package:jobpilot_ai/domain/repositories/analytics_repository.dart' as _iARI;
-import 'package:jobpilot_ai/domain/usecases/analytics/get_pipeline_analytics_usecase.dart' as _iGPA;
-import 'package:jobpilot_ai/domain/usecases/analytics/get_timeline_data_usecase.dart' as _iGTD;
-import 'package:jobpilot_ai/domain/usecases/ai/generate_cover_letter_usecase.dart' as _iGCL;
-import 'package:jobpilot_ai/domain/usecases/ai/get_cover_letter_usecase.dart' as _iGCOL;
-import 'package:jobpilot_ai/domain/usecases/ai/get_cover_letters_usecase.dart' as _iGCOS;
-import 'package:jobpilot_ai/presentation/bloc/analytics/analytics_bloc.dart' as _iAB;
-import 'package:jobpilot_ai/presentation/bloc/cover_letter/cover_letter_bloc.dart' as _iCLB;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -138,6 +147,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i165.DashboardRemoteDataSource>(
       () => _i165.DashboardRemoteDataSource(gh<_i107.DioClient>()),
     );
+    gh.lazySingleton<_i972.AiRemoteDataSource>(
+      () => _i972.AiRemoteDataSource(gh<_i107.DioClient>()),
+    );
     gh.lazySingleton<_i173.JobRemoteDataSource>(
       () => _i173.JobRemoteDataSource(gh<_i107.DioClient>()),
     );
@@ -146,9 +158,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i1014.AuthRemoteDataSource>(
       () => _i1014.AuthRemoteDataSource(gh<_i107.DioClient>()),
-    );
-    gh.lazySingleton<_i972.AiRemoteDataSource>(
-      () => _i972.AiRemoteDataSource(gh<_i107.DioClient>()),
     );
     gh.lazySingleton<_i708.AiRepository>(
       () => _i867.AiRepositoryImpl(gh<_i972.AiRemoteDataSource>()),
@@ -159,6 +168,10 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i73.AuthLocalDataSource>(
       () => _i73.AuthLocalDataSource(gh<_i558.FlutterSecureStorage>()),
+    );
+    gh.lazySingleton<_i1072.AnalyticsRepository>(
+      () =>
+          _i404.AnalyticsRepositoryImpl(gh<_i165.DashboardRemoteDataSource>()),
     );
     gh.factory<_i87.GetInterviewSessionUseCase>(
       () => _i87.GetInterviewSessionUseCase(gh<_i708.AiRepository>()),
@@ -178,6 +191,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i1028.MatchResumeJobUseCase>(
       () => _i1028.MatchResumeJobUseCase(gh<_i708.AiRepository>()),
     );
+    gh.factory<_i860.GenerateCoverLetterUseCase>(
+      () => _i860.GenerateCoverLetterUseCase(gh<_i708.AiRepository>()),
+    );
     gh.factory<_i884.GetInterviewResultUseCase>(
       () => _i884.GetInterviewResultUseCase(gh<_i708.AiRepository>()),
     );
@@ -192,6 +208,12 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i246.GetInterviewSessionsUseCase>(
       () => _i246.GetInterviewSessionsUseCase(gh<_i708.AiRepository>()),
+    );
+    gh.factory<_i94.GetCoverLetterUseCase>(
+      () => _i94.GetCoverLetterUseCase(gh<_i708.AiRepository>()),
+    );
+    gh.factory<_i395.GetCoverLettersUseCase>(
+      () => _i395.GetCoverLettersUseCase(gh<_i708.AiRepository>()),
     );
     gh.factory<_i611.AnalyzeJobUseCase>(
       () => _i611.AnalyzeJobUseCase(gh<_i708.AiRepository>()),
@@ -249,19 +271,29 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i517.GetStatsUseCase>(
       () => _i517.GetStatsUseCase(gh<_i989.DashboardRepository>()),
     );
+    gh.factory<_i638.CoverLetterBloc>(
+      () => _i638.CoverLetterBloc(
+        gh<_i860.GenerateCoverLetterUseCase>(),
+        gh<_i94.GetCoverLetterUseCase>(),
+        gh<_i395.GetCoverLettersUseCase>(),
+      ),
+    );
     gh.lazySingleton<_i498.AuthRepository>(
       () => _i70.AuthRepositoryImpl(
         gh<_i1014.AuthRemoteDataSource>(),
         gh<_i73.AuthLocalDataSource>(),
       ),
     );
-    gh.factory<_i365.JobBloc>(
-      () => _i365.JobBloc(
-        getJobsUseCase: gh<_i817.GetJobsUseCase>(),
-        getJobUseCase: gh<_i130.GetJobUseCase>(),
-        createJobUseCase: gh<_i612.CreateJobUseCase>(),
-        updateJobUseCase: gh<_i795.UpdateJobUseCase>(),
-        deleteJobUseCase: gh<_i433.DeleteJobUseCase>(),
+    gh.factory<_i1027.GetTimelineDataUseCase>(
+      () => _i1027.GetTimelineDataUseCase(gh<_i1072.AnalyticsRepository>()),
+    );
+    gh.factory<_i274.GetPipelineAnalyticsUseCase>(
+      () => _i274.GetPipelineAnalyticsUseCase(gh<_i1072.AnalyticsRepository>()),
+    );
+    gh.factory<_i67.AnalyticsBloc>(
+      () => _i67.AnalyticsBloc(
+        gh<_i274.GetPipelineAnalyticsUseCase>(),
+        gh<_i1027.GetTimelineDataUseCase>(),
       ),
     );
     gh.factory<_i514.DashboardBloc>(
@@ -276,42 +308,21 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i1.LogoutUseCase>(
       () => _i1.LogoutUseCase(gh<_i498.AuthRepository>()),
     );
+    gh.factory<_i365.JobBloc>(
+      () => _i365.JobBloc(
+        getJobsUseCase: gh<_i817.GetJobsUseCase>(),
+        getJobUseCase: gh<_i130.GetJobUseCase>(),
+        createJobUseCase: gh<_i612.CreateJobUseCase>(),
+        updateJobUseCase: gh<_i795.UpdateJobUseCase>(),
+        deleteJobUseCase: gh<_i433.DeleteJobUseCase>(),
+        jobRepository: gh<_i92.JobRepository>(),
+      ),
+    );
     gh.factory<_i653.AuthBloc>(
       () => _i653.AuthBloc(
         gh<_i691.LoginUseCase>(),
         gh<_i599.RegisterUseCase>(),
         gh<_i1.LogoutUseCase>(),
-      ),
-    );
-    gh.lazySingleton<_iARI.AnalyticsRepository>(
-      () => _iAR.AnalyticsRepositoryImpl(gh<_i165.DashboardRemoteDataSource>()),
-    );
-    gh.factory<_iGPA.GetPipelineAnalyticsUseCase>(
-      () => _iGPA.GetPipelineAnalyticsUseCase(gh<_iARI.AnalyticsRepository>()),
-    );
-    gh.factory<_iGTD.GetTimelineDataUseCase>(
-      () => _iGTD.GetTimelineDataUseCase(gh<_iARI.AnalyticsRepository>()),
-    );
-    gh.factory<_iGCL.GenerateCoverLetterUseCase>(
-      () => _iGCL.GenerateCoverLetterUseCase(gh<_i708.AiRepository>()),
-    );
-    gh.factory<_iGCOL.GetCoverLetterUseCase>(
-      () => _iGCOL.GetCoverLetterUseCase(gh<_i708.AiRepository>()),
-    );
-    gh.factory<_iGCOS.GetCoverLettersUseCase>(
-      () => _iGCOS.GetCoverLettersUseCase(gh<_i708.AiRepository>()),
-    );
-    gh.factory<_iAB.AnalyticsBloc>(
-      () => _iAB.AnalyticsBloc(
-        gh<_iGPA.GetPipelineAnalyticsUseCase>(),
-        gh<_iGTD.GetTimelineDataUseCase>(),
-      ),
-    );
-    gh.factory<_iCLB.CoverLetterBloc>(
-      () => _iCLB.CoverLetterBloc(
-        gh<_iGCL.GenerateCoverLetterUseCase>(),
-        gh<_iGCOL.GetCoverLetterUseCase>(),
-        gh<_iGCOS.GetCoverLettersUseCase>(),
       ),
     );
     return this;

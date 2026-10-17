@@ -21,7 +21,10 @@ mixin _$AuthState {
   TResult when<TResult extends Object?>({
     required TResult Function() authInitial,
     required TResult Function() authLoading,
-    required TResult Function(User user) authenticated,
+    required TResult Function(User user, bool isSessionExpiringSoon)
+    authenticated,
+    required TResult Function(User user, String pendingAction)
+    partiallyAuthenticated,
     required TResult Function(String? message) unauthenticated,
     required TResult Function(String message) authError,
   }) => throw _privateConstructorUsedError;
@@ -29,7 +32,8 @@ mixin _$AuthState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? authInitial,
     TResult? Function()? authLoading,
-    TResult? Function(User user)? authenticated,
+    TResult? Function(User user, bool isSessionExpiringSoon)? authenticated,
+    TResult? Function(User user, String pendingAction)? partiallyAuthenticated,
     TResult? Function(String? message)? unauthenticated,
     TResult? Function(String message)? authError,
   }) => throw _privateConstructorUsedError;
@@ -37,7 +41,8 @@ mixin _$AuthState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? authInitial,
     TResult Function()? authLoading,
-    TResult Function(User user)? authenticated,
+    TResult Function(User user, bool isSessionExpiringSoon)? authenticated,
+    TResult Function(User user, String pendingAction)? partiallyAuthenticated,
     TResult Function(String? message)? unauthenticated,
     TResult Function(String message)? authError,
     required TResult orElse(),
@@ -47,6 +52,8 @@ mixin _$AuthState {
     required TResult Function(AuthInitial value) authInitial,
     required TResult Function(AuthLoading value) authLoading,
     required TResult Function(Authenticated value) authenticated,
+    required TResult Function(PartiallyAuthenticated value)
+    partiallyAuthenticated,
     required TResult Function(Unauthenticated value) unauthenticated,
     required TResult Function(AuthError value) authError,
   }) => throw _privateConstructorUsedError;
@@ -55,6 +62,7 @@ mixin _$AuthState {
     TResult? Function(AuthInitial value)? authInitial,
     TResult? Function(AuthLoading value)? authLoading,
     TResult? Function(Authenticated value)? authenticated,
+    TResult? Function(PartiallyAuthenticated value)? partiallyAuthenticated,
     TResult? Function(Unauthenticated value)? unauthenticated,
     TResult? Function(AuthError value)? authError,
   }) => throw _privateConstructorUsedError;
@@ -63,6 +71,7 @@ mixin _$AuthState {
     TResult Function(AuthInitial value)? authInitial,
     TResult Function(AuthLoading value)? authLoading,
     TResult Function(Authenticated value)? authenticated,
+    TResult Function(PartiallyAuthenticated value)? partiallyAuthenticated,
     TResult Function(Unauthenticated value)? unauthenticated,
     TResult Function(AuthError value)? authError,
     required TResult orElse(),
@@ -134,7 +143,10 @@ class _$AuthInitialImpl implements AuthInitial {
   TResult when<TResult extends Object?>({
     required TResult Function() authInitial,
     required TResult Function() authLoading,
-    required TResult Function(User user) authenticated,
+    required TResult Function(User user, bool isSessionExpiringSoon)
+    authenticated,
+    required TResult Function(User user, String pendingAction)
+    partiallyAuthenticated,
     required TResult Function(String? message) unauthenticated,
     required TResult Function(String message) authError,
   }) {
@@ -146,7 +158,8 @@ class _$AuthInitialImpl implements AuthInitial {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? authInitial,
     TResult? Function()? authLoading,
-    TResult? Function(User user)? authenticated,
+    TResult? Function(User user, bool isSessionExpiringSoon)? authenticated,
+    TResult? Function(User user, String pendingAction)? partiallyAuthenticated,
     TResult? Function(String? message)? unauthenticated,
     TResult? Function(String message)? authError,
   }) {
@@ -158,7 +171,8 @@ class _$AuthInitialImpl implements AuthInitial {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? authInitial,
     TResult Function()? authLoading,
-    TResult Function(User user)? authenticated,
+    TResult Function(User user, bool isSessionExpiringSoon)? authenticated,
+    TResult Function(User user, String pendingAction)? partiallyAuthenticated,
     TResult Function(String? message)? unauthenticated,
     TResult Function(String message)? authError,
     required TResult orElse(),
@@ -175,6 +189,8 @@ class _$AuthInitialImpl implements AuthInitial {
     required TResult Function(AuthInitial value) authInitial,
     required TResult Function(AuthLoading value) authLoading,
     required TResult Function(Authenticated value) authenticated,
+    required TResult Function(PartiallyAuthenticated value)
+    partiallyAuthenticated,
     required TResult Function(Unauthenticated value) unauthenticated,
     required TResult Function(AuthError value) authError,
   }) {
@@ -187,6 +203,7 @@ class _$AuthInitialImpl implements AuthInitial {
     TResult? Function(AuthInitial value)? authInitial,
     TResult? Function(AuthLoading value)? authLoading,
     TResult? Function(Authenticated value)? authenticated,
+    TResult? Function(PartiallyAuthenticated value)? partiallyAuthenticated,
     TResult? Function(Unauthenticated value)? unauthenticated,
     TResult? Function(AuthError value)? authError,
   }) {
@@ -199,6 +216,7 @@ class _$AuthInitialImpl implements AuthInitial {
     TResult Function(AuthInitial value)? authInitial,
     TResult Function(AuthLoading value)? authLoading,
     TResult Function(Authenticated value)? authenticated,
+    TResult Function(PartiallyAuthenticated value)? partiallyAuthenticated,
     TResult Function(Unauthenticated value)? unauthenticated,
     TResult Function(AuthError value)? authError,
     required TResult orElse(),
@@ -259,7 +277,10 @@ class _$AuthLoadingImpl implements AuthLoading {
   TResult when<TResult extends Object?>({
     required TResult Function() authInitial,
     required TResult Function() authLoading,
-    required TResult Function(User user) authenticated,
+    required TResult Function(User user, bool isSessionExpiringSoon)
+    authenticated,
+    required TResult Function(User user, String pendingAction)
+    partiallyAuthenticated,
     required TResult Function(String? message) unauthenticated,
     required TResult Function(String message) authError,
   }) {
@@ -271,7 +292,8 @@ class _$AuthLoadingImpl implements AuthLoading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? authInitial,
     TResult? Function()? authLoading,
-    TResult? Function(User user)? authenticated,
+    TResult? Function(User user, bool isSessionExpiringSoon)? authenticated,
+    TResult? Function(User user, String pendingAction)? partiallyAuthenticated,
     TResult? Function(String? message)? unauthenticated,
     TResult? Function(String message)? authError,
   }) {
@@ -283,7 +305,8 @@ class _$AuthLoadingImpl implements AuthLoading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? authInitial,
     TResult Function()? authLoading,
-    TResult Function(User user)? authenticated,
+    TResult Function(User user, bool isSessionExpiringSoon)? authenticated,
+    TResult Function(User user, String pendingAction)? partiallyAuthenticated,
     TResult Function(String? message)? unauthenticated,
     TResult Function(String message)? authError,
     required TResult orElse(),
@@ -300,6 +323,8 @@ class _$AuthLoadingImpl implements AuthLoading {
     required TResult Function(AuthInitial value) authInitial,
     required TResult Function(AuthLoading value) authLoading,
     required TResult Function(Authenticated value) authenticated,
+    required TResult Function(PartiallyAuthenticated value)
+    partiallyAuthenticated,
     required TResult Function(Unauthenticated value) unauthenticated,
     required TResult Function(AuthError value) authError,
   }) {
@@ -312,6 +337,7 @@ class _$AuthLoadingImpl implements AuthLoading {
     TResult? Function(AuthInitial value)? authInitial,
     TResult? Function(AuthLoading value)? authLoading,
     TResult? Function(Authenticated value)? authenticated,
+    TResult? Function(PartiallyAuthenticated value)? partiallyAuthenticated,
     TResult? Function(Unauthenticated value)? unauthenticated,
     TResult? Function(AuthError value)? authError,
   }) {
@@ -324,6 +350,7 @@ class _$AuthLoadingImpl implements AuthLoading {
     TResult Function(AuthInitial value)? authInitial,
     TResult Function(AuthLoading value)? authLoading,
     TResult Function(Authenticated value)? authenticated,
+    TResult Function(PartiallyAuthenticated value)? partiallyAuthenticated,
     TResult Function(Unauthenticated value)? unauthenticated,
     TResult Function(AuthError value)? authError,
     required TResult orElse(),
@@ -346,7 +373,7 @@ abstract class _$$AuthenticatedImplCopyWith<$Res> {
     $Res Function(_$AuthenticatedImpl) then,
   ) = __$$AuthenticatedImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({User user});
+  $Res call({User user, bool isSessionExpiringSoon});
 
   $UserCopyWith<$Res> get user;
 }
@@ -364,13 +391,17 @@ class __$$AuthenticatedImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? user = null}) {
+  $Res call({Object? user = null, Object? isSessionExpiringSoon = null}) {
     return _then(
       _$AuthenticatedImpl(
         user: null == user
             ? _value.user
             : user // ignore: cast_nullable_to_non_nullable
                   as User,
+        isSessionExpiringSoon: null == isSessionExpiringSoon
+            ? _value.isSessionExpiringSoon
+            : isSessionExpiringSoon // ignore: cast_nullable_to_non_nullable
+                  as bool,
       ),
     );
   }
@@ -389,14 +420,20 @@ class __$$AuthenticatedImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$AuthenticatedImpl implements Authenticated {
-  const _$AuthenticatedImpl({required this.user});
+  const _$AuthenticatedImpl({
+    required this.user,
+    this.isSessionExpiringSoon = false,
+  });
 
   @override
   final User user;
+  @override
+  @JsonKey()
+  final bool isSessionExpiringSoon;
 
   @override
   String toString() {
-    return 'AuthState.authenticated(user: $user)';
+    return 'AuthState.authenticated(user: $user, isSessionExpiringSoon: $isSessionExpiringSoon)';
   }
 
   @override
@@ -404,11 +441,13 @@ class _$AuthenticatedImpl implements Authenticated {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$AuthenticatedImpl &&
-            (identical(other.user, user) || other.user == user));
+            (identical(other.user, user) || other.user == user) &&
+            (identical(other.isSessionExpiringSoon, isSessionExpiringSoon) ||
+                other.isSessionExpiringSoon == isSessionExpiringSoon));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, user);
+  int get hashCode => Object.hash(runtimeType, user, isSessionExpiringSoon);
 
   /// Create a copy of AuthState
   /// with the given fields replaced by the non-null parameter values.
@@ -423,11 +462,14 @@ class _$AuthenticatedImpl implements Authenticated {
   TResult when<TResult extends Object?>({
     required TResult Function() authInitial,
     required TResult Function() authLoading,
-    required TResult Function(User user) authenticated,
+    required TResult Function(User user, bool isSessionExpiringSoon)
+    authenticated,
+    required TResult Function(User user, String pendingAction)
+    partiallyAuthenticated,
     required TResult Function(String? message) unauthenticated,
     required TResult Function(String message) authError,
   }) {
-    return authenticated(user);
+    return authenticated(user, isSessionExpiringSoon);
   }
 
   @override
@@ -435,11 +477,12 @@ class _$AuthenticatedImpl implements Authenticated {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? authInitial,
     TResult? Function()? authLoading,
-    TResult? Function(User user)? authenticated,
+    TResult? Function(User user, bool isSessionExpiringSoon)? authenticated,
+    TResult? Function(User user, String pendingAction)? partiallyAuthenticated,
     TResult? Function(String? message)? unauthenticated,
     TResult? Function(String message)? authError,
   }) {
-    return authenticated?.call(user);
+    return authenticated?.call(user, isSessionExpiringSoon);
   }
 
   @override
@@ -447,13 +490,14 @@ class _$AuthenticatedImpl implements Authenticated {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? authInitial,
     TResult Function()? authLoading,
-    TResult Function(User user)? authenticated,
+    TResult Function(User user, bool isSessionExpiringSoon)? authenticated,
+    TResult Function(User user, String pendingAction)? partiallyAuthenticated,
     TResult Function(String? message)? unauthenticated,
     TResult Function(String message)? authError,
     required TResult orElse(),
   }) {
     if (authenticated != null) {
-      return authenticated(user);
+      return authenticated(user, isSessionExpiringSoon);
     }
     return orElse();
   }
@@ -464,6 +508,8 @@ class _$AuthenticatedImpl implements Authenticated {
     required TResult Function(AuthInitial value) authInitial,
     required TResult Function(AuthLoading value) authLoading,
     required TResult Function(Authenticated value) authenticated,
+    required TResult Function(PartiallyAuthenticated value)
+    partiallyAuthenticated,
     required TResult Function(Unauthenticated value) unauthenticated,
     required TResult Function(AuthError value) authError,
   }) {
@@ -476,6 +522,7 @@ class _$AuthenticatedImpl implements Authenticated {
     TResult? Function(AuthInitial value)? authInitial,
     TResult? Function(AuthLoading value)? authLoading,
     TResult? Function(Authenticated value)? authenticated,
+    TResult? Function(PartiallyAuthenticated value)? partiallyAuthenticated,
     TResult? Function(Unauthenticated value)? unauthenticated,
     TResult? Function(AuthError value)? authError,
   }) {
@@ -488,6 +535,7 @@ class _$AuthenticatedImpl implements Authenticated {
     TResult Function(AuthInitial value)? authInitial,
     TResult Function(AuthLoading value)? authLoading,
     TResult Function(Authenticated value)? authenticated,
+    TResult Function(PartiallyAuthenticated value)? partiallyAuthenticated,
     TResult Function(Unauthenticated value)? unauthenticated,
     TResult Function(AuthError value)? authError,
     required TResult orElse(),
@@ -500,15 +548,219 @@ class _$AuthenticatedImpl implements Authenticated {
 }
 
 abstract class Authenticated implements AuthState {
-  const factory Authenticated({required final User user}) = _$AuthenticatedImpl;
+  const factory Authenticated({
+    required final User user,
+    final bool isSessionExpiringSoon,
+  }) = _$AuthenticatedImpl;
 
   User get user;
+  bool get isSessionExpiringSoon;
 
   /// Create a copy of AuthState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AuthenticatedImplCopyWith<_$AuthenticatedImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$PartiallyAuthenticatedImplCopyWith<$Res> {
+  factory _$$PartiallyAuthenticatedImplCopyWith(
+    _$PartiallyAuthenticatedImpl value,
+    $Res Function(_$PartiallyAuthenticatedImpl) then,
+  ) = __$$PartiallyAuthenticatedImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({User user, String pendingAction});
+
+  $UserCopyWith<$Res> get user;
+}
+
+/// @nodoc
+class __$$PartiallyAuthenticatedImplCopyWithImpl<$Res>
+    extends _$AuthStateCopyWithImpl<$Res, _$PartiallyAuthenticatedImpl>
+    implements _$$PartiallyAuthenticatedImplCopyWith<$Res> {
+  __$$PartiallyAuthenticatedImplCopyWithImpl(
+    _$PartiallyAuthenticatedImpl _value,
+    $Res Function(_$PartiallyAuthenticatedImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of AuthState
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? user = null, Object? pendingAction = null}) {
+    return _then(
+      _$PartiallyAuthenticatedImpl(
+        user: null == user
+            ? _value.user
+            : user // ignore: cast_nullable_to_non_nullable
+                  as User,
+        pendingAction: null == pendingAction
+            ? _value.pendingAction
+            : pendingAction // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
+  }
+
+  /// Create a copy of AuthState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $UserCopyWith<$Res> get user {
+    return $UserCopyWith<$Res>(_value.user, (value) {
+      return _then(_value.copyWith(user: value));
+    });
+  }
+}
+
+/// @nodoc
+
+class _$PartiallyAuthenticatedImpl implements PartiallyAuthenticated {
+  const _$PartiallyAuthenticatedImpl({
+    required this.user,
+    required this.pendingAction,
+  });
+
+  @override
+  final User user;
+  @override
+  final String pendingAction;
+
+  @override
+  String toString() {
+    return 'AuthState.partiallyAuthenticated(user: $user, pendingAction: $pendingAction)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$PartiallyAuthenticatedImpl &&
+            (identical(other.user, user) || other.user == user) &&
+            (identical(other.pendingAction, pendingAction) ||
+                other.pendingAction == pendingAction));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, user, pendingAction);
+
+  /// Create a copy of AuthState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$PartiallyAuthenticatedImplCopyWith<_$PartiallyAuthenticatedImpl>
+  get copyWith =>
+      __$$PartiallyAuthenticatedImplCopyWithImpl<_$PartiallyAuthenticatedImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() authInitial,
+    required TResult Function() authLoading,
+    required TResult Function(User user, bool isSessionExpiringSoon)
+    authenticated,
+    required TResult Function(User user, String pendingAction)
+    partiallyAuthenticated,
+    required TResult Function(String? message) unauthenticated,
+    required TResult Function(String message) authError,
+  }) {
+    return partiallyAuthenticated(user, pendingAction);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? authInitial,
+    TResult? Function()? authLoading,
+    TResult? Function(User user, bool isSessionExpiringSoon)? authenticated,
+    TResult? Function(User user, String pendingAction)? partiallyAuthenticated,
+    TResult? Function(String? message)? unauthenticated,
+    TResult? Function(String message)? authError,
+  }) {
+    return partiallyAuthenticated?.call(user, pendingAction);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? authInitial,
+    TResult Function()? authLoading,
+    TResult Function(User user, bool isSessionExpiringSoon)? authenticated,
+    TResult Function(User user, String pendingAction)? partiallyAuthenticated,
+    TResult Function(String? message)? unauthenticated,
+    TResult Function(String message)? authError,
+    required TResult orElse(),
+  }) {
+    if (partiallyAuthenticated != null) {
+      return partiallyAuthenticated(user, pendingAction);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(AuthInitial value) authInitial,
+    required TResult Function(AuthLoading value) authLoading,
+    required TResult Function(Authenticated value) authenticated,
+    required TResult Function(PartiallyAuthenticated value)
+    partiallyAuthenticated,
+    required TResult Function(Unauthenticated value) unauthenticated,
+    required TResult Function(AuthError value) authError,
+  }) {
+    return partiallyAuthenticated(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(AuthInitial value)? authInitial,
+    TResult? Function(AuthLoading value)? authLoading,
+    TResult? Function(Authenticated value)? authenticated,
+    TResult? Function(PartiallyAuthenticated value)? partiallyAuthenticated,
+    TResult? Function(Unauthenticated value)? unauthenticated,
+    TResult? Function(AuthError value)? authError,
+  }) {
+    return partiallyAuthenticated?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(AuthInitial value)? authInitial,
+    TResult Function(AuthLoading value)? authLoading,
+    TResult Function(Authenticated value)? authenticated,
+    TResult Function(PartiallyAuthenticated value)? partiallyAuthenticated,
+    TResult Function(Unauthenticated value)? unauthenticated,
+    TResult Function(AuthError value)? authError,
+    required TResult orElse(),
+  }) {
+    if (partiallyAuthenticated != null) {
+      return partiallyAuthenticated(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class PartiallyAuthenticated implements AuthState {
+  const factory PartiallyAuthenticated({
+    required final User user,
+    required final String pendingAction,
+  }) = _$PartiallyAuthenticatedImpl;
+
+  User get user;
+  String get pendingAction;
+
+  /// Create a copy of AuthState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$PartiallyAuthenticatedImplCopyWith<_$PartiallyAuthenticatedImpl>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -586,7 +838,10 @@ class _$UnauthenticatedImpl implements Unauthenticated {
   TResult when<TResult extends Object?>({
     required TResult Function() authInitial,
     required TResult Function() authLoading,
-    required TResult Function(User user) authenticated,
+    required TResult Function(User user, bool isSessionExpiringSoon)
+    authenticated,
+    required TResult Function(User user, String pendingAction)
+    partiallyAuthenticated,
     required TResult Function(String? message) unauthenticated,
     required TResult Function(String message) authError,
   }) {
@@ -598,7 +853,8 @@ class _$UnauthenticatedImpl implements Unauthenticated {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? authInitial,
     TResult? Function()? authLoading,
-    TResult? Function(User user)? authenticated,
+    TResult? Function(User user, bool isSessionExpiringSoon)? authenticated,
+    TResult? Function(User user, String pendingAction)? partiallyAuthenticated,
     TResult? Function(String? message)? unauthenticated,
     TResult? Function(String message)? authError,
   }) {
@@ -610,7 +866,8 @@ class _$UnauthenticatedImpl implements Unauthenticated {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? authInitial,
     TResult Function()? authLoading,
-    TResult Function(User user)? authenticated,
+    TResult Function(User user, bool isSessionExpiringSoon)? authenticated,
+    TResult Function(User user, String pendingAction)? partiallyAuthenticated,
     TResult Function(String? message)? unauthenticated,
     TResult Function(String message)? authError,
     required TResult orElse(),
@@ -627,6 +884,8 @@ class _$UnauthenticatedImpl implements Unauthenticated {
     required TResult Function(AuthInitial value) authInitial,
     required TResult Function(AuthLoading value) authLoading,
     required TResult Function(Authenticated value) authenticated,
+    required TResult Function(PartiallyAuthenticated value)
+    partiallyAuthenticated,
     required TResult Function(Unauthenticated value) unauthenticated,
     required TResult Function(AuthError value) authError,
   }) {
@@ -639,6 +898,7 @@ class _$UnauthenticatedImpl implements Unauthenticated {
     TResult? Function(AuthInitial value)? authInitial,
     TResult? Function(AuthLoading value)? authLoading,
     TResult? Function(Authenticated value)? authenticated,
+    TResult? Function(PartiallyAuthenticated value)? partiallyAuthenticated,
     TResult? Function(Unauthenticated value)? unauthenticated,
     TResult? Function(AuthError value)? authError,
   }) {
@@ -651,6 +911,7 @@ class _$UnauthenticatedImpl implements Unauthenticated {
     TResult Function(AuthInitial value)? authInitial,
     TResult Function(AuthLoading value)? authLoading,
     TResult Function(Authenticated value)? authenticated,
+    TResult Function(PartiallyAuthenticated value)? partiallyAuthenticated,
     TResult Function(Unauthenticated value)? unauthenticated,
     TResult Function(AuthError value)? authError,
     required TResult orElse(),
@@ -747,7 +1008,10 @@ class _$AuthErrorImpl implements AuthError {
   TResult when<TResult extends Object?>({
     required TResult Function() authInitial,
     required TResult Function() authLoading,
-    required TResult Function(User user) authenticated,
+    required TResult Function(User user, bool isSessionExpiringSoon)
+    authenticated,
+    required TResult Function(User user, String pendingAction)
+    partiallyAuthenticated,
     required TResult Function(String? message) unauthenticated,
     required TResult Function(String message) authError,
   }) {
@@ -759,7 +1023,8 @@ class _$AuthErrorImpl implements AuthError {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? authInitial,
     TResult? Function()? authLoading,
-    TResult? Function(User user)? authenticated,
+    TResult? Function(User user, bool isSessionExpiringSoon)? authenticated,
+    TResult? Function(User user, String pendingAction)? partiallyAuthenticated,
     TResult? Function(String? message)? unauthenticated,
     TResult? Function(String message)? authError,
   }) {
@@ -771,7 +1036,8 @@ class _$AuthErrorImpl implements AuthError {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? authInitial,
     TResult Function()? authLoading,
-    TResult Function(User user)? authenticated,
+    TResult Function(User user, bool isSessionExpiringSoon)? authenticated,
+    TResult Function(User user, String pendingAction)? partiallyAuthenticated,
     TResult Function(String? message)? unauthenticated,
     TResult Function(String message)? authError,
     required TResult orElse(),
@@ -788,6 +1054,8 @@ class _$AuthErrorImpl implements AuthError {
     required TResult Function(AuthInitial value) authInitial,
     required TResult Function(AuthLoading value) authLoading,
     required TResult Function(Authenticated value) authenticated,
+    required TResult Function(PartiallyAuthenticated value)
+    partiallyAuthenticated,
     required TResult Function(Unauthenticated value) unauthenticated,
     required TResult Function(AuthError value) authError,
   }) {
@@ -800,6 +1068,7 @@ class _$AuthErrorImpl implements AuthError {
     TResult? Function(AuthInitial value)? authInitial,
     TResult? Function(AuthLoading value)? authLoading,
     TResult? Function(Authenticated value)? authenticated,
+    TResult? Function(PartiallyAuthenticated value)? partiallyAuthenticated,
     TResult? Function(Unauthenticated value)? unauthenticated,
     TResult? Function(AuthError value)? authError,
   }) {
@@ -812,6 +1081,7 @@ class _$AuthErrorImpl implements AuthError {
     TResult Function(AuthInitial value)? authInitial,
     TResult Function(AuthLoading value)? authLoading,
     TResult Function(Authenticated value)? authenticated,
+    TResult Function(PartiallyAuthenticated value)? partiallyAuthenticated,
     TResult Function(Unauthenticated value)? unauthenticated,
     TResult Function(AuthError value)? authError,
     required TResult orElse(),

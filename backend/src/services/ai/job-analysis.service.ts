@@ -5,6 +5,7 @@ import { logger } from "../../utils/logger";
 import { jobAnalysisSchema } from "./schemas/job-analysis.schema";
 import { buildJobAnalysisPrompt } from "./prompts/job-analysis.prompt";
 import { readTextFileSafely } from "../../utils/fs";
+import { requireOwnedJob } from "../../utils/job";
 import { z } from "zod";
 
 /**
@@ -15,14 +16,7 @@ export class JobAnalysisService {
     let resumeText: string | undefined;
 
     if (jobId) {
-      const job = await prisma.jobApplication.findFirst({
-        where: { id: jobId, userId },
-        include: { resume: true },
-      });
-
-      if (!job) {
-        throw ApiError.notFound("Job application not found");
-      }
+      const job = await requireOwnedJob(userId, jobId, { resume: true });
 
       if (job.resume) {
         resumeText = await readTextFileSafely(

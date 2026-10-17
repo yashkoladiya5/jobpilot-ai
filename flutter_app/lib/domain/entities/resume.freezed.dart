@@ -204,7 +204,7 @@ class __$$ResumeImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$ResumeImpl implements _Resume {
+class _$ResumeImpl extends _Resume {
   const _$ResumeImpl({
     required this.id,
     required this.userId,
@@ -214,7 +214,7 @@ class _$ResumeImpl implements _Resume {
     this.mimeType,
     this.isPrimary,
     this.createdAt,
-  });
+  }) : super._();
 
   factory _$ResumeImpl.fromJson(Map<String, dynamic> json) =>
       _$$ResumeImplFromJson(json);
@@ -290,7 +290,7 @@ class _$ResumeImpl implements _Resume {
   }
 }
 
-abstract class _Resume implements Resume {
+abstract class _Resume extends Resume {
   const factory _Resume({
     required final String id,
     required final String userId,
@@ -301,6 +301,7 @@ abstract class _Resume implements Resume {
     final bool? isPrimary,
     final DateTime? createdAt,
   }) = _$ResumeImpl;
+  const _Resume._() : super._();
 
   factory _Resume.fromJson(Map<String, dynamic> json) = _$ResumeImpl.fromJson;
 
