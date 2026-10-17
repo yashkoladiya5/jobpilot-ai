@@ -15,6 +15,7 @@ import { getPipelineAnalytics, getTimelineData, getSkillMatchAnalytics, getRejec
   getApplicationTrendDirection,
   getApplicationVelocityStatus,
   getApplicationTimeOfDayStats,
+  getApplicationStreakReport,
 } from "../controllers/analytics.controller";
 
 /**
@@ -68,5 +69,6 @@ router.get("/strategy", getApplicationStrategy);
 router.get("/trend-direction", getApplicationTrendDirection);
 router.get("/velocity-status", getApplicationVelocityStatus);
 router.get("/time-of-day-stats", getApplicationTimeOfDayStats);
+router.get("/streak-report", getApplicationStreakReport);
 
 export default router;

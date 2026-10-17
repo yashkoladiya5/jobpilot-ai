@@ -1632,4 +1632,60 @@ export class AnalyticsService {
       calculatedAt: new Date().toISOString()
     };
   }
+
+  async getApplicationStreakReport(userId: string) {
+    const applications = await prisma.jobApplication.findMany({
+      where: { userId },
+      select: { appliedDate: true },
+      orderBy: { appliedDate: "asc" },
+    });
+
+    const appliedDays = Array.from(new Set(applications.map((a) => dateKey(a.appliedDate)))).sort();
+
+    let currentStreak = 0;
+    let longestStreak = 0;
+    let run = 0;
+    let previous: Date | null = null;
+
+    for (const day of appliedDays) {
+      const parsed = new Date(`${day}T00:00:00.000Z`);
+      if (previous && Math.round((parsed.getTime() - previous.getTime()) / MS_PER_DAY) === 1) {
+        run += 1;
+      } else {
+        run = 1;
+      }
+      longestStreak = Math.max(longestStreak, run);
+      previous = parsed;
+    }
+
+    const today = dateKey(new Date());
+    const yesterday = dateKey(daysAgo(1));
+    if (appliedDays.length > 0) {
+      const last = appliedDays[appliedDays.length - 1];
+      if (last === today || last === yesterday) {
+        // Walk backwards from the last applied day to compute the live streak.
+        const daySet = new Set(appliedDays);
+        let cursor = new Date(`${last}T00:00:00.000Z`);
+        while (daySet.has(dateKey(cursor))) {
+          currentStreak += 1;
+          cursor = new Date(cursor.getTime() - MS_PER_DAY);
+        }
+      }
+    }
+
+    return {
+      userId,
+      totalApplications: applications.length,
+      distinctApplicationDays: appliedDays.length,
+      currentStreak,
+      longestStreak,
+      message:
+        currentStreak > 0
+          ? `You are on a ${currentStreak}-day application streak (best: ${longestStreak}).`
+          : appliedDays.length > 0
+            ? `No active streak — your best run was ${longestStreak} day(s). Apply today to start a new one.`
+            : "Apply to your first job to start a streak.",
+      generatedAt: new Date().toISOString()
+    };
+  }
 }

@@ -464,3 +464,15 @@ export const getApplicationTimeOfDayStats = asyncHandler(async (req: Request, re
     data: result 
   });
 });
+
+export const getApplicationStreakReport = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+
+  const result = await analyticsService.getApplicationStreakReport(userId);
+
+  res.status(200).json({
+    success: true,
+    message: "Application streak report generated successfully",
+    data: result
+  });
+});
