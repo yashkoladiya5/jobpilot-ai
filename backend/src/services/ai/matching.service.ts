@@ -128,6 +128,55 @@ export class MatchingService {
         : 0
     }));
   }
+
+  async predictWorkStyleFit(userId: string, resumeId: string, companyValuesText: string) {
+    await requireOwnedResume(userId, resumeId);
+
+    if (!companyValuesText || companyValuesText.trim().length === 0) {
+      throw ApiError.badRequest("companyValuesText is required for work-style fit.");
+    }
+
+    const resume = await prisma.resume.findUnique({ where: { id: resumeId } });
+    const resumeText = await readTextFileOrThrow(resume!.filePath, "Resume file could not be read.");
+
+    const resumeLower = resumeText.toLowerCase();
+    const valuesLower = companyValuesText.toLowerCase();
+
+    const dimensions: { name: string; signals: string[] }[] = [
+      { name: "autonomy", signals: ["independent", "self-directed", "ownership", "solo", "自主"] },
+      { name: "collaboration", signals: ["team", "collaborat", "cross-functional", "pair"] },
+      { name: "mentorship", signals: ["mentor", "coach", "taught", "training", "onboarded"] },
+      { name: "speed", signals: ["fast-paced", "agile", "ship", "deadline", "startup"] },
+      { name: "depth", signals: ["research", "deep dive", "architect", "patent", "publication"] },
+      { name: "remote-first", signals: ["remote", "distributed", "async", "timezone"] },
+    ];
+
+    const scores = dimensions.map((dim) => {
+      const inResume = dim.signals.filter((s) => resumeLower.includes(s)).length;
+      const inValues = dim.signals.filter((s) => valuesLower.includes(s)).length;
+      // Fit: both sides mention the dimension; gap: only one side does.
+      let verdict: "aligned" | "unknown" | "gap";
+      if (inResume > 0 && inValues > 0) verdict = "aligned";
+      else if (inResume === 0 && inValues > 0) verdict = "gap";
+      else verdict = "unknown";
+      return { dimension: dim.name, resumeSignals: inResume, valuesSignals: inValues, verdict };
+    });
+
+    const aligned = scores.filter((s) => s.verdict === "aligned").length;
+    const gaps = scores.filter((s) => s.verdict === "gap");
+    const fitPercent = Math.round((aligned / dimensions.length) * 100);
+
+    return {
+      resumeId,
+      fitPercent,
+      alignedDimensions: aligned,
+      scores,
+      message: gaps.length === 0
+        ? `Strong work-style overlap — ${aligned}/${dimensions.length} dimensions align.`
+        : `Company emphasizes ${gaps.map((g) => g.dimension).join(", ")} which your resume does not evidence yet.`,
+      predictedAt: new Date().toISOString()
+    };
+  }
 }
 
 export const matchingService = new MatchingService();

@@ -39,6 +39,11 @@ import {
   extractJobKeywords,
   detectJobRedFlags,
   generateElevatorPitch,
+  adviseAnswerLength,
+  generateSalaryNegotiationPlan,
+  predictWorkStyleFit,
+  rewriteWeakVerbs,
+  scoreRemoteFriendliness,
   rewriteCoverLetterTone,
   highlightCoverLetterKeywords,
   generateResignationLetter,
@@ -63,11 +68,13 @@ router.get("/resume/analyses/latest", getLatestResumeAnalysis);
 router.get("/resume/:resumeId/analysis", getResumeAnalysis);
 router.get("/resume/analyses", getResumeAnalyses);
 router.get("/resume/:resumeId/smart-summary", getSmartResumeSummary);
+router.get("/resume/:resumeId/weak-verbs", rewriteWeakVerbs);
 
 // Job analysis
 router.post("/job/analyze", analyzeJob);
 router.post("/job/extract-keywords", extractJobKeywords);
 router.post("/job/red-flags", detectJobRedFlags);
+router.post("/job/remote-friendliness", scoreRemoteFriendliness);
 router.get("/job/analysis/:analysisId", getJobAnalysis);
 router.get("/job/analyses", getJobAnalyses);
 router.delete("/job/analysis/:analysisId", deleteJobAnalysis);
@@ -82,6 +89,7 @@ router.get("/match/resume/:resumeId/top", getTopMatches);
 router.get("/match/recent", getRecentMatches);
 router.get("/match/:matchId", getMatchResult);
 router.get("/match/:matchId/details", getMatchDetails);
+router.post("/match/resume/:resumeId/work-style-fit", predictWorkStyleFit);
 
 // Feedback endpoints for AI improvements
 router.post("/resume/analyses/:analysisId/feedback", (_req, res) => {
@@ -109,11 +117,13 @@ router.post("/interview/job/:jobId/technical-assessment", generateMockTechnicalA
 router.post("/interview/job/:jobId/behavioral-assessment", generateMockBehavioralAssessment);
 router.post("/interview/job/:jobId/system-design-assessment", generateMockSystemDesignAssessment);
 router.post("/interview/job/:jobId/elevator-pitch", generateElevatorPitch);
+router.get("/interview/session/:sessionId/answer-length", adviseAnswerLength);
 
 // Career insights
 router.get("/career/insights", getCareerInsights);
 router.post("/career/insights/compute", computeCareerInsights);
 router.get("/career/insights/history", getCareerInsightsHistory);
 router.delete("/career/insights/history", deleteCareerInsightsHistory);
+router.post("/career/negotiation-plan", generateSalaryNegotiationPlan);
 
 export default router;

@@ -254,4 +254,67 @@ Format the output as a clean, ready-to-use email template.`;
       message: "Resignation letter generated successfully"
     };
   }
+
+  async scoreRemoteFriendliness(userId: string, jobDescription: string) {
+    if (!jobDescription || jobDescription.trim().length === 0) {
+      throw ApiError.badRequest("Job description is required to score remote friendliness.");
+    }
+
+    const text = jobDescription.toLowerCase();
+
+    const positiveSignals: Record<string, number> = {
+      "fully remote": 40,
+      "remote": 25,
+      "work from home": 20,
+      "wfh": 20,
+      "distributed team": 15,
+      "hybrid": 10,
+      "any location": 15,
+      "anywhere": 10,
+      "async": 5,
+      "timezone": 5,
+    };
+    const negativeSignals: Record<string, number> = {
+      "onsite": 30,
+      "on-site": 30,
+      "in-office": 25,
+      "in the office": 20,
+      "relocation": 20,
+      "must be located": 25,
+      "5 days a week": 15,
+      "three days": 10,
+    };
+
+    let raw = 0;
+    const matched: string[] = [];
+    for (const [signal, weight] of Object.entries(positiveSignals)) {
+      if (text.includes(signal)) {
+        raw += weight;
+        matched.push(signal);
+      }
+    }
+    const conflicts: string[] = [];
+    for (const [signal, weight] of Object.entries(negativeSignals)) {
+      if (text.includes(signal)) {
+        raw -= weight;
+        conflicts.push(signal);
+      }
+    }
+
+    const score = Math.max(0, Math.min(100, 30 + raw));
+    const label = score >= 75 ? "remote-friendly" : score >= 45 ? "hybrid" : "office-based";
+
+    return {
+      score,
+      label,
+      positiveSignalsFound: matched,
+      officeRequirementsFound: conflicts,
+      message: label === "remote-friendly"
+        ? "Listing reads as remote-friendly."
+        : label === "hybrid"
+          ? "Listing suggests a hybrid setup — expect some onsite time."
+          : "Listing leans onsite; confirm flexibility before applying.",
+      scoredAt: new Date().toISOString()
+    };
+  }
 }

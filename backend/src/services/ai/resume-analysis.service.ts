@@ -202,4 +202,52 @@ export class ResumeAnalysisService {
       suggestedUse: "Include this at the top of your LinkedIn profile or as your resume objective."
     };
   }
+
+  async rewriteWeakVerbs(userId: string, resumeId: string) {
+    const resume = await requireOwnedResume(userId, resumeId);
+    const text = await readTextFileSafely(
+      resume.filePath,
+      `[Binary file: ${resume.fileName} - text extraction not supported]`,
+    );
+    if (typeof text !== "string" || text.trim().length === 0) {
+      throw ApiError.badRequest("Resume text could not be read for verb analysis.");
+    }
+
+    const replacements: Record<string, string[]> = {
+      "responsible for": ["Owned", "Led", "Drove"],
+      "worked on": ["Built", "Delivered", "Shipped"],
+      "helped with": ["Contributed to", "Accelerated", "Supported"],
+      "assisted with": ["Partnered on", "Enabled", "Streamlined"],
+      "duties included": ["Focused on", "Covered"],
+      "in charge of": ["Directed", "Managed", "Oversaw"],
+      "tasked with": ["Assigned to", "Executed"],
+      "participated in": ["Drove", "Co-led", "Shaped"],
+    };
+
+    const lower = text.toLowerCase();
+    const found: { phrase: string; occurrences: number; suggestedVerbs: string[] }[] = [];
+    for (const [phrase, verbs] of Object.entries(replacements)) {
+      let count = 0;
+      let idx = lower.indexOf(phrase);
+      while (idx !== -1) {
+        count += 1;
+        idx = lower.indexOf(phrase, idx + phrase.length);
+      }
+      if (count > 0) {
+        found.push({ phrase, occurrences: count, suggestedVerbs: verbs });
+      }
+    }
+
+    const totalWeakUsage = found.reduce((sum, f) => sum + f.occurrences, 0);
+
+    return {
+      resumeId,
+      weakPhrasesFound: found,
+      totalWeakUsage,
+      message: found.length === 0
+        ? "No passive duty language detected — bullets already lead with strong verbs."
+        : `Found ${totalWeakUsage} passive phrase use(s); rewrite bullets to start with one of the suggested action verbs.`,
+      analyzedAt: new Date().toISOString()
+    };
+  }
 }

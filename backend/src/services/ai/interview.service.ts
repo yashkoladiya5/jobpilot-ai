@@ -628,6 +628,55 @@ export class InterviewService {
       ]
     };
   }
+
+  async adviseAnswerLength(userId: string, sessionId: string) {
+    await this.requireSession(userId, sessionId);
+
+    const questions = await prisma.interviewQuestion.findMany({
+      where: { sessionId },
+      orderBy: { orderIndex: "asc" },
+    });
+
+    const answered = questions.filter((q) => q.answer && q.answer.trim().length > 0);
+    if (answered.length === 0) {
+      throw ApiError.badRequest("Answer at least one question before requesting length advice.");
+    }
+
+    const countWords = (text: string) => text.trim().split(/\s+/).filter(Boolean).length;
+
+    const perAnswer = answered.map((q) => {
+      const words = countWords(q.answer as string);
+      const verdict = words < 40 ? "too-short" : words > 250 ? "too-long" : "good";
+      return {
+        questionId: q.id,
+        question: q.question,
+        wordCount: words,
+        verdict,
+        tip: verdict === "too-short"
+          ? "Expand with a concrete Situation, Task, Action, and Result."
+          : verdict === "too-long"
+            ? "Trim to the two strongest details — aim for roughly 60–90 seconds spoken."
+            : "Length works well for a behavioral answer."
+      };
+    });
+
+    const avgWords = Math.round(perAnswer.reduce((sum, a) => sum + a.wordCount, 0) / perAnswer.length);
+    const spokenSeconds = Math.round((avgWords / 150) * 60);
+    const issues = perAnswer.filter((a) => a.verdict !== "good").length;
+
+    return {
+      sessionId,
+      answeredQuestions: perAnswer.length,
+      averageWords: avgWords,
+      averageSpokenSeconds: spokenSeconds,
+      answersNeedingWork: issues,
+      perAnswer,
+      message: issues === 0
+        ? `All ${perAnswer.length} answers sit in the 40–250 word sweet spot.`
+        : `${issues} of ${perAnswer.length} answers are outside the recommended length range.`,
+      advisedAt: new Date().toISOString()
+    };
+  }
 }
 
 export const interviewService = new InterviewService();

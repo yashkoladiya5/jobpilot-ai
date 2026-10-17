@@ -3,6 +3,8 @@ import prisma from "../../config/prisma";
 import { Prisma } from "@prisma/client";
 import { clampNumber, percentOf } from "../../utils/math";
 import { daysAgo } from "../../utils/dates";
+import { ApiError } from "../../utils/ApiError";
+import { requireUser } from "../../utils/user";
 import { generateStructuredResponse } from "./gemini.client";
 import { buildCareerInsightsPrompt, CareerDataInput } from "./prompts/career-insights.prompt";
 import { careerInsightsSchema, CareerInsightsOutput } from "./schemas/career-insights.schema";
@@ -202,6 +204,52 @@ export class CareerInsightsService {
     if (data.averageAtsScore && data.averageAtsScore > 70) score += 10;
     if (data.averageMatchScore && data.averageMatchScore > 70) score += 10;
     return clampNumber(score, 0, 100);
+  }
+
+  async generateSalaryNegotiationPlan(userId: string, currentSalary: number, offeredSalary: number) {
+    await requireUser(userId);
+
+    if (!Number.isFinite(currentSalary) || currentSalary < 0) {
+      throw ApiError.badRequest("currentSalary must be a non-negative number.");
+    }
+    if (!Number.isFinite(offeredSalary) || offeredSalary <= 0) {
+      throw ApiError.badRequest("offeredSalary must be a positive number.");
+    }
+
+    const upliftPercent = ((offeredSalary - currentSalary) / Math.max(currentSalary, 1)) * 100;
+
+    let stance: "strong" | "balanced" | "diplomatic";
+    if (offeredSalary < currentSalary) stance = "diplomatic";
+    else if (upliftPercent >= 20) stance = "strong";
+    else stance = "balanced";
+
+    // Counter-offer target: typical negotiation headroom before walking away.
+    const counterTarget = Math.round(
+      offeredSalary * (stance === "strong" ? 1.1 : stance === "balanced" ? 1.08 : 1.15)
+    );
+
+    const steps = [
+      "Anchor on market data: cite 2-3 comparable roles before naming a number.",
+      `Ask for ${counterTarget.toLocaleString()} total, framing it around scope and outcomes.`,
+      "Negotiate the whole package — equity, bonus, and remote flexibility count.",
+      "Get the revised offer in writing before resigning from your current role.",
+    ];
+
+    return {
+      userId,
+      currentSalary,
+      offeredSalary,
+      upliftPercent: Math.round(upliftPercent * 10) / 10,
+      stance,
+      counterTarget,
+      steps,
+      message: stance === "diplomatic"
+        ? "The offer is below your current pay — negotiate from value, not need."
+        : stance === "strong"
+          ? "Healthy uplift already — a strong stance can push 10% higher."
+          : "Modest uplift — aim for the full band with a balanced approach.",
+      generatedAt: new Date().toISOString()
+    };
   }
 }
 

@@ -505,3 +505,39 @@ export const generateResignationLetter = asyncHandler(async (req: Request, res: 
     data: result,
   });
 });
+
+export const adviseAnswerLength = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { sessionId } = req.params;
+  const result = await interviewService.adviseAnswerLength(userId, sessionId);
+  res.json({ success: true, message: "Answer length advice generated", data: result });
+});
+
+export const generateSalaryNegotiationPlan = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { currentSalary, offeredSalary } = req.body;
+  const result = await careerInsightsService.generateSalaryNegotiationPlan(userId, currentSalary, offeredSalary);
+  res.json({ success: true, message: "Salary negotiation plan generated", data: result });
+});
+
+export const predictWorkStyleFit = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { resumeId } = req.params;
+  const { companyValuesText } = req.body;
+  const result = await matchingService.predictWorkStyleFit(userId, resumeId, companyValuesText);
+  res.json({ success: true, message: "Work-style fit predicted", data: result });
+});
+
+export const rewriteWeakVerbs = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { resumeId } = req.params;
+  const result = await resumeAnalysisService.rewriteWeakVerbs(userId, resumeId);
+  res.json({ success: true, message: "Weak verb report generated", data: result });
+});
+
+export const scoreRemoteFriendliness = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { jobDescription } = req.body;
+  const result = await jobAnalysisService.scoreRemoteFriendliness(userId, jobDescription);
+  res.json({ success: true, message: "Remote friendliness scored", data: result });
+});
