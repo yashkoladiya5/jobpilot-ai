@@ -1248,4 +1248,38 @@ export class AuthService {
       generatedAt: new Date().toISOString()
     };
   }
+
+  async getPasswordExpiryReminder(userId: string, rotationDays: number = 90) {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true, email: true, updatedAt: true }
+    });
+
+    if (!user) {
+      throw ApiError.notFound("User not found");
+    }
+
+    if (!Number.isFinite(rotationDays) || rotationDays < 1) {
+      throw ApiError.badRequest("rotationDays must be a positive number.");
+    }
+
+    const daysSinceUpdate = elapsedDays(user.updatedAt);
+    const daysRemaining = rotationDays - daysSinceUpdate;
+    const dueSoon = daysRemaining <= 14;
+
+    return {
+      userId,
+      rotationDays,
+      daysSincePasswordUpdate: daysSinceUpdate,
+      daysRemaining: Math.max(daysRemaining, 0),
+      dueSoon,
+      expired: daysRemaining <= 0,
+      message: daysRemaining <= 0
+        ? "Your password is past the rotation window — update it now."
+        : dueSoon
+          ? `Password rotation due in ${daysRemaining} day(s). Schedule the change this week.`
+          : `Password is healthy — next rotation due in ${daysRemaining} day(s).`,
+      checkedAt: new Date().toISOString()
+    };
+  }
 }

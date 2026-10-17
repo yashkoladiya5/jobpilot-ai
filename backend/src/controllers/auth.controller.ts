@@ -596,3 +596,11 @@ export const getAccountActivityDigest = asyncHandler(async (req: Request, res: R
   const result = await authService.getAccountActivityDigest(userId);
   res.status(200).json({ success: true, message: "Account activity digest generated", data: result });
 });
+
+export const getPasswordExpiryReminder = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const rotationDays = req.query.rotationDays ? Number(req.query.rotationDays) : 90;
+
+  const result = await authService.getPasswordExpiryReminder(userId, rotationDays);
+  res.status(200).json({ success: true, message: "Password expiry reminder generated", data: result });
+});

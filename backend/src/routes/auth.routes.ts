@@ -19,6 +19,7 @@ import { register, login, getMe, deleteAccount, updatePassword, updateEmail, upd
   enforceSessionTimeout,
   getDeviceUsageReport,
   getAccountActivityDigest,
+  getPasswordExpiryReminder,
 } from "../controllers/auth.controller";
 import { authenticate } from "../middleware/auth";
 import { validate } from "../middleware/validate";
@@ -77,5 +78,6 @@ router.post("/trigger-password-reset", authenticate, triggerPasswordReset);
 router.post("/admin/enforce-session-timeout", authenticate, enforceSessionTimeout);
 router.get("/device-usage-report", authenticate, getDeviceUsageReport);
 router.get("/activity-digest", authenticate, getAccountActivityDigest);
+router.get("/password-expiry", authenticate, getPasswordExpiryReminder);
 
 export default router;
