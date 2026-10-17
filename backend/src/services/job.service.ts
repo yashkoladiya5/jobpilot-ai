@@ -5,7 +5,7 @@ import { ApiError } from "../utils/ApiError";
 import { countBy } from "../utils/collections";
 import { requireUser } from "../utils/user";
 import { requireOwnedJob } from "../utils/job";
-import { daysAgo } from "../utils/dates";
+import { daysAgo, elapsedDays, MS_PER_DAY } from "../utils/dates";
 import { randInt } from "../utils/math";
 
 /**
@@ -1562,6 +1562,45 @@ ${userName}`;
         : verdict === "above-market"
           ? `The offer is ${gapPercent}% over the mock market median — strong offer.`
           : `The offer sits within the typical market band.`,
+      checkedAt: new Date().toISOString()
+    };
+  }
+
+  async estimateListingExpiry(userId: string, applicationId: string) {
+    const application = await prisma.jobApplication.findUnique({
+      where: { id: applicationId }
+    });
+
+    if (!application || application.userId !== userId) {
+      throw ApiError.notFound("Application not found");
+    }
+
+    const daysSinceApplied = elapsedDays(application.appliedDate);
+    const isTerminal =
+      application.status === $Enums.ApplicationStatus.REJECTED ||
+      application.status === $Enums.ApplicationStatus.OFFER ||
+      application.status === $Enums.ApplicationStatus.WITHDRAWN;
+
+    // Typical listing lifecycle: ~30 days open, responses land within 21 days.
+    const estimatedExpiry = new Date(application.appliedDate.getTime() + 30 * MS_PER_DAY);
+    const likelyExpired = !isTerminal && daysSinceApplied > 30;
+    const silenceRisk = !isTerminal && daysSinceApplied > 21 ? "high" : daysSinceApplied > 14 ? "medium" : "low";
+
+    return {
+      applicationId: application.id,
+      role: application.role,
+      company: application.companyName,
+      daysSinceApplied,
+      estimatedListingExpiry: estimatedExpiry.toISOString(),
+      likelyExpired,
+      silenceRisk,
+      recommendation: isTerminal
+        ? "Application already reached a final state — no expiry tracking needed."
+        : likelyExpired
+          ? "Listing has likely closed; if no response, mark it rejected and move on."
+          : silenceRisk === "high"
+            ? "Send a follow-up — 3 weeks of silence rarely turns into an interview."
+            : "Still within the typical response window; hold tight.",
       checkedAt: new Date().toISOString()
     };
   }

@@ -657,3 +657,16 @@ export const checkSalaryCompetitiveness = asyncHandler(async (req: Request, res:
     data: result,
   });
 });
+
+export const estimateListingExpiry = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { id } = req.params;
+
+  const result = await jobService.estimateListingExpiry(userId, id);
+
+  res.status(200).json({
+    success: true,
+    message: "Listing expiry estimated successfully",
+    data: result,
+  });
+});
