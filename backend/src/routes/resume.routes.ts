@@ -42,6 +42,7 @@ import {
   estimateReadTime,
   analyzeKeywordGap,
   scoreResumeCompleteness,
+  analyzeBulletImpact,
 } from "../controllers/resume.controller";
 import { authenticate } from "../middleware/auth";
 import { upload } from "../middleware/upload";
@@ -107,5 +108,6 @@ router.post("/:id/extract-entities", authenticate, extractKeyEntities);
 router.post("/:id/estimate-read-time", authenticate, estimateReadTime);
 router.post("/:id/keyword-gap", authenticate, analyzeKeywordGap);
 router.post("/:id/completeness-score", authenticate, scoreResumeCompleteness);
+router.post("/:id/bullet-impact", authenticate, analyzeBulletImpact);
 
 export default router;

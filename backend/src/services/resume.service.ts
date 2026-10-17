@@ -1307,4 +1307,60 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
       scoredAt: new Date().toISOString()
     };
   }
+
+  async analyzeBulletImpact(userId: string, id: string, documentText: string) {
+    const resume = await prisma.resume.findUnique({ where: { id } });
+    if (!resume || resume.userId !== userId) {
+      throw ApiError.notFound("Resume not found");
+    }
+
+    if (!documentText || documentText.trim().length === 0) {
+      throw ApiError.badRequest("Document text is required to analyze bullets.");
+    }
+
+    const ACTION_VERBS = new Set([
+      "built", "led", "designed", "shipped", "launched", "improved", "reduced", "increased",
+      "automated", "migrated", "optimized", "scaled", "delivered", "drove", "owned",
+      "created", "implemented", "streamlined", "mentored", "resolved"
+    ]);
+
+    const bullets = documentText
+      .split("\n")
+      .map((line) => line.trim())
+      .filter((line) => /^[-•*▪‣]/.test(line))
+      .map((line) => line.replace(/^[-•*▪‣]\s*/, ""));
+
+    if (bullets.length === 0) {
+      throw ApiError.badRequest("No bullet points detected in the provided text.");
+    }
+
+    const evaluated = bullets.map((bullet) => {
+      const firstWord = bullet.toLowerCase().split(/\s+/)[0].replace(/[^a-z]/g, "");
+      const hasVerb = ACTION_VERBS.has(firstWord);
+      const hasMetric = /\d+(\.\d+)?\s*(%|x|k|m|bn)?|\d+\s*(users|clients|requests|ms|hours|days)/i.test(bullet);
+      const words = bullet.split(/\s+/).length;
+      const strong = hasVerb && hasMetric && words <= 40;
+      return {
+        text: bullet.slice(0, 80),
+        startsWithActionVerb: hasVerb,
+        hasMetric,
+        wordCount: words,
+        verdict: strong ? "strong" : hasVerb || hasMetric ? "needs-metric-or-verb" : "weak"
+      };
+    });
+
+    const strongCount = evaluated.filter((b) => b.verdict === "strong").length;
+    const impactPercent = Math.round((strongCount / evaluated.length) * 100);
+
+    return {
+      resumeId: resume.id,
+      totalBullets: evaluated.length,
+      strongBullets: strongCount,
+      impactPercent,
+      weakest: evaluated.filter((b) => b.verdict === "weak").slice(0, 5),
+      message: impactPercent >= 50
+        ? `${impactPercent}% of bullets are strong (action verb + metric).`
+        : `Only ${impactPercent}% of bullets pair an action verb with a metric — tighten the weakest first.`
+    };
+  }
 }

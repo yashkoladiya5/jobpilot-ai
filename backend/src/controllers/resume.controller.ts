@@ -593,3 +593,17 @@ export const scoreResumeCompleteness = asyncHandler(async (req: Request, res: Re
     data: result,
   });
 });
+
+export const analyzeBulletImpact = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { id } = req.params;
+  const { documentText } = req.body;
+
+  const result = await resumeService.analyzeBulletImpact(userId, id, documentText);
+
+  res.status(200).json({
+    success: true,
+    message: "Bullet impact analyzed successfully",
+    data: result,
+  });
+});
