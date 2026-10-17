@@ -6,6 +6,7 @@ import {
   updateCoverLetter,
   deleteCoverLetter,
   adjustTone,
+  scoreLetterSpecificity,
 } from "../controllers/cover-letter.controller";
 import { authenticate } from "../middleware/auth";
 
@@ -23,5 +24,6 @@ router.get("/:id", getCoverLetter);
 router.patch("/:id", updateCoverLetter);
 router.delete("/:id", deleteCoverLetter);
 router.post("/:id/adjust-tone", adjustTone);
+router.get("/:id/specificity", scoreLetterSpecificity);
 
 export default router;

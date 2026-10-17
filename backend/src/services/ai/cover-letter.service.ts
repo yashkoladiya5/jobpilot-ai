@@ -159,4 +159,56 @@ export class CoverLetterService {
       },
     });
   }
+
+  async scoreLetterSpecificity(userId: string, id: string) {
+    const coverLetter = await this.getCoverLetter(id, userId);
+
+    const text = coverLetter.coverLetterText ?? "";
+    const jobWords = coverLetter.jobDescription
+      ? new Set(coverLetter.jobDescription.toLowerCase().split(/\s+/).filter((w) => w.length > 5))
+      : new Set<string>();
+
+    // Quantified achievements: numbers that are not bare years at sentence starts.
+    const metricMatches = text.match(/\b\d+(\.\d+)?\s?(%|percent|x|k|m|bn|users|clients|projects|hours|days|weeks|months|years|records)\b/gi) ?? [];
+
+    // Generic filler phrases that make letters templated.
+    const fillerPhrases = [
+      "team player",
+      "hard-working",
+      "hard working",
+      "excellent communication skills",
+      "strong work ethic",
+      "dynamic environment",
+      "fast-paced environment",
+      "proven track record",
+      "detail-oriented",
+      "results-driven",
+    ];
+    const lower = text.toLowerCase();
+    const fillersFound = fillerPhrases.filter((p) => lower.includes(p));
+
+    // Role/title presence: does the letter name the job from the description header?
+    const roleMentioned = lower.includes("position of") || lower.includes("role of");
+
+    const words = text.split(/\s+/).filter(Boolean).length;
+    const uniqueSignal = metricMatches.length * 15 + (roleMentioned ? 10 : 0) + (jobWords.size > 0 ? Math.min(jobWords.size, 20) : 0);
+    const penalty = fillersFound.length * 12;
+    const score = Math.max(0, Math.min(100, 40 + uniqueSignal - penalty + (words > 150 ? 5 : 0)));
+
+    return {
+      coverLetterId: coverLetter.id,
+      wordCount: words,
+      quantifiedAchievements: metricMatches.length,
+      genericPhrasesFound: fillersFound,
+      namesSpecificRole: roleMentioned,
+      score,
+      grade: score >= 75 ? "personalized" : score >= 50 ? "mix of specifics and filler" : "reads like a template",
+      message: fillersFound.length > 0
+        ? `Replace ${fillersFound.length} generic phrase(s) with quantified wins to raise specificity.`
+        : score >= 75
+          ? "Strong, specific letter — it references concrete results."
+          : "Add at least one metric or named outcome to stand out.",
+      scoredAt: new Date().toISOString()
+    };
+  }
 }

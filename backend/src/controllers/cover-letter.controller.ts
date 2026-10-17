@@ -93,3 +93,16 @@ export const adjustTone = asyncHandler(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
+export const scoreLetterSpecificity = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { id } = req.params;
+
+  const result = await coverLetterService.scoreLetterSpecificity(userId, id);
+
+  res.status(200).json({
+    success: true,
+    message: "Cover letter specificity scored successfully",
+    data: result,
+  });
+});
