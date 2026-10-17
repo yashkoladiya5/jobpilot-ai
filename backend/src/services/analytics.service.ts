@@ -1688,4 +1688,47 @@ export class AnalyticsService {
       generatedAt: new Date().toISOString()
     };
   }
+
+  async getStageVelocityBreakdown(userId: string) {
+    const applications = await prisma.jobApplication.findMany({
+      where: { userId },
+      select: { id: true, status: true, appliedDate: true, updatedAt: true },
+    });
+
+    if (applications.length === 0) {
+      return {
+        userId,
+        stages: [],
+        message: "No applications yet — stage velocity needs data to work with.",
+        generatedAt: new Date().toISOString()
+      };
+    }
+
+    const grouped = new Map<string, { appliedDate: Date; updatedAt: Date }[]>();
+    for (const app of applications) {
+      const bucket = grouped.get(app.status) ?? [];
+      bucket.push(app);
+      grouped.set(app.status, bucket);
+    }
+
+    const stages = Array.from(grouped.entries()).map(([status, list]) => {
+      const durations = list.map((a) => Math.max(elapsedDays(a.appliedDate, a.updatedAt), 0));
+      const avgDays = Math.round((durations.reduce((s, d) => s + d, 0) / durations.length) * 10) / 10;
+      const slowest = Math.round(Math.max(...durations));
+      return { status, count: list.length, avgDaysInStage: avgDays, slowestDays: slowest };
+    }).sort((a, b) => b.avgDaysInStage - a.avgDaysInStage);
+
+    const bottleneck = stages[0];
+    const totalAvg = Math.round((stages.reduce((s, st) => s + st.avgDaysInStage * st.count, 0) / applications.length) * 10) / 10;
+
+    return {
+      userId,
+      totalApplications: applications.length,
+      stages,
+      averageDaysPerApplication: totalAvg,
+      bottleneckStage: bottleneck.status,
+      message: `Average application ages ${totalAvg} day(s) before activity; ${String(bottleneck.status).toLowerCase()} is the slowest stage at ${bottleneck.avgDaysInStage} day(s).`,
+      generatedAt: new Date().toISOString()
+    };
+  }
 }

@@ -476,3 +476,15 @@ export const getApplicationStreakReport = asyncHandler(async (req: Request, res:
     data: result
   });
 });
+
+export const getStageVelocityBreakdown = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+
+  const result = await analyticsService.getStageVelocityBreakdown(userId);
+
+  res.status(200).json({
+    success: true,
+    message: "Stage velocity breakdown generated successfully",
+    data: result
+  });
+});
