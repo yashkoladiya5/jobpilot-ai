@@ -47,6 +47,7 @@ import {
   checkApplicationCompletionStatus,
   suggestResumeCustomization,
   evaluateJobFit,
+  checkSalaryCompetitiveness,
 } from "../controllers/job.controller";
 import { authenticate } from "../middleware/auth";
 import { validate } from "../middleware/validate";
@@ -101,6 +102,7 @@ router.get("/activity", authenticate, checkApplicationActivity);
 router.get("/:id/completion-status", authenticate, checkApplicationCompletionStatus);
 router.get("/:id/resume-customization", authenticate, suggestResumeCustomization);
 router.get("/:id/evaluate-job-fit", authenticate, evaluateJobFit);
+router.post("/:id/salary-competitiveness", authenticate, checkSalaryCompetitiveness);
 
 // CRUD operations for jobs, all requiring user authentication
 router.get("/", authenticate, getJobs);

@@ -1517,4 +1517,52 @@ ${userName}`;
       evaluatedAt: new Date().toISOString()
     };
   }
+
+  async checkSalaryCompetitiveness(userId: string, applicationId: string, offeredSalary: number) {
+    const application = await prisma.jobApplication.findUnique({
+      where: { id: applicationId }
+    });
+
+    if (!application || application.userId !== userId) {
+      throw ApiError.notFound("Application not found");
+    }
+
+    if (typeof offeredSalary !== "number" || !Number.isFinite(offeredSalary) || offeredSalary <= 0) {
+      throw ApiError.badRequest("A positive offeredSalary number is required.");
+    }
+
+    // Deterministic mock market band derived from the role + location so the
+    // same application always reports the same benchmark.
+    const seedSource = `${application.role}|${application.location ?? ""}`;
+    let hash = 0;
+    for (const ch of seedSource) {
+      hash = (hash * 31 + ch.charCodeAt(0)) >>> 0;
+    }
+    const marketMedian = 60000 + (hash % 60000);
+    const lowBand = Math.round(marketMedian * 0.85);
+    const highBand = Math.round(marketMedian * 1.15);
+
+    let verdict: "below-market" | "at-market" | "above-market";
+    if (offeredSalary < lowBand) verdict = "below-market";
+    else if (offeredSalary > highBand) verdict = "above-market";
+    else verdict = "at-market";
+
+    const gapPercent = Math.round(((offeredSalary - marketMedian) / marketMedian) * 100);
+
+    return {
+      applicationId: application.id,
+      role: application.role,
+      offeredSalary,
+      marketMedian,
+      marketBand: { low: lowBand, high: highBand },
+      gapPercent,
+      verdict,
+      message: verdict === "below-market"
+        ? `The offer is ${Math.abs(gapPercent)}% under the mock market median — consider negotiating.`
+        : verdict === "above-market"
+          ? `The offer is ${gapPercent}% over the mock market median — strong offer.`
+          : `The offer sits within the typical market band.`,
+      checkedAt: new Date().toISOString()
+    };
+  }
 }

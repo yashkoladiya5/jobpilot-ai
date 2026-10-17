@@ -643,3 +643,17 @@ export const evaluateJobFit = asyncHandler(async (req: Request, res: Response) =
     data: result,
   });
 });
+
+export const checkSalaryCompetitiveness = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { id } = req.params;
+  const { offeredSalary } = req.body;
+
+  const result = await jobService.checkSalaryCompetitiveness(userId, id, offeredSalary);
+
+  res.status(200).json({
+    success: true,
+    message: "Salary competitiveness checked successfully",
+    data: result,
+  });
+});
