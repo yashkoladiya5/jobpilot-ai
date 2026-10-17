@@ -1,4 +1,5 @@
 import { AnalysisStatus, ApplicationStatus } from "@prisma/client";
+import { startOfWeek } from "date-fns";
 import prisma from "../config/prisma";
 import { ApiError } from "../utils/ApiError";
 import { countBy } from "../utils/collections";
@@ -1551,6 +1552,48 @@ export class DashboardService {
         stale: staleApplied.length
       },
       suggestedAt: new Date().toISOString()
+    };
+  }
+
+  async trackWeeklyGoalProgress(userId: string, targetApplications: number) {
+    if (!Number.isFinite(targetApplications) || targetApplications < 1) {
+      throw ApiError.badRequest("targetApplications must be a positive number.");
+    }
+
+    const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
+    const applicationsThisWeek = await prisma.jobApplication.count({
+      where: { userId, appliedDate: { gte: weekStart } },
+    });
+    const totalApplications = await prisma.jobApplication.count({ where: { userId } });
+
+    const progressPercent = Math.min(100, Math.round((applicationsThisWeek / targetApplications) * 100));
+
+    const now = new Date();
+    const dayOfWeek = ((now.getDay() + 6) % 7) + 1; // Monday = 1
+    const daysLeft = 7 - dayOfWeek;
+    const remaining = Math.max(targetApplications - applicationsThisWeek, 0);
+    const paceRequired = daysLeft > 0 ? Math.ceil(remaining / daysLeft) : remaining;
+
+    let pace: "ahead" | "on-track" | "behind";
+    if (progressPercent >= 100) pace = "ahead";
+    else if (remaining === 0) pace = "on-track";
+    else pace = dayOfWeek <= 4 && progressPercent < (dayOfWeek / 4) * 100 ? "behind" : "on-track";
+
+    return {
+      userId,
+      targetApplications,
+      applicationsThisWeek,
+      totalApplications,
+      progressPercent,
+      pace,
+      daysLeftInWeek: daysLeft,
+      applicationsNeededPerDay: paceRequired,
+      message: progressPercent >= 100
+        ? `Weekly goal of ${targetApplications} applications smashed — ${applicationsThisWeek} logged.`
+        : pace === "behind"
+          ? `Behind pace: ${applicationsThisWeek}/${targetApplications} done, needs ${paceRequired}/day for the rest of the week.`
+          : `${applicationsThisWeek}/${targetApplications} applications this week (${progressPercent}%). Keep the pace.`,
+      trackedAt: new Date().toISOString()
     };
   }
 }

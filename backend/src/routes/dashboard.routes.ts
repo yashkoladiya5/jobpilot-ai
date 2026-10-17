@@ -13,6 +13,7 @@ import { getStats, getRecentActivityLogs, getActionItems, getDashboardSummary, g
   suggestRest,
   suggestPortfolioUpdate,
   getDailyFocusSuggestion,
+  trackWeeklyGoalProgress,
 } from "../controllers/dashboard.controller";
 
 /**
@@ -62,5 +63,6 @@ router.get("/suggest-motivation", authenticate, suggestMotivation);
 router.get("/suggest-rest", authenticate, suggestRest);
 router.get("/suggest-portfolio-update", authenticate, suggestPortfolioUpdate);
 router.get("/daily-focus", authenticate, getDailyFocusSuggestion);
+router.get("/weekly-goal-progress", authenticate, trackWeeklyGoalProgress);
 
 export default router;

@@ -611,3 +611,16 @@ export const getDailyFocusSuggestion = asyncHandler(async (req: Request, res: Re
     data: result
   });
 });
+
+export const trackWeeklyGoalProgress = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const target = Number(req.query.target ?? 10);
+
+  const result = await dashboardService.trackWeeklyGoalProgress(userId, target);
+
+  res.status(200).json({
+    success: true,
+    message: "Weekly goal progress tracked successfully",
+    data: result
+  });
+});
