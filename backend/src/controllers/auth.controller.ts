@@ -582,3 +582,17 @@ export const enforceSessionTimeout = asyncHandler(async (req: Request, res: Resp
   const result = await authService.enforceSessionTimeout(adminId, targetUserId);
   res.status(200).json({ success: true, message: "Session timeout enforced", data: result });
 });
+
+export const getDeviceUsageReport = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+
+  const result = await authService.getDeviceUsageReport(userId);
+  res.status(200).json({ success: true, message: "Device usage report generated", data: result });
+});
+
+export const getAccountActivityDigest = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+
+  const result = await authService.getAccountActivityDigest(userId);
+  res.status(200).json({ success: true, message: "Account activity digest generated", data: result });
+});

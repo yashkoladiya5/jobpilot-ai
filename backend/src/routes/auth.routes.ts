@@ -17,6 +17,8 @@ import { register, login, getMe, deleteAccount, updatePassword, updateEmail, upd
   checkPasswordResetFlag,
   triggerPasswordReset,
   enforceSessionTimeout,
+  getDeviceUsageReport,
+  getAccountActivityDigest,
 } from "../controllers/auth.controller";
 import { authenticate } from "../middleware/auth";
 import { validate } from "../middleware/validate";
@@ -73,5 +75,7 @@ router.get("/password-age", authenticate, analyzePasswordAge);
 router.get("/password-reset-flag", authenticate, checkPasswordResetFlag);
 router.post("/trigger-password-reset", authenticate, triggerPasswordReset);
 router.post("/admin/enforce-session-timeout", authenticate, enforceSessionTimeout);
+router.get("/device-usage-report", authenticate, getDeviceUsageReport);
+router.get("/activity-digest", authenticate, getAccountActivityDigest);
 
 export default router;

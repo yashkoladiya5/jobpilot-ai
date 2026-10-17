@@ -1172,4 +1172,80 @@ export class AuthService {
       enforcedAt: new Date().toISOString()
     };
   }
+
+  private classifyDevice(device: string): "mobile" | "desktop" | "tablet" | "unknown" {
+    const name = device.toLowerCase();
+    if (/(iphone|android|pixel|galaxy|mobile)/.test(name)) return "mobile";
+    if (/(ipad|tablet|pad)/.test(name)) return "tablet";
+    if (/(macbook|imac|laptop|windows|linux|chromebook|desktop)/.test(name)) return "desktop";
+    return "unknown";
+  }
+
+  async getDeviceUsageReport(userId: string) {
+    const [sessions, history] = await Promise.all([
+      this.getActiveSessions(userId),
+      this.getLoginHistory(userId),
+    ]);
+
+    const devices = [...sessions.map((s) => s.device), ...history.map((h) => h.device)];
+    const byCategory: Record<string, number> = { mobile: 0, desktop: 0, tablet: 0, unknown: 0 };
+    for (const device of devices) {
+      byCategory[this.classifyDevice(device)] += 1;
+    }
+
+    const uniqueNames = Array.from(new Set(devices));
+    const primaryCategory = Object.entries(byCategory).sort((a, b) => b[1] - a[1])[0][0];
+
+    return {
+      userId,
+      totalSessions: sessions.length,
+      totalLoginEvents: history.length,
+      uniqueDevices: uniqueNames.length,
+      devicesByCategory: byCategory,
+      primaryCategory,
+      message: `Most of your ${devices.length} recorded sign-ins come from ${primaryCategory} devices.`,
+      generatedAt: new Date().toISOString()
+    };
+  }
+
+  async getAccountActivityDigest(userId: string) {
+    const history = await this.getLoginHistory(userId);
+
+    const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const byDay: Record<string, { total: number; successful: number; failed: number }> = {};
+    for (const day of dayNames) {
+      byDay[day] = { total: 0, successful: 0, failed: 0 };
+    }
+
+    let successful = 0;
+    let failed = 0;
+    for (const event of history) {
+      const day = dayNames[event.timestamp.getDay()];
+      byDay[day].total += 1;
+      if (event.status === "SUCCESS") {
+        byDay[day].successful += 1;
+        successful += 1;
+      } else {
+        byDay[day].failed += 1;
+        failed += 1;
+      }
+    }
+
+    const busiestDay = Object.entries(byDay).sort((a, b) => b[1].total - a[1].total)[0][0];
+    const successRate = history.length > 0 ? Math.round((successful / history.length) * 100) : 0;
+
+    return {
+      userId,
+      totalEvents: history.length,
+      successfulLogins: successful,
+      failedLogins: failed,
+      successRate,
+      busiestDay,
+      activityByDay: byDay,
+      message: failed > 0
+        ? `${failed} failed login attempt(s) detected across your history — review unfamiliar locations.`
+        : `All ${successful} recorded sign-ins succeeded. Your busiest day is ${busiestDay}.`,
+      generatedAt: new Date().toISOString()
+    };
+  }
 }
