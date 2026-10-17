@@ -1506,4 +1506,51 @@ export class DashboardService {
       suggestedAt: new Date().toISOString()
     };
   }
+
+  async getDailyFocusSuggestion(userId: string) {
+    const applications = await prisma.jobApplication.findMany({
+      where: { userId },
+      select: { id: true, status: true, updatedAt: true },
+    });
+
+    const staleThreshold = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    const interviews = applications.filter((a) => a.status === ApplicationStatus.INTERVIEW);
+    const offers = applications.filter((a) => a.status === ApplicationStatus.OFFER);
+    const staleApplied = applications.filter(
+      (a) =>
+        a.status !== ApplicationStatus.REJECTED &&
+        a.status !== ApplicationStatus.WITHDRAWN &&
+        a.status !== ApplicationStatus.SAVED &&
+        a.updatedAt < staleThreshold
+    );
+
+    let focus: string;
+    let action: string;
+    if (offers.length > 0) {
+      focus = "evaluate-offer";
+      action = `Review the ${offers.length} open offer(s) and respond — timing matters for negotiation leverage.`;
+    } else if (interviews.length > 0) {
+      focus = "prep-interview";
+      action = `Prepare for your ${interviews.length} active interview pipeline(s): rehearse STAR stories for the top 3 questions.`;
+    } else if (staleApplied.length > 0) {
+      focus = "follow-up";
+      action = `Send a polite follow-up on ${staleApplied.length} application(s) untouched for 7+ days.`;
+    } else {
+      focus = "apply";
+      action = "Pipeline looks fresh — apply to 2 new roles today to keep momentum.";
+    }
+
+    return {
+      userId,
+      focus,
+      action,
+      counts: {
+        total: applications.length,
+        interviews: interviews.length,
+        offers: offers.length,
+        stale: staleApplied.length
+      },
+      suggestedAt: new Date().toISOString()
+    };
+  }
 }

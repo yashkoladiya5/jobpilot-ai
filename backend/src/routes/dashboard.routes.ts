@@ -12,6 +12,7 @@ import { getStats, getRecentActivityLogs, getActionItems, getDashboardSummary, g
   suggestMotivation,
   suggestRest,
   suggestPortfolioUpdate,
+  getDailyFocusSuggestion,
 } from "../controllers/dashboard.controller";
 
 /**
@@ -60,5 +61,6 @@ router.get("/suggest-urgent-action", authenticate, suggestUrgentAction);
 router.get("/suggest-motivation", authenticate, suggestMotivation);
 router.get("/suggest-rest", authenticate, suggestRest);
 router.get("/suggest-portfolio-update", authenticate, suggestPortfolioUpdate);
+router.get("/daily-focus", authenticate, getDailyFocusSuggestion);
 
 export default router;
