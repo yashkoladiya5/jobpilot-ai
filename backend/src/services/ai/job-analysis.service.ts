@@ -317,4 +317,58 @@ Format the output as a clean, ready-to-use email template.`;
       scoredAt: new Date().toISOString()
     };
   }
+
+  async estimateSeniority(userId: string, jobDescription: string) {
+    if (!jobDescription || jobDescription.trim().length === 0) {
+      throw ApiError.badRequest("Job description is required to estimate seniority.");
+    }
+
+    const text = jobDescription.toLowerCase();
+
+    const levelSignals: Array<{ level: string; weight: number; cues: string[] }> = [
+      { level: "intern", weight: 1, cues: ["internship", "intern", "co-op", "student"] },
+      { level: "entry", weight: 2, cues: ["entry level", "entry-level", "junior", "graduate", "0-1 years", "no experience"] },
+      { level: "mid", weight: 3, cues: ["mid level", "2-4 years", "3+ years", "3-5 years", "associate"] },
+      { level: "senior", weight: 4, cues: ["senior", "5+ years", "5-8 years", "7+ years", "experienced", "staff"] },
+      { level: "lead", weight: 5, cues: ["lead", "principal", "head of", "manager", "mentor", "architect", "8+ years", "10+ years"] },
+    ];
+
+    let score = 0;
+    let matched = 0;
+    const matchedCues: string[] = [];
+    for (const signal of levelSignals) {
+      for (const cue of signal.cues) {
+        if (text.includes(cue)) {
+          score += signal.weight;
+          matched += 1;
+          matchedCues.push(cue);
+        }
+      }
+    }
+
+    const yearsMatches = [...text.matchAll(/(\d{1,2})\+?\s*(?:\+\s*)?years/g)].map((m) => Number(m[1]));
+    const maxYears = yearsMatches.length > 0 ? Math.max(...yearsMatches) : null;
+
+    const avgWeight = matched > 0 ? score / matched : 2.5;
+    const estimated =
+      maxYears !== null && maxYears >= 8 ? "lead" :
+      maxYears !== null && maxYears >= 5 ? "senior" :
+      maxYears !== null && maxYears <= 1 ? "entry" :
+      avgWeight <= 1.5 ? "intern" :
+      avgWeight <= 2.5 ? "entry" :
+      avgWeight <= 3.5 ? "mid" :
+      avgWeight <= 4.5 ? "senior" : "lead";
+
+    return {
+      userId,
+      estimatedLevel: estimated,
+      highestYearsRequired: maxYears,
+      matchedSignals: matchedCues,
+      confidence: matchedCues.length >= 3 || maxYears !== null ? "high" : matchedCues.length > 0 ? "medium" : "low",
+      message: matchedCues.length === 0
+        ? "No seniority cues found — treat this as unspecified and ask the recruiter."
+        : `Listing reads as ${estimated}-level based on ${matchedCues.length} cue(s)${maxYears !== null ? ` and a ${maxYears}+ year requirement` : ""}.`,
+      estimatedAt: new Date().toISOString()
+    };
+  }
 }

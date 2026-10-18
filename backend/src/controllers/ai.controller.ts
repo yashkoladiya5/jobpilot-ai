@@ -548,3 +548,10 @@ export const getDifficultyCurve = asyncHandler(async (req: Request, res: Respons
   const result = await interviewService.getDifficultyCurve(userId, sessionId);
   res.json({ success: true, message: "Difficulty curve generated", data: result });
 });
+
+export const estimateSeniority = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { jobDescription } = req.body;
+  const result = await jobAnalysisService.estimateSeniority(userId, jobDescription);
+  res.json({ success: true, message: "Seniority estimated", data: result });
+});

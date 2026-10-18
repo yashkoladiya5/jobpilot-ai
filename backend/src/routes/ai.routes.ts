@@ -44,6 +44,7 @@ import {
   predictWorkStyleFit,
   rewriteWeakVerbs,
   scoreRemoteFriendliness,
+  estimateSeniority,
   getDifficultyCurve,
   rewriteCoverLetterTone,
   highlightCoverLetterKeywords,
@@ -76,6 +77,7 @@ router.post("/job/analyze", analyzeJob);
 router.post("/job/extract-keywords", extractJobKeywords);
 router.post("/job/red-flags", detectJobRedFlags);
 router.post("/job/remote-friendliness", scoreRemoteFriendliness);
+router.post("/job/seniority-estimate", estimateSeniority);
 router.get("/job/analysis/:analysisId", getJobAnalysis);
 router.get("/job/analyses", getJobAnalyses);
 router.delete("/job/analysis/:analysisId", deleteJobAnalysis);
