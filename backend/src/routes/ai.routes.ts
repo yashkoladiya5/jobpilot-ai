@@ -44,6 +44,7 @@ import {
   predictWorkStyleFit,
   rewriteWeakVerbs,
   scoreRemoteFriendliness,
+  getDifficultyCurve,
   rewriteCoverLetterTone,
   highlightCoverLetterKeywords,
   generateResignationLetter,
@@ -118,6 +119,7 @@ router.post("/interview/job/:jobId/behavioral-assessment", generateMockBehaviora
 router.post("/interview/job/:jobId/system-design-assessment", generateMockSystemDesignAssessment);
 router.post("/interview/job/:jobId/elevator-pitch", generateElevatorPitch);
 router.get("/interview/session/:sessionId/answer-length", adviseAnswerLength);
+router.get("/interview/session/:sessionId/difficulty-curve", getDifficultyCurve);
 
 // Career insights
 router.get("/career/insights", getCareerInsights);

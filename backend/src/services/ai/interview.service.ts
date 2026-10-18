@@ -677,6 +677,52 @@ export class InterviewService {
       advisedAt: new Date().toISOString()
     };
   }
+
+  async getDifficultyCurve(userId: string, sessionId: string) {
+    await this.requireSession(userId, sessionId);
+
+    const questions = await prisma.interviewQuestion.findMany({
+      where: { sessionId },
+      orderBy: { orderIndex: "asc" },
+    });
+
+    if (questions.length === 0) {
+      throw ApiError.badRequest("Session has no questions to rate.");
+    }
+
+    const hardCues = ["design", "trade-off", "tradeoff", "architect", "scale", "why did", "explain how", "complex"];
+    const easyCues = ["what is", "what are", "define", "list", "introduce", "tell me about yourself"];
+
+    const curve = questions.map((q) => {
+      const text = q.question.toLowerCase();
+      let level = 2; // medium
+      if (hardCues.some((cue) => text.includes(cue)) || text.split(/\s+/).length > 25) level = 3;
+      else if (easyCues.some((cue) => text.includes(cue))) level = 1;
+      return {
+        orderIndex: q.orderIndex,
+        question: q.question.slice(0, 70),
+        difficulty: level === 3 ? "hard" : level === 1 ? "easy" : "medium",
+        level,
+      };
+    });
+
+    // A good ramp keeps early questions approachable and saves hard ones for last.
+    const firstHalfAvg = curve.slice(0, Math.ceil(curve.length / 2)).reduce((s, c) => s + c.level, 0) / Math.ceil(curve.length / 2);
+    const secondHalfAvg = curve.slice(Math.ceil(curve.length / 2)).reduce((s, c) => s + c.level, 0) / Math.max(curve.length - Math.ceil(curve.length / 2), 1);
+    const isRamping = secondHalfAvg >= firstHalfAvg;
+
+    return {
+      sessionId,
+      curve,
+      firstHalfAvgDifficulty: Math.round(firstHalfAvg * 10) / 10,
+      secondHalfAvgDifficulty: Math.round(secondHalfAvg * 10) / 10,
+      shape: isRamping ? "progressive-ramp" : "front-loaded",
+      message: isRamping
+        ? "Questions ramp from easier openers to harder depth — good flow."
+        : "The hardest questions come early; consider reordering so you warm up first.",
+      generatedAt: new Date().toISOString()
+    };
+  }
 }
 
 export const interviewService = new InterviewService();

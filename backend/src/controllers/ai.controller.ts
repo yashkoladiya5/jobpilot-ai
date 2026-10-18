@@ -541,3 +541,10 @@ export const scoreRemoteFriendliness = asyncHandler(async (req: Request, res: Re
   const result = await jobAnalysisService.scoreRemoteFriendliness(userId, jobDescription);
   res.json({ success: true, message: "Remote friendliness scored", data: result });
 });
+
+export const getDifficultyCurve = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { sessionId } = req.params;
+  const result = await interviewService.getDifficultyCurve(userId, sessionId);
+  res.json({ success: true, message: "Difficulty curve generated", data: result });
+});
