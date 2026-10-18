@@ -307,4 +307,47 @@ export class CoverLetterService {
       checkedAt: new Date().toISOString()
     };
   }
+
+  async scoreOpeningHook(userId: string, id: string) {
+    const coverLetter = await this.getCoverLetter(id, userId);
+    const text = coverLetter.coverLetterText ?? "";
+
+    const sentences = splitSentences(text);
+    const opener = sentences.slice(0, 2).join(" ");
+    const openerLower = opener.toLowerCase();
+
+    const cliches = [
+      "i am writing to apply",
+      "i am writing to express",
+      "to whom it may concern",
+      "i hope this message finds you well",
+      "i saw your job posting",
+      "with great interest",
+    ];
+    const clichesFound = cliches.filter((c) => openerLower.includes(c));
+
+    let score = 50;
+    if (clichesFound.length > 0) score -= 15 * clichesFound.length;
+    if (/(\d+(?:\.\d+)?\s*%|\$\s?\d|\b\d{2,}\b)/.test(opener)) score += 20;
+    if (/\b(i|my)\b/i.test(opener) && /\b(built|shipped|led|grew|reduced|increased|launched)\b/i.test(opener)) score += 15;
+    if (/(your company|your team|@[a-z0-9.-]+)/i.test(opener) === false && /\b[a-z]{3,}\b/.test(openerLower)) score += 5;
+    if (countWords(opener) > 45) score -= 10;
+    score = Math.max(0, Math.min(100, score));
+
+    const grade = score >= 70 ? "strong" : score >= 45 ? "workable" : "weak";
+
+    return {
+      coverLetterId: coverLetter.id,
+      openingLines: opener,
+      score,
+      grade,
+      clichesFound,
+      advice: grade === "strong"
+        ? "Hook leads with proof, not pleasantries — keep it."
+        : clichesFound.length > 0
+          ? `Drop "${clichesFound[0]}" and open with the single most relevant win instead.`
+          : "Open with a concrete result tied to the role; save introductions for paragraph two.",
+      scoredAt: new Date().toISOString()
+    };
+  }
 }

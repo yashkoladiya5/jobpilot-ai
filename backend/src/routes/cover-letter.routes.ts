@@ -9,6 +9,7 @@ import {
   scoreLetterSpecificity,
   checkCallToAction,
   checkLengthConstraints,
+  scoreOpeningHook,
 } from "../controllers/cover-letter.controller";
 import { authenticate } from "../middleware/auth";
 
@@ -29,5 +30,6 @@ router.post("/:id/adjust-tone", adjustTone);
 router.get("/:id/specificity", scoreLetterSpecificity);
 router.get("/:id/call-to-action", checkCallToAction);
 router.get("/:id/length-constraints", checkLengthConstraints);
+router.get("/:id/opening-hook", scoreOpeningHook);
 
 export default router;

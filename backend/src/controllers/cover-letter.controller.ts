@@ -132,3 +132,15 @@ export const checkLengthConstraints = asyncHandler(async (req: Request, res: Res
     data: result,
   });
 });
+export const scoreOpeningHook = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { id } = req.params;
+
+  const result = await coverLetterService.scoreOpeningHook(userId, id);
+
+  res.status(200).json({
+    success: true,
+    message: "Opening hook scored successfully",
+    data: result,
+  });
+});
