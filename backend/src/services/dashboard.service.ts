@@ -3,7 +3,7 @@ import { startOfWeek } from "date-fns";
 import prisma from "../config/prisma";
 import { ApiError } from "../utils/ApiError";
 import { countBy } from "../utils/collections";
-import { MS_PER_DAY, dateKey, daysAgo } from "../utils/dates";
+import { MS_PER_DAY, dateKey, daysAgo, elapsedDays } from "../utils/dates";
 import { clampNumber, randInt } from "../utils/math";
 import { requireUser } from "../utils/user";
 
@@ -1594,6 +1594,60 @@ export class DashboardService {
           ? `Behind pace: ${applicationsThisWeek}/${targetApplications} done, needs ${paceRequired}/day for the rest of the week.`
           : `${applicationsThisWeek}/${targetApplications} applications this week (${progressPercent}%). Keep the pace.`,
       trackedAt: new Date().toISOString()
+    };
+  }
+
+  async getStreakGuardian(userId: string) {
+    await requireUser(userId);
+
+    const applications = await prisma.jobApplication.findMany({
+      where: { userId },
+      select: { appliedDate: true, updatedAt: true },
+    });
+
+    const activeDays = new Set<string>();
+    for (const application of applications) {
+      if (application.appliedDate) activeDays.add(dateKey(application.appliedDate));
+      activeDays.add(dateKey(application.updatedAt));
+    }
+
+    let currentStreak = 0;
+    for (let offset = 0; ; offset += 1) {
+      const key = dateKey(daysAgo(offset));
+      // Today does not count against the streak until the day ends.
+      if (offset === 0 && !activeDays.has(key)) continue;
+      if (!activeDays.has(key)) break;
+      currentStreak += 1;
+    }
+
+    const lastActivityDays = applications.length === 0
+      ? null
+      : Math.min(
+          ...applications.map((application) =>
+            elapsedDays(application.appliedDate ?? application.updatedAt)
+          )
+        );
+
+    // A streak is at risk once two consecutive quiet days appear.
+    const atRisk = currentStreak > 0 && (lastActivityDays ?? 99) >= 2;
+    const broken = currentStreak === 0;
+
+    let guardAction: string;
+    if (broken) {
+      guardAction = "No active streak yet — update one application or log a new one today to start.";
+    } else if (atRisk) {
+      guardAction = `Streak of ${currentStreak} days is at risk. Touch a single application today to keep it alive.`;
+    } else {
+      guardAction = `Streak of ${currentStreak} days is safe for today. Aim for ${Math.max(currentStreak + 1, 3)} days next.`;
+    }
+
+    return {
+      userId,
+      currentStreak,
+      lastActivityDaysAgo: lastActivityDays,
+      status: broken ? "broken" : atRisk ? "at_risk" : "healthy",
+      guardAction,
+      checkedAt: new Date().toISOString()
     };
   }
 }

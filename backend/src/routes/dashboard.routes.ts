@@ -14,6 +14,7 @@ import { getStats, getRecentActivityLogs, getActionItems, getDashboardSummary, g
   suggestPortfolioUpdate,
   getDailyFocusSuggestion,
   trackWeeklyGoalProgress,
+  getStreakGuardian,
 } from "../controllers/dashboard.controller";
 
 /**
@@ -64,5 +65,6 @@ router.get("/suggest-rest", authenticate, suggestRest);
 router.get("/suggest-portfolio-update", authenticate, suggestPortfolioUpdate);
 router.get("/daily-focus", authenticate, getDailyFocusSuggestion);
 router.get("/weekly-goal-progress", authenticate, trackWeeklyGoalProgress);
+router.get("/streak-guardian", authenticate, getStreakGuardian);
 
 export default router;

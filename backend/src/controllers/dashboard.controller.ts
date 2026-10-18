@@ -624,3 +624,15 @@ export const trackWeeklyGoalProgress = asyncHandler(async (req: Request, res: Re
     data: result
   });
 });
+
+export const getStreakGuardian = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+
+  const result = await dashboardService.getStreakGuardian(userId);
+
+  res.status(200).json({
+    success: true,
+    message: "Streak guardian report generated successfully",
+    data: result
+  });
+});
