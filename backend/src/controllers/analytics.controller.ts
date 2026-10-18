@@ -488,3 +488,15 @@ export const getStageVelocityBreakdown = asyncHandler(async (req: Request, res: 
     data: result
   });
 });
+
+export const getResponseTimeBenchmark = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+
+  const result = await analyticsService.getResponseTimeBenchmark(userId);
+
+  res.status(200).json({
+    success: true,
+    message: "Response time benchmark generated successfully",
+    data: result
+  });
+});

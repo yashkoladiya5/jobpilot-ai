@@ -1731,4 +1731,54 @@ export class AnalyticsService {
       generatedAt: new Date().toISOString()
     };
   }
+
+  async getResponseTimeBenchmark(userId: string) {
+    const applications = await prisma.jobApplication.findMany({
+      where: {
+        userId,
+        status: { in: [ApplicationStatus.INTERVIEW, ApplicationStatus.OFFER, ApplicationStatus.REJECTED] },
+      },
+      select: { id: true, companyName: true, status: true, appliedDate: true, updatedAt: true },
+    });
+
+    if (applications.length === 0) {
+      return {
+        userId,
+        message: "No decided applications yet — interview/reject outcomes give the benchmark data.",
+        buckets: { under3Days: 0, threeToTenDays: 0, overTenDays: 0 },
+        medianDays: null,
+        generatedAt: new Date().toISOString()
+      };
+    }
+
+    const durations = applications
+      .map((a) => elapsedDays(a.appliedDate, a.updatedAt))
+      .sort((x, y) => x - y);
+
+    const median =
+      durations.length % 2 === 1
+        ? durations[Math.floor(durations.length / 2)]
+        : (durations[durations.length / 2 - 1] + durations[durations.length / 2]) / 2;
+
+    const buckets = {
+      under3Days: durations.filter((d) => d < 3).length,
+      threeToTenDays: durations.filter((d) => d >= 3 && d <= 10).length,
+      overTenDays: durations.filter((d) => d > 10).length,
+    };
+
+    const fastestDecisions = applications
+      .map((a) => ({ company: a.companyName, days: Math.round(elapsedDays(a.appliedDate, a.updatedAt) * 10) / 10, status: String(a.status) }))
+      .sort((a, b) => a.days - b.days)
+      .slice(0, 3);
+
+    return {
+      userId,
+      decidedApplications: applications.length,
+      medianResponseDays: Math.round(median * 10) / 10,
+      buckets,
+      fastestDecisions,
+      message: `Half of your decisions arrive within ${Math.round(median * 10) / 10} days; ${buckets.overTenDays} application(s) took over two weeks.`,
+      generatedAt: new Date().toISOString()
+    };
+  }
 }
