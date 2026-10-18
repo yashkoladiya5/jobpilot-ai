@@ -44,6 +44,7 @@ import {
   scoreResumeCompleteness,
   analyzeBulletImpact,
   analyzeSectionBalance,
+  getKeywordDensityHeatmap,
 } from "../controllers/resume.controller";
 import { authenticate } from "../middleware/auth";
 import { upload } from "../middleware/upload";
@@ -111,5 +112,6 @@ router.post("/:id/keyword-gap", authenticate, analyzeKeywordGap);
 router.post("/:id/completeness-score", authenticate, scoreResumeCompleteness);
 router.post("/:id/bullet-impact", authenticate, analyzeBulletImpact);
 router.post("/:id/section-balance", authenticate, analyzeSectionBalance);
+router.post("/:id/keyword-heatmap", authenticate, getKeywordDensityHeatmap);
 
 export default router;

@@ -621,3 +621,17 @@ export const analyzeSectionBalance = asyncHandler(async (req: Request, res: Resp
     data: result,
   });
 });
+
+export const getKeywordDensityHeatmap = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { id } = req.params;
+  const { documentText } = req.body;
+
+  const result = await resumeService.getKeywordDensityHeatmap(userId, id, documentText);
+
+  res.status(200).json({
+    success: true,
+    message: "Keyword density heatmap generated successfully",
+    data: result
+  });
+});

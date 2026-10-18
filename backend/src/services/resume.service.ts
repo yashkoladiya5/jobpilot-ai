@@ -1,7 +1,7 @@
 import fs from "fs";
 import prisma from "../config/prisma";
 import { ApiError } from "../utils/ApiError";
-import { averageSentenceLength, countWords } from "../utils/text";
+import { averageSentenceLength, countWords, termFrequency } from "../utils/text";
 import { clampNumber, randInt } from "../utils/math";
 import { MS_PER_DAY, daysAgo } from "../utils/dates";
 import { requireOwnedResume } from "../utils/resume";
@@ -1431,6 +1431,42 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
         ? "Section word allocation sits inside recommended ranges."
         : `Fix ${issues.length} lopsided section(s): ${issues.map((i) => `${i.name} (${i.status})`).join(", ")}.`,
       analyzedAt: new Date().toISOString()
+    };
+  }
+
+  async getKeywordDensityHeatmap(userId: string, id: string, documentText: string) {
+    const resume = await requireOwnedResume(userId, id);
+    if (!documentText || documentText.trim().length === 0) {
+      throw ApiError.badRequest("Document text is required to build a keyword heatmap.");
+    }
+
+    const totalWords = countWords(documentText);
+    const terms = termFrequency(documentText, 20);
+
+    const STUFFING_THRESHOLD = 3; // percent of total words
+    const THIN_THRESHOLD = 0.5;
+
+    const cells = terms.map((entry) => {
+      const densityPercent = totalWords > 0 ? (entry.count / totalWords) * 100 : 0;
+      const band =
+        densityPercent >= STUFFING_THRESHOLD ? "overused" :
+        densityPercent >= THIN_THRESHOLD ? "healthy" : "thin";
+      return { term: entry.term, count: entry.count, densityPercent: Number(densityPercent.toFixed(2)), band };
+    });
+
+    const overused = cells.filter((cell) => cell.band === "overused").map((cell) => cell.term);
+    const topSkills = cells.filter((cell) => cell.band === "healthy").slice(0, 5).map((cell) => cell.term);
+
+    return {
+      resumeId: resume.id,
+      totalWords,
+      cells,
+      overusedTerms: overused,
+      balancedTopTerms: topSkills,
+      message: overused.length > 0
+        ? `${overused.join(", ")} repeated ${STUFFING_THRESHOLD}%+ of the document — ATS may flag this as keyword stuffing.`
+        : `Keyword spread looks natural across ${cells.length} tracked terms.`,
+      mappedAt: new Date().toISOString()
     };
   }
 }
