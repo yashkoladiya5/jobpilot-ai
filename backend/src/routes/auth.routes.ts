@@ -21,6 +21,7 @@ import { register, login, getMe, deleteAccount, updatePassword, updateEmail, upd
   getAccountActivityDigest,
   getPasswordExpiryReminder,
   auditSessionGeoAnomalies,
+  getBackupCodeUsageReport,
 } from "../controllers/auth.controller";
 import { authenticate } from "../middleware/auth";
 import { validate } from "../middleware/validate";
@@ -81,5 +82,6 @@ router.get("/device-usage-report", authenticate, getDeviceUsageReport);
 router.get("/activity-digest", authenticate, getAccountActivityDigest);
 router.get("/password-expiry", authenticate, getPasswordExpiryReminder);
 router.get("/geo-anomalies", authenticate, auditSessionGeoAnomalies);
+router.get("/backup-codes/usage", authenticate, getBackupCodeUsageReport);
 
 export default router;

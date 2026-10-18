@@ -611,3 +611,13 @@ export const auditSessionGeoAnomalies = asyncHandler(async (req: Request, res: R
   const result = await authService.auditSessionGeoAnomalies(userId);
   res.status(200).json({ success: true, message: "Session geo audit complete", data: result });
 });
+
+export const getBackupCodeUsageReport = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const result = await authService.getBackupCodeUsageReport(userId);
+  res.status(200).json({
+    success: true,
+    message: "Backup code usage report generated successfully",
+    data: result
+  });
+});
