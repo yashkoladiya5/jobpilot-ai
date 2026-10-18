@@ -1,6 +1,7 @@
 import fs from "fs";
 import prisma from "../config/prisma";
 import { ApiError } from "../utils/ApiError";
+import { averageSentenceLength, countWords } from "../utils/text";
 import { clampNumber, randInt } from "../utils/math";
 import { MS_PER_DAY, daysAgo } from "../utils/dates";
 import { requireOwnedResume } from "../utils/resume";
@@ -1361,6 +1362,75 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
       message: impactPercent >= 50
         ? `${impactPercent}% of bullets are strong (action verb + metric).`
         : `Only ${impactPercent}% of bullets pair an action verb with a metric — tighten the weakest first.`
+    };
+  }
+
+  async analyzeSectionBalance(userId: string, id: string, documentText: string) {
+    const resume = await prisma.resume.findUnique({ where: { id } });
+    if (!resume || resume.userId !== userId) {
+      throw ApiError.notFound("Resume not found");
+    }
+    if (!documentText || documentText.trim().length === 0) {
+      throw ApiError.badRequest("Document text is required to analyze section balance.");
+    }
+
+    const sectionDefs: { name: string; header: RegExp; idealShare: [number, number] }[] = [
+      { name: "summary", header: /^(summary|profile|objective)\b/i, idealShare: [0.05, 0.12] },
+      { name: "experience", header: /^(experience|employment|work history)\b/i, idealShare: [0.45, 0.65] },
+      { name: "education", header: /^(education|academic)\b/i, idealShare: [0.08, 0.2] },
+      { name: "skills", header: /^(skills|technologies|tech stack)\b/i, idealShare: [0.08, 0.2] },
+    ];
+
+    const lines = documentText.split("\n").map((l) => l.trim()).filter(Boolean);
+    const totalWords = countWords(documentText);
+    if (totalWords === 0) {
+      throw ApiError.badRequest("Document has no words to analyze.");
+    }
+
+    const buckets: Record<string, string[]> = {};
+    let current: string | null = null;
+    for (const line of lines) {
+      const matched = sectionDefs.find((s) => s.header.test(line));
+      if (matched) {
+        current = matched.name;
+        buckets[current] = buckets[current] ?? [];
+        continue;
+      }
+      if (current) buckets[current].push(line);
+    }
+
+    const sections = sectionDefs.map((def) => {
+      const content = buckets[def.name] ?? [];
+      const words = content.reduce((sum, l) => sum + countWords(l), 0);
+      const share = words / totalWords;
+      let status: "missing" | "underweight" | "balanced" | "overweight";
+      if (words === 0) status = "missing";
+      else if (share < def.idealShare[0]) status = "underweight";
+      else if (share > def.idealShare[1]) status = "overweight";
+      else status = "balanced";
+      return {
+        name: def.name,
+        words,
+        sharePercent: Math.round(share * 1000) / 10,
+        idealRangePercent: `${def.idealShare[0] * 100}–${def.idealShare[1] * 100}`,
+        avgSentenceWords: content.length > 0 ? averageSentenceLength(content.join(" ")) : 0,
+        status,
+      };
+    });
+
+    const issues = sections.filter((s) => s.status !== "balanced");
+    const longestSentence = Math.max(...lines.map((l) => countWords(l)), 0);
+
+    return {
+      resumeId: resume.id,
+      totalWords,
+      sections,
+      longestLineWords: longestSentence,
+      balanced: issues.length === 0,
+      message: issues.length === 0
+        ? "Section word allocation sits inside recommended ranges."
+        : `Fix ${issues.length} lopsided section(s): ${issues.map((i) => `${i.name} (${i.status})`).join(", ")}.`,
+      analyzedAt: new Date().toISOString()
     };
   }
 }

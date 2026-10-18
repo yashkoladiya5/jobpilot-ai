@@ -607,3 +607,17 @@ export const analyzeBulletImpact = asyncHandler(async (req: Request, res: Respon
     data: result,
   });
 });
+
+export const analyzeSectionBalance = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { id } = req.params;
+  const { documentText } = req.body;
+
+  const result = await resumeService.analyzeSectionBalance(userId, id, documentText);
+
+  res.status(200).json({
+    success: true,
+    message: "Section balance analyzed successfully",
+    data: result,
+  });
+});
