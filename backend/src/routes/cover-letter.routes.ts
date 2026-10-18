@@ -8,6 +8,7 @@ import {
   adjustTone,
   scoreLetterSpecificity,
   checkCallToAction,
+  checkLengthConstraints,
 } from "../controllers/cover-letter.controller";
 import { authenticate } from "../middleware/auth";
 
@@ -27,5 +28,6 @@ router.delete("/:id", deleteCoverLetter);
 router.post("/:id/adjust-tone", adjustTone);
 router.get("/:id/specificity", scoreLetterSpecificity);
 router.get("/:id/call-to-action", checkCallToAction);
+router.get("/:id/length-constraints", checkLengthConstraints);
 
 export default router;

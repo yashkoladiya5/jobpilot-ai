@@ -6,6 +6,7 @@ import { coverLetterSchema } from "./schemas/cover-letter.schema";
 import { buildCoverLetterPrompt } from "./prompts/cover-letter.prompt";
 import { readTextFileSafely } from "../../utils/fs";
 import { requireOwnedResume } from "../../utils/resume";
+import { countWords, splitSentences } from "../../utils/text";
 
 /** Tones accepted when generating or adjusting a cover letter. */
 const SUPPORTED_COVER_LETTER_TONES: readonly string[] = ["professional", "enthusiastic", "confident", "humorous", "formal"];
@@ -257,6 +258,52 @@ export class CoverLetterService {
         : grade === "partial"
           ? "Add one explicit next step, e.g. 'I will follow up next week to schedule a conversation.'"
           : "Your letter never asks for anything — end with a concrete next step and your contact details.",
+      checkedAt: new Date().toISOString()
+    };
+  }
+
+  async checkLengthConstraints(userId: string, id: string) {
+    const coverLetter = await this.getCoverLetter(id, userId);
+    const text = coverLetter.coverLetterText ?? "";
+
+    const MIN_WORDS = 250;
+    const MAX_WORDS = 400;
+    const MIN_PARAGRAPHS = 3;
+    const MAX_PARAGRAPHS = 5;
+    const LONG_SENTENCE_WORDS = 30;
+
+    const words = countWords(text);
+    const paragraphs = text
+      .split(/\n\s*\n/)
+      .map((p) => p.trim())
+      .filter(Boolean);
+    const sentences = splitSentences(text);
+    const longSentences = sentences
+      .map((sentence, index) => ({ index: index + 1, words: countWords(sentence) }))
+      .filter((sentence) => sentence.words > LONG_SENTENCE_WORDS);
+
+    const verdict =
+      words < MIN_WORDS ? "too_short" : words > MAX_WORDS ? "too_long" : "within_range";
+
+    const issues: string[] = [];
+    if (words < MIN_WORDS) issues.push(`Add ${MIN_WORDS - words} more words to reach the ${MIN_WORDS}-word floor.`);
+    if (words > MAX_WORDS) issues.push(`Trim ${words - MAX_WORDS} words — recruiters skim past ${MAX_WORDS}.`);
+    if (paragraphs.length < MIN_PARAGRAPHS) issues.push("Use at least 3 paragraphs: hook, evidence, closing.");
+    if (paragraphs.length > MAX_PARAGRAPHS) issues.push(`Merge paragraphs down to ${MAX_PARAGRAPHS} or fewer.`);
+    if (longSentences.length > 0) issues.push(`Sentence(s) ${longSentences.map((s) => s.index).join(", ")} exceed ${LONG_SENTENCE_WORDS} words — split them.`);
+
+    return {
+      coverLetterId: coverLetter.id,
+      wordCount: words,
+      targetRange: { min: MIN_WORDS, max: MAX_WORDS },
+      verdict,
+      paragraphCount: paragraphs.length,
+      sentenceCount: sentences.length,
+      longSentences,
+      issues,
+      message: issues.length === 0
+        ? `Well sized: ${words} words in ${paragraphs.length} paragraphs.`
+        : issues.join(" "),
       checkedAt: new Date().toISOString()
     };
   }
