@@ -1846,4 +1846,56 @@ export class AnalyticsService {
       generatedAt: new Date().toISOString()
     };
   }
+
+  async getPipelineMixShift(userId: string) {
+    await requireUser(userId);
+
+    const applications = await prisma.jobApplication.findMany({
+      where: { userId },
+      select: { status: true, appliedDate: true, updatedAt: true },
+    });
+
+    const now = new Date();
+    const currentMonthKey = monthKey(now);
+    const prevMonthDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const prevMonthKey = monthKey(prevMonthDate);
+
+    const mixFor = (monthKeyStr: string) => {
+      const inMonth = applications.filter(
+        (a) => a.appliedDate && monthKey(a.appliedDate) === monthKeyStr
+      );
+      const counts = countBy(inMonth, (a) => a.status);
+      const total = inMonth.length;
+      return { total, counts, shares: Object.fromEntries(
+        Object.entries(counts).map(([status, n]) => [status, total === 0 ? 0 : Math.round((n / total) * 100)])
+      ) };
+    };
+
+    const current = mixFor(currentMonthKey);
+    const previous = mixFor(prevMonthKey);
+
+    const statuses = Array.from(new Set([...Object.keys(current.counts), ...Object.keys(previous.counts)]));
+    const shifts = statuses.map((status) => ({
+      status,
+      previousSharePercent: previous.shares[status] ?? 0,
+      currentSharePercent: current.shares[status] ?? 0,
+      deltaPercent: (current.shares[status] ?? 0) - (previous.shares[status] ?? 0),
+    })).sort((a, b) => Math.abs(b.deltaPercent) - Math.abs(a.deltaPercent));
+
+    const biggest = shifts[0];
+
+    return {
+      userId,
+      months: { previous: prevMonthKey, current: currentMonthKey },
+      currentMix: current.counts,
+      previousMix: previous.counts,
+      shifts,
+      message: current.total === 0
+        ? "No applications logged this month yet — nothing to compare."
+        : biggest === undefined
+          ? "Pipeline mix unchanged."
+          : `Biggest shift: ${biggest.status} moved ${biggest.deltaPercent >= 0 ? "+" : ""}${biggest.deltaPercent} points month over month.`,
+      generatedAt: new Date().toISOString()
+    };
+  }
 }

@@ -513,3 +513,15 @@ export const getMonthlyFunnelTrend = asyncHandler(async (req: Request, res: Resp
     data: result
   });
 });
+
+export const getPipelineMixShift = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+
+  const result = await analyticsService.getPipelineMixShift(userId);
+
+  res.status(200).json({
+    success: true,
+    message: "Pipeline mix shift computed successfully",
+    data: result
+  });
+});
