@@ -1469,4 +1469,62 @@ JavaScript, TypeScript, React, Node.js, SQL, AWS`;
       mappedAt: new Date().toISOString()
     };
   }
+
+  async runAtsFormatChecklist(userId: string, id: string, documentText: string) {
+    const resume = await requireOwnedResume(userId, id);
+    if (!documentText || documentText.trim().length === 0) {
+      throw ApiError.badRequest("Document text is required for the ATS format checklist.");
+    }
+
+    const checks = [
+      {
+        name: "Contact email present",
+        passed: /[\w.+-]+@[\w-]+\.[\w.-]+/.test(documentText),
+        fix: "Add a plain-text email address near the top."
+      },
+      {
+        name: "Phone number present",
+        passed: /(\+?\d[\d\s().-]{7,}\d)/.test(documentText),
+        fix: "Include a phone number in the header block."
+      },
+      {
+        name: "Standard section headings",
+        passed: /(experience|work history)/i.test(documentText) && /(education)/i.test(documentText) && /(skills)/i.test(documentText),
+        fix: "Use conventional headings: Experience, Education, Skills."
+      },
+      {
+        name: "No decorative glyphs",
+        passed: !/[★☆◆■●▪→]|[\u2500-\u25FF]/.test(documentText),
+        fix: "Replace symbols and box-drawing characters — many ATS parsers drop them."
+      },
+      {
+        name: "Recognizable date format",
+        passed: /(\b(19|20)\d{2}\b)/.test(documentText) || /\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.? \d{4}/i.test(documentText),
+        fix: "Add year values (e.g. 2021–2024) so the parser can build a timeline."
+      },
+      {
+        name: "Within scannable length",
+        passed: countWords(documentText) <= 900,
+        fix: "Trim below ~900 words; parsers and recruiters both lose the plot past that."
+      },
+    ];
+
+    const passedCount = checks.filter((check) => check.passed).length;
+    const score = Math.round((passedCount / checks.length) * 100);
+    const failures = checks.filter((check) => !check.passed);
+
+    return {
+      resumeId: resume.id,
+      checks,
+      passed: passedCount,
+      total: checks.length,
+      score,
+      verdict: score >= 85 ? "ats-safe" : score >= 60 ? "ats-risky" : "ats-likely-broken",
+      fixes: failures.map((check) => check.fix),
+      message: failures.length === 0
+        ? "All format checks pass — this resume should parse cleanly."
+        : `${failures.length} of ${checks.length} checks failed: ${failures.map((f) => f.name).join("; ")}.`,
+      checkedAt: new Date().toISOString()
+    };
+  }
 }

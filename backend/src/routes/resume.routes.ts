@@ -45,6 +45,7 @@ import {
   analyzeBulletImpact,
   analyzeSectionBalance,
   getKeywordDensityHeatmap,
+  runAtsFormatChecklist,
 } from "../controllers/resume.controller";
 import { authenticate } from "../middleware/auth";
 import { upload } from "../middleware/upload";
@@ -113,5 +114,6 @@ router.post("/:id/completeness-score", authenticate, scoreResumeCompleteness);
 router.post("/:id/bullet-impact", authenticate, analyzeBulletImpact);
 router.post("/:id/section-balance", authenticate, analyzeSectionBalance);
 router.post("/:id/keyword-heatmap", authenticate, getKeywordDensityHeatmap);
+router.post("/:id/ats-checklist", authenticate, runAtsFormatChecklist);
 
 export default router;

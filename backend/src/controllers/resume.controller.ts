@@ -635,3 +635,17 @@ export const getKeywordDensityHeatmap = asyncHandler(async (req: Request, res: R
     data: result
   });
 });
+
+export const runAtsFormatChecklist = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { id } = req.params;
+  const { documentText } = req.body;
+
+  const result = await resumeService.runAtsFormatChecklist(userId, id, documentText);
+
+  res.status(200).json({
+    success: true,
+    message: "ATS format checklist completed successfully",
+    data: result
+  });
+});
