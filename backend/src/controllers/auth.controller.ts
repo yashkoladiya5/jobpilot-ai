@@ -621,3 +621,13 @@ export const getBackupCodeUsageReport = asyncHandler(async (req: Request, res: R
     data: result
   });
 });
+
+export const getSignInPatternReport = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const result = await authService.getSignInPatternReport(userId);
+  res.status(200).json({
+    success: true,
+    message: "Sign-in pattern report generated successfully",
+    data: result
+  });
+});

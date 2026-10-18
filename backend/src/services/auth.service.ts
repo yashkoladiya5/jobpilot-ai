@@ -1351,4 +1351,44 @@ export class AuthService {
       reportedAt: new Date().toISOString()
     };
   }
+
+  async getSignInPatternReport(userId: string) {
+    const history = await this.getLoginHistory(userId);
+
+    const BANDS = [
+      { band: "early_morning", label: "00:00–05:59", test: (h: number) => h < 6 },
+      { band: "morning", label: "06:00–11:59", test: (h: number) => h >= 6 && h < 12 },
+      { band: "afternoon", label: "12:00–17:59", test: (h: number) => h >= 12 && h < 18 },
+      { band: "evening", label: "18:00–23:59", test: (h: number) => h >= 18 },
+    ];
+
+    const counts: Record<string, number> = {};
+    for (const entry of BANDS) counts[entry.band] = 0;
+
+    let failedOutsideBusinessHours = 0;
+    for (const login of history) {
+      const hour = login.timestamp.getHours();
+      const band = BANDS.find((entry) => entry.test(hour));
+      if (band) counts[band.band] += 1;
+      if (login.status !== "SUCCESS" && hour >= 22) failedOutsideBusinessHours += 1;
+    }
+
+    const total = history.length;
+    const dominant = BANDS.reduce((max, entry) => (counts[entry.band] > counts[max.band] ? entry : max), BANDS[0]);
+    const nightOwlShare = total === 0 ? 0 : Math.round((counts.early_morning / total) * 100);
+
+    return {
+      userId,
+      loginsAnalyzed: total,
+      bandCounts: counts,
+      dominantBand: dominant.band,
+      dominantLabel: dominant.label,
+      nightOwlSharePercent: nightOwlShare,
+      suspiciousLateNightFailures: failedOutsideBusinessHours,
+      message: failedOutsideBusinessHours > 0
+        ? `${failedOutsideBusinessHours} failed sign-in(s) after 22:00 — worth reviewing even if the pattern looks normal.`
+        : `You mostly sign in between ${dominant.label}${nightOwlShare > 25 ? ", with a notable late-night tail" : ""}.`,
+      analyzedAt: new Date().toISOString()
+    };
+  }
 }
