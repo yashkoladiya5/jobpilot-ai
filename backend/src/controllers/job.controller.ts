@@ -683,3 +683,16 @@ export const getDemandedSkillsReport = asyncHandler(async (req: Request, res: Re
     data: result,
   });
 });
+
+export const getFollowUpDigest = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const quietDays = req.query.quietDays ? Number(req.query.quietDays) : 7;
+
+  const result = await jobService.getFollowUpDigest(userId, quietDays);
+
+  res.status(200).json({
+    success: true,
+    message: "Follow-up digest generated successfully",
+    data: result,
+  });
+});

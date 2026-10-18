@@ -1647,4 +1647,46 @@ ${userName}`;
       generatedAt: new Date().toISOString()
     };
   }
+
+  async getFollowUpDigest(userId: string, quietDays = 7) {
+    await requireUser(userId);
+
+    if (!Number.isFinite(quietDays) || quietDays < 1) {
+      throw ApiError.badRequest("quietDays must be a positive number.");
+    }
+
+    const cutoff = daysAgo(quietDays);
+    const stale = await prisma.jobApplication.findMany({
+      where: {
+        userId,
+        status: $Enums.ApplicationStatus.APPLIED,
+        updatedAt: { lt: cutoff },
+      },
+      orderBy: { updatedAt: "asc" },
+    });
+
+    const digest = stale.map((application) => {
+      const waitingDays = elapsedDays(application.updatedAt);
+      const draft = `Hi ${application.companyName} team — following up on my ${application.role} application (submitted ~${waitingDays} days ago). Still very interested; happy to share anything additional.`;
+      return {
+        applicationId: application.id,
+        companyName: application.companyName,
+        role: application.role,
+        daysSinceUpdate: waitingDays,
+        urgency: waitingDays >= quietDays * 3 ? "high" : waitingDays >= quietDays * 2 ? "medium" : "low",
+        draftMessage: draft,
+      };
+    });
+
+    return {
+      userId,
+      quietDaysThreshold: quietDays,
+      applicationsNeedingFollowUp: digest.length,
+      digest,
+      message: digest.length === 0
+        ? `Nothing stale — every active application touched in the last ${quietDays} days.`
+        : `${digest.length} application(s) have gone quiet for ${quietDays}+ days. Top: ${digest[0].companyName} (${digest[0].daysSinceUpdate}d).`,
+      generatedAt: new Date().toISOString()
+    };
+  }
 }
