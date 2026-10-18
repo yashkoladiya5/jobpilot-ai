@@ -604,3 +604,10 @@ export const getPasswordExpiryReminder = asyncHandler(async (req: Request, res: 
   const result = await authService.getPasswordExpiryReminder(userId, rotationDays);
   res.status(200).json({ success: true, message: "Password expiry reminder generated", data: result });
 });
+
+export const auditSessionGeoAnomalies = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+
+  const result = await authService.auditSessionGeoAnomalies(userId);
+  res.status(200).json({ success: true, message: "Session geo audit complete", data: result });
+});

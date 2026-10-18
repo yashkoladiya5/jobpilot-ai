@@ -1282,4 +1282,40 @@ export class AuthService {
       checkedAt: new Date().toISOString()
     };
   }
+
+  async auditSessionGeoAnomalies(userId: string) {
+    const [sessions, history] = await Promise.all([
+      this.getActiveSessions(userId),
+      this.getLoginHistory(userId),
+    ]);
+
+    const locationCounts = new Map<string, number>();
+    for (const event of history) {
+      locationCounts.set(event.location, (locationCounts.get(event.location) ?? 0) + 1);
+    }
+
+    const sortedLocations = Array.from(locationCounts.entries()).sort((a, b) => b[1] - a[1]);
+    const homeLocation = sortedLocations[0]?.[0] ?? null;
+
+    const anomalies = history.filter((event) => homeLocation && event.location !== homeLocation);
+    const riskyIps = Array.from(new Set(anomalies.filter((a) => a.status === "FAILED_ATTEMPT").map((a) => a.ipAddress)));
+
+    return {
+      userId,
+      homeLocation,
+      knownLocations: sortedLocations.map(([location, logins]) => ({ location, logins })),
+      activeSessionLocations: Array.from(new Set(sessions.map((s) => s.location))),
+      anomalousLogins: anomalies.map((a) => ({
+        timestamp: a.timestamp.toISOString(),
+        location: a.location,
+        device: a.device,
+        status: a.status,
+      })),
+      flaggedIpAddresses: riskyIps,
+      message: anomalies.length === 0
+        ? "Every recorded sign-in came from your primary location — nothing to flag."
+        : `${anomalies.length} sign-in(s) came from locations other than ${homeLocation}. Review anything unfamiliar.`,
+      auditedAt: new Date().toISOString()
+    };
+  }
 }

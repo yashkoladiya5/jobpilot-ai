@@ -20,6 +20,7 @@ import { register, login, getMe, deleteAccount, updatePassword, updateEmail, upd
   getDeviceUsageReport,
   getAccountActivityDigest,
   getPasswordExpiryReminder,
+  auditSessionGeoAnomalies,
 } from "../controllers/auth.controller";
 import { authenticate } from "../middleware/auth";
 import { validate } from "../middleware/validate";
@@ -79,5 +80,6 @@ router.post("/admin/enforce-session-timeout", authenticate, enforceSessionTimeou
 router.get("/device-usage-report", authenticate, getDeviceUsageReport);
 router.get("/activity-digest", authenticate, getAccountActivityDigest);
 router.get("/password-expiry", authenticate, getPasswordExpiryReminder);
+router.get("/geo-anomalies", authenticate, auditSessionGeoAnomalies);
 
 export default router;
