@@ -1781,4 +1781,69 @@ export class AnalyticsService {
       generatedAt: new Date().toISOString()
     };
   }
+
+  async getMonthlyFunnelTrend(userId: string, months = 3) {
+    await requireUser(userId);
+
+    if (!Number.isFinite(months) || months < 1 || months > 12) {
+      throw ApiError.badRequest("months must be between 1 and 12.");
+    }
+
+    const applications = await prisma.jobApplication.findMany({
+      where: { userId },
+      select: { appliedDate: true, status: true },
+    });
+
+    const now = new Date();
+    const windowKeys: string[] = [];
+    for (let i = months - 1; i >= 0; i -= 1) {
+      windowKeys.push(monthKey(new Date(now.getFullYear(), now.getMonth() - i, 1)));
+    }
+
+    const byMonth = new Map<string, { applied: number; interviews: number; offers: number }>();
+    for (const key of windowKeys) {
+      byMonth.set(key, { applied: 0, interviews: 0, offers: 0 });
+    }
+
+    for (const application of applications) {
+      if (!application.appliedDate) continue;
+      const key = monthKey(application.appliedDate);
+      const bucket = byMonth.get(key);
+      if (!bucket) continue;
+      bucket.applied += 1;
+      if (application.status === ApplicationStatus.INTERVIEW || application.status === ApplicationStatus.OFFER) bucket.interviews += 1;
+      if (application.status === ApplicationStatus.OFFER) bucket.offers += 1;
+    }
+
+    const trend = windowKeys.map((month) => {
+      const bucket = byMonth.get(month)!;
+      return {
+        month,
+        applied: bucket.applied,
+        reachedInterview: bucket.interviews,
+        offers: bucket.offers,
+        interviewRatePercent: bucket.applied === 0 ? 0 : Math.round((bucket.interviews / bucket.applied) * 100),
+      };
+    });
+
+    const thisMonth = trend[trend.length - 1];
+    const prevMonth = trend.length > 1 ? trend[trend.length - 2] : null;
+    const direction =
+      prevMonth === null || thisMonth.interviewRatePercent === prevMonth.interviewRatePercent
+        ? "flat"
+        : thisMonth.interviewRatePercent > prevMonth.interviewRatePercent ? "improving" : "declining";
+
+    return {
+      userId,
+      months,
+      trend,
+      direction,
+      message: direction === "improving"
+        ? `Interview conversion improved to ${thisMonth.interviewRatePercent}% this month.`
+        : direction === "declining"
+          ? `Interview conversion slipped to ${thisMonth.interviewRatePercent}% this month — review targeting.`
+          : `Interview conversion holding at ${thisMonth.interviewRatePercent}% this month.`,
+      generatedAt: new Date().toISOString()
+    };
+  }
 }

@@ -500,3 +500,16 @@ export const getResponseTimeBenchmark = asyncHandler(async (req: Request, res: R
     data: result
   });
 });
+
+export const getMonthlyFunnelTrend = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const months = req.query.months ? Number(req.query.months) : 3;
+
+  const result = await analyticsService.getMonthlyFunnelTrend(userId, months);
+
+  res.status(200).json({
+    success: true,
+    message: "Monthly funnel trend generated successfully",
+    data: result
+  });
+});

@@ -18,6 +18,7 @@ import { getPipelineAnalytics, getTimelineData, getSkillMatchAnalytics, getRejec
   getApplicationStreakReport,
   getStageVelocityBreakdown,
   getResponseTimeBenchmark,
+  getMonthlyFunnelTrend,
 } from "../controllers/analytics.controller";
 
 /**
@@ -74,5 +75,6 @@ router.get("/time-of-day-stats", getApplicationTimeOfDayStats);
 router.get("/streak-report", getApplicationStreakReport);
 router.get("/stage-velocity", getStageVelocityBreakdown);
 router.get("/response-time-benchmark", getResponseTimeBenchmark);
+router.get("/monthly-funnel-trend", getMonthlyFunnelTrend);
 
 export default router;
