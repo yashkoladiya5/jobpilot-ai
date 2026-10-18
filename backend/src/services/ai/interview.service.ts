@@ -723,6 +723,60 @@ export class InterviewService {
       generatedAt: new Date().toISOString()
     };
   }
+
+  async getPrepTimeBudget(userId: string, sessionId: string, totalMinutes = 60) {
+    if (!Number.isFinite(totalMinutes) || totalMinutes < 5) {
+      throw ApiError.badRequest("totalMinutes must be at least 5.");
+    }
+
+    const session = await this.requireSession(userId, sessionId, {
+      questions: { orderBy: { orderIndex: "asc" } },
+    });
+    const questions = session.questions;
+
+    if (questions.length === 0) {
+      throw ApiError.badRequest("This session has no questions to allocate prep time for.");
+    }
+
+    const MIN_MINUTES_PER_QUESTION = 3;
+    const weights = questions.map((question) => {
+      const words = (question.question ?? "").trim().split(/\s+/).filter(Boolean).length;
+      const isBehavioral = /(tell me about|describe a time|example|conflict|failure|challenge)/i.test(question.question ?? "");
+      return 1 + words / 40 + (isBehavioral ? 1 : 0);
+    });
+    const weightTotal = weights.reduce((sum, w) => sum + w, 0);
+
+    const guaranteed = questions.length * MIN_MINUTES_PER_QUESTION;
+    if (guaranteed > totalMinutes) {
+      throw ApiError.badRequest(
+        `${questions.length} questions need at least ${guaranteed} minutes at ${MIN_MINUTES_PER_QUESTION} min each; increase totalMinutes.`
+      );
+    }
+
+    const flexible = totalMinutes - guaranteed;
+    let cursor = 0;
+    const plan = questions.map((question, index) => {
+      const allocated = MIN_MINUTES_PER_QUESTION + Math.round((weights[index] / weightTotal) * flexible);
+      const slot = {
+        orderIndex: question.orderIndex,
+        question: question.question,
+        prepMinutes: allocated,
+        startsAtMinute: cursor,
+      };
+      cursor += allocated;
+      return slot;
+    });
+
+    return {
+      sessionId,
+      totalMinutes,
+      questionCount: questions.length,
+      plan,
+      heaviestPrep: plan.reduce((max, slot) => (slot.prepMinutes > max.prepMinutes ? slot : max), plan[0]).question,
+      message: `Spread ${totalMinutes} minutes over ${questions.length} question(s); save the biggest block for "${plan.reduce((max, slot) => (slot.prepMinutes > max.prepMinutes ? slot : max), plan[0]).question.slice(0, 60)}".`,
+      generatedAt: new Date().toISOString()
+    };
+  }
 }
 
 export const interviewService = new InterviewService();

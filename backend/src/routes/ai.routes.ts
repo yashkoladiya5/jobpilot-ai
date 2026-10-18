@@ -46,6 +46,7 @@ import {
   scoreRemoteFriendliness,
   estimateSeniority,
   getDifficultyCurve,
+  getPrepTimeBudget,
   rewriteCoverLetterTone,
   highlightCoverLetterKeywords,
   generateResignationLetter,
@@ -122,6 +123,7 @@ router.post("/interview/job/:jobId/system-design-assessment", generateMockSystem
 router.post("/interview/job/:jobId/elevator-pitch", generateElevatorPitch);
 router.get("/interview/session/:sessionId/answer-length", adviseAnswerLength);
 router.get("/interview/session/:sessionId/difficulty-curve", getDifficultyCurve);
+router.get("/interview/session/:sessionId/prep-budget", getPrepTimeBudget);
 
 // Career insights
 router.get("/career/insights", getCareerInsights);

@@ -555,3 +555,11 @@ export const estimateSeniority = asyncHandler(async (req: Request, res: Response
   const result = await jobAnalysisService.estimateSeniority(userId, jobDescription);
   res.json({ success: true, message: "Seniority estimated", data: result });
 });
+
+export const getPrepTimeBudget = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { sessionId } = req.params;
+  const totalMinutes = req.query.minutes ? Number(req.query.minutes) : 60;
+  const result = await interviewService.getPrepTimeBudget(userId, sessionId, totalMinutes);
+  res.json({ success: true, message: "Prep time budget allocated", data: result });
+});
