@@ -1689,4 +1689,56 @@ ${userName}`;
       generatedAt: new Date().toISOString()
     };
   }
+
+  async detectDuplicateApplications(userId: string) {
+    await requireUser(userId);
+
+    const applications = await prisma.jobApplication.findMany({
+      where: { userId },
+      orderBy: { appliedDate: "asc" },
+    });
+
+    const normalize = (value: string) =>
+      value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+
+    const groups = new Map<string, typeof applications>();
+    for (const application of applications) {
+      const key = `${normalize(application.companyName)}|${normalize(application.role)}`;
+      const bucket = groups.get(key);
+      if (bucket) bucket.push(application);
+      else groups.set(key, [application]);
+    }
+
+    const duplicates: Array<{
+      companyName: string;
+      role: string;
+      applicationIds: string[];
+      statuses: string[];
+      earliestApplied: string | null;
+      latestApplied: string | null;
+    }> = [];
+
+    for (const bucket of groups.values()) {
+      if (bucket.length < 2) continue;
+      duplicates.push({
+        companyName: bucket[0].companyName,
+        role: bucket[0].role,
+        applicationIds: bucket.map((a) => a.id),
+        statuses: bucket.map((a) => a.status),
+        earliestApplied: bucket[0].appliedDate?.toISOString() ?? null,
+        latestApplied: bucket[bucket.length - 1].appliedDate?.toISOString() ?? null,
+      });
+    }
+
+    return {
+      userId,
+      applicationsScanned: applications.length,
+      duplicateGroups: duplicates.length,
+      duplicates,
+      message: duplicates.length === 0
+        ? "No repeated company+role submissions found."
+        : `${duplicates.length} company/role pair(s) submitted more than once — consolidate the older entries or withdraw them.`,
+      scannedAt: new Date().toISOString()
+    };
+  }
 }

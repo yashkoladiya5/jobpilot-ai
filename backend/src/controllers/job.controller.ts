@@ -696,3 +696,15 @@ export const getFollowUpDigest = asyncHandler(async (req: Request, res: Response
     data: result,
   });
 });
+
+export const detectDuplicateApplications = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+
+  const result = await jobService.detectDuplicateApplications(userId);
+
+  res.status(200).json({
+    success: true,
+    message: "Duplicate applications detected successfully",
+    data: result,
+  });
+});
