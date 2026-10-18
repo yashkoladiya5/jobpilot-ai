@@ -636,3 +636,15 @@ export const getStreakGuardian = asyncHandler(async (req: Request, res: Response
     data: result
   });
 });
+
+export const getApplicationCadenceProfile = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+
+  const result = await dashboardService.getApplicationCadenceProfile(userId);
+
+  res.status(200).json({
+    success: true,
+    message: "Application cadence profile generated successfully",
+    data: result
+  });
+});

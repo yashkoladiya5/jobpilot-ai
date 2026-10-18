@@ -1650,4 +1650,46 @@ export class DashboardService {
       checkedAt: new Date().toISOString()
     };
   }
+
+  async getApplicationCadenceProfile(userId: string) {
+    await requireUser(userId);
+
+    const applications = await prisma.jobApplication.findMany({
+      where: { userId, appliedDate: { not: null } },
+      select: { appliedDate: true },
+    });
+
+    const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const perDay: number[] = new Array(7).fill(0);
+    for (const application of applications) {
+      perDay[application.appliedDate!.getDay()] += 1;
+    }
+
+    const total = applications.length;
+    const distribution = DAY_NAMES.map((day, index) => ({
+      day,
+      count: perDay[index],
+      sharePercent: total === 0 ? 0 : Math.round((perDay[index] / total) * 100),
+    }));
+
+    const busiestIndex = perDay.indexOf(Math.max(...perDay));
+    const quietestIndex = perDay.indexOf(Math.min(...perDay));
+    const weekendShare =
+      total === 0 ? 0 : Math.round(((perDay[0] + perDay[6]) / total) * 100);
+
+    return {
+      userId,
+      trackedApplications: total,
+      distribution,
+      busiestDay: total === 0 ? null : DAY_NAMES[busiestIndex],
+      quietestDay: total === 0 ? null : DAY_NAMES[quietestIndex],
+      weekendSharePercent: weekendShare,
+      message: total < 5
+        ? "Not enough applications logged yet to read a cadence — keep applying to unlock this profile."
+        : weekendShare > 40
+          ? `You apply heavily on weekends (${weekendShare}%) — recruiters reply on weekdays, consider shifting to ${DAY_NAMES[1]}–${DAY_NAMES[4]}.`
+          : `Your rhythm peaks on ${DAY_NAMES[busiestIndex]}; ${DAY_NAMES[quietestIndex]} is your wasted day.`,
+      profiledAt: new Date().toISOString()
+    };
+  }
 }
