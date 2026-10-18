@@ -670,3 +670,16 @@ export const estimateListingExpiry = asyncHandler(async (req: Request, res: Resp
     data: result,
   });
 });
+
+export const getDemandedSkillsReport = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const limit = req.query.limit ? Number(req.query.limit) : 15;
+
+  const result = await jobService.getDemandedSkillsReport(userId, limit);
+
+  res.status(200).json({
+    success: true,
+    message: "Demanded skills report generated successfully",
+    data: result,
+  });
+});

@@ -49,6 +49,7 @@ import {
   evaluateJobFit,
   checkSalaryCompetitiveness,
   estimateListingExpiry,
+  getDemandedSkillsReport,
 } from "../controllers/job.controller";
 import { authenticate } from "../middleware/auth";
 import { validate } from "../middleware/validate";
@@ -105,6 +106,7 @@ router.get("/:id/resume-customization", authenticate, suggestResumeCustomization
 router.get("/:id/evaluate-job-fit", authenticate, evaluateJobFit);
 router.post("/:id/salary-competitiveness", authenticate, checkSalaryCompetitiveness);
 router.get("/:id/listing-expiry", authenticate, estimateListingExpiry);
+router.get("/skills/demand-report", authenticate, getDemandedSkillsReport);
 
 // CRUD operations for jobs, all requiring user authentication
 router.get("/", authenticate, getJobs);

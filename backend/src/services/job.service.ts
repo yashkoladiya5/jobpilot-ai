@@ -2,7 +2,7 @@ import prisma from "../config/prisma";
 import { $Enums, Prisma } from "@prisma/client";
 import { ACTIVE_APPLICATION_STATUSES } from "../constants";
 import { ApiError } from "../utils/ApiError";
-import { countBy } from "../utils/collections";
+import { countBy, stringList } from "../utils/collections";
 import { requireUser } from "../utils/user";
 import { requireOwnedJob } from "../utils/job";
 import { daysAgo, elapsedDays, MS_PER_DAY } from "../utils/dates";
@@ -1602,6 +1602,49 @@ ${userName}`;
             ? "Send a follow-up — 3 weeks of silence rarely turns into an interview."
             : "Still within the typical response window; hold tight.",
       checkedAt: new Date().toISOString()
+    };
+  }
+
+  async getDemandedSkillsReport(userId: string, limit: number = 15) {
+    const analyses = await prisma.jobAnalysis.findMany({
+      where: { userId, status: $Enums.AnalysisStatus.COMPLETED },
+      select: { id: true, requiredSkills: true, preferredSkills: true },
+    });
+
+    const tally = new Map<string, { required: number; preferred: number }>();
+    for (const analysis of analyses) {
+      for (const skill of stringList(analysis.requiredSkills)) {
+        const key = skill.toLowerCase();
+        const entry = tally.get(key) ?? { required: 0, preferred: 0 };
+        entry.required += 1;
+        tally.set(key, entry);
+      }
+      for (const skill of stringList(analysis.preferredSkills)) {
+        const key = skill.toLowerCase();
+        const entry = tally.get(key) ?? { required: 0, preferred: 0 };
+        entry.preferred += 1;
+        tally.set(key, entry);
+      }
+    }
+
+    const skills = Array.from(tally.entries())
+      .map(([skill, counts]) => ({
+        skill,
+        jobCount: counts.required + counts.preferred,
+        requiredIn: counts.required,
+        preferredIn: counts.preferred,
+      }))
+      .sort((a, b) => b.jobCount - a.jobCount || a.skill.localeCompare(b.skill))
+      .slice(0, limit);
+
+    return {
+      userId,
+      analysesConsidered: analyses.length,
+      topSkills: skills,
+      message: skills.length === 0
+        ? "Complete a job analysis first — there is no skill demand data yet."
+        : `${skills[0].skill} tops your demand list across ${analyses.length} analyzed job(s).`,
+      generatedAt: new Date().toISOString()
     };
   }
 }
