@@ -106,3 +106,16 @@ export const scoreLetterSpecificity = asyncHandler(async (req: Request, res: Res
     data: result,
   });
 });
+
+export const checkCallToAction = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { id } = req.params;
+
+  const result = await coverLetterService.checkCallToAction(userId, id);
+
+  res.status(200).json({
+    success: true,
+    message: "Call to action checked successfully",
+    data: result,
+  });
+});

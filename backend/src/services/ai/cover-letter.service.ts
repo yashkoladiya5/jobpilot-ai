@@ -211,4 +211,53 @@ export class CoverLetterService {
       scoredAt: new Date().toISOString()
     };
   }
+
+  async checkCallToAction(userId: string, id: string) {
+    const coverLetter = await this.getCoverLetter(id, userId);
+    const text = coverLetter.coverLetterText ?? "";
+
+    const sentences = text
+      .split(/(?<=[.!?])\s+/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+
+    const closing = sentences.slice(-3).join(" ").toLowerCase();
+
+    const ctaSignals = [
+      "look forward",
+      "follow up",
+      "schedule",
+      "discuss",
+      "interview",
+      "available for",
+      "contact me",
+      "reach out",
+      "call",
+    ];
+    const foundSignals = ctaSignals.filter((s) => closing.includes(s));
+
+    const hasAvailability = /\d{3}[-.)]\s?\d{3}[-.]\d{4}|[\w.+-]+@[\w-]+\.[\w.-]+/.test(text);
+    const confidentClosing = /(sincerely|best regards|thank you)/i.test(closing);
+
+    const grade =
+      foundSignals.length >= 2 && hasAvailability
+        ? "strong"
+        : foundSignals.length === 1
+          ? "partial"
+          : "missing";
+
+    return {
+      coverLetterId: coverLetter.id,
+      grade,
+      ctaSignalsFound: foundSignals,
+      hasContactDetails: hasAvailability,
+      courteousClosing: confidentClosing,
+      advice: grade === "strong"
+        ? "Closing clearly invites the next step and gives a way to reach you."
+        : grade === "partial"
+          ? "Add one explicit next step, e.g. 'I will follow up next week to schedule a conversation.'"
+          : "Your letter never asks for anything — end with a concrete next step and your contact details.",
+      checkedAt: new Date().toISOString()
+    };
+  }
 }

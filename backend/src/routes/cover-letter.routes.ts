@@ -7,6 +7,7 @@ import {
   deleteCoverLetter,
   adjustTone,
   scoreLetterSpecificity,
+  checkCallToAction,
 } from "../controllers/cover-letter.controller";
 import { authenticate } from "../middleware/auth";
 
@@ -25,5 +26,6 @@ router.patch("/:id", updateCoverLetter);
 router.delete("/:id", deleteCoverLetter);
 router.post("/:id/adjust-tone", adjustTone);
 router.get("/:id/specificity", scoreLetterSpecificity);
+router.get("/:id/call-to-action", checkCallToAction);
 
 export default router;
