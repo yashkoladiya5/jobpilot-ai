@@ -9,6 +9,7 @@ import 'package:jobpilot_ai/presentation/bloc/job/job_event.dart';
 import 'package:jobpilot_ai/presentation/bloc/job/job_state.dart';
 import 'package:jobpilot_ai/presentation/widgets/empty_state.dart';
 import 'package:jobpilot_ai/presentation/widgets/error_display.dart';
+import 'package:jobpilot_ai/presentation/widgets/job_filter_bottom_sheet.dart';
 import 'package:jobpilot_ai/presentation/widgets/status_chip.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -22,6 +23,7 @@ class JobsListScreen extends StatefulWidget {
 class _JobsListScreenState extends State<JobsListScreen> {
   final _searchController = TextEditingController();
   ApplicationStatus? _statusFilter;
+  JobFilterOptions _advancedFilters = const JobFilterOptions();
   String _sortBy = 'appliedDate';
   String _sortOrder = 'desc';
   List<JobApplication>? _lastLoadedJobs;
@@ -114,32 +116,61 @@ class _JobsListScreenState extends State<JobsListScreen> {
   }
 
   Widget _buildSearchAndFilterBar() {
+    final activeFiltersCount = _advancedFilters.activeFilterCount;
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 6),
-          child: TextField(
-            controller: _searchController,
-            decoration: InputDecoration(
-              hintText: 'Search by company or role...',
-              prefixIcon: const Icon(Icons.search),
-              suffixIcon: _searchController.text.isNotEmpty
-                  ? IconButton(
-                      icon: const Icon(Icons.clear),
-                      onPressed: () {
-                        _searchController.clear();
-                        setState(() {});
-                      },
-                    )
-                  : null,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                    hintText: 'Search company, role, location...',
+                    prefixIcon: const Icon(Icons.search),
+                    suffixIcon: _searchController.text.isNotEmpty
+                        ? IconButton(
+                            icon: const Icon(Icons.clear),
+                            onPressed: () {
+                              _searchController.clear();
+                              setState(() {});
+                            },
+                          )
+                        : null,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    contentPadding: EdgeInsets.zero,
+                    filled: true,
+                    fillColor: Theme.of(context).colorScheme.surface,
+                  ),
+                  onChanged: (_) => setState(() {}),
+                ),
               ),
-              contentPadding: EdgeInsets.zero,
-              filled: true,
-              fillColor: Theme.of(context).colorScheme.surface,
-            ),
-            onChanged: (_) => setState(() {}),
+              const SizedBox(width: 8),
+              Badge(
+                isLabelVisible: activeFiltersCount > 0,
+                label: Text('$activeFiltersCount'),
+                child: IconButton.filledTonal(
+                  icon: const Icon(Icons.tune),
+                  tooltip: 'Filter options',
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+                      ),
+                      builder: (context) => JobFilterBottomSheet(
+                        initialFilters: _advancedFilters,
+                        onApply: (updated) => setState(() => _advancedFilters = updated),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
         ),
         SizedBox(
@@ -163,7 +194,7 @@ class _JobsListScreenState extends State<JobsListScreen> {
                 value: _sortBy,
                 underline: const SizedBox(),
                 items: const [
-                  DropdownMenuItem(value: 'appliedDate', child: Text('Date')),
+                  DropdownMenuItem(value: 'appliedDate', child: Text('Date Applied')),
                   DropdownMenuItem(value: 'companyName', child: Text('Company')),
                   DropdownMenuItem(value: 'status', child: Text('Status')),
                 ],
@@ -203,16 +234,58 @@ class _JobsListScreenState extends State<JobsListScreen> {
 
   List<JobApplication> _filterAndSort(List<JobApplication> jobs) {
     var result = jobs.toList();
+
+    // 1. Status Filter from Chip or Advanced Filter
     if (_statusFilter != null) {
       result = result.where((j) => j.status == _statusFilter).toList();
+    } else if (_advancedFilters.statuses.isNotEmpty) {
+      result = result.where((j) => _advancedFilters.statuses.contains(j.status)).toList();
     }
+
+    // 2. Search Query (Company, Role, Location, Notes)
     final query = _searchController.text.trim().toLowerCase();
     if (query.isNotEmpty) {
       result = result.where((j) =>
         j.companyName.toLowerCase().contains(query) ||
-        j.role.toLowerCase().contains(query)
+        j.role.toLowerCase().contains(query) ||
+        (j.location != null && j.location!.toLowerCase().contains(query)) ||
+        (j.notes != null && j.notes!.toLowerCase().contains(query))
       ).toList();
     }
+
+    // 3. Location Type Filter (Remote, Hybrid, Onsite)
+    if (_advancedFilters.locationType != 'all') {
+      result = result.where((j) {
+        final loc = (j.location ?? '').toLowerCase();
+        if (_advancedFilters.locationType == 'remote') return loc.contains('remote');
+        if (_advancedFilters.locationType == 'hybrid') return loc.contains('hybrid');
+        if (_advancedFilters.locationType == 'onsite') return !loc.contains('remote') && !loc.contains('hybrid') && loc.isNotEmpty;
+        return true;
+      }).toList();
+    }
+
+    // 4. Favorites Only
+    if (_advancedFilters.favoritesOnly) {
+      result = result.where((j) => j.isFavorite).toList();
+    }
+
+    // 5. Notes Only
+    if (_advancedFilters.withNotesOnly) {
+      result = result.where((j) => j.notes != null && j.notes!.trim().isNotEmpty).toList();
+    }
+
+    // 6. Date Range Filter
+    if (_advancedFilters.dateRange != 'all') {
+      final now = DateTime.now();
+      int days = 3650;
+      if (_advancedFilters.dateRange == '7d') days = 7;
+      if (_advancedFilters.dateRange == '30d') days = 30;
+      if (_advancedFilters.dateRange == '90d') days = 90;
+      final threshold = now.subtract(Duration(days: days));
+      result = result.where((j) => j.appliedDate.isAfter(threshold)).toList();
+    }
+
+    // Sort Result
     result.sort((a, b) {
       int cmp;
       switch (_sortBy) {

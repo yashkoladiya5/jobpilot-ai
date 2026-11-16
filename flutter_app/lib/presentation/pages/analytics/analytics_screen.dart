@@ -16,6 +16,8 @@ class AnalyticsScreen extends StatefulWidget {
 }
 
 class _AnalyticsScreenState extends State<AnalyticsScreen> {
+  String _selectedTimeframe = 'All Time';
+  final List<String> _timeframes = ['30 Days', '90 Days', '6 Months', 'All Time'];
   @override
   void initState() {
     super.initState();
@@ -72,6 +74,10 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       padding: const EdgeInsets.all(16),
       children: [
         _buildHeader(analytics),
+        const SizedBox(height: 16),
+        _buildTimeframeFilter(),
+        const SizedBox(height: 20),
+        _buildQuickMetricsSummary(analytics),
         const SizedBox(height: 24),
         _buildSuccessRateRing(analytics),
         const SizedBox(height: 28),
@@ -163,6 +169,88 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: AppColors.textSecondary,
               ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTimeframeFilter() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: _timeframes.map((tf) {
+          final isSelected = _selectedTimeframe == tf;
+          return Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: ChoiceChip(
+              label: Text(tf),
+              selected: isSelected,
+              selectedColor: AppColors.primaryLight.withValues(alpha: 0.2),
+              onSelected: (_) => setState(() => _selectedTimeframe = tf),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildQuickMetricsSummary(PipelineAnalytics analytics) {
+    final responseRate = analytics.conversionRates.appliedToInterview;
+    final offerRate = analytics.conversionRates.interviewToOffer;
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: AppColors.primary.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Row(
+                  children: [
+                    Icon(Icons.mark_email_read_outlined, size: 16, color: AppColors.primary),
+                    SizedBox(width: 4),
+                    Text('Response Rate', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.primaryDark)),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                Text('${(responseRate * 100).round()}%', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.primaryDark)),
+                const SizedBox(height: 2),
+                Text(responseRate > 0.2 ? 'Above industry avg' : 'Needs attention', style: TextStyle(fontSize: 10, color: Colors.grey.shade600)),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: AppColors.success.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppColors.success.withValues(alpha: 0.2)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Row(
+                  children: [
+                    Icon(Icons.workspace_premium_outlined, size: 16, color: AppColors.success),
+                    SizedBox(width: 4),
+                    Text('Interview-to-Offer', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.success)),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                Text('${(offerRate * 100).round()}%', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.success)),
+                const SizedBox(height: 2),
+                Text(offerRate > 0.3 ? 'High conversion' : 'Normal benchmark', style: TextStyle(fontSize: 10, color: Colors.grey.shade600)),
+              ],
+            ),
+          ),
         ),
       ],
     );

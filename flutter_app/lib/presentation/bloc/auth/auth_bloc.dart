@@ -85,7 +85,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   String _mapFailureToMessage(Failure failure) {
-    return failure.when(
+    return failure.maybeWhen(
       serverFailure: (message, code) => message,
       networkFailure: (message, code) => message,
       authFailure: (message, code) => message,
@@ -94,6 +94,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       notFoundFailure: (message, code) => message,
       timeoutFailure: (message, code) => message,
       aiProcessingFailure: (message, code) => message,
+      orElse: () => failure.message,
     );
   }
 }

@@ -99,13 +99,14 @@ class ResumeBloc extends Bloc<ResumeEvent, ResumeState> {
   }
 
   String _mapFailureToMessage(Failure failure) {
-    return failure.when(
+    return failure.maybeWhen(
       serverFailure: (message, code) => message,
       networkFailure: (message, code) => message,
       authFailure: (message, code) => message,
       validationFailure: (message, code) => message,
       cacheFailure: (message, code) => message,
       notFoundFailure: (message, code) => message,
+      orElse: () => failure.message,
     );
   }
 }

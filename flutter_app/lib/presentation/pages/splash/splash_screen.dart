@@ -48,7 +48,7 @@ class _SplashScreenState extends State<SplashScreen>
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) async {
         state.whenOrNull(
-          authenticated: (_) => context.go(AppConstants.dashboardRoute),
+          authenticated: (user, isExpiring) => context.go(AppConstants.dashboardRoute),
           unauthenticated: (_) => _handleUnauthenticated(),
           authError: (_) => _handleUnauthenticated(),
         );

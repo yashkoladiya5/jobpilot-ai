@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -26,16 +27,39 @@ class _InterviewSessionScreenState extends State<InterviewSessionScreen> {
   String _feedbackMessage = '';
   InterviewSession? _session;
 
+  // Real-time interview simulation timer
+  Timer? _timer;
+  int _elapsedSeconds = 0;
+  bool _isVoiceRecording = false;
+  bool _showStarGuide = false;
+
   @override
   void initState() {
     super.initState();
     context.read<InterviewBloc>().add(LoadInterviewSession(widget.sessionId));
+    _startTimer();
   }
 
   @override
   void dispose() {
+    _timer?.cancel();
     _answerController.dispose();
     super.dispose();
+  }
+
+  void _startTimer() {
+    _timer?.cancel();
+    _elapsedSeconds = 0;
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (!mounted) return;
+      setState(() => _elapsedSeconds++);
+    });
+  }
+
+  String _formatElapsedTime(int seconds) {
+    final mins = (seconds ~/ 60).toString().padLeft(2, '0');
+    final secs = (seconds % 60).toString().padLeft(2, '0');
+    return '$mins:$secs';
   }
 
   void _submitAnswer() {
@@ -63,6 +87,7 @@ class _InterviewSessionScreenState extends State<InterviewSessionScreen> {
         if (_currentQuestionIndex < _session!.questions.length - 1) {
           _currentQuestionIndex++;
           _answerController.clear();
+          _startTimer();
         }
       });
     });
@@ -213,6 +238,35 @@ class _InterviewSessionScreenState extends State<InterviewSessionScreen> {
                       _buildCategoryBadge(question.category),
                       const SizedBox(width: 8),
                       _buildDifficultyBadge(question.difficulty),
+                      const Spacer(),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: _elapsedSeconds > 120
+                              ? AppColors.error.withValues(alpha: 0.1)
+                              : AppColors.primary.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.timer_outlined,
+                              size: 14,
+                              color: _elapsedSeconds > 120 ? AppColors.error : AppColors.primary,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              _formatElapsedTime(_elapsedSeconds),
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: _elapsedSeconds > 120 ? AppColors.error : AppColors.primary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 20),
@@ -240,12 +294,104 @@ class _InterviewSessionScreenState extends State<InterviewSessionScreen> {
                     if (question.feedback != null)
                       _buildFeedbackCard(question.feedback!),
                   ] else ...[
+                    // Framework hint / STAR Method prompt
+                    InkWell(
+                      onTap: () => setState(() => _showStarGuide = !_showStarGuide),
+                      borderRadius: BorderRadius.circular(8),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: AppColors.secondary.withValues(alpha: 0.08),
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: AppColors.secondary.withValues(alpha: 0.2)),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.lightbulb_outline, size: 16, color: AppColors.secondary),
+                            const SizedBox(width: 8),
+                            const Expanded(
+                              child: Text(
+                                'Interview Framework: Use STAR Method (Situation, Task, Action, Result)',
+                                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.secondaryDark),
+                              ),
+                            ),
+                            Icon(_showStarGuide ? Icons.expand_less : Icons.expand_more, size: 16, color: AppColors.secondary),
+                          ],
+                        ),
+                      ),
+                    ),
+                    if (_showStarGuide) ...[
+                      const SizedBox(height: 8),
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: AppColors.divider),
+                        ),
+                        child: const Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('• Situation: Set the context and specify the challenge.', style: TextStyle(fontSize: 12)),
+                            SizedBox(height: 4),
+                            Text('• Task: Describe what your responsibility was.', style: TextStyle(fontSize: 12)),
+                            SizedBox(height: 4),
+                            Text('• Action: Detail the specific steps you took to address it.', style: TextStyle(fontSize: 12)),
+                            SizedBox(height: 4),
+                            Text('• Result: Share the measurable outcomes and what you learned.', style: TextStyle(fontSize: 12)),
+                          ],
+                        ),
+                      ),
+                    ],
+                    const SizedBox(height: 12),
                     TextField(
                       controller: _answerController,
                       maxLines: 5,
-                      decoration: const InputDecoration(
-                        hintText: 'Type your answer here...',
+                      onChanged: (_) => setState(() {}),
+                      decoration: InputDecoration(
+                        hintText: 'Type your answer here using the STAR method...',
                         alignLabelWithHint: true,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _isVoiceRecording ? Icons.mic : Icons.mic_none,
+                            color: _isVoiceRecording ? AppColors.error : AppColors.primary,
+                          ),
+                          tooltip: _isVoiceRecording ? 'Stop recording' : 'Voice simulation mode',
+                          onPressed: () {
+                            setState(() {
+                              _isVoiceRecording = !_isVoiceRecording;
+                              if (_isVoiceRecording && _answerController.text.isEmpty) {
+                                _answerController.text = 'In my previous position, I led a cross-functional team to ';
+                              }
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    if (_isVoiceRecording)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.fiber_manual_record, color: AppColors.error, size: 12),
+                            const SizedBox(width: 6),
+                            Text(
+                              'Voice recording active... (transcribing simulation)',
+                              style: TextStyle(fontSize: 11, color: Colors.grey.shade700, fontStyle: FontStyle.italic),
+                            ),
+                          ],
+                        ),
+                      ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 6, right: 4),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            '${_answerController.text.trim().split(RegExp(r'\s+')).where((s) => s.isNotEmpty).length} words',
+                            style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
+                          ),
+                        ],
                       ),
                     ),
                   ],
