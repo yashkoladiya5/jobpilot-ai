@@ -98,43 +98,65 @@ class _DashboardScreenState extends State<DashboardScreen> {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              StatsCard(
-                icon: Icons.work_outline,
-                iconBackgroundColor: AppColors.primary,
-                number: stats.totalApplications.toString(),
-                label: 'Total Applications',
+              InkWell(
+                onTap: () => context.go('/jobs'),
+                borderRadius: BorderRadius.circular(16),
+                child: StatsCard(
+                  icon: Icons.work_outline,
+                  iconBackgroundColor: AppColors.primary,
+                  number: stats.totalApplications.toString(),
+                  label: 'Total Applications',
+                ),
               ),
               const SizedBox(width: 12),
-              StatsCard(
-                icon: Icons.star_border,
-                iconBackgroundColor: AppColors.warning,
-                number: savedCount.toString(),
-                label: 'Saved Jobs',
+              InkWell(
+                onTap: () => context.go('/jobs'),
+                borderRadius: BorderRadius.circular(16),
+                child: StatsCard(
+                  icon: Icons.star_border,
+                  iconBackgroundColor: AppColors.warning,
+                  number: savedCount.toString(),
+                  label: 'Saved Jobs',
+                ),
               ),
               const SizedBox(width: 12),
-              StatsCard(
-                icon: Icons.people_outline,
-                iconBackgroundColor: AppColors.secondary,
-                number: interviewCount.toString(),
-                label: 'Interviews',
+              InkWell(
+                onTap: () => context.go('/jobs'),
+                borderRadius: BorderRadius.circular(16),
+                child: StatsCard(
+                  icon: Icons.people_outline,
+                  iconBackgroundColor: AppColors.secondary,
+                  number: interviewCount.toString(),
+                  label: 'Interviews',
+                ),
               ),
               const SizedBox(width: 12),
-              StatsCard(
-                icon: Icons.check_circle_outline,
-                iconBackgroundColor: AppColors.success,
-                number: offerCount.toString(),
-                label: 'Offers',
+              InkWell(
+                onTap: () => context.go('/jobs'),
+                borderRadius: BorderRadius.circular(16),
+                child: StatsCard(
+                  icon: Icons.check_circle_outline,
+                  iconBackgroundColor: AppColors.success,
+                  number: offerCount.toString(),
+                  label: 'Offers',
+                ),
               ),
               const SizedBox(width: 12),
-              StatsCard(
-                icon: Icons.trending_up,
-                iconBackgroundColor: AppColors.secondary,
-                number: stats.recentActivity.toString(),
-                label: 'Recent Activity',
+              InkWell(
+                onTap: () => context.go('/ai/pipeline'),
+                borderRadius: BorderRadius.circular(16),
+                child: StatsCard(
+                  icon: Icons.trending_up,
+                  iconBackgroundColor: AppColors.secondary,
+                  number: stats.recentActivity.toString(),
+                  label: 'Recent Activity',
+                ),
               ),
             ],
           ),
         ),
+        const SizedBox(height: 24),
+        _buildPipelineSummaryBar(context, stats),
         const SizedBox(height: 24),
         _buildQuickActions(context),
         const SizedBox(height: 24),
@@ -155,6 +177,78 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 (app) => _buildRecentApplicationItem(context, app),
               ),
       ],
+    );
+  }
+
+  Widget _buildPipelineSummaryBar(BuildContext context, DashboardStats stats) {
+    final stages = [
+      {'status': 'SAVED', 'label': 'Saved', 'color': AppColors.warning},
+      {'status': 'APPLIED', 'label': 'Applied', 'color': AppColors.primary},
+      {'status': 'INTERVIEW', 'label': 'Interview', 'color': AppColors.secondary},
+      {'status': 'OFFER', 'label': 'Offer', 'color': AppColors.success},
+    ];
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.divider),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Application Pipeline Status',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+              ),
+              InkWell(
+                onTap: () => context.go('/ai/pipeline'),
+                child: const Row(
+                  children: [
+                    Text('Analytics', style: TextStyle(fontSize: 12, color: AppColors.primary, fontWeight: FontWeight.w600)),
+                    Icon(Icons.chevron_right, size: 16, color: AppColors.primary),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          Row(
+            children: stages.map((st) {
+              final count = stats.byStatus
+                  .where((s) => s.status == st['status'])
+                  .fold(0, (sum, s) => sum + s.count);
+              return Expanded(
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  decoration: BoxDecoration(
+                    color: (st['color'] as Color).withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    children: [
+                      Text(
+                        '$count',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: st['color'] as Color),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        st['label'] as String,
+                        style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
     );
   }
 
