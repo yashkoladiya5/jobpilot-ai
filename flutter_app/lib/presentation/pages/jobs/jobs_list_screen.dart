@@ -7,6 +7,7 @@ import 'package:jobpilot_ai/domain/entities/job_application.dart';
 import 'package:jobpilot_ai/presentation/bloc/job/job_bloc.dart';
 import 'package:jobpilot_ai/presentation/bloc/job/job_event.dart';
 import 'package:jobpilot_ai/presentation/bloc/job/job_state.dart';
+import 'package:jobpilot_ai/presentation/pages/jobs/jobs_kanban_view.dart';
 import 'package:jobpilot_ai/presentation/widgets/empty_state.dart';
 import 'package:jobpilot_ai/presentation/widgets/error_display.dart';
 import 'package:jobpilot_ai/presentation/widgets/job_filter_bottom_sheet.dart';
@@ -26,6 +27,7 @@ class _JobsListScreenState extends State<JobsListScreen> {
   JobFilterOptions _advancedFilters = const JobFilterOptions();
   String _sortBy = 'appliedDate';
   String _sortOrder = 'desc';
+  bool _isKanbanMode = false;
   List<JobApplication>? _lastLoadedJobs;
 
   @override
@@ -45,6 +47,13 @@ class _JobsListScreenState extends State<JobsListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Job Applications'),
+        actions: [
+          IconButton(
+            icon: Icon(_isKanbanMode ? Icons.view_list : Icons.view_kanban_outlined),
+            tooltip: _isKanbanMode ? 'List View' : 'Kanban Board',
+            onPressed: () => setState(() => _isKanbanMode = !_isKanbanMode),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.push(AppConstants.jobCreateRoute),
@@ -305,6 +314,15 @@ class _JobsListScreenState extends State<JobsListScreen> {
 
   Widget _buildJobsList(BuildContext context, List<JobApplication> jobs) {
     final filtered = _filterAndSort(jobs);
+
+    if (_isKanbanMode) {
+      return Column(
+        children: [
+          _buildSearchAndFilterBar(),
+          Expanded(child: JobsKanbanView(jobs: filtered)),
+        ],
+      );
+    }
 
     if (filtered.isEmpty) {
       final emptyState = _searchController.text.isNotEmpty
