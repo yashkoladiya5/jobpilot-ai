@@ -226,9 +226,12 @@ class _ResumeScreenState extends State<ResumeScreen> {
       },
       child: ListView.builder(
         padding: const EdgeInsets.only(top: 10, bottom: 96),
-        itemCount: resumes.length,
+        itemCount: resumes.length + 1,
         itemBuilder: (context, index) {
-          final resume = resumes[index];
+          if (index == 0) {
+            return _buildVaultInfoBanner(resumes);
+          }
+          final resume = resumes[index - 1];
           return Dismissible(
             key: ValueKey(resume.id),
             direction: DismissDirection.endToStart,
@@ -281,6 +284,51 @@ class _ResumeScreenState extends State<ResumeScreen> {
             ),
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildVaultInfoBanner(List<Resume> resumes) {
+    Resume? primaryResume;
+    for (final r in resumes) {
+      if (r.isPrimary == true) {
+        primaryResume = r;
+        break;
+      }
+    }
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 4, 16, 12),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: AppColors.primary.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.verified_outlined, color: AppColors.primary, size: 22),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  primaryResume != null
+                      ? 'Primary Resume: ${primaryResume.fileName}'
+                      : 'No primary resume set',
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.primaryDark),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 2),
+                const Text(
+                  'Tap any card to set it as your default for job matching & analysis',
+                  style: TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
