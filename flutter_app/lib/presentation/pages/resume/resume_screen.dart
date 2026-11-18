@@ -98,11 +98,11 @@ class _ResumeScreenState extends State<ResumeScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Row(
+        title: const Row(
           children: [
-            const Icon(Icons.warning_amber_rounded, color: AppColors.error),
-            const SizedBox(width: 8),
-            const Text('Delete Resume'),
+            Icon(Icons.warning_amber_rounded, color: AppColors.error),
+            SizedBox(width: 8),
+            Text('Delete Resume'),
           ],
         ),
         content: Text('Are you sure you want to delete "${resume.fileName}"? This action cannot be undone.'),

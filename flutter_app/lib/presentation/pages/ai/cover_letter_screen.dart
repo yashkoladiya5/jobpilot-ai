@@ -452,7 +452,7 @@ class _CoverLetterScreenState extends State<CoverLetterScreen> {
         children: [
           Row(
             children: [
-              Icon(Icons.auto_awesome, size: 22, color: AppColors.primary),
+              const Icon(Icons.auto_awesome, size: 22, color: AppColors.primary),
               const SizedBox(width: 8),
               Text(
                 'Generated Cover Letter',
@@ -520,7 +520,7 @@ class _CoverLetterScreenState extends State<CoverLetterScreen> {
             const SizedBox(height: 20),
             Row(
               children: [
-                Icon(Icons.stars, size: 20, color: AppColors.secondary),
+                const Icon(Icons.stars, size: 20, color: AppColors.secondary),
                 const SizedBox(width: 8),
                 Text(
                   'Key Highlights',
