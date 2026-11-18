@@ -10,7 +10,6 @@ import { register, login, getMe, deleteAccount, updatePassword, updateEmail, upd
   requirePasswordReset,
   requireTwoFactorSetup,
   checkPasswordStrength,
-  generateBackupCodes,
   checkPasswordBreach,
   analyzeAuthenticationPatterns,
   analyzePasswordAge,

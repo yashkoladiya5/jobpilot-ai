@@ -1377,10 +1377,10 @@ export class DashboardService {
       userId,
       needsUpdate,
       resumeId: latestResume.id,
-      resumeTitle: latestResume.title,
+      resumeTitle: latestResume.fileName,
       daysSinceUpdate,
       message: needsUpdate 
-        ? `Your resume "${latestResume.title}" hasn't been updated in ${daysSinceUpdate} days. Consider adding recent accomplishments to keep it fresh.`
+        ? `Your resume "${latestResume.fileName}" hasn't been updated in ${daysSinceUpdate} days. Consider adding recent accomplishments to keep it fresh.`
         : `Your resume is up to date (last modified ${daysSinceUpdate} days ago).`,
       actionRequired: needsUpdate ? "Update Resume" : "None",
       checkedAt: now.toISOString()
@@ -1655,7 +1655,7 @@ export class DashboardService {
     await requireUser(userId);
 
     const applications = await prisma.jobApplication.findMany({
-      where: { userId, appliedDate: { not: null } },
+      where: { userId },
       select: { appliedDate: true },
     });
 

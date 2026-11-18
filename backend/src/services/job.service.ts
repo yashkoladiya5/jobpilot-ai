@@ -1146,7 +1146,7 @@ ${userName}`;
   async evaluateApplicationQuality(userId: string, id: string) {
     const job = await prisma.jobApplication.findUnique({
       where: { id },
-      include: { events: true }
+      include: { coverLetters: true }
     });
 
     if (!job || job.userId !== userId) {
@@ -1163,17 +1163,12 @@ ${userName}`;
       factors.push("- Missing linked resume");
     }
 
-    if (job.coverLetterId) {
+    if (job.coverLetters && job.coverLetters.length > 0) {
       score += 15;
       factors.push("+ Cover Letter Included");
     }
 
-    // Check for follow-up events
-    const hasFollowUp = job.events.some(e => 
-      e.type === "EMAIL" || e.type === "FOLLOW_UP" || (e.notes && e.notes.toLowerCase().includes("follow up"))
-    );
-
-    if (hasFollowUp) {
+    if (job.notes && job.notes.toLowerCase().includes("follow up")) {
       score += 15;
       factors.push("+ Followed up appropriately");
     } else if (job.status !== "APPLIED") {
@@ -1194,15 +1189,13 @@ ${userName}`;
   async checkApplicationUrgency(userId: string, id: string) {
     const job = await prisma.jobApplication.findUnique({
       where: { id },
-      include: { events: { orderBy: { date: 'desc' } } }
     });
 
     if (!job || job.userId !== userId) {
       throw ApiError.notFound("Job application not found");
     }
 
-    // Determine the last interaction date (either the last event or the application creation date)
-    const lastInteractionDate = job.events.length > 0 ? job.events[0].date : job.createdAt;
+    const lastInteractionDate = job.updatedAt ?? job.createdAt;
     const daysSinceLastInteraction = (new Date().getTime() - lastInteractionDate.getTime()) / (1000 * 3600 * 24);
 
     let urgencyLevel = "Low";
@@ -1281,7 +1274,7 @@ ${userName}`;
     const missingFields: string[] = [];
     const suggestions: string[] = [];
 
-    if (!job.url) {
+    if (!job.jobUrl) {
       missingFields.push("Job URL");
       suggestions.push("Add the original job posting URL for future reference.");
     }
@@ -1291,7 +1284,7 @@ ${userName}`;
       suggestions.push("Specify the job location (e.g., Remote, City, State).");
     }
 
-    if (!job.salary) {
+    if (!job.salaryRange) {
       missingFields.push("Salary Information");
       suggestions.push("Note the expected or posted salary range to aid in future negotiations.");
     }
@@ -1504,8 +1497,8 @@ ${userName}`;
     let fitScore = 50; 
     
     if (application.role && application.companyName) fitScore += 15;
-    if (application.salaryExpectation) fitScore += 10;
-    if (application.status === 'interview') fitScore += 20;
+    if (application.salaryRange) fitScore += 10;
+    if (application.status === 'INTERVIEW') fitScore += 20;
 
     return {
       applicationId: application.id,

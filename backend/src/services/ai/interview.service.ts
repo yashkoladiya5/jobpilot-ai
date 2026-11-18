@@ -21,15 +21,23 @@ export class InterviewService {
   private async requireInterviewJob(
     userId: string,
     jobId: string,
-    withResume?: boolean
+    withResume?: false
   ): Promise<Prisma.JobApplicationGetPayload<{}>>;
   private async requireInterviewJob(userId: string, jobId: string, withResume = false) {
-    return requireOwnedJob(
+    if (withResume) {
+      return (await requireOwnedJob(
+        userId,
+        jobId,
+        { resume: true },
+        "Job not found",
+      )) as Prisma.JobApplicationGetPayload<{ include: { resume: true } }>;
+    }
+    return (await requireOwnedJob(
       userId,
       jobId,
-      withResume ? { resume: true } : undefined,
+      undefined,
       "Job not found",
-    ) as Prisma.JobApplicationGetPayload<{ include: { resume: true } }>;
+    )) as Prisma.JobApplicationGetPayload<{}>;
   }
 
   private async requireSession(

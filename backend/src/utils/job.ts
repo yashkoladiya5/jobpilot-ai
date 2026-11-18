@@ -10,8 +10,8 @@ import { ApiError } from "./ApiError";
 export async function requireOwnedJob(
   userId: string,
   jobId: string,
-  include: undefined,
-  message: string,
+  include?: undefined,
+  message?: string,
 ): Promise<JobApplication>;
 export async function requireOwnedJob<T extends Prisma.JobApplicationInclude>(
   userId: string,
