@@ -155,7 +155,10 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
           ),
           const SizedBox(height: 12),
           Center(child: StatusChip(status: job.status)),
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
+          // Interactive Quick Stage Stepper
+          _buildStageStepper(context, job),
+          const SizedBox(height: 20),
           const Divider(),
           _buildDetailRow(
             context,
@@ -284,6 +287,76 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
           ],
           const SizedBox(height: 24),
         ],
+      ),
+    );
+  }
+
+  Widget _buildStageStepper(BuildContext context, JobApplication job) {
+    const progression = [
+      ApplicationStatus.saved,
+      ApplicationStatus.applied,
+      ApplicationStatus.interview,
+      ApplicationStatus.offer,
+    ];
+
+    final currentIndex = progression.indexOf(job.status);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: progression.map((stage) {
+          final stageIdx = progression.indexOf(stage);
+          final isPastOrCurrent = currentIndex != -1 && stageIdx <= currentIndex;
+          final isCurrent = stage == job.status;
+
+          return InkWell(
+            onTap: () {
+              if (stage != job.status) {
+                context.read<JobBloc>().add(
+                  UpdateJob(job.id, UpdateJobParams(status: stage)),
+                );
+              }
+            },
+            borderRadius: BorderRadius.circular(8),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircleAvatar(
+                    radius: isCurrent ? 14 : 11,
+                    backgroundColor: isCurrent
+                        ? Theme.of(context).colorScheme.primary
+                        : isPastOrCurrent
+                            ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.4)
+                            : Colors.grey.shade300,
+                    child: Icon(
+                      isPastOrCurrent ? Icons.check : Icons.circle,
+                      size: isCurrent ? 14 : 10,
+                      color: isPastOrCurrent ? Colors.white : Colors.grey.shade600,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    stage.value[0] + stage.value.substring(1).toLowerCase(),
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: isCurrent ? FontWeight.bold : FontWeight.normal,
+                      color: isCurrent
+                          ? Theme.of(context).colorScheme.primary
+                          : Colors.grey.shade700,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }).toList(),
       ),
     );
   }
