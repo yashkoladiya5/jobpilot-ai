@@ -11,10 +11,14 @@ const jobService = new JobService();
 
 export const getJobs = asyncHandler(async (req: Request, res: Response) => {
   const userId = getUserId(req);
-  const { search, status, sortBy, sortOrder } = req.query;
+  const { search, status, location, remoteOnly, dateFrom, dateTo, sortBy, sortOrder } = req.query;
   const jobs = await jobService.getJobs(userId, {
     search: search as string | undefined,
     status: status as string | undefined,
+    location: location as string | undefined,
+    remoteOnly: remoteOnly === "true" || remoteOnly === "1",
+    dateFrom: dateFrom as string | undefined,
+    dateTo: dateTo as string | undefined,
     sortBy: sortBy as string | undefined,
     sortOrder: sortOrder as string | undefined,
   });

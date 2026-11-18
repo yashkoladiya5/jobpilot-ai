@@ -22,6 +22,10 @@ export class JobService {
     query?: {
       search?: string;
       status?: string;
+      location?: string;
+      remoteOnly?: boolean;
+      dateFrom?: string;
+      dateTo?: string;
       sortBy?: string;
       sortOrder?: string;
     }
@@ -35,7 +39,20 @@ export class JobService {
       where.OR = [
         { companyName: { contains: query.search, mode: "insensitive" } },
         { role: { contains: query.search, mode: "insensitive" } },
+        { location: { contains: query.search, mode: "insensitive" } },
+        { notes: { contains: query.search, mode: "insensitive" } },
       ];
+    }
+    if (query?.location) {
+      where.location = { contains: query.location, mode: "insensitive" };
+    }
+    if (query?.remoteOnly) {
+      where.location = { contains: "remote", mode: "insensitive" };
+    }
+    if (query?.dateFrom || query?.dateTo) {
+      where.appliedDate = {};
+      if (query.dateFrom) where.appliedDate.gte = new Date(query.dateFrom);
+      if (query.dateTo) where.appliedDate.lte = new Date(query.dateTo);
     }
     const orderBy: Prisma.JobApplicationOrderByWithRelationInput = { appliedDate: "desc" };
     if (query?.sortBy) {
