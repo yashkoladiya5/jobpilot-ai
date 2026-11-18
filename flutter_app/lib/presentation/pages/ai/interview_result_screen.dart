@@ -172,6 +172,114 @@ class _InterviewResultScreenState extends State<InterviewResultScreen> {
             ),
           ),
         ],
+        if (session.questions.isNotEmpty) ...[
+          const SizedBox(height: 28),
+          _buildSectionHeader(theme, 'Question Analysis & Model Answers'),
+          const SizedBox(height: 12),
+          ...session.questions.asMap().entries.map((entry) {
+            final idx = entry.key;
+            final q = entry.value;
+            return Card(
+              margin: const EdgeInsets.only(bottom: 12),
+              elevation: 1,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              child: ExpansionTile(
+                tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                leading: CircleAvatar(
+                  backgroundColor: AppColors.primaryLight.withValues(alpha: 0.2),
+                  radius: 14,
+                  child: Text(
+                    '${idx + 1}',
+                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.primary),
+                  ),
+                ),
+                title: Text(
+                  q.question,
+                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                ),
+                subtitle: Text(
+                  '${q.category.toUpperCase()} • ${q.difficulty.toUpperCase()}',
+                  style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                ),
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Divider(),
+                        const Text(
+                          'Your Answer:',
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: AppColors.textSecondary),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          q.answer != null && q.answer!.isNotEmpty ? q.answer! : '(No response provided)',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontStyle: q.answer == null || q.answer!.isEmpty ? FontStyle.italic : FontStyle.normal,
+                          ),
+                        ),
+                        if (q.feedback != null && q.feedback!.isNotEmpty) ...[
+                          const SizedBox(height: 12),
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: AppColors.secondary.withValues(alpha: 0.08),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Icon(Icons.auto_awesome, size: 16, color: AppColors.secondary),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    q.feedback!,
+                                    style: const TextStyle(fontSize: 12, height: 1.4),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                        const SizedBox(height: 12),
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: AppColors.primary.withValues(alpha: 0.06),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: AppColors.primary.withValues(alpha: 0.15)),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Row(
+                                children: [
+                                  Icon(Icons.star_outline, size: 16, color: AppColors.primary),
+                                  SizedBox(width: 6),
+                                  Text(
+                                    'Recommended STAR Model Framework',
+                                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.primary),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 6),
+                              Text(
+                                'State a concrete business problem (Situation), quantify your specific role (Task), describe technical/communication steps (Action), and close with quantified impact metrics (Result).',
+                                style: TextStyle(fontSize: 12, color: Colors.grey.shade700, height: 1.4),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }),
+        ],
         const SizedBox(height: 32),
         SafeArea(
           child: Column(
