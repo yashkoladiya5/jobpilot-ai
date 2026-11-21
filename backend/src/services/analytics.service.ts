@@ -1986,4 +1986,49 @@ export class AnalyticsService {
       evaluatedAt: new Date().toISOString(),
     };
   }
+
+  async getApplicationActivityHeatmap(userId: string) {
+    const applications = await prisma.jobApplication.findMany({
+      where: { userId },
+      select: { appliedDate: true, status: true },
+    });
+
+    const dayOfWeekCounts: Record<string, number> = {
+      Sunday: 0,
+      Monday: 0,
+      Tuesday: 0,
+      Wednesday: 0,
+      Thursday: 0,
+      Friday: 0,
+      Saturday: 0,
+    };
+
+    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+    for (const app of applications) {
+      const dayIndex = app.appliedDate.getDay();
+      const dayName = days[dayIndex];
+      dayOfWeekCounts[dayName] = (dayOfWeekCounts[dayName] || 0) + 1;
+    }
+
+    let peakDay = "Monday";
+    let maxSubmissions = -1;
+    for (const [day, count] of Object.entries(dayOfWeekCounts)) {
+      if (count > maxSubmissions) {
+        maxSubmissions = count;
+        peakDay = day;
+      }
+    }
+
+    return {
+      userId,
+      totalCount: applications.length,
+      distribution: dayOfWeekCounts,
+      peakDay,
+      peakDaySubmissions: Math.max(0, maxSubmissions),
+      insight: applications.length === 0
+        ? "No applications recorded yet."
+        : `Your highest application submission activity is on ${peakDay} (${maxSubmissions} applications).`,
+    };
+  }
 }

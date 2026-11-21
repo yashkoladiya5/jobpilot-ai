@@ -21,6 +21,7 @@ import { getPipelineAnalytics, getTimelineData, getSkillMatchAnalytics, getRejec
   getMonthlyFunnelTrend,
   getPipelineMixShift,
   getApplicationHealthScorecard,
+  getApplicationDayOfWeekHeatmap,
 } from "../controllers/analytics.controller";
 
 /**
@@ -80,5 +81,6 @@ router.get("/response-time-benchmark", getResponseTimeBenchmark);
 router.get("/monthly-funnel-trend", getMonthlyFunnelTrend);
 router.get("/pipeline-mix-shift", getPipelineMixShift);
 router.get("/health-scorecard", getApplicationHealthScorecard);
+router.get("/day-of-week-heatmap", getApplicationDayOfWeekHeatmap);
 
 export default router;

@@ -537,3 +537,15 @@ export const getApplicationHealthScorecard = asyncHandler(async (req: Request, r
     data: result
   });
 });
+
+export const getApplicationDayOfWeekHeatmap = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+
+  const result = await analyticsService.getApplicationActivityHeatmap(userId);
+
+  res.status(200).json({
+    success: true,
+    message: "Application day-of-week heatmap computed successfully",
+    data: result
+  });
+});
