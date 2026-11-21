@@ -1751,4 +1751,26 @@ ${userName}`;
       scannedAt: new Date().toISOString()
     };
   }
+
+  async getRecentSalaryInsights(userId: string) {
+    const jobs = await prisma.jobApplication.findMany({
+      where: { userId },
+      select: { salaryRange: true, role: true, companyName: true, status: true },
+    });
+
+    const documentedJobs = jobs.filter((j) => j.salaryRange && j.salaryRange.trim().length > 0);
+
+    return {
+      userId,
+      totalApplications: jobs.length,
+      salaryDocumentedCount: documentedJobs.length,
+      coveragePercent: jobs.length > 0 ? Math.round((documentedJobs.length / jobs.length) * 100) : 0,
+      recentOffersWithSalary: jobs
+        .filter((j) => j.status === "OFFER" && j.salaryRange)
+        .map((j) => ({ company: j.companyName, role: j.role, compensation: j.salaryRange })),
+      advice: documentedJobs.length < 3
+        ? "Adding compensation figures to your job applications will help benchmark market value and negotiate effectively."
+        : "Good salary transparency recorded across your pipeline.",
+    };
+  }
 }

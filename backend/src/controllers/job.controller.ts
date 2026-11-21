@@ -712,3 +712,15 @@ export const detectDuplicateApplications = asyncHandler(async (req: Request, res
     data: result,
   });
 });
+
+export const getRecentSalaryInsights = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+
+  const result = await jobService.getRecentSalaryInsights(userId);
+
+  res.status(200).json({
+    success: true,
+    message: "Pipeline salary insights aggregated successfully",
+    data: result,
+  });
+});

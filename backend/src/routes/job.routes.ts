@@ -52,6 +52,7 @@ import {
   getDemandedSkillsReport,
   getFollowUpDigest,
   detectDuplicateApplications,
+  getRecentSalaryInsights,
 } from "../controllers/job.controller";
 import { authenticate } from "../middleware/auth";
 import { validate } from "../middleware/validate";
@@ -111,6 +112,7 @@ router.get("/:id/listing-expiry", authenticate, estimateListingExpiry);
 router.get("/skills/demand-report", authenticate, getDemandedSkillsReport);
 router.get("/follow-up-digest", authenticate, getFollowUpDigest);
 router.get("/duplicates", authenticate, detectDuplicateApplications);
+router.get("/salary-tracking-insights", authenticate, getRecentSalaryInsights);
 
 // CRUD operations for jobs, all requiring user authentication
 router.get("/", authenticate, getJobs);
