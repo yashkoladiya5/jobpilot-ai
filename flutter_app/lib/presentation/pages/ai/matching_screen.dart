@@ -145,7 +145,10 @@ class _MatchingScreenState extends State<MatchingScreen> {
   }
 
   Widget _buildForm(ThemeData theme, List<Resume> resumes, [MatchResult? result]) {
-    _selectedResume ??= resumes.isNotEmpty ? resumes.first : null;
+    _selectedResume ??= resumes.isNotEmpty
+        ? resumes.firstWhere((r) => r.isPrimary == true,
+            orElse: () => resumes.first)
+        : null;
     if (result != null) _lastResult = result;
 
     return ListView(
