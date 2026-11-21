@@ -1898,4 +1898,92 @@ export class AnalyticsService {
       generatedAt: new Date().toISOString()
     };
   }
+
+  async getApplicationHealthScorecard(userId: string) {
+    await requireUser(userId);
+
+    const applications = await prisma.jobApplication.findMany({
+      where: { userId },
+      select: {
+        status: true,
+        appliedDate: true,
+        updatedAt: true,
+        salaryRange: true,
+        jobUrl: true,
+        notes: true,
+      },
+    });
+
+    const totalCount = applications.length;
+    if (totalCount === 0) {
+      return {
+        userId,
+        healthScore: 0,
+        healthGrade: "Needs Initialization",
+        metrics: {
+          documentationCompleteness: 0,
+          responseRate: 0,
+          activeApplicationShare: 0,
+        },
+        recommendations: [
+          "Log your active job applications to build visibility into your pipeline.",
+          "Add target salary ranges and job posting URLs for rich tracking.",
+        ],
+        evaluatedAt: new Date().toISOString(),
+      };
+    }
+
+    let documentedCount = 0;
+    let interviewOrOfferCount = 0;
+    let activeCount = 0;
+
+    for (const app of applications) {
+      if (app.salaryRange || app.jobUrl || (app.notes && app.notes.length > 0)) {
+        documentedCount++;
+      }
+      if (app.status === "INTERVIEW" || app.status === "OFFER") {
+        interviewOrOfferCount++;
+      }
+      if (app.status === "APPLIED" || app.status === "INTERVIEW") {
+        activeCount++;
+      }
+    }
+
+    const documentationCompleteness = Math.round((documentedCount / totalCount) * 100);
+    const responseRate = Math.round((interviewOrOfferCount / totalCount) * 100);
+    const activeShare = Math.round((activeCount / totalCount) * 100);
+
+    // Weighted health score (0 - 100)
+    const rawScore = (documentationCompleteness * 0.3) + (responseRate * 0.4) + (activeShare * 0.3);
+    const healthScore = Math.min(100, Math.round(rawScore));
+
+    const healthGrade = healthScore >= 80 ? "Excellent" : healthScore >= 60 ? "Good" : healthScore >= 40 ? "Fair" : "Needs Attention";
+
+    const recommendations: string[] = [];
+    if (documentationCompleteness < 50) {
+      recommendations.push("Enrich your job entries with salary benchmarks and application links.");
+    }
+    if (responseRate < 20) {
+      recommendations.push("Tailor resumes with the AI Match tool to lift your interview conversion.");
+    }
+    if (activeShare < 30) {
+      recommendations.push("Maintain application momentum with new submissions this week.");
+    }
+
+    return {
+      userId,
+      healthScore,
+      healthGrade,
+      metrics: {
+        totalApplications: totalCount,
+        documentationCompleteness,
+        responseRatePercent: responseRate,
+        activeApplicationSharePercent: activeShare,
+      },
+      recommendations: recommendations.length > 0
+        ? recommendations
+        : ["Your job search pipeline metrics are in great standing. Keep up the steady cadence!"],
+      evaluatedAt: new Date().toISOString(),
+    };
+  }
 }

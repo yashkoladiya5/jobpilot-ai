@@ -525,3 +525,15 @@ export const getPipelineMixShift = asyncHandler(async (req: Request, res: Respon
     data: result
   });
 });
+
+export const getApplicationHealthScorecard = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+
+  const result = await analyticsService.getApplicationHealthScorecard(userId);
+
+  res.status(200).json({
+    success: true,
+    message: "Application health scorecard evaluated successfully",
+    data: result
+  });
+});
