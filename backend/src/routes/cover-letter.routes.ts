@@ -10,6 +10,7 @@ import {
   checkCallToAction,
   checkLengthConstraints,
   scoreOpeningHook,
+  getCoverLetterStatistics,
 } from "../controllers/cover-letter.controller";
 import { authenticate } from "../middleware/auth";
 
@@ -23,6 +24,7 @@ router.use(authenticate);
 
 router.post("/generate", generateCoverLetter);
 router.get("/list", getCoverLetters);
+router.get("/statistics", getCoverLetterStatistics);
 router.get("/:id", getCoverLetter);
 router.patch("/:id", updateCoverLetter);
 router.delete("/:id", deleteCoverLetter);

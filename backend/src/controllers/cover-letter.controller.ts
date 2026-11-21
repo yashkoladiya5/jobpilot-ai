@@ -144,3 +144,14 @@ export const scoreOpeningHook = asyncHandler(async (req: Request, res: Response)
     data: result,
   });
 });
+
+export const getCoverLetterStatistics = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const result = await coverLetterService.getCoverLetterStatistics(userId);
+
+  res.status(200).json({
+    success: true,
+    message: "Cover letter statistics fetched successfully",
+    data: result,
+  });
+});

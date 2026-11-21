@@ -350,4 +350,35 @@ export class CoverLetterService {
       scoredAt: new Date().toISOString()
     };
   }
+
+  async getCoverLetterStatistics(userId: string) {
+    const letters = await prisma.coverLetter.findMany({
+      where: { userId },
+      orderBy: { createdAt: "desc" },
+    });
+
+    const totalCount = letters.length;
+    const toneDistribution: Record<string, number> = {};
+    let totalWordCount = 0;
+
+    for (const letter of letters) {
+      const tone = letter.tone || "professional";
+      toneDistribution[tone] = (toneDistribution[tone] || 0) + 1;
+      if (letter.coverLetterText) {
+        totalWordCount += countWords(letter.coverLetterText);
+      }
+    }
+
+    const averageWordCount = totalCount > 0 ? Math.round(totalWordCount / totalCount) : 0;
+
+    return {
+      totalGenerated: totalCount,
+      averageWordCount,
+      toneDistribution,
+      mostUsedTone: Object.entries(toneDistribution).sort((a, b) => b[1] - a[1])[0]?.[0] ?? "professional",
+      summary: totalCount === 0
+        ? "No cover letters generated yet."
+        : `Generated ${totalCount} tailored cover letters with an average length of ${averageWordCount} words.`
+    };
+  }
 }
