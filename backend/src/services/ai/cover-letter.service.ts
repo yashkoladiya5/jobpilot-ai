@@ -381,4 +381,27 @@ export class CoverLetterService {
         : `Generated ${totalCount} tailored cover letters with an average length of ${averageWordCount} words.`
     };
   }
+
+  async auditReadinessScore(userId: string, id: string) {
+    const letter = await this.getCoverLetter(id, userId);
+    const words = countWords(letter.coverLetterText || "");
+    const hasJobId = !!letter.jobId;
+    const isCompleted = letter.status === AnalysisStatus.COMPLETED;
+
+    let score = 50;
+    if (words >= 200 && words <= 450) score += 25;
+    else if (words > 100) score += 10;
+
+    if (hasJobId) score += 15;
+    if (isCompleted) score += 10;
+
+    return {
+      coverLetterId: letter.id,
+      readinessScore: Math.min(score, 100),
+      wordCount: words,
+      isLinkedToJob: hasJobId,
+      status: letter.status,
+      verdict: score >= 80 ? "Ready to Send" : "Needs Review",
+    };
+  }
 }

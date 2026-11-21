@@ -11,6 +11,7 @@ import {
   checkLengthConstraints,
   scoreOpeningHook,
   getCoverLetterStatistics,
+  getCoverLetterReadinessScore,
 } from "../controllers/cover-letter.controller";
 import { authenticate } from "../middleware/auth";
 
@@ -33,5 +34,6 @@ router.get("/:id/specificity", scoreLetterSpecificity);
 router.get("/:id/call-to-action", checkCallToAction);
 router.get("/:id/length-constraints", checkLengthConstraints);
 router.get("/:id/opening-hook", scoreOpeningHook);
+router.get("/:id/readiness-score", getCoverLetterReadinessScore);
 
 export default router;

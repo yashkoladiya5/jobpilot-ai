@@ -155,3 +155,15 @@ export const getCoverLetterStatistics = asyncHandler(async (req: Request, res: R
     data: result,
   });
 });
+
+export const getCoverLetterReadinessScore = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const { id } = req.params;
+  const result = await coverLetterService.auditReadinessScore(userId, id);
+
+  res.status(200).json({
+    success: true,
+    message: "Cover letter readiness score audited successfully",
+    data: result,
+  });
+});
