@@ -1365,4 +1365,54 @@ export class AuthService {
       analyzedAt: new Date().toISOString()
     };
   }
+
+  async getAccountSecurityChecklist(userId: string) {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        email: true,
+        updatedAt: true,
+        createdAt: true,
+      },
+    });
+
+    if (!user) {
+      throw ApiError.notFound("User not found");
+    }
+
+    const items = [
+      {
+        id: "email_verified",
+        label: "Email Address Validated",
+        completed: Boolean(user.email && user.email.includes("@")),
+        severity: "critical",
+      },
+      {
+        id: "profile_setup",
+        label: "Profile Account Created",
+        completed: Boolean(user.id),
+        severity: "high",
+      },
+      {
+        id: "password_updated",
+        label: "Password Rotated Recently",
+        completed: (Date.now() - user.updatedAt.getTime()) < 90 * 24 * 60 * 60 * 1000,
+        severity: "medium",
+      },
+    ];
+
+    const completedCount = items.filter((i) => i.completed).length;
+    const score = Math.round((completedCount / items.length) * 100);
+
+    return {
+      userId,
+      checklistScore: score,
+      items,
+      message: score === 100
+        ? "All security recommendations are satisfied."
+        : `${items.length - completedCount} security recommendation(s) pending for your account.`,
+      evaluatedAt: new Date().toISOString(),
+    };
+  }
 }
