@@ -26,8 +26,10 @@ class FakeJobRepository implements JobRepository {
   Future<Either<Failure, List<JobApplication>>> getJobs({ApplicationStatus? status}) async =>
       getJobsResult ?? const Right([]);
 
+  Future<Either<Failure, JobApplication>> getJob(String id) => getJobById(id);
+
   @override
-  Future<Either<Failure, JobApplication>> getJob(String id) async =>
+  Future<Either<Failure, JobApplication>> getJobById(String id) async =>
       getJobResult ??
       Right(JobApplication(
         id: id,
@@ -36,9 +38,6 @@ class FakeJobRepository implements JobRepository {
         status: ApplicationStatus.applied,
         appliedDate: DateTime(2025, 1, 1),
       ));
-
-  @override
-  Future<Either<Failure, JobApplication>> getJobById(String id) => getJob(id);
 
   @override
   Future<Either<Failure, JobApplication>> createJob(CreateJobParams params) async =>

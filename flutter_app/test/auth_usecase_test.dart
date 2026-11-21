@@ -37,7 +37,6 @@ class MockAuthRepository implements AuthRepository {
     );
   }
 
-  @override
   Future<Either<Failure, User>> getProfile() async {
     return const Right(
       User(id: 'u1', email: 'valid@jobpilot.ai', name: 'Valid User'),

@@ -32,13 +32,12 @@ class FakeAuthRepository implements AuthRepository {
   @override
   Future<bool> isAuthenticated() async => authenticated;
 
-  @override
   Future<Either<Failure, User>> getProfile() async =>
-      Right(User(id: '1', email: 'test@example.com', name: 'Test User'));
+      const Right(User(id: '1', email: 'test@example.com', name: 'Test User'));
 
   @override
   Future<Either<Failure, User>> getMe() async =>
-      meResult ?? Right(User(id: '1', email: 'me@example.com', name: 'Me'));
+      meResult ?? const Right(User(id: '1', email: 'me@example.com', name: 'Me'));
 }
 
 void main() {
