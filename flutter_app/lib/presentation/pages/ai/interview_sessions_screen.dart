@@ -157,8 +157,78 @@ class _InterviewSessionsScreenState extends State<InterviewSessionsScreen> {
 
     return ListView.builder(
       padding: const EdgeInsets.only(top: 8, bottom: 88),
-      itemCount: sessions.length,
-      itemBuilder: (context, index) => _buildSessionCard(sessions[index]),
+      itemCount: sessions.length + 1,
+      itemBuilder: (context, index) {
+        if (index == 0) {
+          return _buildReadinessSummaryBanner(sessions);
+        }
+        return _buildSessionCard(sessions[index - 1]);
+      },
+    );
+  }
+
+  Widget _buildReadinessSummaryBanner(List<InterviewSession> sessions) {
+    final completed = sessions.where((s) => s.status == 'completed').length;
+    final scoredSessions = sessions.where((s) => s.score != null).toList();
+    final avgScore = scoredSessions.isNotEmpty
+        ? (scoredSessions.map((s) => s.score!).reduce((a, b) => a + b) / scoredSessions.length).round()
+        : null;
+
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 4, 16, 10),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: AppColors.primary.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
+      ),
+      child: Row(
+        children: [
+          CircleAvatar(
+            radius: 20,
+            backgroundColor: AppColors.primary.withValues(alpha: 0.15),
+            child: const Icon(Icons.psychology, color: AppColors.primary, size: 22),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Prep Overview',
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.primaryDark),
+                    ),
+                    if (avgScore != null)
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: _scoreColor(avgScore.toDouble()).withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          '$avgScore% Avg',
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: _scoreColor(avgScore.toDouble()),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  '$completed of ${sessions.length} sessions completed',
+                  style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
