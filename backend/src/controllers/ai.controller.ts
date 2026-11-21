@@ -569,3 +569,9 @@ export const getInterviewPerformanceSummary = asyncHandler(async (req: Request, 
   const result = await interviewService.getInterviewPerformanceSummary(userId);
   res.json({ success: true, message: "Interview performance summary fetched successfully", data: result });
 });
+
+export const getJobAnalysisSummary = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const result = await jobAnalysisService.getJobAnalysisSummary(userId);
+  res.json({ success: true, message: "Job analysis summary fetched successfully", data: result });
+});

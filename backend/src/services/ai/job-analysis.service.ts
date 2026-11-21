@@ -371,4 +371,52 @@ Format the output as a clean, ready-to-use email template.`;
       estimatedAt: new Date().toISOString()
     };
   }
+
+  async getJobAnalysisSummary(userId: string) {
+    const analyses = await prisma.jobAnalysis.findMany({
+      where: { userId },
+      orderBy: { createdAt: "desc" },
+      take: 20,
+    });
+
+    const totalAnalyses = analyses.length;
+    const completedAnalyses = analyses.filter((a) => a.status === "COMPLETED");
+
+    let totalScore = 0;
+    let scoredCount = 0;
+    const skillCounts: Record<string, number> = {};
+
+    for (const a of completedAnalyses) {
+      if (typeof a.resumeMatchScore === "number") {
+        totalScore += a.resumeMatchScore;
+        scoredCount++;
+      }
+      if (Array.isArray(a.requiredSkills)) {
+        for (const skill of a.requiredSkills) {
+          if (typeof skill === "string") {
+            const normalized = skill.trim();
+            if (normalized) {
+              skillCounts[normalized] = (skillCounts[normalized] || 0) + 1;
+            }
+          }
+        }
+      }
+    }
+
+    const averageMatchScore = scoredCount > 0 ? Math.round(totalScore / scoredCount) : null;
+    const topInDemandSkills = Object.entries(skillCounts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+      .map(([skill, count]) => ({ skill, count }));
+
+    return {
+      totalAnalyses,
+      completedCount: completedAnalyses.length,
+      averageMatchScore,
+      topInDemandSkills,
+      summary: totalAnalyses === 0
+        ? "No job analyses performed yet."
+        : `Analyzed ${totalAnalyses} job descriptions with an average resume match score of ${averageMatchScore ?? "N/A"}%.`,
+    };
+  }
 }

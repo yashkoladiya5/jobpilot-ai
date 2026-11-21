@@ -48,6 +48,7 @@ import {
   getDifficultyCurve,
   getPrepTimeBudget,
   getInterviewPerformanceSummary,
+  getJobAnalysisSummary,
   rewriteCoverLetterTone,
   highlightCoverLetterKeywords,
   generateResignationLetter,
@@ -82,6 +83,7 @@ router.post("/job/remote-friendliness", scoreRemoteFriendliness);
 router.post("/job/seniority-estimate", estimateSeniority);
 router.get("/job/analysis/:analysisId", getJobAnalysis);
 router.get("/job/analyses", getJobAnalyses);
+router.get("/job/analysis-summary", getJobAnalysisSummary);
 router.delete("/job/analysis/:analysisId", deleteJobAnalysis);
 router.delete("/resume/analysis/:analysisId", deleteResumeAnalysis);
 router.post("/cover-letter/rewrite-tone", rewriteCoverLetterTone);
