@@ -20,6 +20,7 @@ class CoverLettersListScreen extends StatefulWidget {
 
 class _CoverLettersListScreenState extends State<CoverLettersListScreen> {
   List<CoverLetter>? _cachedLetters;
+  String _selectedToneFilter = 'All';
 
   @override
   void initState() {
@@ -84,16 +85,189 @@ class _CoverLettersListScreenState extends State<CoverLettersListScreen> {
       return EmptyState(
         icon: Icons.mark_email_unread_outlined,
         message: 'No AI Cover Letters Found',
-        subtitle: 'Stand out from the crowd! Generate a highly personalized cover letter tailored specifically to your resume and target job.',
+        subtitle:
+            'Stand out from the crowd! Generate a highly personalized cover letter tailored specifically to your resume and target job.',
         actionLabel: 'Generate New Letter',
         onAction: () => context.push('/ai/cover-letter'),
       );
     }
 
-    return ListView.builder(
-      padding: const EdgeInsets.only(top: 8, bottom: 88),
-      itemCount: letters.length,
-      itemBuilder: (context, index) => _buildLetterCard(letters[index]),
+    final filtered = _selectedToneFilter == 'All'
+        ? letters
+        : letters
+            .where((l) =>
+                l.tone.toLowerCase() == _selectedToneFilter.toLowerCase())
+            .toList();
+
+    return Column(
+      children: [
+        _buildStatsHeader(letters),
+        _buildToneFilterChips(letters),
+        Expanded(
+          child: filtered.isEmpty
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.filter_list_off,
+                          size: 44, color: AppColors.textHint),
+                      const SizedBox(height: 12),
+                      Text(
+                        'No $_selectedToneFilter tone cover letters',
+                        style: const TextStyle(
+                          color: AppColors.textSecondary,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () =>
+                            setState(() => _selectedToneFilter = 'All'),
+                        child: const Text('Reset Filter'),
+                      ),
+                    ],
+                  ),
+                )
+              : ListView.builder(
+                  padding: const EdgeInsets.only(top: 4, bottom: 88),
+                  itemCount: filtered.length,
+                  itemBuilder: (context, index) =>
+                      _buildLetterCard(filtered[index]),
+                ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStatsHeader(List<CoverLetter> letters) {
+    final completedCount =
+        letters.where((l) => l.status == 'COMPLETED').length;
+    final toneMap = <String, int>{};
+    for (final l in letters) {
+      toneMap[l.tone.toLowerCase()] = (toneMap[l.tone.toLowerCase()] ?? 0) + 1;
+    }
+    String topTone = 'None';
+    int maxToneCount = 0;
+    toneMap.forEach((tone, count) {
+      if (count > maxToneCount) {
+        maxToneCount = count;
+        topTone = _capitalize(tone);
+      }
+    });
+
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            AppColors.primary.withValues(alpha: 0.1),
+            AppColors.secondary.withValues(alpha: 0.05),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: AppColors.primary.withValues(alpha: 0.2),
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: AppColors.primary.withValues(alpha: 0.15),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.auto_awesome,
+              color: AppColors.primary,
+              size: 22,
+            ),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'AI Cover Letter Vault',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: AppColors.success.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text(
+                        '$completedCount/${letters.length} Ready',
+                        style: const TextStyle(
+                          color: AppColors.success,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Top Tone: $topTone  •  Tailored for targeted job applications',
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildToneFilterChips(List<CoverLetter> letters) {
+    final tones = ['All', 'Professional', 'Enthusiastic', 'Formal', 'Casual'];
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      child: Row(
+        children: tones.map((tone) {
+          final isSelected = _selectedToneFilter == tone;
+          return Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: ChoiceChip(
+              label: Text(tone),
+              selected: isSelected,
+              onSelected: (selected) {
+                if (selected) {
+                  setState(() => _selectedToneFilter = tone);
+                }
+              },
+              selectedColor: AppColors.primary.withValues(alpha: 0.15),
+              labelStyle: TextStyle(
+                fontSize: 12,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                color: isSelected ? AppColors.primary : AppColors.textSecondary,
+              ),
+              side: BorderSide(
+                color: isSelected
+                    ? AppColors.primary
+                    : Colors.grey.withValues(alpha: 0.3),
+              ),
+            ),
+          );
+        }).toList(),
+      ),
     );
   }
 
