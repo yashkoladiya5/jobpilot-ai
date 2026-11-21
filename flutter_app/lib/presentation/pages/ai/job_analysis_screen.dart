@@ -148,11 +148,21 @@ class _JobAnalysisScreenState extends State<JobAnalysisScreen> {
             );
           },
         ),
-        Text(
-          'Job Description',
-          style: theme.textTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Job Description',
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            if (_descriptionController.text.isNotEmpty)
+              Text(
+                '${_descriptionController.text.trim().split(RegExp(r'\s+')).where((w) => w.isNotEmpty).length} words',
+                style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
+              ),
+          ],
         ),
         const SizedBox(height: 8),
         TextField(
