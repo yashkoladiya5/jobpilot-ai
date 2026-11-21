@@ -207,9 +207,13 @@ class _ResumeScreenState extends State<ResumeScreen> {
 
   Widget _buildResumeList(List<Resume> resumes) {
     if (resumes.isEmpty) {
-      return const EmptyState(
+      return EmptyState(
         icon: Icons.upload_file,
-        message: 'Your resume vault is empty.\nUpload a resume to unlock AI matching!',
+        message: 'Your resume vault is empty',
+        subtitle:
+            'Upload a PDF or Word document to unlock instant AI matching, skill extraction, and personalized cover letters.',
+        actionLabel: 'Upload Resume',
+        onAction: _pickAndUploadFile,
       );
     }
 
