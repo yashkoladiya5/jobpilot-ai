@@ -168,9 +168,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
         const SizedBox(height: 12),
         if (stats.recentApplications.isEmpty)
-          const EmptyState(
+          EmptyState(
             icon: Icons.inbox_outlined,
             message: 'No recent applications',
+            subtitle:
+                'Start tracking your job search by logging your first application or browsing openings.',
+            actionLabel: 'Browse Jobs',
+            onAction: () => context.goNamed('jobs'),
           )
         else
           ...stats.recentApplications.take(5).map(
