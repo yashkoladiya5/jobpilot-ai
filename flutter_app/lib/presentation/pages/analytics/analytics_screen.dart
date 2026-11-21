@@ -70,6 +70,69 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
 
   Widget _buildContent(
       PipelineAnalytics analytics, List<TimelineEntry>? timeline) {
+    if (analytics.totalApplications == 0) {
+      return ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          _buildHeader(analytics),
+          const SizedBox(height: 32),
+          Container(
+            padding: const EdgeInsets.all(28),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: AppColors.divider),
+            ),
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withValues(alpha: 0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.insights_outlined,
+                    size: 48,
+                    color: AppColors.primary,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'No Pipeline Analytics Yet',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Track your applications, interview invites, and offers to unlock conversion funnels, response rate analytics, and weekly activity charts.',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: AppColors.textSecondary,
+                        height: 1.4,
+                      ),
+                ),
+                const SizedBox(height: 24),
+                ElevatedButton.icon(
+                  onPressed: () => Navigator.of(context).maybePop(),
+                  icon: const Icon(Icons.arrow_back),
+                  label: const Text('Back to Dashboard'),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      );
+    }
+
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
