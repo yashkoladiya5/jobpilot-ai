@@ -563,3 +563,9 @@ export const getPrepTimeBudget = asyncHandler(async (req: Request, res: Response
   const result = await interviewService.getPrepTimeBudget(userId, sessionId, totalMinutes);
   res.json({ success: true, message: "Prep time budget allocated", data: result });
 });
+
+export const getInterviewPerformanceSummary = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const result = await interviewService.getInterviewPerformanceSummary(userId);
+  res.json({ success: true, message: "Interview performance summary fetched successfully", data: result });
+});

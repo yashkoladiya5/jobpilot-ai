@@ -785,6 +785,44 @@ export class InterviewService {
       generatedAt: new Date().toISOString()
     };
   }
+
+  async getInterviewPerformanceSummary(userId: string) {
+    const sessions = await prisma.interviewSession.findMany({
+      where: { userId },
+      include: {
+        results: true,
+        questions: true,
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    const totalSessions = sessions.length;
+    const completedSessions = sessions.filter(s => s.status === "COMPLETED" || s.results.length > 0).length;
+    const totalQuestions = sessions.reduce((acc, s) => acc + s.questions.length, 0);
+    const answeredQuestions = sessions.reduce((acc, s) => acc + s.questions.filter(q => q.answer && q.answer.trim().length > 0).length, 0);
+
+    const scores = sessions
+      .flatMap(s => s.results.map(r => r.overallScore))
+      .filter((score): score is number => typeof score === "number");
+
+    const averageScore = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+    const bestScore = scores.length > 0 ? Math.max(...scores) : 0;
+
+    return {
+      totalSessions,
+      completedSessions,
+      inProgressSessions: totalSessions - completedSessions,
+      totalQuestions,
+      answeredQuestions,
+      completionRate: totalQuestions > 0 ? Math.round((answeredQuestions / totalQuestions) * 100) : 0,
+      averageScore,
+      bestScore,
+      readinessLevel: averageScore >= 80 ? "High" : averageScore >= 60 ? "Moderate" : "Needs Preparation",
+      summaryMessage: totalSessions === 0
+        ? "No interview sessions recorded yet. Start your first session to build confidence."
+        : `Completed ${completedSessions} of ${totalSessions} sessions with an average score of ${averageScore}%.`
+    };
+  }
 }
 
 export const interviewService = new InterviewService();

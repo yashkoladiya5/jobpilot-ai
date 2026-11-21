@@ -47,6 +47,7 @@ import {
   estimateSeniority,
   getDifficultyCurve,
   getPrepTimeBudget,
+  getInterviewPerformanceSummary,
   rewriteCoverLetterTone,
   highlightCoverLetterKeywords,
   generateResignationLetter,
@@ -124,6 +125,7 @@ router.post("/interview/job/:jobId/elevator-pitch", generateElevatorPitch);
 router.get("/interview/session/:sessionId/answer-length", adviseAnswerLength);
 router.get("/interview/session/:sessionId/difficulty-curve", getDifficultyCurve);
 router.get("/interview/session/:sessionId/prep-budget", getPrepTimeBudget);
+router.get("/interview/performance-summary", getInterviewPerformanceSummary);
 
 // Career insights
 router.get("/career/insights", getCareerInsights);
