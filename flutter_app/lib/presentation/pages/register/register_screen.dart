@@ -24,6 +24,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _confirmPasswordController = TextEditingController();
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
+  String _password = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _passwordController.addListener(() {
+      if (mounted) {
+        setState(() => _password = _passwordController.text);
+      }
+    });
+  }
 
   @override
   void dispose() {
@@ -148,6 +159,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             validator: Validators.password,
                           ),
                           const SizedBox(height: 8),
+                          _buildPasswordStrengthIndicator(),
+                          const SizedBox(height: 8),
                           Padding(
                             padding:
                                 const EdgeInsets.only(left: 12, bottom: 8),
@@ -225,6 +238,82 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildPasswordStrengthIndicator() {
+    if (_password.isEmpty) return const SizedBox.shrink();
+
+    int strength = 0;
+    if (_password.length >= 8) strength++;
+    if (RegExp(r'[A-Za-z]').hasMatch(_password)) strength++;
+    if (RegExp(r'[0-9]').hasMatch(_password)) strength++;
+    if (RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(_password)) strength++;
+
+    Color strengthColor;
+    String strengthLabel;
+    switch (strength) {
+      case 1:
+        strengthColor = AppColors.error;
+        strengthLabel = 'Weak';
+        break;
+      case 2:
+        strengthColor = AppColors.warning;
+        strengthLabel = 'Fair';
+        break;
+      case 3:
+        strengthColor = Colors.blue;
+        strengthLabel = 'Good';
+        break;
+      case 4:
+        strengthColor = AppColors.success;
+        strengthLabel = 'Strong';
+        break;
+      default:
+        strengthColor = AppColors.error;
+        strengthLabel = 'Very Weak';
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Password Strength',
+                style: TextStyle(fontSize: 11, color: AppColors.textSecondary),
+              ),
+              Text(
+                strengthLabel,
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                  color: strengthColor,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Row(
+            children: List.generate(4, (index) {
+              final filled = index < strength;
+              return Expanded(
+                child: Container(
+                  height: 4,
+                  margin: EdgeInsets.only(right: index < 3 ? 4 : 0),
+                  decoration: BoxDecoration(
+                    color: filled ? strengthColor : Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              );
+            }),
+          ),
+        ],
       ),
     );
   }
