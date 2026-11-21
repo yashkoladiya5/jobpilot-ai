@@ -660,3 +660,15 @@ export const getExecutiveBriefing = asyncHandler(async (req: Request, res: Respo
     data: result
   });
 });
+
+export const getSearchVelocityBenchmark = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+
+  const result = await dashboardService.getSearchVelocityBenchmark(userId);
+
+  res.status(200).json({
+    success: true,
+    message: "Search velocity benchmark evaluated successfully",
+    data: result
+  });
+});

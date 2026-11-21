@@ -1733,4 +1733,39 @@ export class DashboardService {
       generatedAt: new Date().toISOString(),
     };
   }
+
+  async getSearchVelocityBenchmark(userId: string) {
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    const recentApps = await prisma.jobApplication.findMany({
+      where: {
+        userId,
+        appliedDate: { gte: thirtyDaysAgo },
+      },
+      select: { id: true, appliedDate: true, status: true },
+    });
+
+    const totalLast30Days = recentApps.length;
+    const weeklyAverage = Math.round((totalLast30Days / 4.2) * 10) / 10;
+    
+    // Benchmark targets
+    const targetWeekly = 5;
+    const paceStatus = weeklyAverage >= targetWeekly
+      ? "On Track"
+      : weeklyAverage >= 2
+        ? "Moderate"
+        : "Low Momentum";
+
+    return {
+      userId,
+      applicationsPast30Days: totalLast30Days,
+      weeklyAverageCadence: weeklyAverage,
+      targetWeeklyCadence: targetWeekly,
+      paceStatus,
+      recommendation: paceStatus === "On Track"
+        ? "Exceptional velocity! Continue focusing on interview preparation."
+        : "Aim for 1 application per weekday to reach the optimal active search benchmark.",
+    };
+  }
 }
