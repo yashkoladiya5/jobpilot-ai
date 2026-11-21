@@ -1692,4 +1692,45 @@ export class DashboardService {
       profiledAt: new Date().toISOString()
     };
   }
+
+  async getExecutiveBriefing(userId: string) {
+    await requireUser(userId);
+
+    const [applications, resumes, interviews] = await Promise.all([
+      prisma.jobApplication.findMany({
+        where: { userId },
+        select: { status: true, companyName: true, role: true, appliedDate: true, updatedAt: true },
+        orderBy: { updatedAt: "desc" },
+      }),
+      prisma.resume.findMany({
+        where: { userId },
+        select: { id: true, fileName: true, isPrimary: true },
+      }),
+      prisma.interviewSession.findMany({
+        where: { userId },
+        select: { id: true, status: true },
+      }),
+    ]);
+
+    const activeApplications = applications.filter((a) => a.status === "APPLIED" || a.status === "INTERVIEW");
+    const primaryResume = resumes.find((r) => r.isPrimary) ?? resumes[0];
+    const completedInterviews = interviews.filter((i) => i.status === "COMPLETED");
+
+    return {
+      userId,
+      totalApplications: applications.length,
+      activePipelineCount: activeApplications.length,
+      primaryResumeName: primaryResume?.fileName ?? null,
+      interviewsCompleted: completedInterviews.length,
+      topPriorityJob: activeApplications[0]
+        ? { companyName: activeApplications[0].companyName, role: activeApplications[0].role }
+        : null,
+      readinessStatus: resumes.length > 0 && applications.length > 0
+        ? "Active Search"
+        : resumes.length > 0
+          ? "Resume Ready"
+          : "Setup Needed",
+      generatedAt: new Date().toISOString(),
+    };
+  }
 }

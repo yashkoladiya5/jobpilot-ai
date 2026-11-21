@@ -16,6 +16,7 @@ import { getStats, getRecentActivityLogs, getActionItems, getDashboardSummary, g
   trackWeeklyGoalProgress,
   getStreakGuardian,
   getApplicationCadenceProfile,
+  getExecutiveBriefing,
 } from "../controllers/dashboard.controller";
 
 /**
@@ -68,5 +69,6 @@ router.get("/daily-focus", authenticate, getDailyFocusSuggestion);
 router.get("/weekly-goal-progress", authenticate, trackWeeklyGoalProgress);
 router.get("/streak-guardian", authenticate, getStreakGuardian);
 router.get("/cadence-profile", authenticate, getApplicationCadenceProfile);
+router.get("/executive-briefing", authenticate, getExecutiveBriefing);
 
 export default router;

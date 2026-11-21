@@ -648,3 +648,15 @@ export const getApplicationCadenceProfile = asyncHandler(async (req: Request, re
     data: result
   });
 });
+
+export const getExecutiveBriefing = asyncHandler(async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+
+  const result = await dashboardService.getExecutiveBriefing(userId);
+
+  res.status(200).json({
+    success: true,
+    message: "Executive briefing generated successfully",
+    data: result
+  });
+});
